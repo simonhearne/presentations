@@ -1,0 +1,353 @@
+<!doctype html>
+<html lang="en">
+
+	<head>
+		<meta charset="utf-8">
+
+		<title>The Psychology of Speed - @SimonHearne</title>
+
+		<meta name="description" content="Presentation: the psychology of speed. Presented at Akamai DPM Event, Stockholm, April 2019">
+		<meta name="author" content="Simon Hearne">
+
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<link rel="stylesheet" href="../css/reveal.css">
+		<link rel="stylesheet" href="../css/theme/simon.css" id="theme">
+
+		<!-- Theme used for syntax highlighting of code -->
+		<link rel="stylesheet" href="../lib/css/zenburn.css">
+
+		<link rel="stylesheet" href="../lib/css/animate.min.css">
+
+		<!-- Printing and PDF exports -->
+		<script>
+			var link = document.createElement( 'link' );
+			link.rel = 'stylesheet';
+			link.type = 'text/css';
+			link.href = window.location.search.match( /print-pdf/gi ) ? '../css/print/pdf.css' : '../css/print/paper.css';
+			document.getElementsByTagName( 'head' )[0].appendChild( link );
+		</script>
+
+		<!--[if lt IE 9]>
+		<script src="lib/js/html5shiv.js"></script>
+		<![endif]-->
+	</head>
+
+	<body>
+
+		<div class="reveal">
+
+			<!-- Any section element inside of this container is displayed as a slide -->
+			<div class="slides">
+				<section data-state="title-slide">
+					<h1>The Psychology of <span style="display:block; font-style:oblique;">Speed</span></h1>
+					<p style="text-align: center;">Simon Hearne</p>
+					<p class="smaller" style="text-align: center;">Perfomance Solutions Consultant</p>
+
+					<aside class="notes">
+						We intuitively know that slow websites cause frustration, but intuition doesn’t pay for developers! In this talk I want to explore the latest research and analysis on the psychology of web performance. I’ll also dig into some of the trillions of user experience beacons we’ve collected through mPulse to try to identify the best timers to represent user experience, and how they impact key performance indicators like time on page and session length.
+					</aside>
+				</section>
+
+				<section>
+					<h3>We've all seen the studies...</h3>
+					<table class="twocol">
+						<tr>
+							<td><img class="plain" src="media/walmart.png"/></td>
+							<td>Walmart sees 1% increase in revenue for every 100ms improvement</td>
+						</tr>
+						<tr class="fragment">
+							<td><img class="plain" src="media/staples.png"/></td>
+							<td>Staples saw a 10% increase in conversion rate when reducing homepage load time by one second</td>
+						</tr>
+						<tr class="fragment">
+							<td><img class="plain" src="media/aliexpress.png"/></td>
+							<td>AliExpress saw 10.5% increase in conversions when reducing load time by 36%</td>
+						</tr>
+					</table>
+					<p class="subtitle smallest bottom-right"><a href="https://wpostats.com/tags/conversion/">wpostats.com/tags/conversion/</a></p>
+					<aside class="notes">
+						There are plenty of studies to show how reducing load time improves business metrics. By they tend to focus on US retailers and rarely share the specific timers or test conditions.
+					</aside>
+				</section>
+
+				<section>
+					<h3>We've all seen the studies...</h3>
+					<table class="twocol">
+						<tr>
+							<td><img class="plain" src="media/bbc.png"/></td>
+							<td>The BBC loses an additional 10% of users for every additional second it takes to load</td>
+						</tr>
+						<tr class="fragment">
+							<td><img class="plain" src="media/pinterest.png"/></td>
+							<td>Pinterest improved load time by 40% and saw 15% increase in SEO traffic and 15% increase in conversions</td>
+						</tr>
+						<tr class="fragment">
+							<td><img class="plain" src="media/ft.png"/></td>
+							<td>The Financial times increased user engagement by 30% when they released the new, performance focused FT.com</td>
+						</tr>
+					</table>
+					<p class="subtitle smallest bottom-right"><a href="https://wpostats.com/tags/engagement/">wpostats.com/tags/engagement/</a></p>
+					<aside class="notes">
+						There are also studies which show how engagement increases when speed is improved, but what is engagement, and what is speed? Unfortunately it is extremely rare for these case studies to include the things we really care about - what metric did they use to measure speed? How did they collect it, or aggregate it? The BBC loses an additional 10% of users for every second their site gets slower - what is a lost user? A bounce or a session that never happens? These are all important questions and caveats to bear in mind when viewing case studies, they are useful tools to generate interest in speed but the critical task is to perform this analysis on _your own data_.
+					</aside>
+				</section>
+
+				<section>
+					<section>
+						<h3>What do we mean by speed?</h3>
+						<ul>
+							<li class="fragment">Page Load Time</li>
+							<li class="fragment">DOM Ready</li>
+							<li class="fragment">Visually Ready</li>
+							<li class="fragment">Something else?</li>
+						</ul>
+					</section>
+
+					<section>
+						<h3>Navigation Timing API</h3>
+						<img src="media/navtiming.png"/>
+						<p class="subtitle smallest bottom-right"><a href="https://w3c.github.io/perf-timing-primer/">w3c.github.io/perf-timing-primer/</a></p>
+					</section>
+
+					<section>
+						<h3>Common measures...</h3>
+						<ul>
+							<li class="fragment">Page Load Time</li>
+							<li class="fragment">DOM Ready</li>
+							<li class="fragment">First Contentful Paint</li>
+							<li class="fragment">Something else?</li>
+						</ul>
+					</section>
+
+					<section id="poll-1" data-state="secondary-slide">
+						<h2>POLL 1</h2>
+						<p>What do you measure?</p>
+					</section>
+
+					<section>
+						<h3>User Timing API 🦄</h3>
+						<pre><code>
+performance.mark("headline-rendered");
+performance.measure("unicorn-load",
+                 "unicorn-request","unicorn-render");
+						</code></pre>
+					</section>
+
+					<section>
+						<h3>Timer Summary</h3>
+						<p>THE GOOD STUFF</p>
+					</section>
+					
+					<section>
+						<h3>What 📏 I'll be using</h3>
+					</section>
+				</section>
+
+				<section id="intermission-1" data-state="main-slide">
+					<section>
+						<div class="intermission">&lt; intermission &gt;</div>
+						<div class="noise noprint"></div>
+					</section>
+					<section>
+						<h2>Objective vs Subjective time</h2>
+					</section>
+					<section>
+						<h3>How long does ten minutes feel?</h3>
+						<img class="stretch" src="media/table.jpg"/>
+					</section>
+					<section>
+						<h3>How long does ten minutes feel?</h3>
+						<img class="stretch" src="media/waitingroom.jpg"/>
+					</section>
+					<section>
+						<h3>Our <span data-delay="0.5" data-animate="jackInTheBox">perception</span> of time is <span data-delay="1.5" data-animate="rubberBand">subjective...</span></h3>
+						<h3 class="fragment">...but our measures are <span data-delay="0.5" data-animate="flipInX">objective</span></h3>
+					</section>
+				</section>
+
+				<section>
+					<section>
+						<h3>How can we measure speed?</h3>
+							<ul>
+							<li class="fragment">Synthetic Tests</li>
+							<li class="fragment">Application-level Monitoring</li>
+							<li class="fragment">Analytics</li>
+							<li class="fragment">Real User Monitoring</li>
+						</ul>
+					</section>
+
+					<section id="poll-2" data-state="secondary-slide">
+						<h2>POLL 2</h2>
+						<p>How do you measure speed?</p>
+					</section>
+
+					<section>
+						<h3>My requirements (for multi-app analysis)</h3>
+						<ol>
+							<li>Available in <em>most</em> browsers</li>
+							<li>Representative of the user experience</li>
+						</ol>
+					</section>
+				</section>
+
+				<section id="intermission-2" data-state="main-slide">
+					<section>
+						<div class="intermission">&lt; intermission &gt;</div>
+						<div class="noise noprint"></div>
+					</section>
+					<section>
+						<h2>Just Noticeable Difference</h2>
+					</section>
+					<section>
+						<h3>blah</h3>
+					</section>
+				</section>
+	
+				<section id="engagement">
+					<section>
+						<h3>What about engagement?</h3>
+						<div class="fragment tweet" data-src="https://twitter.com/simonhearne/status/1106482584517857280"></div>
+					</section>
+	
+					<section>
+						<h3>What do you do when you <span style="color: HSL(356, 82.3%, 37.6%);" class="infinite" data-delay="0.5" data-animate="heartBeat">feel</span> engaged?</h3>
+						<ul>
+							<li class="fragment">Hang around</li> <!-- active time? time on homepage (only when focussed)-->
+							<li class="fragment">Click on things</li> <!-- session length -->
+							<li class="fragment">Complete an action</li>
+						</ul>
+					</section>
+
+					<section id="poll-2" data-state="secondary-slide">
+						<h2>POLL 3</h2>
+						<p>How do you measure engagement?</p>
+					</section>
+
+					<section>
+						<h3>What kind of things make you feel less engaged?</h3>
+						<ul>
+							<li class="fragment">Accidental click</li>
+							<li class="fragment">Slow-loading images</li>
+							<li class="fragment">Non-responsive to input</li>
+						</ul>
+					</section>
+
+				</section>
+			</div>
+
+		</div>
+
+		<script src="../lib/js/head.min.js"></script>
+		<script src="../js/reveal.js"></script>
+		<script src="../lib/js/jquery-3.3.1.min.js"></script>
+
+		<script>
+				function getFragment(event) {
+					return (event.currentSlide.id !== "" ? event.currentSlide.id : null);
+				}
+			// More info https://github.com/hakimel/reveal.js#configuration
+			Reveal.initialize({
+				controls: false,
+				progress: true,
+				history: true,
+				center: true,
+
+				transition: 'none', // none/fade/slide/convex/concave/zoom
+
+				allottedTime: 30 * 60 * 1000, // 30 minutes
+				barColor: 'hsl(220,99%,54%)',
+
+				// More info https://github.com/hakimel/reveal.js#dependencies
+				dependencies: [
+					{ src: '../lib/js/classList.js', condition: function() { return !document.body.classList; } },
+					{ src: '../plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: '../plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: '../plugin/embed-tweet/embed-tweet.js', condition: function() { return !!document.querySelector( 'div.tweet[data-src]' ); } },
+					{ src: '../plugin/elapsed-time-bar/elapsed-time-bar.js'},
+					{ src: '../plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+					{ src: '../plugin/search/search.js', async: true },
+					{ src: '../plugin/zoom-js/zoom.js', async: true },
+					{ src: '../plugin/notes/notes.js', async: true }
+				],
+
+				keyboard: {
+					// pause/resume time when Enter is pressed
+					13: () => {
+						ElapsedTimeBar.isPaused ? ElapsedTimeBar.resume() : ElapsedTimeBar.pause();
+					},
+					// reset timer when 'r' is pressed
+					82: () => {
+						ElapsedTimeBar.reset();
+					}
+				}
+			});
+			Reveal.addEventListener( 'slidechanged', function( event ) {
+				let state = {h: event.indexh, v: event.indexv, name: getFragment(event)};
+				console.log(state);
+			} );
+
+			/* animate.css */
+			// Set animation delay if data-delay is specified
+			Reveal.addEventListener('ready', function ( event ) {
+				$('*[data-delay]').each( function () { 
+					var delay = $(this).attr("data-delay");
+					$(this).css("-webkit-animation-delay", delay+"s"); 
+					$(this).css("animation-delay", delay+"s"); 
+				});
+			});
+
+			// Set animation duration if data-duration is specified
+			Reveal.addEventListener('ready', function ( event ) {
+				$('*[data-duration]').each( function () { 
+					var duration = $(this).attr("data-duration");
+					$(this).css("-webkit-animation-duration", duration+"s"); 
+					$(this).css("animation-duration", duration+"s"); 
+				});
+			});
+
+			// Animate items that are not in a fragment
+				Reveal.addEventListener('slidechanged', function( event ) {
+				// Animate elements that are not a fragment (or in a fragment)
+				var filter = '*[data-animate]:not(.fragment):not(.fragment *)';
+				
+				$(event.currentSlide).find(filter).each( function () {
+					$(this).addClass('animated');
+					$(this).addClass($(this).attr('data-animate'));
+				});		
+				$(event.previousSlide).find(filter).each( function () {
+					$(this).removeClass('animated');
+					$(this).removeClass($(this).attr('data-animate'));
+				});		
+				});
+
+				// Animate fragments
+				Reveal.addEventListener('fragmentshown', function( event ) {
+				function loop(i, el) { 
+					if ($(el).attr('data-animate')) {
+						$(el).addClass('animated');
+						$(el).addClass($(el).attr('data-animate'));
+					}
+					$.each($(el).children().not('.fragment'), loop);
+				};
+				$.each(event.fragments, loop);
+				});
+
+				// Make the animation runnable again if fragment is hidden
+				Reveal.addEventListener('fragmenthidden', function( event ) {	  
+				function loop(i, el) { 
+					if ($(el).attr('data-animate')) {
+						$(el).removeClass('animated');
+						$(el).removeClass($(el).attr('data-animate'));
+					}
+					$.each($(el).children().not('.fragment'), loop);
+				};
+				$.each(event.fragments, loop);
+			});
+		</script>
+
+	</body>
+</html>
