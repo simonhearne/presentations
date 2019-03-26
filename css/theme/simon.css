@@ -210,9 +210,6 @@ html.intermission body {
   max-height: 400px;
   word-wrap: normal; }
 
-.reveal sup {
-  vertical-align: super; }
-
 .reveal sub {
   vertical-align: sub; }
 
@@ -431,3 +428,9 @@ p.smallest {
 }
 
 span { display: inline-block; }
+
+.font-effect-static {
+  -webkit-mask-image: url(../noise.png);
+  text-shadow: 0 0 2px #000, 0 0 4px #000, 0 0 6px #000, 0 0 8px #333, 0 0 10px #fff;
+  font-size: 110%;
+}
