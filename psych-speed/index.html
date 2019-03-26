@@ -139,7 +139,15 @@ performance.measure("unicorn-load",
 
 					<section>
 						<h3>Timer Summary</h3>
-						<p>THE GOOD STUFF</p>
+						<table class="twocol">
+							<tr><td>TTFB</td><td>How fast is my delivery stack?</td></tr>
+							<tr><td>First Paint</td><td>What is the minimum time to render <em>something</em>?</td></tr>
+							<tr><td>First Contentful Paint</td><td>When does the user see something?</td></tr>
+							<tr><td>DOM Loading</td><td>How fast are my critical dependencies?</td></tr>
+							<tr><td>DOM Ready</td><td>How fast are my critical dependencies &amp; how fast are they parsed?</td></tr>
+							<tr><td>Page Load Time</td><td>When does my asynchronous code execute?</td></tr>
+							<tr><td>TTFI</td><td>When does a user first try to interact?</td></tr>
+						</table>
 					</section>
 					
 					<section>
@@ -164,8 +172,17 @@ performance.measure("unicorn-load",
 						<img class="stretch" src="media/waitingroom.jpg"/>
 					</section>
 					<section>
+						<h3>Does an hour feel longer to some people?</h3>
+						<!-- https://www.vecteezy.com/vector-art/137049-set-of-personas-icons -->
+						<table><tr>
+						<td>Child</td><td>Teenager</td>
+						</tr><tr>
+						<td>Professional</td><td>Elderly Person</td>
+						</tr></table>
+					</section>
+					<section>
 						<h3>Our <span data-delay="0.5" data-animate="jackInTheBox">perception</span> of time is <span data-delay="1.5" data-animate="rubberBand">subjective...</span></h3>
-						<h3 class="fragment">...but our measures are <span data-delay="0.5" data-animate="flipInX">objective</span></h3>
+						<h3 class="fragment">...but our measures are <span data-delay="0.25" data-animate="flipInX">objective</span></h3>
 					</section>
 				</section>
 
@@ -203,7 +220,16 @@ performance.measure("unicorn-load",
 						<h2>Just Noticeable Difference</h2>
 					</section>
 					<section>
-						<h3>blah</h3>
+						<h3>Faster, slower or the same?</h3>
+						<p data-animate="lightSpeedIn" data-duration="1" class="fragment">This one?</p>
+						<p data-animate="lightSpeedIn" data-duration="1.1" class="fragment">This one?</p>
+						<p data-animate="lightSpeedIn" data-duration="0.8" class="fragment">This one?</p>
+						<p class="fragment smallest bottom-right">"Designing and Engineering Time" by Steven C. Seow, Ph.D.</p>
+					</section>
+					<section>
+						<h3>So what?</h3>
+						<p class="fragment">Get <em>20% faster</em> for existing customers to notice</p>
+						<p class="fragment">Be <em>20% faster</em> than your peers &amp; competitors</p>
 					</section>
 				</section>
 	
@@ -214,7 +240,7 @@ performance.measure("unicorn-load",
 					</section>
 	
 					<section>
-						<h3>What do you do when you <span style="color: HSL(356, 82.3%, 37.6%);" class="infinite" data-delay="0.5" data-animate="heartBeat">feel</span> engaged?</h3>
+						<h3>What do you do when you <span style="color: HSL(356, 75%, 50%);" class="infinite" data-animate="heartBeat">feel</span> engaged?</h3>
 						<ul>
 							<li class="fragment">Hang around</li> <!-- active time? time on homepage (only when focussed)-->
 							<li class="fragment">Click on things</li> <!-- session length -->
@@ -226,16 +252,54 @@ performance.measure("unicorn-load",
 						<h2>POLL 3</h2>
 						<p>How do you measure engagement?</p>
 					</section>
+					
+					<section>
+						<h3>Universal<sup>*</sup> engagement metrics</h3>
+						<ul>
+							<li>Session Length</li>
+							<li>Bounce Rate</li>
+							<li>Exit Rate</li>
+							<li>Time on page</li>
+						</ul>
+						<p class="smaller bottom-right"><sup>*</sup> bespoke metrics will always be better!</p>
+					</section>
+
+					<section>
+						<h3>Testing the metrics</h3>
+						<p>Cross-correlate timer and engagement metric</p>
+						<p>First-page vs session average</p>
+						<p>Fast vs slow bouncers</p>
+						<p>Foreground vs background tabs</p>
+						<p>Mobile vs Desktop</p>
+					</section>
 
 					<section>
 						<h3>What kind of things make you feel less engaged?</h3>
 						<ul>
-							<li class="fragment">Accidental click</li>
+							<li class="fragment">Accidental click?</li>
 							<li class="fragment">Slow-loading images</li>
 							<li class="fragment">Non-responsive to input</li>
 						</ul>
 					</section>
-
+				</section>
+				
+				<section id="intermission-3" data-state="main-slide">
+					<section>
+						<div class="intermission">&lt; intermission &gt;</div>
+						<div class="noise noprint"></div>
+					</section>
+					<section>
+						<h2>Human Computer Interaction principles</h2>
+					</section>
+					<section>
+						<h3>We've known this since 1969!</h3>
+						<p class="fragment smallest bottom-right"></p>
+					</section>
+					<section>
+						<h3>So what?</h3>
+						<p class="fragment">Get <em>20% faster</em> for existing customers to notice</p>
+						<p class="fragment">Be <em>20% faster</em> than your peers &amp; competitors</p>
+					</section>
 				</section>
 			</div>
 
