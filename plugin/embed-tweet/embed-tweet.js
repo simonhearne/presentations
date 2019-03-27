@@ -32,7 +32,7 @@ var RevealEmbedTweet = window.RevealEmbedTweet || (function(){
 	}
 
 	Reveal.addEventListener( 'ready', function( event ) {
-		load();
+		window.setTimeout(load, 5000);
 	} );
 
 

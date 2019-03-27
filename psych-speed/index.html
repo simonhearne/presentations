@@ -22,6 +22,65 @@
 
 		<link rel="stylesheet" href="../lib/css/animate.min.css">
 
+		<style>
+			.clickable {
+				cursor: pointer;
+				user-select: none;
+				color: #9393ff;
+			}
+			.demo-container {
+				position: relative;
+				width: 100%;
+			}
+			.demo-background-container {
+				position: absolute;
+				top: 0;
+				width: 100%;
+				height: 100%;
+				z-index: 1;
+			}
+			.demo-foreground-container {
+				position: absolute;
+				top: 0;
+				width: 100%;
+				height: 100%;
+				z-index: 2;
+			}
+			.demo-bar {
+				width: 100%;
+				height: 40px;
+				margin-bottom: 40px !important;
+				cursor: pointer;
+			}
+			.demo-bar.demo-background {
+				background-color: #bab;
+				box-shadow: 1px 1px 4px 0 #000;
+			}
+			.demo-bar.demo-background:active {
+				box-shadow: 1px 1px 4px 2px red;
+			}
+			.demo-bar.demo-foreground {
+				will-change: width;
+				width: 0;
+				background-color: blueviolet;
+			}
+			.demo-bar.demo-foreground.demo-med {
+				transition: width 1s linear;
+			}
+			.demo-bar.demo-foreground.demo-fast {
+				transition: width 1.1s linear;
+			}
+			.demo-bar.demo-foreground.demo-faster {
+				transition: width 1.3s linear;
+			}
+			.demo-bar.demo-foreground.demo-on {
+				width: 100%;
+			}
+			.demo-controls {
+				position: relative;
+				top: 220px;
+			}
+		</style>
 		<!-- Printing and PDF exports -->
 		<script>
 			var link = document.createElement( 'link' );
@@ -182,11 +241,16 @@ performance.measure("unicorn-load",
 						<h3>Our <span data-delay="0.5" data-animate="jackInTheBox">perception</span> of time is <span data-delay="1.5" data-animate="rubberBand">subjective...</span></h3>
 						<h3 class="fragment">...but our measures are <span data-delay="0.25" data-animate="flipInX">objective</span></h3>
 					</section>
+					<section>
+						<h3>And it only gets worse...</h3>
+						<p class="fragment">User perception of load is <em>15% slower</em> than objective measures</p>
+						<p class="fragment">And they remember it as <em>35% slower</em>!</p>
+					</section>
 				</section>
 
 				<section>
 					<section>
-						<h2>Speed? 🚀</h2>
+						<h2>Speed? <span data-animate="zoomOutRight" data-delay="1">🚀</span></h2>
 					</section>
 					
 					<section>
@@ -233,10 +297,20 @@ performance.measure("unicorn-load",
 					</section>
 					<section>
 						<h3>Faster, slower or the same?</h3>
-						<p data-animate="lightSpeedIn" data-duration="1" class="fragment">This one?</p>
-						<p data-animate="lightSpeedIn" data-duration="1.1" class="fragment">This one?</p>
-						<p data-animate="lightSpeedIn" data-duration="0.8" class="fragment">This one?</p>
-						<p class="fragment smallest bottom-right">"Designing and Engineering Time" by Steven C. Seow, Ph.D.</p>
+						<div class="demo-container">
+							<div class="demo-background-container">
+								<div data-demo="1" class="demo-bar demo-background"></div>
+								<div data-demo="2" class="demo-bar demo-background"></div>
+								<div data-demo="3" class="demo-bar demo-background"></div>
+							</div>
+							<div class="demo-foreground-container">
+								<div data-demo="1" id="demo-bar-1" class="demo-bar demo-foreground demo-med"></div>
+								<div data-demo="2" id="demo-bar-2" class="demo-bar demo-foreground demo-fast"></div>
+								<div data-demo="3" id="demo-bar-3" class="demo-bar demo-foreground demo-faster"></div>
+							</div>
+						</div>
+						<div class="fragment demo-controls clickable smaller"><span id="demo-reset">reset</span> | <span id="demo-all">all</span></div>
+						<p class="fragment smallest bottom-right">The 20% Rule: "Designing and Engineering Time" by Steven C. Seow, Ph.D.</p>
 					</section>
 					<section>
 						<h3>So what?</h3>
@@ -248,15 +322,13 @@ performance.measure("unicorn-load",
 				<section id="engagement">
 					
 					<section>
-						<h2>Engagement? 🤑</h2>
+						<h2>Engagement? 😑</h2>
 					</section>
 										
 					<section>
 						<h3>What about engagement?</h3>
 						<div class="fragment tweet" data-src="https://twitter.com/simonhearne/status/1106482584517857280"></div>
 					</section>
-	
-					
 	
 					<section>
 						<h3>What do you do when you <span style="color: HSL(356, 75%, 50%);" class="infinite" data-animate="heartBeat">feel</span> engaged?</h3>
@@ -311,8 +383,13 @@ performance.measure("unicorn-load",
 						<h2>Human Computer Interaction principles</h2>
 					</section>
 					<section>
+						<h3>Akscyn's Law</h3>
+						<blockquote>Hypertext systems should take about 1/4 second to move from one place to another. If the delay is longer, people may be distracted; if the delay is much longer, people will stop using the system</blockquote>
+						<p class="smallest bottom-right">"KMS: A Distributed Hypermedia Systems for Managing Knowledge in Organizations". Robert Akscyn, Donald McCracken &amp; Elise Yoder.</p>
+					</section>
+					<section>
 						<h3>We've known this since 1969!</h3>
-						<p class="fragment smallest bottom-right"></p>
+						<p class="smallest bottom-right">"Response Time in Man-Computer Conversational Interactions" by Robert B. Miller</p>
 					</section>
 					<section>
 						<h3>So what?</h3>
@@ -421,6 +498,27 @@ performance.measure("unicorn-load",
 					$(this).css("-webkit-animation-duration", duration+"s"); 
 					$(this).css("animation-duration", duration+"s"); 
 				});
+				$('.demo-bar').each( function() {
+					this.addEventListener("click", () => {
+						let demo = this.attributes.getNamedItem("data-demo")
+						if (demo) {
+							console.log(demo);
+							let id = "#demo-bar-"+demo.value;
+							$(id).toggleClass("demo-on");
+						}
+					})
+				});
+				
+				$('#demo-reset').click(function() {
+					$('.demo-bar.demo-foreground').css('opacity',0).removeClass("demo-on");
+					window.setTimeout(function() {
+						$('.demo-bar.demo-foreground').css('opacity',1)
+					},1300);
+				});
+				$('#demo-all').click(function() {
+					$('.demo-bar.demo-foreground').addClass("demo-on");
+				});
+				
 			});
 
 			// Animate items that are not in a fragment
