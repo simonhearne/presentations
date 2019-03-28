@@ -411,12 +411,7 @@ p.bottom-left {
   }
 }
 
-.reveal div.intermission {
-  width: 100%;
-  margin-top: 30%;
-  font-size: 200%;
-  opacity: 0.9;
-  text-align: center;
+.reveal .intermission {
   font-family: 'Smythe'; }
 
 @media print {
