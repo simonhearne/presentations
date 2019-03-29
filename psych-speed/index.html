@@ -98,7 +98,6 @@
 	<body>
 
 		<div class="reveal">
-
 			<!-- Any section element inside of this container is displayed as a slide -->
 			<div class="slides">
 				<section data-state="title-slide">
@@ -158,12 +157,7 @@
 				<section>
 					<section>
 						<h3>What do we mean by speed?</h3>
-						<ul>
-							<li class="fragment">Page Load Time</li>
-							<li class="fragment">DOM Ready</li>
-							<li class="fragment">Visually Ready</li>
-							<li class="fragment">Something else?</li>
-						</ul>
+						<div class="tweet" data-src="https://twitter.com/simonhearne/status/1111396048143073280"></div>
 					</section>
 
 					<section>
@@ -173,12 +167,38 @@
 					</section>
 
 					<section>
-						<h3>Common measures...</h3>
+						<h3>What <em>actually</em> matters?</h3>
 						<ul>
-							<li class="fragment">Page Load Time</li>
-							<li class="fragment">DOM Ready</li>
+							<li class="fragment">Is it working?</li>
+							<li class="fragment">Is it useful?</li>
+							<li class="fragment">Is it interactive?</li>
+						</ul>
+					</section>
+
+					<section>
+						<h3>Is it working?</h3>
+						<p>When is the first time the user gets feedback?</p>
+						<ul>
+							<li class="fragment">Time to First Byte</li>
+							<li class="fragment">First Paint</li>
+							<li class="fragment">DOM Content Loaded</li>
+						</ul>
+					</section>
+
+					<section>
+						<h3>Is it useful?</h3>
+						<p>When is the first time the user can make an action?</p>
+						<ul>
 							<li class="fragment">First Contentful Paint</li>
-							<li class="fragment">Something else?</li>
+							<li class="fragment">Time to Interactive</li>
+						</ul>
+					</section>
+
+					<section>
+						<h3>Is it interactive?</h3>
+						<p>How fluid is the user experience?</p>
+						<ul>
+							<li class="fragment">First Input Delay</li>
 						</ul>
 					</section>
 
@@ -380,6 +400,12 @@ performance.measure("unicorn-load",
 							<li class="fragment">Non-responsive to input</li>
 						</ul>
 					</section>
+
+					<section id="sessionlength-chart">
+						<h3>Performance metrics correlate with engagement</h3>
+						<div class="vega-chart" id="vis" data-spec="data/sessionlength.json"></div>
+					</section>
+			
 				</section>
 				
 				<section id="intermission-3" data-state="main-slide">
@@ -464,6 +490,8 @@ performance.measure("unicorn-load",
 					{ src: '../plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
 					{ src: '../plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
 					{ src: '../plugin/embed-tweet/embed-tweet.js', condition: function() { return !!document.querySelector( 'div.tweet[data-src]' ); } },
+					{ src: '../lib/js/vega.min.js', condition: function() { return !!document.querySelector( 'div.vega-chart' ); } },
+					{ src: '../lib/js/vega-embed.min.js', condition: function() { return !!document.querySelector( 'div.vega-chart' ); } },
 					{ src: '../plugin/elapsed-time-bar/elapsed-time-bar.js'},
 					{ src: '../plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
 					{ src: '../plugin/search/search.js', async: true },
@@ -484,7 +512,6 @@ performance.measure("unicorn-load",
 			});
 			Reveal.addEventListener( 'slidechanged', function( event ) {
 				let state = {h: event.indexh, v: event.indexv, name: getFragment(event)};
-				console.log(state);
 			} );
 
 			/* animate.css */
@@ -508,7 +535,6 @@ performance.measure("unicorn-load",
 					this.addEventListener("click", () => {
 						let demo = this.attributes.getNamedItem("data-demo")
 						if (demo) {
-							console.log(demo);
 							let id = "#demo-bar-"+demo.value;
 							$(id).toggleClass("demo-on");
 						}
@@ -524,7 +550,14 @@ performance.measure("unicorn-load",
 				$('#demo-all').click(function() {
 					$('.demo-bar.demo-foreground').addClass("demo-on");
 				});
-				
+				let width = window.innerWidth / 2;
+				$(".vega-chart").each(function() {
+					let spec = this.attributes.getNamedItem("data-spec").value;
+					//spec = "https://raw.githubusercontent.com/vega/vega/master/docs/examples/bar-chart.vg.json";
+					vegaEmbed('#'+this.id, spec, {"actions": false, "theme": "dark", "width": width, "renderer": "svg", "config": "data/config.json"}).then(function(result) {
+					// Access the Vega view instance (https://vega.github.io/vega/docs/api/view/) as result.view
+					}).catch(console.error);
+				})
 			});
 
 			// Animate items that are not in a fragment
@@ -544,14 +577,14 @@ performance.measure("unicorn-load",
 
 				// Animate fragments
 				Reveal.addEventListener('fragmentshown', function( event ) {
-				function loop(i, el) { 
-					if ($(el).attr('data-animate')) {
-						$(el).addClass('animated');
-						$(el).addClass($(el).attr('data-animate'));
-					}
-					$.each($(el).children().not('.fragment'), loop);
-				};
-				$.each(event.fragments, loop);
+					function loop(i, el) { 
+						if ($(el).attr('data-animate')) {
+							$(el).addClass('animated');
+							$(el).addClass($(el).attr('data-animate'));
+						}
+						$.each($(el).children().not('.fragment'), loop);
+					};
+					$.each(event.fragments, loop);
 				});
 
 				// Make the animation runnable again if fragment is hidden

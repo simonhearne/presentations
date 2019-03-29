@@ -477,3 +477,14 @@ span { display: inline-block; }
   }
 }
 
+.next-icon {
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+
+.hide {
+  visibility: hidden;
+  opacity: 0;
+  displat: none;
+}
