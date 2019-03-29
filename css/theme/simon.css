@@ -486,5 +486,14 @@ span { display: inline-block; }
 .hide {
   visibility: hidden;
   opacity: 0;
-  displat: none;
+  display: none;
+}
+
+.reveal table.compact {
+  font-size: 80%;
+}
+
+.reveal table.compact tr td,
+.reveal table.compact tr th {
+  padding: 0.1em 0.25em 0.1em 0.25em;
 }

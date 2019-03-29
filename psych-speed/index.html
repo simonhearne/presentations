@@ -403,7 +403,29 @@ performance.measure("unicorn-load",
 
 					<section id="sessionlength-chart">
 						<h3>Performance metrics correlate with engagement</h3>
-						<div class="vega-chart" id="vis" data-spec="data/sessionlength.json"></div>
+						<div class="vega-chart" id="vis1" data-spec="data/sessionlength.json"></div>
+						<p class="smallest bottom-right">~1Bn mPulse pageview beacons - early March 2019</p>
+					</section>
+
+					<section id="sessionduration-chart">
+						<h3>Performance metrics correlate with engagement</h3>
+						<div class="vega-chart" id="vis"2 data-spec="data/timeonpage.json"></div>
+						<p class="smallest bottom-right">~1Bn mPulse pageview beacons - early March 2019</p>
+					</section>
+
+					<section>
+						<h3>Beware missing data</h3>
+						<table class="compact">
+							<tr><th>Timer</th><th>Rate</th></tr>
+							<tr><td>TTFB</td><td>100%</td></tr>
+							<tr><td>Page Load Time</td><td>99%</td></tr>
+							<tr><td>DOM Ready</td><td>96%</td></tr>
+							<tr><td>Time to Visually Ready</td><td>88%</td></tr>
+							<tr><td>First Contentful Paint</td><td>47%</td></tr>
+							<tr><td>Time to Interactive</td><td>38%</td></tr>
+							<tr><td>First Input Delay</td><td>21%</td></tr>
+						</table>
+						<p class="smallest bottom-right">~1Bn mPulse pageview beacons - early March 2019</p>
 					</section>
 			
 				</section>
