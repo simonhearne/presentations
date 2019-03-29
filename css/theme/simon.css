@@ -497,3 +497,11 @@ span { display: inline-block; }
 .reveal table.compact tr th {
   padding: 0.1em 0.25em 0.1em 0.25em;
 }
+
+.reveal .tagline {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  padding: 30px 40px !important;
+  opacity: 0.5;
+}
