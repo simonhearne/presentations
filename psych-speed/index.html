@@ -177,7 +177,7 @@
 
 					<section>
 						<h3>Is it working?</h3>
-						<p>When is the first time the user gets feedback?</p>
+						<p>When does the user first get feedback?</p>
 						<ul>
 							<li class="fragment">Time to First Byte</li>
 							<li class="fragment">First Paint</li>
@@ -187,7 +187,7 @@
 
 					<section>
 						<h3>Is it useful?</h3>
-						<p>When is the first time the user can make an action?</p>
+						<p>When can the user see the application?</p>
 						<ul>
 							<li class="fragment">First Contentful Paint</li>
 							<li class="fragment">Time to Interactive</li>
@@ -402,17 +402,23 @@ performance.measure("unicorn-load",
 					</section>
 
 					<section id="sessionlength-chart">
-						<h3>Performance metrics correlate with engagement</h3>
+						<h3 class="with-subtitle">Performance metrics correlate with engagement<span class="subtitle">(session length)</span></h3>
 						<div class="vega-chart" id="vis1" data-spec="data/sessionlength.json"></div>
 						<p class="smallest bottom-right">~1Bn mPulse pageview beacons - early March 2019</p>
 					</section>
 
 					<section id="sessionduration-chart">
-						<h3>Performance metrics correlate with engagement</h3>
-						<div class="vega-chart" id="vis"2 data-spec="data/timeonpage.json"></div>
+						<h3 class="with-subtitle">Performance metrics correlate with engagement<span class="subtitle">(time on page)</span></h3>
+						<div class="vega-chart" id="vis2" data-spec="data/timeonpage.json"></div>
 						<p class="smallest bottom-right">~1Bn mPulse pageview beacons - early March 2019</p>
 					</section>
 
+					<section id="bouncerate-chart">
+						<h3 class="with-subtitle">Performance metrics correlate with engagement<span class="subtitle">(bounce rate)</span></h3>
+						<div class="vega-chart" id="vis3" data-spec="data/bouncerates.json"></div>
+						<p class="smallest bottom-right">~1Bn mPulse pageview beacons - early March 2019</p>
+					</section>
+		
 					<section>
 						<h3>Beware missing data 🔎</h3>
 						<table class="compact">

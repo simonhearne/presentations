@@ -505,3 +505,11 @@ span { display: inline-block; }
   padding: 30px 40px !important;
   opacity: 0.5;
 }
+
+h3.with-subtitle {
+  line-height: 50%;
+}
+
+h3 span.subtitle {
+  font-size: 60%;
+}
