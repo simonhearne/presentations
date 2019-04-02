@@ -16,7 +16,15 @@
         {
             "name": "max_loadtime",
             "value": 30000,
-            "on": [{"events": "*:mouseup", "update": "max_loadtime === 30000 ? 5000 : 30000"}]
+            "on": [{"events": "*:mouseup", "update": "max_loadtime === 30000 ? 5000 : 30000"}],
+            "bind": {
+              "element": "#chart-controls",
+              "name": "Max load time (ms)",
+              "input": "range",
+              "min": 1000,
+              "max": 30000,
+              "step": 1000
+            }
         },
         {
             "name": "highlight_timer",

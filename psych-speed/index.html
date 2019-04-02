@@ -22,65 +22,6 @@
 
 		<link rel="stylesheet" href="../lib/css/animate.min.css">
 
-		<style>
-			.clickable {
-				cursor: pointer;
-				user-select: none;
-				color: #9393ff;
-			}
-			.demo-container {
-				position: relative;
-				width: 100%;
-			}
-			.demo-background-container {
-				position: absolute;
-				top: 0;
-				width: 100%;
-				height: 100%;
-				z-index: 1;
-			}
-			.demo-foreground-container {
-				position: absolute;
-				top: 0;
-				width: 100%;
-				height: 100%;
-				z-index: 2;
-			}
-			.demo-bar {
-				width: 100%;
-				height: 40px;
-				margin-bottom: 40px !important;
-				cursor: pointer;
-			}
-			.demo-bar.demo-background {
-				background-color: #bab;
-				box-shadow: 1px 1px 4px 0 #000;
-			}
-			.demo-bar.demo-background:active {
-				box-shadow: 1px 1px 4px 2px red;
-			}
-			.demo-bar.demo-foreground {
-				will-change: width;
-				width: 0;
-				background-color: blueviolet;
-			}
-			.demo-bar.demo-foreground.demo-med {
-				transition: width 1s linear;
-			}
-			.demo-bar.demo-foreground.demo-fast {
-				transition: width 1.1s linear;
-			}
-			.demo-bar.demo-foreground.demo-faster {
-				transition: width 1.3s linear;
-			}
-			.demo-bar.demo-foreground.demo-on {
-				width: 100%;
-			}
-			.demo-controls {
-				position: relative;
-				top: 220px;
-			}
-		</style>
 		<!-- Printing and PDF exports -->
 		<script>
 			var link = document.createElement( 'link' );
@@ -218,19 +159,24 @@ performance.measure("unicorn-load",
 
 					<section>
 						<h3>Timer Summary</h3>
-						<table class="twocol">
-							<tr><td>TTFB</td><td>How fast is my delivery stack?</td></tr>
-							<tr><td>First Paint</td><td>What is the minimum time to render <em>something</em>?</td></tr>
-							<tr><td>First Contentful Paint</td><td>When does the user see something?</td></tr>
-							<tr><td>DOM Loading</td><td>How fast are my critical dependencies?</td></tr>
-							<tr><td>DOM Ready</td><td>How fast are my critical dependencies &amp; how fast are they parsed?</td></tr>
-							<tr><td>Page Load Time</td><td>When does my asynchronous code execute?</td></tr>
-							<tr><td>TTFI</td><td>When does a user first try to interact?</td></tr>
+						<table class="list">
+							<tr class="fragment"><td>TTFB</td><td>How fast is my delivery stack?</td></tr>
+							<tr class="fragment"><td>First Paint (FP)</td><td>What is the minimum time to render <em>something</em>?</td></tr>
+							<tr class="fragment"><td>First Contentful Paint (FCP)</td><td>When does the user see something?</td></tr>
+							<tr class="fragment"><td>DOM Content Loaded (DCL)</td><td>How fast are my critical dependencies?</td></tr>
+							<tr class="fragment"><td>DOM Ready</td><td>How fast are my critical dependencies &amp; how fast are they parsed?</td></tr>
+							<tr class="fragment"><td>Page Load Time (PLT)</td><td>When does my asynchronous code execute?</td></tr>
+							<tr class="fragment"><td>Time To Interactive</td><td>When is the app first responsive to input?</td></tr>
+							<tr class="fragment"><td>TTFI</td><td>When does a user first try to interact?</td></tr>
 						</table>
 					</section>
 					
 					<section>
-						<h3>What 📏 I'll be using</h3>
+						<h3>My requirements (for multi-app analysis)</h3>
+						<ol>
+							<li class="fragment">Available in <em>most</em> browsers</li>
+							<li class="fragment">(generally) representative of the user experience</li>
+						</ol>
 					</section>
 				</section>
 
@@ -263,8 +209,9 @@ performance.measure("unicorn-load",
 					</section>
 					<section>
 						<h3>What about web performance?</h3>
-						<p class="fragment">User perception is ~<em>15% slower</em> than objective measure</p>
-						<p class="fragment">Find the metric closest to user perception</p>
+						<p class="fragment" data-fragment-index="1">User perception is ~<em>15% slower</em> than objective measures<span class="smaller">(more <em>waiting room</em> than <em>romantic evening</em>)</span></p>
+						<p class="fragment" data-fragment-index="2">Find the metric closest to user perception<sup>*</sup></p>
+						<p class="fragment smallest bottom-right" data-fragment-index="2"><sup>*</sup>this depends entirely on your app!</p>
 					</section>
 					<section>
 						<blockquote>Waiting is frustrating, demoralizing, agonizing, aggravating, annoying, time consuming and incredibly expensive.</blockquote>
@@ -296,7 +243,7 @@ performance.measure("unicorn-load",
 						<h2>POLL 2</h2>
 						<p>How do you measure speed?</p>
 					</section>
-
+					<!-- TODO: Where to put this?
 					<section>
 						<h3>Real data is <span class="font-effect-static">noisy</span></h3>
 						<p>scatter plot / distribution?</p>
@@ -306,14 +253,7 @@ performance.measure("unicorn-load",
 						<h3>Finding a valid aggregation</h3>
 						<p>median / percentiles / MAD</p>
 					</section>
-	
-					<section>
-						<h3>My requirements (for multi-app analysis)</h3>
-						<ol>
-							<li>Available in <em>most</em> browsers</li>
-							<li>Representative of the user experience</li>
-						</ol>
-					</section>
+					-->
 				</section>
 
 				<section id="intermission-2" data-state="main-slide">
@@ -490,6 +430,7 @@ performance.measure("unicorn-load",
 				</section>
 	
 			</div>
+			<div id="chart-controls" class="hide"></div>
 
 		</div>
 

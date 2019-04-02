@@ -43,6 +43,21 @@ html.intermission body {
   
 }
 
+.reveal table.list {
+  font-size: 70%;
+  
+}
+
+.reveal table.list td:first-of-type {
+  text-align: right;  
+  white-space: nowrap;
+  vertical-align: top;
+}
+
+.reveal table.list td:first-of-type::after {
+  content: ' ⇨';
+}
+
 .main-slide {
   font-size:500%;
 }
@@ -88,13 +103,13 @@ html.intermission body {
   word-wrap: break-word; }
 
 .reveal h1 {
-  font-size: 3.77em; }
+  font-size: 3.8em; }
 
 .reveal h2 {
-  font-size: 2.11em; }
+  font-size: 2.6em; }
 
 .reveal h3 {
-  font-size: 1.55em; }
+  font-size: 2em; }
 
 .reveal h4 {
   font-size: 1em; 
@@ -502,7 +517,8 @@ span { display: inline-block; }
   position: absolute;
   bottom: 0;
   left: 0;
-  padding: 30px 40px !important;
+  padding-bottom: 30px !important;
+  padding-left: 33px !important;
   opacity: 0.5;
 }
 
@@ -512,4 +528,68 @@ h3.with-subtitle {
 
 h3 span.subtitle {
   font-size: 60%;
+}
+
+#chart-controls {
+
+}
+
+/* DEMO CONTROLS */
+
+.clickable {
+  cursor: pointer;
+  user-select: none;
+  color: #9393ff;
+}
+.demo-container {
+  position: relative;
+  width: 100%;
+}
+.demo-background-container {
+  position: absolute;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+.demo-foreground-container {
+  position: absolute;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 2;
+}
+.demo-bar {
+  width: 100%;
+  height: 40px;
+  margin-bottom: 40px !important;
+  cursor: pointer;
+}
+.demo-bar.demo-background {
+  background-color: #bab;
+  box-shadow: 1px 1px 4px 0 #000;
+}
+.demo-bar.demo-background:active {
+  box-shadow: 1px 1px 4px 2px red;
+}
+.demo-bar.demo-foreground {
+  will-change: width;
+  width: 0;
+  background-color: blueviolet;
+}
+.demo-bar.demo-foreground.demo-med {
+  transition: width 1s linear;
+}
+.demo-bar.demo-foreground.demo-fast {
+  transition: width 1.1s linear;
+}
+.demo-bar.demo-foreground.demo-faster {
+  transition: width 1.3s linear;
+}
+.demo-bar.demo-foreground.demo-on {
+  width: 100%;
+}
+.demo-controls {
+  position: relative;
+  top: 220px;
 }
