@@ -230,7 +230,7 @@ html.intermission body {
 
 .reveal pre code {
   display: block;
-  padding: 5px;
+  padding: 5px 5px 5px 25px;
   overflow: auto;
   max-height: 400px;
   word-wrap: normal; }
