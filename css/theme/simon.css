@@ -524,10 +524,12 @@ span { display: inline-block; }
 
 h3.with-subtitle {
   line-height: 50%;
+  font-size: 1.5em;
 }
 
 h3 span.subtitle {
   font-size: 60%;
+  display: block;
 }
 
 #chart-controls {
@@ -592,4 +594,12 @@ h3 span.subtitle {
 .demo-controls {
   position: relative;
   top: 220px;
+}
+
+.reveal video {
+  max-height: 45rem !important;
+}
+
+ul li ul li {
+  font-size: 0.7em !important;
 }

@@ -117,42 +117,52 @@
 					</section>
 
 					<section>
-						<video class="play-when-visible" autoplay muted controls src="media/akamai-1.mov"></video>
+						<h3>Is it working?</h3>
+						<video muted controls src="media/akamai-1.mov"></video>
 					</section>
 
 					<section>
 						<h3>Is it working?</h3>
 						<p>When does the user first get feedback?</p>
 						<ul>
-							<li class="fragment">Time to First Byte</li>
-							<li class="fragment">First Paint</li>
+							<li>Time to First Byte</li>
+							<li>First Paint</li>
 						</ul>
 					</section>
 
 					<section>
-						<video class="play-when-visible" autoplay muted controls src="media/akamai-2.mov"></video>
+						<h3>Is it useful?</h3>
+						<video muted controls src="media/akamai-2.mov"></video>
 					</section>
 
 					<section>
 						<h3>Is it useful?</h3>
 						<p>When can the user first see content?</p>
 						<ul>
-							<li class="fragment">DOM Content Loaded</li>
-							<li class="fragment">First Contentful Paint</li>
-							<li class="fragment">Time to Interactive</li>
+							<li>DOM Content Loaded</li>
+							<li>DOM Complete</li>
+							<li>First Contentful Paint</li>
+							<li>Time to Visually Ready<sup>*</sup></li>
 						</ul>
+						<p class="smallest bottom-right"><sup>*</sup>mPulse only</p>
+					
 					</section>
 
 					<section>
-						<video class="play-when-visible" autoplay muted controls src="media/tti.mp4"></video>
+						<h3>Is it interactive?</h3>
+						<video muted controls src="media/tti.mp4"></video>
 					</section>
 
 					<section>
 						<h3>Is it interactive?</h3>
 						<p>How fluid is the user experience?</p>
 						<ul>
-							<li class="fragment">First Input Delay</li>
+							<li>Time to Interactive</li>
+							<li>First Input Delay</li>
+							<li>Time to First Interaction</li>
+							<li>Rage Clicks<sup>*</sup></li>
 						</ul>
+						<p class="smallest bottom-right"><sup>*</sup>mPulse only</p>
 					</section>
 
 					<section id="poll-1" data-state="secondary-slide">
@@ -172,14 +182,15 @@ performance.measure("unicorn-load",
 					<section>
 						<h3>Timer Summary</h3>
 						<table class="list">
-							<tr class="fragment"><td>TTFB</td><td>How fast is my delivery stack?</td></tr>
-							<tr class="fragment"><td>First Paint (FP)</td><td>What is the minimum time to render <em>something</em>?</td></tr>
-							<tr class="fragment"><td>First Contentful Paint (FCP)</td><td>When does the user see something?</td></tr>
-							<tr class="fragment"><td>DOM Content Loaded (DCL)</td><td>How fast are my critical dependencies?</td></tr>
-							<tr class="fragment"><td>DOM Ready</td><td>How fast are my critical dependencies &amp; how fast are they parsed?</td></tr>
-							<tr class="fragment"><td>Page Load Time (PLT)</td><td>When does my asynchronous code execute?</td></tr>
-							<tr class="fragment"><td>Time To Interactive</td><td>When is the app first responsive to input?</td></tr>
-							<tr class="fragment"><td>TTFI</td><td>When does a user first try to interact?</td></tr>
+							<tr class="fragment"><td>Time to First Byte (TTFB)</td><td>The speed of the delivery stack</td></tr>
+							<tr class="fragment"><td>First Paint (FP)</td><td>The first time <em>something</em> is rendered</td></tr>
+							<tr class="fragment"><td>First Contentful Paint (FCP)</td><td>When the user first sees content</td></tr>
+							<tr class="fragment"><td>DOM Content Loaded (DCL)</td><td>The speed of critical dependencies</td></tr>
+							<tr class="fragment"><td>DOM Ready</td><td>How fast the page is parsed</td></tr>
+							<tr class="fragment"><td>Page Load Time (PLT)</td><td>When the page is complete</td></tr>
+							<tr class="fragment"><td>Time To Interactive</td><td>When the app is first responsive to input</td></tr>
+							<tr class="fragment"><td>Time to First Interaction (TTFI)</td><td>When a user first tries to interact</td></tr>
+							<tr class="fragment"><td>First Input Delay (FID)</td><td>How long it takes to respond to input</td></tr>
 						</table>
 					</section>
 					
@@ -187,7 +198,7 @@ performance.measure("unicorn-load",
 						<h3>My requirements (for multi-app analysis)</h3>
 						<ol>
 							<li class="fragment">Available in <em>most</em> browsers</li>
-							<li class="fragment">(generally) representative of the user experience</li>
+							<li class="fragment">Representative of user experience</li>
 						</ol>
 					</section>
 				</section>
@@ -225,10 +236,12 @@ performance.measure("unicorn-load",
 						<p class="fragment" data-fragment-index="2">Find the metric closest to user perception<sup>*</sup></p>
 						<p class="fragment smallest bottom-right" data-fragment-index="2"><sup>*</sup>this depends entirely on your app!</p>
 					</section>
+					<!--
 					<section>
 						<blockquote>Waiting is frustrating, demoralizing, agonizing, aggravating, annoying, time consuming and incredibly expensive.</blockquote>
 						<p class="subtitle smallest bottom-right">Federal Express advertisement in the 1980s</p>
 					</section>
+					-->
 					<section>
 						<h3>First Law of Service</h3>
 						<code>satisfaction = perception - expectation</code>
@@ -254,6 +267,12 @@ performance.measure("unicorn-load",
 					<section id="poll-2" data-state="secondary-slide">
 						<h2>POLL 2</h2>
 						<p>How do you measure speed?</p>
+						<ul style="font-size: 70%;">
+							<li>Synthetic Tests</li>
+							<li>Application Monitoring</li>
+							<li>Analytics</li>
+							<li>Real User Monitoring</li>
+						</ul>
 					</section>
 					<!-- TODO: Where to put this?
 					<section>
@@ -319,9 +338,15 @@ performance.measure("unicorn-load",
 						<div class="fragment tweet" data-src="https://twitter.com/simonhearne/status/1106482584517857280"></div>
 					</section>
 
-					<section id="poll-2" data-state="secondary-slide">
+					<section id="poll-3" data-state="secondary-slide">
 						<h2>POLL 3</h2>
 						<p>How do you measure engagement?</p>
+						<ul style="font-size: 70%;">
+							<li>Session Length</li>
+							<li>Bounce Rate</li>
+							<li>Exit Rate</li>
+							<li>Time on page</li>
+						</ul>
 					</section>
 					<!--
 					<section>
@@ -334,7 +359,6 @@ performance.measure("unicorn-load",
 						</ul>
 						<p class="smaller bottom-right"><sup>*</sup> bespoke metrics will always be better!</p>
 					</section>
-					-->
 					<section>
 						<h3>Testing the metrics</h3>
 						<p>Cross-correlate timer and engagement metric</p>
@@ -352,6 +376,7 @@ performance.measure("unicorn-load",
 							<li class="fragment">Non-responsive to input</li>
 						</ul>
 					</section>
+					-->
 
 					<section id="sessionlength-chart">
 						<h3 class="with-subtitle">Performance metrics correlate with engagement<span class="subtitle">(session length)</span></h3>
@@ -371,6 +396,19 @@ performance.measure("unicorn-load",
 						<p class="smallest bottom-right">~1Bn mPulse pageview beacons - early March 2019</p>
 					</section>
 		
+					<section>
+						<h3>Performance metric goals for engagement</h3>
+						<table class="compact">
+							<tr><th>Timer</th><th>Goal Speed</th></tr>
+							<tr><td>First Input Delay (FID)</td><td>200ms</td></tr>
+							<tr><td>Time to First Byte (TTFB)</td><td>500ms</td></tr>
+							<tr><td>First Contentful Paint (FCP)</td><td>1,000ms</td></tr>
+							<tr><td>DOM Ready</td><td>2,500ms</td></tr>
+							<tr><td>Time To Visually Ready (TTVR)</td><td>2,500ms</td></tr>
+							<tr><td>Page Load Time (PLT)</td><td>3,000ms</td></tr>
+							<tr><td>Time To Interactive</td><td>4,000ms</td></tr>
+						</table>
+					</section>
 					<section>
 						<h3>Beware missing data 🔎</h3>
 						<table class="compact">
@@ -414,9 +452,33 @@ performance.measure("unicorn-load",
 				<section>
 					<section>
 						<h2>Conclusions ✍️</h2>
+						<ul>
+							<li class="fragment">Measuring speed is difficult
+								<ul>
+									<li>Use metrics which correlate with engagement</li>
+									<li>Track the 75th - 95th percentile</li>
+									<li>Investigate newer metrics</li>
+								</ul>
+							</li>
+							<li class="fragment">Deliver <em>something</em> to the user quickly
+								<ul>
+									<li>Server-side rendering</li>
+									<li>Inline critical dependencies</li>
+									<li>Optimise your CDN configurations</li>
+								</ul>
+							</li>
+							<li class="fragment">JavaScript is (usually) the bottleneck
+								<ul>
+									<li>Monitor real users with RUM!</li>
+									<li>Analyse FID and TTI</li>
+									<li>Manage event listeners</li>
+									<li>Track third-party scripts</li>
+								</ul>
+							</li>
+						</ul>
 					</section>
 				</section>
-	
+				<!--
 						
 				<section id="intermission-4" data-state="main-slide">
 					<section class="center">
@@ -433,7 +495,7 @@ performance.measure("unicorn-load",
 						<h3>Eli stuff</h3>
 					</section>
 				</section>	
-				
+				-->
 				<section>
 					<section>
 						<h2>Thank you 🙏</h2>

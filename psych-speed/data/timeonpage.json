@@ -15,8 +15,8 @@
         },
         {
             "name": "max_loadtime",
-            "value": 30000,
-            "on": [{"events": "*:mouseup", "update": "max_loadtime === 30000 ? 5000 : 30000"}]
+            "value": 20000,
+            "on": [{"events": "*:mouseup", "update": "max_loadtime === 20000 ? 5000 : 20000"}]
         },
         {
             "name": "highlight_timer",
@@ -112,7 +112,8 @@
             "scale": "x",
             "orient": "bottom",
             "tickCount": 5,
-            "title": "First Page Speed (ms)"
+            "title": "First Page Speed (ms)",
+            "grid": true
         },
         {
             "scale": "y",
@@ -164,26 +165,6 @@
             },
             "marks": [
                 {
-                    "name": "marks",
-                    "type": "symbol",
-                    "from": {"data": "timers"},
-                    "encode": {
-                        "update": {
-                            "x": {"scale": "x", "field": "VALUE"},
-                            "y": {"scale": "y", "field": "TIMEONPAGE"},
-                            "size": {"value": 3},
-                            "shape": {"value": "circle"},
-                            "fill": {"scale": "color", "field": "TIMER"},
-                            "opacity": {
-                                "signal": "highlight_timer ? (highlight_timer === datum.TIMER ? 0.5 : 0.01) : 0.05"
-                            },
-                            "tooltip": {
-                                "signal": "{title: datum.TIMER,'Load Time (ms)':format(datum.VALUE, ',d'),'Session Length':datum.TIMEONPAGE}"
-                            }
-                        }
-                    }
-                },
-                {
                     "name": "line",
                     "type": "line",
                     "from": {"data": "timers"},
@@ -197,6 +178,9 @@
                             "strokeWidth": {"value": 0.5},
                             "opacity": {
                                 "signal": "highlight_timer ? (highlight_timer === datum.TIMER ? 1 : 0.05) : 0.7"
+                            },
+                            "tooltip": {
+                                "signal": "{title: datum.TIMER,'Load Time (ms)':format(datum.VALUE, ',d'),'Session Length':datum.TIMEONPAGE}"
                             }
                         }
                     }
