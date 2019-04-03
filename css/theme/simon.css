@@ -55,7 +55,8 @@ html.intermission body {
 }
 
 .reveal table.list td:first-of-type::after {
-  content: ' ⇨';
+  content: '⇨';
+  margin-left: 1em;
 }
 
 .main-slide {
@@ -523,17 +524,13 @@ span { display: inline-block; }
 }
 
 h3.with-subtitle {
-  line-height: 50%;
   font-size: 1.5em;
 }
 
 h3 span.subtitle {
   font-size: 60%;
   display: block;
-}
-
-#chart-controls {
-
+  margin-top: -15px;
 }
 
 /* DEMO CONTROLS */

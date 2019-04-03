@@ -98,7 +98,7 @@
 				<section>
 					<section>
 						<h3>What do we mean by speed?</h3>
-						<div class="tweet" data-src="https://twitter.com/simonhearne/status/1111396048143073280"></div>
+						<div class="fragment tweet" data-src="https://twitter.com/simonhearne/status/1111396048143073280"></div>
 					</section>
 
 					<section>
@@ -109,7 +109,7 @@
 
 					<section>
 						<h3>What <em>actually</em> matters?</h3>
-						<ul>
+						<ul class="smaller">
 							<li class="fragment">Is it working?</li>
 							<li class="fragment">Is it useful?</li>
 							<li class="fragment">Is it interactive?</li>
@@ -123,8 +123,7 @@
 
 					<section>
 						<h3>Is it working?</h3>
-						<p>When does the user first get feedback?</p>
-						<ul>
+						<ul class="smaller">
 							<li>Time to First Byte</li>
 							<li>First Paint</li>
 						</ul>
@@ -137,8 +136,7 @@
 
 					<section>
 						<h3>Is it useful?</h3>
-						<p>When can the user first see content?</p>
-						<ul>
+						<ul class="smaller">
 							<li>DOM Content Loaded</li>
 							<li>DOM Complete</li>
 							<li>First Contentful Paint</li>
@@ -155,8 +153,7 @@
 
 					<section>
 						<h3>Is it interactive?</h3>
-						<p>How fluid is the user experience?</p>
-						<ul>
+						<ul class="smaller">
 							<li>Time to Interactive</li>
 							<li>First Input Delay</li>
 							<li>Time to First Interaction</li>
@@ -195,7 +192,7 @@ performance.measure("unicorn-load",
 					</section>
 					
 					<section>
-						<h3>My requirements (for multi-app analysis)</h3>
+						<h3>My requirements<span class="subtitle">(for multi-app analysis)</span></h3>
 						<ol>
 							<li class="fragment">Available in <em>most</em> browsers</li>
 							<li class="fragment">Representative of user experience</li>
@@ -397,7 +394,7 @@ performance.measure("unicorn-load",
 					</section>
 		
 					<section>
-						<h3>Performance metric goals for engagement</h3>
+						<h3>Goals for maximum engagement</h3>
 						<table class="compact">
 							<tr><th>Timer</th><th>Goal Speed</th></tr>
 							<tr><td>First Input Delay (FID)</td><td>200ms</td></tr>
@@ -409,6 +406,13 @@ performance.measure("unicorn-load",
 							<tr><td>Time To Interactive</td><td>4,000ms</td></tr>
 						</table>
 					</section>
+
+					<section>
+						<h3>Measuring against your goals</h3>
+						<p>What percentage of users achieve the goal?</p>
+						<p>How far away is the 95<sup>th</sup> percentile?</p>
+					</section>
+
 					<section>
 						<h3>Beware missing data 🔎</h3>
 						<table class="compact">
