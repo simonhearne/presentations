@@ -44,7 +44,7 @@
 				<section data-state="title-slide">
 					<h1>The Psychology of <span style="display:block; font-style:oblique;">Speed</span></h1>
 					<p style="text-align: center;">Simon Hearne</p>
-					<p class="smaller" style="text-align: center;">Perfomance Solutions Consultant</p>
+					<p class="smaller" style="text-align: center;">Performance Solutions Consultant</p>
 
 					<aside class="notes">
 						We intuitively know that slow websites cause frustration, but intuition doesn’t pay for developers! In this talk I want to explore the latest research and analysis on the psychology of web performance. I’ll also dig into some of the trillions of user experience beacons we’ve collected through mPulse to try to identify the best timers to represent user experience, and how they impact key performance indicators like time on page and session length.
@@ -169,11 +169,18 @@
 
 					<section>
 						<h3>User Timing API 🦄</h3>
+						<!--
+						<img src="http://dev.local:3000/user-timing"/>-->
 						<pre><code>
-performance.mark("headline-rendered");
-performance.measure("unicorn-load",
-                 "unicorn-request","unicorn-render");
+window.addEventListener(
+  'scroll',
+  ()=>{
+    performance.mark('first-scroll');
+  },
+  {once: true, capture: false, passive: true}
+);
 						</code></pre>
+						<p class="smallest bottom-right"><sup>*</sup>probably don't use this in production</p>
 					</section>
 
 					<section>
@@ -411,7 +418,7 @@ performance.measure("unicorn-load",
 
 					<section>
 						<h3>Measuring against your goals</h3>
-						<p>What percentage of users achieve the goal?</p>
+						<p>What percentage of user experiences achieve the goal?</p>
 						<p>How far away is the 95<sup>th</sup> percentile?</p>
 					</section>
 

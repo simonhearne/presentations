@@ -15,8 +15,8 @@
         },
         {
             "name": "max_loadtime",
-            "value": 20000,
-            "on": [{"events": "*:mouseup", "update": "max_loadtime === 20000 ? 5000 : 20000"}]
+            "value": 10000,
+            "on": [{"events": "*:mouseup", "update": "max_loadtime === 10000 ? 5000 : 10000"}]
         },
         {
             "name": "highlight_timer",
@@ -111,7 +111,7 @@
         {
             "scale": "x",
             "orient": "bottom",
-            "tickCount": 5,
+            "tickCount": 10,
             "title": "First Page Speed (ms)",
             "grid": true
         },
