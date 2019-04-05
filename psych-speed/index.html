@@ -44,7 +44,7 @@
 				<section data-state="title-slide">
 					<h1>The Psychology of <span style="display:block; font-style:oblique;">Speed</span></h1>
 					<p style="text-align: center;">Simon Hearne</p>
-					<p class="smaller" style="text-align: center;">Performance Solutions Consultant</p>
+					<p class="smaller" style="text-align: center;">Web Performance Solutions Engineer @ Akamai</p>
 
 					<aside class="notes">
 						We intuitively know that slow websites cause frustration, but intuition doesn’t pay for developers! In this talk I want to explore the latest research and analysis on the psychology of web performance. I’ll also dig into some of the trillions of user experience beacons we’ve collected through mPulse to try to identify the best timers to represent user experience, and how they impact key performance indicators like time on page and session length.
@@ -181,6 +181,7 @@ window.addEventListener(
 );
 						</code></pre>
 						<p class="smallest bottom-right"><sup>*</sup>probably don't use this in production</p>
+						<img class="plain" src="https://caniuse-icon.herokuapp.com/user-timing"/>
 					</section>
 
 					<section>
@@ -314,7 +315,8 @@ window.addEventListener(
 								<div data-demo="3" id="demo-bar-3" class="demo-bar demo-foreground demo-faster"></div>
 							</div>
 						</div>
-						<div class="fragment demo-controls clickable smaller"><span id="demo-reset">reset</span> | <span id="demo-all">all</span></div>
+						<div class="demo-controls clickable smaller"><span id="demo-reset">reset</span> | <span id="demo-all">all</span></div>
+						<img class="cursor" data-animate="bounceOutUp" data-delay="1" src="media/cursor.png"/>
 						<p class="fragment smallest bottom-right">The 20% Rule: "Designing and Engineering Time" by Steven C. Seow, Ph.D.</p>
 					</section>
 					<section>
@@ -388,6 +390,7 @@ window.addEventListener(
 						<h3 class="with-subtitle">Performance metrics correlate with engagement<span class="subtitle">(session length)</span></h3>
 						<div class="vega-chart" id="vis1" data-spec="data/sessionlength.json"></div>
 						<p class="smallest bottom-right">~1Bn mPulse pageview beacons - early March 2019</p>
+						<img class="cursor" style="position: absolute; right: 9%; top: 44%;" data-animate="bounceOutUp" data-delay="1" src="media/cursor.png"/>
 					</section>
 
 					<section id="sessionduration-chart">
@@ -414,16 +417,17 @@ window.addEventListener(
 							<tr><td>Page Load Time (PLT)</td><td>3,000ms</td></tr>
 							<tr><td>Time To Interactive</td><td>4,000ms</td></tr>
 						</table>
+						<p class="smallest bottom-right">Based on aggregate data - what are yours?</p>
 					</section>
 
 					<section>
 						<h3>Measuring against your goals</h3>
 						<p>What percentage of user experiences achieve the goal?</p>
-						<p>How far away is the 95<sup>th</sup> percentile?</p>
+						<pre><code>perfScore = beacons faster than goal / total beacon count</code></pre>
 					</section>
 
 					<section>
-						<h3>Beware missing data 🔎</h3>
+						<h3>Enable latest features 🔎</h3>
 						<table class="compact">
 							<tr><th>Timer</th><th>Rate</th></tr>
 							<tr><td>TTFB</td><td>100%</td></tr>
@@ -471,7 +475,7 @@ window.addEventListener(
 								<ul>
 									<li>Use metrics which correlate with engagement</li>
 									<li>Track the 75th - 95th percentile (with RUM)</li>
-									<li>Investigate newer metrics</li>
+									<li>Calculate scores against goal speeds</li>
 								</ul>
 							</li>
 							<li class="fragment">Deliver <em>something</em> to the user quickly

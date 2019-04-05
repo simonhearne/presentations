@@ -601,3 +601,14 @@ h3 span.subtitle {
 ul li ul li {
   font-size: 0.7em !important;
 }
+
+img.cursor {
+  display: block;
+  position: relative;
+  margin: 0 !important;
+  width: 4rem !important;
+  border: none !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  z-index: 1000;
+}
