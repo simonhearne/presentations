@@ -613,11 +613,25 @@ img.cursor {
   z-index: 1000;
 }
 
-button.animate-hover {
-  transition: background-color 0.5s ease-in;
+.animate-hover {
+  transition: border 0.5s ease-in;
   transition: color 0.5s ease-out;
 }
-button.animate-hover:hover {
-  background-color: black;
-  color: white;
+.animate-hover:hover {
+  border: 4px solid green;
+  color: green;
+}
+
+.btn-big:active {
+  border: 4px solid greenyellow;
+  color: greenyellow;
+}
+
+.btn-big {
+  font-size: x-large;
+  padding: 0.1rem 0.5rem;
+  background-color: transparent;
+  margin-bottom: 10px;
+  color: deepskyblue;
+  border: 4px solid deepskyblue;
 }

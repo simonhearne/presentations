@@ -462,8 +462,11 @@ window.addEventListener(
 					</section>
 					<section>
 						<h3>So what?</h3>
-						<p class="fragment">The fundamentals don't change</p>
-						<p class="fragment">Simple & fast is better than complex and slow</p>
+						<ul>
+							<li class="fragment">The fundamentals don't change</li>
+							<li class="fragment">Simple & fast is better than complex and slow</li>
+							<li class="fragment">Give users <em>something</em> every ~1 second</li>
+						</ul>
 					</section>
 				</section>
 				
@@ -510,7 +513,7 @@ window.addEventListener(
 					</section>
 					<section>
 						<h3 class="with-subtitle">Anticipate Behaviour<span class="subtitle">cheat with mouse events</span></h3>
-						<button id="demo-btn-1" style="zoom:3; margin-bottom: 10px;">Click Me!</button>
+						<button id="demo-btn-1" class="btn-big">Click Me!</button>
 						<table style="font-size: 75%;" id="demo-btn-results">
 							<tr><th>Event</th><th>Free Time!</th></tr>
 							<tr><td>touchStart</td><td id="demo-btn-touch">-</td></tr>
@@ -522,8 +525,10 @@ window.addEventListener(
 						<p class="smaller fragment clickable" onclick="$('#demo-btn-1').toggleClass('animate-hover')">but wait, there's more!</p>
 					</section>
 					<section>
-						<p>mouseDown buys us 50 - 150ms<br>
-						hover transition buys another 50 - 150ms!</p>
+						<ul>
+							<li>mouseDown buys us 50 - 150ms</li>
+							<li>hover transition buys another 50 - 100ms!</li>
+						</ul>
 					</section>
 					<!--
 					<section>
