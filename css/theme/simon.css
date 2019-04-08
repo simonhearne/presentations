@@ -612,3 +612,12 @@ img.cursor {
   box-shadow: none !important;
   z-index: 1000;
 }
+
+button.animate-hover {
+  transition: background-color 0.5s ease-in;
+  transition: color 0.5s ease-out;
+}
+button.animate-hover:hover {
+  background-color: black;
+  color: white;
+}

@@ -495,11 +495,11 @@ window.addEventListener(
 						</ul>
 					</section>
 				</section>
-				<!--
+				
 						
 				<section id="intermission-4" data-state="main-slide">
 					<section class="center">
-						<h2 class="intermission">&lt; psychology &gt;</h2>
+						<h2 class="intermission">&lt; hacking psychology &gt;</h2>
 					</section>
 					<section>
 						<h2>Hacking human perception</h2>
@@ -509,10 +509,43 @@ window.addEventListener(
 						<p class="fragment">but you can buy some time</p>
 					</section>
 					<section>
-						<h3>Eli stuff</h3>
+						<h3 class="with-subtitle">Anticipate Behaviour<span class="subtitle">cheat with mouse events</span></h3>
+						<button id="demo-btn-1" style="zoom:3; margin-bottom: 10px;">Click Me!</button>
+						<table style="font-size: 75%;" id="demo-btn-results">
+							<tr><th>Event</th><th>Free Time!</th></tr>
+							<tr><td>touchStart</td><td id="demo-btn-touch">-</td></tr>
+							<tr><td>mouseOver</td><td id="demo-btn-hover">-</td></tr>
+							<tr><td>mouseDown</td><td id="demo-btn-down">-</td></tr>
+							<tr><td>click</td><td id="demo-btn-click">-</td></tr>
+						</table>
+						<p class="smaller">Use to anticipate navigations, product viewer actions etc.</p>
+						<p class="smaller fragment clickable" onclick="$('#demo-btn-1').toggleClass('animate-hover')">but wait, there's more!</p>
+					</section>
+					<section>
+						<p>mouseDown buys us 50 - 150ms<br>
+						hover transition buys another 50 - 150ms!</p>
+					</section>
+					<!--
+					<section>
+						<h3>Anticipate Behaviour<span class="subtitle">prefetch</span></h3>
+						<table style="font-size: 90%;" id="demo-btn-results">
+							<tr><th>Method</th><th>Image</th></tr>
+							<tr><td><button id="demo-btn-2">normal</button></td><td id="demo-btn-img-2">-</td></tr>
+							<tr><td><button id="demo-btn-3">prefetch</button></td><td id="demo-btn-img-3">-</td></tr>
+						</table>
+					</section>
+					-->
+					<section>
+						<h3>Keep Users Engaged<span class="subtitle">Skeleton UI</span></h3>
+						<video style="height: 9rem;" muted autoplay loop src="media/slack.mov"/>
+					</section>
+					<section>
+						<h3>Keep Users Engaged<span class="subtitle">Skeleton UI</span></h3>
+						<img class="plain" style="height: 9rem;" src="media/facebook.gif"/>
+						<p class="fragment smallest bottom-right"><sup>*</sup>use sparingly</p>
 					</section>
 				</section>	
-				-->
+
 				<section>
 					<section>
 						<h2>Thank you 🙏</h2>
@@ -619,7 +652,28 @@ window.addEventListener(
 					vegaEmbed('#'+this.id, spec, {"actions": false, "theme": "dark", "width": width, "renderer": "svg", "config": "data/config.json"}).then(function(result) {
 					// Access the Vega view instance (https://vega.github.io/vega/docs/api/view/) as result.view
 					}).catch(console.error);
-				})
+				});
+				window.demoBtnData = {"mouseover":null,"mousedown":null,"touchstart":null};
+				document.getElementById('demo-btn-1').addEventListener("touchstart",()=>{window.demoBtnData.touchstart=performance.now()});
+				document.getElementById('demo-btn-1').addEventListener("mouseover",()=>{window.demoBtnData.mouseover=performance.now()});
+				document.getElementById('demo-btn-1').addEventListener("mousedown",()=>{window.demoBtnData.mousedown=performance.now()});
+				document.getElementById('demo-btn-1').addEventListener("click",()=>{
+					let now = performance.now();
+					window.demoBtnData.mouseover &&	(document.getElementById("demo-btn-hover").innerHTML = (now - window.demoBtnData.mouseover).toFixed(2)+'ms');
+					window.demoBtnData.touchstart && (document.getElementById("demo-btn-touch").innerHTML = (now - window.demoBtnData.touchstart).toFixed(2)+'ms');
+					window.demoBtnData.mousedown && (document.getElementById("demo-btn-down").innerHTML = (now - window.demoBtnData.mousedown).toFixed(2)+'ms');
+					document.getElementById("demo-btn-click").innerHTML = "0ms";
+				});
+				document.getElementById('demo-btn-3').addEventListener("mouseover",()=>{
+					fetch('media/pavlov.jpg').then(console.log('Pavlov Fetched!'));
+				});
+				document.getElementById('demo-btn-3').addEventListener("click",()=>{
+					document.getElementById("demo-btn-img-3").innerHTML = "<img src='media/freud.jpg'/>";
+				});
+				document.getElementById('demo-btn-2').addEventListener("click",()=>{
+					document.getElementById("demo-btn-img-2").innerHTML = "<img src='media/pavlov.jpg'/>";
+				});
+				
 			});
 
 			// Animate items that are not in a fragment
