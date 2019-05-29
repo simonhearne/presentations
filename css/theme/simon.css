@@ -229,6 +229,10 @@ html.intermission body {
   font-family: monospace;
   text-transform: none; }
 
+.reveal code.inline-code {
+  font-size: 90%;
+  background-color: rgba(0,0,0,0.3); }
+
 .reveal pre code {
   display: block;
   padding: 5px 5px 5px 25px;
@@ -634,4 +638,17 @@ img.cursor {
   margin-bottom: 10px;
   color: deepskyblue;
   border: 4px solid deepskyblue;
+}
+
+.vega-bindings span {
+  font-size: 50%;
+}
+
+span.vega-bind-name::after {
+  content: ':';
+  margin-right: 7px;
+}
+
+div.vega-bind {
+  line-height: 0.5em;
 }
