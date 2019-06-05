@@ -180,7 +180,7 @@
     {
       "orient": "bottom",
       "scale": "bucket",
-      "title": "Load Time (ms)"
+      "title": {"signal": "timerName + ' (ms)'"}
     },
     {
       "orient": "right",

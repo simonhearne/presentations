@@ -174,7 +174,7 @@
     {
       "orient": "bottom",
       "scale": "bucket",
-      "title": "Load Time (ms)"
+      "title": {"signal": "timerName1 + ' (ms)'"}
     },
     {
       "orient": "right",

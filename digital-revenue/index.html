@@ -107,6 +107,16 @@
 						<div class="fragment tweet" data-src="https://twitter.com/simonhearne/status/1111396048143073280"></div>
 					</section>
 
+					<section data-state="secondary-slide">
+						<h3>POLL 1: What do you measure?</h3>
+						<ol>
+							<li>Page Load</li>
+							<li>Paint Timing</li>
+							<li>Custom Timer</li>
+							<li>Don't know / don't measure</li>
+						</ol>
+					</section>
+
 					<section>
 						<h3>What <em>actually</em> matters?</h3>
 						<ul>
@@ -172,7 +182,7 @@
 							<tr class="fragment"><td>First Contentful Paint (FCP)</td><td>When the user <em>might</em> first see content</td></tr>
 							<tr class="fragment"><td>Time To Visually Ready (TTVR)</td><td>When key content is rendered</td></tr>
 							<tr class="fragment"><td>Page Load Time (PLT)</td><td>When the page is complete</td></tr>
-							<tr class="fragment"><td>Time To Interactive</td><td>When the app is first responsive to input</td></tr>
+							<tr class="fragment"><td>Time To Interactive (TTI)</td><td>When the app is first responsive to input</td></tr>
 							<tr class="fragment"><td>First Input Delay (FID)</td><td>How long it takes to respond to input</td></tr>
 						</table>
 						<p class="fragment smallest bottom-right"><a href="https://developer.akamai.com/mpulse/whats-in-a-beacon/">developer.akamai.com/mpulse/whats-in-a-beacon/</a></p>
@@ -180,6 +190,7 @@
 					
 				</section>
 
+				<!--
 
 				<section id="intermission-2" data-state="main-slide">
 					<section class="center">
@@ -213,6 +224,8 @@
 					</section>
 				</section>
 	
+				-->
+
 				<section id="engagement">
 					
 					<section>
@@ -249,7 +262,7 @@
 							<tr><td>DOM Ready</td><td>2,500ms</td></tr>
 							<tr><td>Time To Visually Ready (TTVR)</td><td>2,500ms</td></tr>
 							<tr><td>Page Load Time (PLT)</td><td>3,000ms</td></tr>
-							<tr><td>Time To Interactive</td><td>4,000ms</td></tr>
+							<tr><td>Time To Interactive (TTI)</td><td>4,000ms</td></tr>
 						</table>
 						<p class="smallest bottom-right">Based on aggregate data - what are yours?</p>
 					</section>
@@ -262,30 +275,89 @@
 						</section>
 						<section>
 							<h3>1) Manage third-parties</h3>
+						</section>
+						<section data-background="media/requestmap.png">
+							<h3>Third-party scripts are responsible for >70% of publisher requests</h3>
+							<p class="smallest bottom-right"><a href="https://requestmap.webperf.tools/">requestmap.webperf.tools</a></p>
+						</section>
+						<section>
+							<h3>Up to 1/3rd of third-parties are useless</h3>
+							<blockquote>we had a collection of very old scripts and couldn’t track the original requester. We removed those on the premise that, if they were important, people would get back in touch — no one did.</blockquote>
+							<p class="smallest bottom-right"><a href="https://medium.com/the-telegraph-engineering/improving-third-party-web-performance-at-the-telegraph-a0a1000be5">Improving third-party web performance at The Telegraph</a></p>
+						</section>
+						<section>
+							<h3>Manage third-parties in the client</h3>
+							<p class="smaller">A simple header:</p>
+							<pre><code class="hljs smaller">Content-Security-Policy: default-src 'self'; report-uri http://mysite.com/csp-reports/</code></pre>
+							<p class="smaller">JSON violation reports:</p>
+							<pre><code class="hljs smaller">{
+ "csp-report": {
+  "document-uri": "http://example.org/page.html",
+  "referrer": "http://evil.example.com/",
+  "blocked-uri": "http://evil.example.com/evil.js",
+  "violated-directive": "default-src 'self'",
+  "original-policy": "default 'self'; report-uri http://mysite.com/csp-reports/"
+ }
+}
+							</code></pre>
+						</section>
+						
+						<section>
+							<h3>1) Manage third-parties</h3>
 							<ol>
-								<li>Remove the unnecessary</li>
-								<li>Defer non-critical</li>
+								<li>Remove unnecessary scripts</li>
+								<li>Defer non-critical scripts</li>
 								<li>Use a Content-Security-Policy</li>
 							</ol>
 						</section>
 						<section>
 							<h3>2) Serve critical content ASAP</h3>
+						</section>
+						<section>
+							<h3>Cache HTML with prefresh</h3>
+							<p>Always serve quickly, with minimum risk of stale content</p>
+							<img width="50%" src="media/prefreshing.png">
+							<p class="smallest bottom-right"><a href="https://community.akamai.com/customers/s/article/Achieving-Great-Offload-and-Performance-using-Prefresh">Achieving Great Offload and Performance using Prefresh</a></p>
+						</section>
+						<section>
+							<h3>Show text as soon as you can</h3>
+							<p>Preloading font-files cheats the browser!</p>
+							<video width="70%" muted controls src="media/fonts.mp4"></video>
+							<p class="smallest bottom-right"><a href="https://andydavies.me/blog/2019/02/12/preloading-fonts-and-the-puzzle-of-priorities/">Preloading Fonts and the Puzzle of Priorities</a></p>
+						</section>
+						<section>
+							<h3>Show text as soon as you can</h3>
+							<p>Swap in web font when it downloads</p>
+							<pre style="width:58rem;"><code>font-display: [swap|fallback|optional]</code></pre>
+							<img width="50%" src="media/fonts.png"></img>
+							<p class="smallest bottom-right"><a href="https://developers.google.com/web/updates/2016/02/font-display">Controlling Font Performance with font-display</a></p>
+						</section>
+						<section>
+							<h3>2) Serve critical content ASAP</h3>
 							<ul>
-								<li>Use prefreshing to cache HTML*</li>
-								<li>Split pre-load and post-load CSS</li>
-								<li>Use <code class="inline-code">font-display: fallback</code> for text rendering</li>
+								<li>Cache HTML with prefresh</li>
+								<li>Show text as soon as you can</li>
 							</ul>
-							<p class="smaller bottom-right">* <a href="https://community.akamai.com/customers/s/article/Achieving-Great-Offload-and-Performance-using-Prefresh">Achieving Great Offload and Performance using Prefresh. community.akamai.com.</a></p>
+						</section>
+						<section>
+							<h3>3) Optimise image delivery</h3>
+						</section>
+						<section>
+							<h3>Automate image management</h3>
+							<img width="70%" src="media/image-manager.jpg"></img>
+							<p class="smallest bottom-right"><a href="https://developer.akamai.com/akamai-image-manager">Akamai Image Manager</a></p>
+						</section>
+						<section>
+							<h3>Defer below-the-fold images</h3>
+							<img width="70%" src="media/without-lazyload@2x.png"></img>
+							<p class="smallest bottom-right"><a href="https://addyosmani.com/blog/lazy-loading/">Native image lazy-loading for the web!</a></p>
 						</section>
 						<section>
 							<h3>3) Optimise image delivery</h3>
 							<ul>
-								<li>Deliver the right sized image</li>
-								<li>Use the most appropriate format</li>
-								<li>Consider the <code class="inline-code">loading="lazy"</code> attribute (3Q2019)</li>
-								<li>Outsource Image Management*</li>
+								<li>Automate image managemenr</li>
+								<li>Defer below-the-fold images</li>
 							</ul>
-							<p class="smaller bottom-right">* Akamai Image Manager</p>
 						</section>
 						<section>
 							<h3>4) Reduce DOM complexity</h3>
