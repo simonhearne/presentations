@@ -54,11 +54,10 @@
 				<section>
 					<h3>Coming up...</h3>
 					<ol>
-						<li>Introducing Performance Measures</li>
-						<li>IT Levers on Digital Revenue</li>
-						<li>Key UX Measurements</li>
-						<li>UX and Performance</li>
-						<li>Case Studies</li>
+						<li>Digital Revenue in 2019</li>
+						<li>Defining Site Speed</li>
+						<li>IT Levers on Speed</li>
+						<li>Maximising Revenue</li>
 						<li>What you can do today</li>
 					</ol>
 				</section>
@@ -75,8 +74,8 @@
 						<h3>How do we make <em>more</em> money?</h3>
 						<ul>
 							<li>More traffic</li>
-							<li>Better targeting</li>
 							<li>Longer sessions</li>
+							<li>Better content</li>
 						</ul>
 					</section>
 					<section>
@@ -190,46 +189,20 @@
 					
 				</section>
 
-				<!--
-
-				<section id="intermission-2" data-state="main-slide">
-					<section class="center">
-						<h2 class="intermission">&lt; psychology &gt;</h2>
-					</section>
-					<section>
-						<h2>Just Noticeable Difference</h2>
-					</section>
-					<section>
-						<h3>Faster, slower or the same?</h3>
-						<div class="demo-container">
-							<div class="demo-background-container">
-								<div data-demo="1" class="demo-bar demo-background"></div>
-								<div data-demo="2" class="demo-bar demo-background"></div>
-								<div data-demo="3" class="demo-bar demo-background"></div>
-							</div>
-							<div class="demo-foreground-container">
-								<div data-demo="1" id="demo-bar-1" class="demo-bar demo-foreground demo-med"></div>
-								<div data-demo="2" id="demo-bar-2" class="demo-bar demo-foreground demo-fast"></div>
-								<div data-demo="3" id="demo-bar-3" class="demo-bar demo-foreground demo-faster"></div>
-							</div>
-						</div>
-						<div class="demo-controls clickable smaller"><span id="demo-reset">reset</span> | <span id="demo-all">all</span></div>
-						<img class="cursor" data-animate="bounceOutUp" data-delay="1" src="media/cursor.png"/>
-						<p class="fragment smallest bottom-right">The 20% Rule: "Designing and Engineering Time" by Steven C. Seow, Ph.D.</p>
-					</section>
-					<section>
-						<h3>So what?</h3>
-						<p class="fragment">Get <em>20% faster</em> for existing customers to notice</p>
-						<p class="fragment">Be <em>20% faster</em> than your peers &amp; competitors</p>
-					</section>
-				</section>
-	
-				-->
-
 				<section id="engagement">
 					
 					<section>
 						<h2>Performance Levers 🎚</h2>
+					</section>
+
+					<section data-state="secondary-slide">
+						<h3>POLL 2: How do you measure success?</h3>
+						<ol>
+							<li>Bounce Rate</li>
+							<li>Session Length</li>
+							<li>Subscriptions / Registrations</li>
+							<li>Don't know / don't measure</li>
+						</ol>
 					</section>
 
 					<section>
@@ -271,17 +244,21 @@
 				
 				<section>
 						<section>
-							<h2>Five actions to improve revenue ️💵</h2>
+							<h2>Five tips to improve revenue ️💵</h2>
 						</section>
 						<section>
-							<h3>1) Manage third-parties</h3>
+							<h3>1: Manage third-parties 🚸</h3>
+						</section>
+						<section id="js-chart">
+							<h3 class="with-subtitle">JavaScript size correlates with TTI</h3>
+							<div class="vega-chart" id="vega-chart-js" data-spec="data/jssize_vs_tti.json"></div>
 						</section>
 						<section data-background="media/requestmap.png">
 							<h3>Third-party scripts are responsible for >70% of publisher requests</h3>
 							<p class="smallest bottom-right"><a href="https://requestmap.webperf.tools/">requestmap.webperf.tools</a></p>
 						</section>
 						<section>
-							<h3>Up to 1/3rd of third-parties are useless</h3>
+							<h3>1/3rd of third-parties could be redundant</h3>
 							<blockquote>we had a collection of very old scripts and couldn’t track the original requester. We removed those on the premise that, if they were important, people would get back in touch — no one did.</blockquote>
 							<p class="smallest bottom-right"><a href="https://medium.com/the-telegraph-engineering/improving-third-party-web-performance-at-the-telegraph-a0a1000be5">Improving third-party web performance at The Telegraph</a></p>
 						</section>
@@ -291,19 +268,19 @@
 							<pre><code class="hljs smaller">Content-Security-Policy: default-src 'self'; report-uri http://mysite.com/csp-reports/</code></pre>
 							<p class="smaller">JSON violation reports:</p>
 							<pre><code class="hljs smaller">{
- "csp-report": {
-  "document-uri": "http://example.org/page.html",
-  "referrer": "http://evil.example.com/",
-  "blocked-uri": "http://evil.example.com/evil.js",
-  "violated-directive": "default-src 'self'",
-  "original-policy": "default 'self'; report-uri http://mysite.com/csp-reports/"
- }
-}
-							</code></pre>
+  "csp-report": {
+    "document-uri": "http://example.org/page.html",
+    "referrer": "http://evil.example.com/",
+    "blocked-uri": "http://evil.example.com/evil.js",
+    "violated-directive": "default-src 'self'",
+    "original-policy": "default 'self'; report-uri http://mysite.com/csp-reports/"
+  }
+}</code></pre>
+							<p class="smallest bottom-right"><a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP">Content Security Policy on MDN</a></p>
 						</section>
 						
 						<section>
-							<h3>1) Manage third-parties</h3>
+							<h3>1: Manage third-parties 🚸</h3>
 							<ol>
 								<li>Remove unnecessary scripts</li>
 								<li>Defer non-critical scripts</li>
@@ -311,7 +288,11 @@
 							</ol>
 						</section>
 						<section>
-							<h3>2) Serve critical content ASAP</h3>
+							<h3>2: Serve critical content ASAP ⚡️</h3>
+						</section>
+						<section id="ttfb-chart">
+							<h3 class="with-subtitle">TTFB correlates with TTI</h3>
+							<div class="vega-chart" id="vega-chart-ttfb" data-spec="data/ttfb_vs_tti.json"></div>
 						</section>
 						<section>
 							<h3>Cache HTML with prefresh</h3>
@@ -319,28 +300,36 @@
 							<img width="50%" src="media/prefreshing.png">
 							<p class="smallest bottom-right"><a href="https://community.akamai.com/customers/s/article/Achieving-Great-Offload-and-Performance-using-Prefresh">Achieving Great Offload and Performance using Prefresh</a></p>
 						</section>
+						<section id="fonts-chart">
+							<h3 class="with-subtitle">Font load correlates with TTI</h3>
+							<div class="vega-chart" id="vega-chart-fonts" data-spec="data/lastfont_vs_tti.json"></div>
+						</section>
 						<section>
 							<h3>Show text as soon as you can</h3>
-							<p>Preloading font-files cheats the browser!</p>
+							<p>Preloading fonts cheats the browser!</p>
 							<video width="70%" muted controls src="media/fonts.mp4"></video>
 							<p class="smallest bottom-right"><a href="https://andydavies.me/blog/2019/02/12/preloading-fonts-and-the-puzzle-of-priorities/">Preloading Fonts and the Puzzle of Priorities</a></p>
 						</section>
 						<section>
 							<h3>Show text as soon as you can</h3>
-							<p>Swap in web font when it downloads</p>
+							<p>Swap in the brand font when it downloads</p>
 							<pre style="width:58rem;"><code>font-display: [swap|fallback|optional]</code></pre>
 							<img width="50%" src="media/fonts.png"></img>
 							<p class="smallest bottom-right"><a href="https://developers.google.com/web/updates/2016/02/font-display">Controlling Font Performance with font-display</a></p>
 						</section>
 						<section>
-							<h3>2) Serve critical content ASAP</h3>
+							<h3>2: Serve critical content ASAP ⚡️</h3>
 							<ul>
 								<li>Cache HTML with prefresh</li>
 								<li>Show text as soon as you can</li>
 							</ul>
 						</section>
 						<section>
-							<h3>3) Optimise image delivery</h3>
+							<h3>3: Optimise image delivery 🌄</h3>
+						</section>
+						<section id="image-chart">
+							<h3 class="with-subtitle">Image count correlates with TTI</h3>
+							<div class="vega-chart" id="vega-chart-image" data-spec="data/images_vs_tti.json"></div>
 						</section>
 						<section>
 							<h3>Automate image management</h3>
@@ -353,51 +342,60 @@
 							<p class="smallest bottom-right"><a href="https://addyosmani.com/blog/lazy-loading/">Native image lazy-loading for the web!</a></p>
 						</section>
 						<section>
-							<h3>3) Optimise image delivery</h3>
+							<h3>3: Optimise image delivery 🌄</h3>
 							<ul>
 								<li>Automate image managemenr</li>
 								<li>Defer below-the-fold images</li>
 							</ul>
 						</section>
 						<section>
-							<h3>4) Reduce DOM complexity</h3>
+							<h3>4: Reduce DOM complexity 🧠</h3>
+						</section>
+						<section id="dom-chart">
+							<h3 class="with-subtitle">DOM complexity correlates with TTI</h3>
+							<div class="vega-chart" id="vega-chart-dom" data-spec="data/domsize_vs_tti.json"></div>
 						</section>
 						<section>
-							<h3>5) Reduce or defer JavaScript execution</h3>
-
+							<h3>4: Reduce DOM complexity 🧠</h3>
+							<ul>
+								<li>Render on the server</li>
+								<li>Avoid infinite scroll</li>
+								<li>Adopt a CSS methodology</li>
+							</ul>
 						</section>
 						<section>
-							<h3>BONUS) Measure performance with RUM</h3>
-
+							<h3>5: Reduce or defer JavaScript execution ⚙️</h3>
+						</section>
+						<section id="js-chart2">
+							<h3 class="with-subtitle">JavaScript size correlates with TTI</h3>
+							<div class="vega-chart" id="vega-chart-js2" data-spec="data/jssize_vs_tti.json"></div>
+						</section>
+						<section>
+							<h3>Let the browser focus</h3>
+							<blockquote>The single biggest improvement (and easiest to implement technically) came from deferring all JavaScript, including our own.</blockquote>
+							<img width="70%" src="media/defer.png"></img>
+							<p class="smallest bottom-right"><a href="https://medium.com/the-telegraph-engineering/improving-third-party-web-performance-at-the-telegraph-a0a1000be5">Improving third-party web performance at The Telegraph</a></p>
+						</section>
+						<section>
+							<h3>5: Reduce or defer JavaScript execution</h3>
+							<ul>
+								<li>Only ship necessary JavaScript</li>
+								<li>Consider differential serving for low-end devices</li>
+								<li>Defer everything?!</li>
+							</ul>
 						</section>
 				</section>
 				<section>
 					<section>
 						<h2>Conclusions ✍️</h2>
-						<ul>
-							<li class="fragment">Measuring speed is difficult
-								<ul>
-									<li>Use metrics which correlate with engagement</li>
-									<li>Track the 75th - 95th percentile (with RUM)</li>
-									<li>Calculate scores against goal speeds</li>
-								</ul>
-							</li>
-							<li class="fragment">Deliver <em>something</em> to the user quickly
-								<ul>
-									<li>Server-side rendering</li>
-									<li>Inline critical dependencies</li>
-									<li>Optimise your CDN configurations</li>
-								</ul>
-							</li>
-							<li class="fragment">JavaScript is (usually) the bottleneck
-								<ul>
-									<li>Analyse FID and TTI</li>
-									<li>Manage event listeners</li>
-									<li>Track third-party scripts</li>
-								</ul>
-							</li>
-						</ul>
 					</section>
+				</section>
+
+				<section>
+					<h3>Call to Action</h3>
+					<p>If you're not actively measuring site speed, start now!</p>
+					<p class="fragment">Correlate speed and behaviour</p>
+					<p class="fragment">Find your <em>sweet spots</em> and set speed goals</p>
 				</section>
 				
 				<section>
