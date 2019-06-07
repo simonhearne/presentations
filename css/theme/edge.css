@@ -22,6 +22,11 @@ html.title-slide body {
   background-position: bottom center, top left;
   background-size: 100%, auto;
   background-repeat: no-repeat;
+  padding-bottom: 10%;
+}
+html.plain-slide body {
+  background: none;
+  background-color: #fff; 
 }
 
 .reveal {
@@ -467,6 +472,7 @@ span { display: inline-block; }
 
 .reveal .orange {
   color: #f1892c;
+  font-weight: 400;
 }
 
 html.title-slide .not-title {
