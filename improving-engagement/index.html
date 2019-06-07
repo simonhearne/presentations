@@ -31,6 +31,10 @@
 			document.getElementsByTagName( 'head' )[0].appendChild( link );
 		</script>
 
+		<script src="../lib/js/head.min.js"></script>
+		<script src="../js/reveal.js"></script>
+		<script src="../lib/js/jquery-3.3.1.min.js"></script>
+
 		<!--[if lt IE 9]>
 		<script src="lib/js/html5shiv.js"></script>
 		<![endif]-->
@@ -43,9 +47,9 @@
 			<!-- Any section element inside of this container is displayed as a slide -->
 			<div class="slides">
 				<section data-state="title-slide">
-					<h1 style="font-size:2.8em;">Five Surprising Techniques to <span style="display:block; font-style:oblique;">Improve Online Engagement</span></h1>
-					<p style="text-align: center;font-weight:400;">Simon Hearne</p>
-					<p class="smaller" style="text-align: center;font-weight:400;">Web Performance Solutions Engineer @ Akamai</p>
+					<h1>Five Surprising Techniques to <br>Improve Online Engagement</h1>
+					<br><p style="text-align: center;">Simon Hearne</p>
+					<p class="smaller" style="text-align: center;">Web Performance Solutions Engineer @ Akamai</p>
 
 					<aside class="notes">
 						We intuitively know that slow websites cause frustration, but intuition doesn’t pay for developers! In this talk I want to explore the latest research and analysis on the psychology of web performance. I’ll also dig into some of the trillions of user experience beacons we’ve collected through mPulse to try to identify the best timers to represent user experience, and how they impact key performance indicators like time on page and session length.
@@ -238,13 +242,13 @@
 						</ol>
 					</section>
 
-					<section id="retention-chart">
-						<h3 class="with-subtitle">Performance metrics correlate with engagement</h3>
+					<section data-state="plain-slide" id="retention-chart">
+						<h4>Performance correlates with engagement</h4>
 						<div class="vega-chart" id="vis1" data-spec="data/retention.json"></div>
 					</section>
 		
-					<section id="sessionlength-chart">
-						<h3 class="with-subtitle">Performance metrics correlate with engagement</h3>
+					<section data-state="plain-slide" id="sessionlength-chart">
+						<h4>Performance correlates with engagement</h4>
 						<div class="vega-chart" id="vis2" data-spec="data/session_length.json"></div>
 					</section>
 		
@@ -276,7 +280,7 @@
 							<h3 class="with-subtitle">JavaScript size correlates with TTI</h3>
 							<div class="vega-chart" id="vega-chart-js" data-spec="data/jssize_vs_tti.json"></div>
 						</section>
-						<section data-background="media/requestmap.png">
+						<section data-state="plain-slide" data-background="media/requestmap.png">
 							<h3>Third-party scripts are responsible for<br/>>70% of requests</h3>
 							<p class="smallest bottom-right"><a href="https://requestmap.webperf.tools/">requestmap.webperf.tools</a></p>
 						</section>
@@ -358,21 +362,17 @@
 						</section>
 						<section>
 							<h3>2: Serve critical content ASAP ⚡️</h3>
-							<ul class="point">
+							<ol>
 								<li>Cache HTML with prefresh</li>
 								<li>Show text as soon as you can</li>
-							</ul>
+							</ol>
 						</section>
 						<section>
 							<h3>3: Optimise image delivery 🌄</h3>
 						</section>
-						<section id="image-chart">
+						<section data-state="plain-slide" id="image-chart">
 							<h3 class="with-subtitle">Image count correlates with TTI</h3>
 							<div class="vega-chart" id="vega-chart-image" data-spec="data/images_vs_tti.json"></div>
-						</section>
-						<section id="image-size-chart">
-							<h3 class="with-subtitle">Image count correlates with TTI</h3>
-							<div class="vega-chart" id="vega-chart-image-size" data-spec="data/imagesize_vs_tti.json"></div>
 						</section>
 						<section>
 							<h3>Automate image management</h3>
@@ -386,10 +386,10 @@
 						</section>
 						<section>
 							<h3>3: Optimise image delivery 🌄</h3>
-							<ul class="point">
+							<ol>
 								<li>Automate image managemenr</li>
 								<li>Defer below-the-fold images</li>
-							</ul>
+							</ol>
 						</section>
 						<section>
 							<h3>4: Reduce DOM complexity 🧠</h3>
@@ -400,11 +400,11 @@
 						</section>
 						<section>
 							<h3>4: Reduce DOM complexity 🧠</h3>
-							<ul class="point">
+							<ol>
 								<li>Render on the server</li>
 								<li>Avoid infinite scroll</li>
 								<li>Adopt a CSS methodology</li>
-							</ul>
+							</ol>
 						</section>
 						<section>
 							<h3>5: Reduce or defer JavaScript execution ⚙️</h3>
@@ -421,11 +421,11 @@
 						</section>
 						<section>
 							<h3>5: Reduce or defer JavaScript execution</h3>
-							<ul class="point">
+							<ol>
 								<li>Only ship necessary JavaScript</li>
 								<li>Consider differential serving for low-end devices</li>
 								<li>Defer everything?!</li>
-							</ul>
+							</ol>
 						</section>
 				</section>
 				<section>
@@ -448,10 +448,6 @@
 			<div id="chart-controls" class="hide"></div>
 
 		</div>
-
-		<script src="../lib/js/head.min.js"></script>
-		<script src="../js/reveal.js"></script>
-		<script src="../lib/js/jquery-3.3.1.min.js"></script>
 
 		<script>
 				function getFragment(event) {
@@ -516,15 +512,25 @@
 					$(this).css("-webkit-animation-duration", duration+"s"); 
 					$(this).css("animation-duration", duration+"s"); 
 				});
-				let width = window.innerWidth / 2;
-				$(".vega-chart").each(function() {
-					let spec = this.attributes.getNamedItem("data-spec").value;
-					//spec = "https://raw.githubusercontent.com/vega/vega/master/docs/examples/bar-chart.vg.json";
-					vegaEmbed('#'+this.id, spec, {"actions": false, "theme": "dark", "width": width, "renderer": "svg", "config": "data/config.json"}).then(function(result) {
-					// Access the Vega view instance (https://vega.github.io/vega/docs/api/view/) as result.view
-					}).catch(console.error);
-				});				
+				embedVegaCharts();
 			});
+
+			function embedVegaCharts() {
+				if (window.hasOwnProperty('vegaEmbed')) {
+					console.log("vega-ready");
+					let width = window.innerWidth / 1.75;
+					$(".vega-chart").each(function() {
+						let spec = this.attributes.getNamedItem("data-spec").value;
+						//spec = "https://raw.githubusercontent.com/vega/vega/master/docs/examples/bar-chart.vg.json";
+						vegaEmbed('#'+this.id, spec, {"actions": false, "theme": "dark", "width": width, "renderer": "svg", "config": "data/config.json"}).then(function(result) {
+						// Access the Vega view instance (https://vega.github.io/vega/docs/api/view/) as result.view
+						}).catch(console.error);
+					});
+				} else {
+					console.log("vega-not-ready");
+					setTimeout(embedVegaCharts,1000);
+				}
+			};
 
 			// Animate items that are not in a fragment
 				Reveal.addEventListener('slidechanged', function( event ) {

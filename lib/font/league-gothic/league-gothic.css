@@ -1,10 +1,21 @@
 @font-face {
     font-family: 'League Gothic';
+    font-display: swap;
     src: url('league-gothic.eot');
     src: url('league-gothic.eot?#iefix') format('embedded-opentype'),
          url('league-gothic.woff') format('woff'),
          url('league-gothic.ttf') format('truetype');
 
     font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'League Gothic';
+    font-display: swap;
+    src: url('league-gothic-condensedregular.woff2') format('woff2'),
+         url('league-gothic-condensedregular.woff') format('woff'),
+         url('league-gothic-condensedregular.ttf') format('truetype');
+         
+    font-weight: 300;
     font-style: normal;
 }

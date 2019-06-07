@@ -1,5 +1,6 @@
 /* lato-100 - latin */
 @font-face {
+     font-display: swap;
     font-family: 'Lato';
     font-style: normal;
     font-weight: 100;
@@ -9,6 +10,7 @@
   }
   /* lato-100italic - latin */
   @font-face {
+     font-display: swap;
     font-family: 'Lato';
     font-style: italic;
     font-weight: 100;
@@ -18,6 +20,7 @@
   }
   /* lato-300 - latin */
   @font-face {
+     font-display: swap;
     font-family: 'Lato';
     font-style: normal;
     font-weight: 300;
@@ -27,6 +30,7 @@
   }
   /* lato-300italic - latin */
   @font-face {
+     font-display: swap;
     font-family: 'Lato';
     font-style: italic;
     font-weight: 300;
@@ -36,6 +40,7 @@
   }
   /* lato-regular - latin */
   @font-face {
+     font-display: swap;
     font-family: 'Lato';
     font-style: normal;
     font-weight: 400;
