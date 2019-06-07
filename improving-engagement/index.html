@@ -69,19 +69,21 @@
 				</section>
 				<section>
 					<section>
-						<h3>How do we make money?</h3>
-						<ul>
+						<h3>How do we make money? 💵</h3>
+						<ul class="point">
 							<li>Ad impressions &amp; clicks (circulation)</li>
 							<li>Advertorials &amp; sponsored content</li>
 							<li>Subscriptions &amp; paywalls</li>
+							<li>Conversions</li>
 						</ul>
 					</section>
 					<section>
-						<h3>How do we make <em>more</em> money?</h3>
-						<ul>
-							<li>More traffic</li>
+						<h3>How do we make <em>more</em> money? 💸</h3>
+						<ul class="point">
+							<li>More visitors</li>
 							<li>Longer sessions</li>
-							<li>Better content</li>
+							<li>Better experience</li>
+							<li>Better products</li>
 						</ul>
 					</section>
 					<section>
@@ -97,13 +99,28 @@
 							</tr>
 							<tr class="fragment">
 								<td><img class="plain" src="media/ft.png"/></td>
-								<td>The Financial times increased user engagement by 30% when they released the new, performance focused FT.com</td>
+								<td>Financial Times added a one second delay to every page view and saw a 4.9% drop in the number of articles users read over a 7 day window</td>
 							</tr>
 						</table>
 						<p class="subtitle smallest bottom-right"><a href="https://wpostats.com/tags/engagement/">wpostats.com/tags/engagement/</a></p>
-						<aside class="notes">
-							There are also studies which show how engagement increases when speed is improved, but what is engagement, and what is speed? Unfortunately it is extremely rare for these case studies to include the things we really care about - what metric did they use to measure speed? How did they collect it, or aggregate it? The BBC loses an additional 10% of users for every second their site gets slower - what is a lost user? A bounce or a session that never happens? These are all important questions and caveats to bear in mind when viewing case studies, they are useful tools to generate interest in speed but the critical task is to perform this analysis on _your own data_.
-						</aside>
+					</section>
+					<section>
+						<h3>We know that speed matters</h3>
+						<table class="twocol">
+							<tr class="fragment">
+								<td><img class="plain" src="media/cook.png"/></td>
+								<td>COOK increased conversion rate by 7% after cutting average page load time by 0.85 seconds. Bounce rate fell by 7% and session length increased by 10%.</td>
+							</tr>
+							<tr class="fragment">
+								<td><img class="plain" src="media/mobify.png"/></td>
+								<td>For every 100ms decrease in homepage load speed, Mobify's customer base saw a 1.11% lift in session based conversion</td>
+							</tr>
+							<tr class="fragment">
+								<td><img class="plain" src="media/gq.png"/></td>
+								<td>GQ cut load time by 80% and saw an 80% increase in traffic. Median time spent on the site also increased by 32%</td>
+							</tr>
+						</table>
+						<p class="subtitle smallest bottom-right"><a href="https://wpostats.com/tags/engagement/">wpostats.com/tags/engagement/</a></p>
 					</section>
 				</section>
 				<section>
@@ -124,7 +141,7 @@
 
 					<section>
 						<h3>What <em>actually</em> matters?</h3>
-						<ul>
+						<ul class="point">
 							<li class="fragment">Is it working?</li>
 							<li class="fragment">Is it useful?</li>
 							<li class="fragment">Is it interactive?</li>
@@ -138,7 +155,7 @@
 
 					<section>
 						<h3>Is it working?</h3>
-						<ul class="smaller">
+						<ul class="point">
 							<li>Time to First Byte</li>
 							<li>First Paint</li>
 						</ul>
@@ -151,7 +168,7 @@
 
 					<section>
 						<h3>Is it useful?</h3>
-						<ul class="smaller">
+						<ul class="point">
 							<li>DOM Content Loaded</li>
 							<li>DOM Complete</li>
 							<li>First Contentful Paint</li>
@@ -168,7 +185,7 @@
 
 					<section>
 						<h3>Is it interactive?</h3>
-						<ul class="smaller">
+						<ul class="point">
 							<li>Time to Interactive</li>
 							<li>First Input Delay</li>
 							<li>Time to First Interaction</li>
@@ -203,7 +220,7 @@
 
 					<section>
 						<h3>How can we measure engagement?</h3>
-						<ul>
+						<ul class="point">
 							<li>Bounce Rate</li>
 							<li>Session Length</li>
 							<li>Retention Rate*</li>
@@ -250,7 +267,7 @@
 				
 				<section>
 						<section>
-							<h2>Five tips to improve revenue ️💵</h2>
+							<h2>Five tips to improve engagement</h2>
 						</section>
 						<section>
 							<h3>1: Manage third-parties 🚸</h3>
@@ -260,7 +277,7 @@
 							<div class="vega-chart" id="vega-chart-js" data-spec="data/jssize_vs_tti.json"></div>
 						</section>
 						<section data-background="media/requestmap.png">
-							<h3>Third-party scripts are responsible for >70% of publisher requests</h3>
+							<h3>Third-party scripts are responsible for<br/>>70% of requests</h3>
 							<p class="smallest bottom-right"><a href="https://requestmap.webperf.tools/">requestmap.webperf.tools</a></p>
 						</section>
 						<section>
@@ -268,6 +285,7 @@
 							<blockquote>we had a collection of very old scripts and couldn’t track the original requester. We removed those on the premise that, if they were important, people would get back in touch — no one did.</blockquote>
 							<p class="smallest bottom-right"><a href="https://medium.com/the-telegraph-engineering/improving-third-party-web-performance-at-the-telegraph-a0a1000be5">Improving third-party web performance at The Telegraph</a></p>
 						</section>
+						<!--
 						<section>
 							<h3>Manage third-parties in the client</h3>
 							<p class="smaller">A simple header:</p>
@@ -284,13 +302,28 @@
 }</code></pre>
 							<p class="smallest bottom-right"><a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP">Content Security Policy on MDN</a></p>
 						</section>
-						
+						-->
+						<section>
+							<h3>Proxy through Akamai to reduce risk</h3>
+							<img width="50%" src="media/optimizely.png">
+							<p class="smallest bottom-right"><a href="https://help.optimizely.com/Set_Up_Optimizely/Optimizely_self-hosting_for_Akamai_users">Optimizely Self Hosting with Akamai</a></p>
+						</section>
+						<section>
+							<h3>Proxy through Akamai to reduce risk</h3>
+							<img width="70%" src="media/casper.png">
+							<p class="smallest bottom-right"><a href="https://medium.com/caspertechteam/we-shaved-1-7-seconds-off-casper-com-by-self-hosting-optimizely-2704bcbff8ec">How we shaved 1.7 seconds off casper.com by self-hosting Optimizely</a></p>
+						</section>
+						<section>
+							<h3>Use Akamai Script Manager to control execution</h3>
+							<img width="50%" src="media/A2.png">
+							<p class="smallest bottom-right"><a href="https://developer.akamai.com/blog/2017/12/12/manage-impact-scripts-and-get-protection-unresponsive-third-parties">Manage the Impact of Scripts and Get Protection From Unresponsive Third Parties</a></p>
+						</section>
 						<section>
 							<h3>1: Manage third-parties 🚸</h3>
 							<ol>
 								<li>Remove unnecessary scripts</li>
 								<li>Defer non-critical scripts</li>
-								<li>Use a Content-Security-Policy</li>
+								<li>Use Akamai features to reduce risk</li>
 							</ol>
 						</section>
 						<section>
@@ -325,7 +358,7 @@
 						</section>
 						<section>
 							<h3>2: Serve critical content ASAP ⚡️</h3>
-							<ul>
+							<ul class="point">
 								<li>Cache HTML with prefresh</li>
 								<li>Show text as soon as you can</li>
 							</ul>
@@ -336,6 +369,10 @@
 						<section id="image-chart">
 							<h3 class="with-subtitle">Image count correlates with TTI</h3>
 							<div class="vega-chart" id="vega-chart-image" data-spec="data/images_vs_tti.json"></div>
+						</section>
+						<section id="image-size-chart">
+							<h3 class="with-subtitle">Image count correlates with TTI</h3>
+							<div class="vega-chart" id="vega-chart-image-size" data-spec="data/imagesize_vs_tti.json"></div>
 						</section>
 						<section>
 							<h3>Automate image management</h3>
@@ -349,7 +386,7 @@
 						</section>
 						<section>
 							<h3>3: Optimise image delivery 🌄</h3>
-							<ul>
+							<ul class="point">
 								<li>Automate image managemenr</li>
 								<li>Defer below-the-fold images</li>
 							</ul>
@@ -363,7 +400,7 @@
 						</section>
 						<section>
 							<h3>4: Reduce DOM complexity 🧠</h3>
-							<ul>
+							<ul class="point">
 								<li>Render on the server</li>
 								<li>Avoid infinite scroll</li>
 								<li>Adopt a CSS methodology</li>
@@ -384,7 +421,7 @@
 						</section>
 						<section>
 							<h3>5: Reduce or defer JavaScript execution</h3>
-							<ul>
+							<ul class="point">
 								<li>Only ship necessary JavaScript</li>
 								<li>Consider differential serving for low-end devices</li>
 								<li>Defer everything?!</li>

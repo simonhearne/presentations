@@ -15,11 +15,11 @@
       "transform": [
         {
             "type": "filter",
-            "expr": "datum.TTI <= 10000"
+            "expr": "datum.TTI <= 7000"
         },
         {
             "type": "filter",
-            "expr": "datum.IMAGES <= 100"
+            "expr": "datum.IMAGES <= 75"
         }
       ]
     }
@@ -58,7 +58,14 @@
       "type": "linear",
       "nice": false,
       "domain": {"data": "data", "field": "FREQ"},
-      "range": [0.05,1]
+      "range": [0.05,0.75]
+    },
+    {
+      "name": "size",
+      "type": "linear",
+      "nice": false,
+      "domain": {"data": "data", "field": "FREQ"},
+      "range": [10,100]
     }
   ],
 
@@ -90,7 +97,7 @@
         "update": {
           "x": {"scale": "x", "field": "IMAGES"},
           "y": {"scale": "y", "field": "TTI"},
-          "size": {"value": 30},
+          "size": {"scale": "size", "field": "FREQ"},
           "shape": {"value": "circle"},
           "strokeWidth": {"value": 2},
           "opacity": {"scale": "opacity", "field": "FREQ"},

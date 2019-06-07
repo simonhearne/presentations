@@ -8,7 +8,7 @@
   "signals": [
     {
       "name": "width",
-      "update": "width - 200"
+      "update": "width - 150"
     },
     {
       "name": "height",
@@ -203,7 +203,7 @@
         "enter": {
           "baseline": {"value": "middle"},
           "align": {"value": "center"},
-          "fontSize": {"value": 18}
+          "fontSize": {"value": 16}
         },
         "update": {
           "x": {"signal": "width / 2"},
@@ -219,7 +219,7 @@
         "enter": {
           "baseline": {"value": "middle"},
           "align": {"value": "center"},
-          "fontSize": {"value": 16}
+          "fontSize": {"value": 15}
         },
         "update": {
           "x": {"signal": "width / 2"},

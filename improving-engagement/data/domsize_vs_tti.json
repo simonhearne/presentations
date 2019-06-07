@@ -15,7 +15,7 @@
       "transform": [
           {
               "type": "filter",
-              "expr": "datum.DOM_SIZE <= 3000"
+              "expr": "datum.DOM_SIZE > 500"
           }
       ]
     }

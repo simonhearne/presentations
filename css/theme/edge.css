@@ -5,8 +5,6 @@
  */
  @import url(../../lib/font/league-gothic/league-gothic.css);
  @import url(../../lib/font/lato-v14-latin/lato-v14-latin.css);
- @import url(../../lib/font/smythe-v9-latin/smythe-v9-latin.css);
- @import url(../../lib/font/josefin-sans-v13-latin/josefin-sans-v13-latin.css);
 section.has-dark-background, section.has-dark-background h1, section.has-dark-background h2, section.has-dark-background h3, section.has-dark-background h4, section.has-dark-background h5, section.has-dark-background h6 {
   color: #fff; }
 
@@ -64,13 +62,13 @@ body {
   font-size: 2.5em; }
 
 .reveal h2 {
-  font-size: 1.6em; }
+  font-size: 1.9em; }
 
 .reveal h3 {
-  font-size: 1.3em; }
+  font-size: 1.6em; }
 
 .reveal h4 {
-  font-size: 1em; }
+  font-size: 1.3em; }
 
 .reveal h1 {
   text-shadow: none; }
@@ -102,6 +100,15 @@ body {
   display: inline-block;
   text-align: left;
   margin: 0 0 0 1em; }
+
+.reveal ul.point {
+  list-style-type: none;
+}
+
+.reveal ul.point li:before {
+  content: '👉';
+  margin-right: 0.5em;
+}
 
 .reveal ol {
   list-style-type: decimal; }
@@ -250,7 +257,8 @@ body {
 
 .reveal section img.plain {
   border: 0;
-  box-shadow: none; }
+  box-shadow: none;
+  background: none; }
 
 .reveal a img {
   -webkit-transition: all .15s linear;
@@ -273,7 +281,7 @@ body {
  *********************************************/
 .reveal .progress {
   background: rgba(0, 0, 0, 0.2);
-  color: #2a76dd; }
+  color: #f1892c; }
 
 .reveal .progress span {
   -webkit-transition: width 800ms cubic-bezier(0.26, 0.86, 0.44, 0.985);
@@ -346,64 +354,11 @@ p.bottom-left {
   text-align: right; }
 
 .reveal table.twocol td:first-of-type {
-  width: 25%;
-  background-color: rgba(255,255,255,0.4); }
+  width: 25%; }
 
 .reveal table.twocol td {
   font-size: 75%;
 }
-
-.noise {
-  width: 200vw;
-  height: 200vh;
-  position: absolute;
-  top: -500px;
-  right: -500px;
-  bottom: -500px;
-  left: -500px;
-  background: transparent url(../noise.png) 0 0;
-  background-size: 320px 320px;
-	opacity: .4;
-	animation: noise 1s steps(3) infinite both;
-}
-
-@keyframes noise {
-  0% {
-    transform: translateX(0px,0px); }
-  10% {
-    transform: translate(-100px, 100px);
-  }
-  20% {
-    transform: translate(150px, -100px);
-  }
-  30% {
-    transform: translate(-100px,100px);
-  }
-  40% {
-    transform: translate(100px, -150px);
-  }
-  50% {
-    transform: translate(-100px, 200px);
-  }
-  60% {
-    transform: translate(-200px, -100px);
-  }
-  70% {
-    transform: translateY(50px, 100px);
-  }
-  80% {
-    transform: translate(100px, -150px);
-  }
-  90% {
-    transform: translate(0px, 200px);
-  }
-  100% {
-    transform: translate(-100px, 100px);
-  }
-}
-
-.reveal .intermission {
-  font-family: 'Smythe'; }
 
 @media print {
   .reveal .slide-background {
@@ -626,5 +581,9 @@ span.vega-bind-name::after {
 }
 
 div.vega-bind {
-  line-height: .3em;
+  line-height: .1em;
+}
+.reveal table.list {
+  font-size: 70%;
+  
 }
