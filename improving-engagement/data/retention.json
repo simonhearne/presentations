@@ -1,0 +1,335 @@
+{
+  "$schema": "https://vega.github.io/schema/vega/v5.json",
+  "width": 1000,
+  "height": 500,
+  "padding": 5,
+  "resize": true,
+
+  "signals": [
+    {
+      "name": "width",
+      "update": "width - 150"
+    },
+    {
+      "name": "height",
+      "update": "height - 50"
+    },
+    {
+      "name": "timerName1",
+      "value": "Time to Interactive",
+      "bind": {
+        "input": "radio",
+        "name": "Page Timer",
+        "options": ["Time to First Byte", "First Paint", "DOM Ready", "Page Load Time", "Time to Interactive"]
+      }
+    },
+    {
+      "name": "timer",
+      "value": "tti",
+      "update": "scale('timer_lookup',timerName1)"
+    },
+    {
+      "name": "devicetype1",
+      "value": "Mobile",
+      "bind": {
+        "input": "radio",
+        "name": "Device Type",
+        "options": ["Mobile","Desktop","Tablet"]
+      }
+    },
+    {
+      "name": "pagegroup1",
+      "value": "homepage",
+      "bind": {
+        "input": "radio",
+        "name": "Page type",
+        "options": ["homepage","article"]
+      }
+    },
+    {
+      "name": "maxSpeed",
+      "value": 20000,
+      "update": "scale('scale_lookup',timerName1)"
+    },
+    {
+      "name": "highlight_website",
+      "value": null,
+      "on": [
+        {
+          "events": "window:keypress",
+          "update": "null"
+        },
+        {
+          "events": "@resetLink:click",
+          "update": "null"
+        },
+        {
+          "events": "@legendSymbol:click, @legendLabel:click",
+          "update": "datum.value"
+        }
+      ]
+    },
+    {
+      "name": "markersize",
+      "value": 30
+    }
+  ],
+
+  "data": [
+    {
+      "name": "data",
+      "url" : {"signal": "'data/'+timer+'.csv'"},
+      "format": {
+        "type": "csv"
+      },
+      "transform": [
+        {
+          "type": "collect",
+          "sort": {"field": "website"}
+        },
+        {
+          "type": "formula",
+          "expr": "datum.bounce_rate / 100",
+          "as": "bounce_rate"
+        },
+        {
+          "type":"filter",
+          "expr": "datum.devicetypename == devicetype1"
+        },
+        {
+          "type":"filter",
+          "expr": "datum.pagegroupname == pagegroup1"
+        },
+        {
+          "type": "joinaggregate",
+          "groupby": ["website","devicetype1name","pagegroup1name"],
+          "fields": ["sessions"],
+          "ops": ["sum"],
+          "as": ["total_sessions"]
+        },
+        {
+          "type": "formula",
+          "expr": "datum.sessions / datum.total_sessions",
+          "as": "perc_sessions"
+        },
+        {
+          "type": "joinaggregate",
+          "groupby": ["website","devicetype1name","pagegroup1name"],
+          "fields": ["perc_sessions"],
+          "ops": ["max"],
+          "as": ["max_sessions"]
+        }
+      ]
+    }
+  ],
+
+  "scales": [
+    {
+      "name": "bucket",
+      "type": "linear",
+      "range": "width",
+      "domain": {"data": "data", "field": "bucket"},
+      "domainMax": {"signal": "maxSpeed"}
+    },
+    {
+      "name": "retention",
+      "type": "linear",
+      "range": "height",
+      "domain": {"data": "data", "field": "retention_rate"},
+      "domainMax": 1
+    },
+    {
+      "name": "sessions",
+      "type": "linear",
+      "range": "height",
+      "domain": {"data": "data", "field": "perc_sessions"}
+    },
+    {
+      "name": "color",
+      "type": "ordinal",
+      "range": {"scheme": "category10"},
+      "domain": {"data": "data", "field": "website"}
+    },
+    {
+      "name": "shape",
+      "type": "ordinal",
+      "domain": ["retention_rate","bounce_rate","session_length"],
+      "range": ["circle","triangle-down","diamond"]
+    },
+    {
+      "name": "timer_lookup",
+      "type": "ordinal",
+      "domain": ["Page Load Time", "Time to Interactive", "Time to First Byte", "First Paint", "DOM Ready"],
+      "range": ["pageloadtime", "tti", "firstbytetimer", "firstpaint", "domreadytimer"]
+    },
+    {
+      "name": "scale_lookup",
+      "type": "ordinal",
+      "domain": ["Page Load Time", "Time to Interactive", "Time to First Byte", "First Paint", "DOM Ready"],
+      "range": [20000,20000,5000,10000,20000]
+    }
+  ],
+
+  "axes": [
+    {
+      "orient": "bottom",
+      "scale": "bucket",
+      "title": {"signal": "timerName1 + ' (ms)'"}
+    },
+    {
+      "orient": "right",
+      "scale": "retention",
+      "title": "Retention / Bounce Rate",
+      "format": ".0%",
+      "grid": true
+    },
+    {
+      "orient": "left",
+      "scale": "sessions",
+      "title": "Sessions",
+      "labels": false
+    }
+  ],
+
+  "marks": [
+    {
+      "type": "text",
+      "encode": {
+        "enter": {
+          "baseline": {"value": "middle"},
+          "align": {"value": "center"},
+          "fontSize": {"value": 16}
+        },
+        "update": {
+          "x": {"signal": "width / 2"},
+          "y": {"value": -50},
+          "text": {"signal": "'Retention and Bounce rate for publisher '+pagegroup1+'s on '+devicetype1+' by '+timerName1"}
+        }
+      }
+    },
+    {
+      "type": "text",
+      "name": "resetLink",
+      "encode": {
+        "enter": {
+          "baseline": {"value": "middle"},
+          "align": {"value": "center"},
+          "fontSize": {"value": 15}
+        },
+        "update": {
+          "x": {"signal": "width / 2"},
+          "y": {"value": -30},
+          "text": {"signal": "highlight_website ? 'Focusing on publisher '+highlight_website+' (click here to reset)' : 'Click on an entry in the legend to focus on a publisher'"},
+          "cursor": {"value": "pointer"}
+        }
+      }
+    },
+    {
+      "type": "group",
+      "clip": true,
+      "from": {
+        "facet": {
+          "name": "grouped",
+          "data": "data",
+          "groupby": [
+            "website", "devicetype1name", "pagegroup1name"
+          ]
+        }
+      },
+      "marks": [
+        {
+          "type": "area",
+          "from": {"data": "grouped"},
+          "encode": {
+            "update": {
+              "fill": {"scale": "color", "field": "website"},
+              "stroke": {"scale": "color", "field": "website"},
+              "y2": {"signal": "height"},
+              "y": {"scale": "sessions", "field": "perc_sessions"},
+              "x": {"scale": "bucket", "field": "bucket"},
+              "fillOpacity": {"value": 0.25},
+              "strokeOpacity": {"value": 0.5},
+              "interpolate": {"value": "catmull-rom"},
+              "opacity": {"signal": "highlight_website ? highlight_website == datum.website ? 1 : 0.05 : 0.5"},
+              "tooltip": {"signal": "{'title':'Publisher: '+datum.website,'Load Time':format(datum.bucket,',.0f')+'ms','Sessions': format(datum.perc_sessions,'.2%'),'Session Length': format(datum.session_length,'.0'),'Bounce Rate':format(datum.bounce_rate,'.2%'),'Retention Rate':format(datum.retention_rate,'.2%')}"}
+            }
+          }
+        },
+        {
+          "type": "symbol",
+          "from": {"data": "grouped"},
+          "encode": {
+            "enter": {
+              "shape": {"signal": "scale('shape','retention_rate')"},
+              "size": {"signal": "markersize"}
+            },
+            "update": {
+              "fill": {"scale": "color", "field": "website"},
+              "x": {"scale": "bucket", "field": "bucket"},
+              "y": {"scale": "retention", "field": "retention_rate"},
+              "zindex": 1,
+              "opacity": {"signal": "highlight_website ? highlight_website == datum.website ? 1 : 0.05 : 0.5"},
+              "tooltip": {"signal": "{'title':'Publisher: '+datum.website,'Load Time':format(datum.bucket,',.0f')+'ms','Sessions': format(datum.perc_sessions,'.2%'),'Session Length': format(datum.session_length,'.0'),'Bounce Rate':format(datum.bounce_rate,'.2%'),'Retention Rate':format(datum.retention_rate,'.2%')}"}
+            }
+          }
+        },
+        {
+          "type": "symbol",
+          "from": {"data": "grouped"},
+          "encode": {
+            "enter": {
+              "shape": {"signal": "scale('shape','bounce_rate')"},
+              "size": {"signal": "markersize"}
+            },
+            "update": {
+              "fill": {"scale": "color", "field": "website"},
+              "x": {"scale": "bucket", "field": "bucket"},
+              "y": {"scale": "retention", "field": "bounce_rate"},
+              "zindex": 1,
+              "opacity": {"signal": "highlight_website ? highlight_website == datum.website ? 1 : 0.05 : 0.5"},
+              "tooltip": {"signal": "{'title':'Publisher: '+datum.website,'Load Time':format(datum.bucket,',.0f')+'ms','Sessions': format(datum.perc_sessions,'.2%'),'Session Length': format(datum.session_length,'.0'),'Bounce Rate':format(datum.bounce_rate,'.2%'),'Retention Rate':format(datum.retention_rate,'.2%')}"}
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "legends": [
+    {
+      "fill": "color",
+      "title": "Publisher",
+      "encode": {
+        "labels": {
+          "interactive": true,
+          "name": "legendLabel",
+          "update": {
+            "cursor": {"value": "pointer"}
+          }
+        },
+        "symbols": {
+          "interactive": true,
+          "name": "legendSymbol",
+          "update": {
+            "size": {"value": 120},
+            "cursor": {"value": "pointer"},
+            "opacity": {"signal": "highlight_website ? highlight_website == datum.value ? 1 : 0.1 : 1"}
+          }
+        }
+      }
+    },
+    {
+      "shape": "shape",
+      "title": "Key",
+      "encode": {
+        "symbols": {
+          "update": {
+            "fill": {"signal": "scale('color',highlight_website ? highlight_website : 1)"},
+            "size": {"signal": "markersize"},
+            "stroke": {"value": "transparent"}
+          }
+        }
+      }
+    }
+  ]
+}
+    

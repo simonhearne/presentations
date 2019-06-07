@@ -1,0 +1,98 @@
+{
+  "$schema": "https://vega.github.io/schema/vega/v5.json",
+  "width": 500,
+  "height": 500,
+  "padding": 5,
+  "resize": true,
+
+  "data": [
+    {
+      "name": "data",
+      "url" : "data/lastfont_vs_tti.csv",
+      "format": {
+        "type": "csv"
+      },
+      "transform": [
+          {
+              "type": "filter",
+              "expr": "datum.TTI <= 10000"
+          }
+      ]
+    }
+  ],
+  "signals": [
+    {
+      "name": "width",
+      "update": "width - 250"
+    },
+    {
+      "name": "height",
+      "update": "height - 50"
+    }
+  ],
+  "scales": [
+    {
+      "name": "x",
+      "type": "linear",
+      "round": true,
+      "nice": true,
+      "zero": true,
+      "domain": {"data": "data", "field": "LASTFONT"},
+      "range": "width"
+    },
+    {
+      "name": "y",
+      "type": "linear",
+      "round": true,
+      "nice": true,
+      "zero": true,
+      "domain": {"data": "data", "field": "TTI"},
+      "range": "height"
+    },
+    {
+      "name": "opacity",
+      "type": "linear",
+      "nice": false,
+      "domain": {"data": "data", "field": "FREQ"},
+      "range": [0,0.2]
+    }
+  ],
+
+  "axes": [
+    {
+      "scale": "x",
+      "grid": true,
+      "domain": false,
+      "orient": "bottom",
+      "tickCount": 5,
+      "title": "Last Font Loaded (ms)"
+    },
+    {
+      "scale": "y",
+      "grid": true,
+      "domain": false,
+      "orient": "left",
+      "titlePadding": 5,
+      "title": "Time to Interactive (ms)"
+    }
+  ],
+
+  "marks": [
+    {
+      "name": "marks",
+      "type": "symbol",
+      "from": {"data": "data"},
+      "encode": {
+        "update": {
+          "x": {"scale": "x", "field": "LASTFONT"},
+          "y": {"scale": "y", "field": "TTI"},
+          "size": {"value": 50},
+          "shape": {"value": "circle"},
+          "strokeWidth": {"value": 2},
+          "opacity": {"scale": "opacity", "field": "FREQ"},
+          "fill": {"value": "#4682b4"}
+        }
+      }
+    }
+  ]
+}

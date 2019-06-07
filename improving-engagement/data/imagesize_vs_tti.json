@@ -1,0 +1,102 @@
+{
+  "$schema": "https://vega.github.io/schema/vega/v5.json",
+  "width": 500,
+  "height": 500,
+  "padding": 5,
+  "resize": true,
+  
+  "data": [
+    {
+      "name": "data",
+      "url" : "data/imagesize_vs_tti.csv",
+      "format": {
+        "type": "csv"
+      },
+      "transform": [
+        {
+            "type": "filter",
+            "expr": "datum.TTI <= 10000"
+        },
+        {
+            "type": "filter",
+            "expr": "datum.IMAGE_SIZE <= 100000"
+        }
+      ]
+    }
+  ],
+  "signals": [
+    {
+      "name": "width",
+      "update": "width - 250"
+    },
+    {
+      "name": "height",
+      "update": "height - 50"
+    }
+  ],
+  "scales": [
+    {
+      "name": "x",
+      "type": "linear",
+      "round": true,
+      "nice": true,
+      "zero": false,
+      "domain": {"data": "data", "field": "IMAGE_SIZE"},
+      "range": "width"
+    },
+    {
+      "name": "y",
+      "type": "linear",
+      "round": true,
+      "nice": true,
+      "zero": false,
+      "domain": {"data": "data", "field": "TTI"},
+      "range": "height"
+    },
+    {
+      "name": "opacity",
+      "type": "linear",
+      "nice": false,
+      "domain": {"data": "data", "field": "FREQ"},
+      "range": [0.05,1]
+    }
+  ],
+
+  "axes": [
+    {
+      "scale": "y",
+      "grid": true,
+      "domain": false,
+      "orient": "left",
+      "tickCount": 5,
+      "title": "Time to Interactive (ms)"
+    },
+    {
+      "scale": "x",
+      "grid": true,
+      "domain": false,
+      "orient": "bottom",
+      "titlePadding": 5,
+      "title": "Image Size (B)"
+    }
+  ],
+
+  "marks": [
+    {
+      "name": "marks",
+      "type": "symbol",
+      "from": {"data": "data"},
+      "encode": {
+        "update": {
+          "x": {"scale": "x", "field": "IMAGE_SIZE"},
+          "y": {"scale": "y", "field": "TTI"},
+          "size": {"value": 30},
+          "shape": {"value": "circle"},
+          "strokeWidth": {"value": 2},
+          "opacity": {"scale": "opacity", "field": "FREQ"},
+          "fill": {"value": "#4682b4"}
+        }
+      }
+    }
+  ]
+}

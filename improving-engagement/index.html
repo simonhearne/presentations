@@ -1,0 +1,533 @@
+<!doctype html>
+<html lang="en">
+
+	<head>
+		<meta charset="utf-8">
+
+		<title>Five Surprising Techniques to Improve Online Engagement - @SimonHearne</title>
+
+		<meta name="description" content="Presentation: Five Surprising Techniques to Improve Online Engagement">
+		<meta name="author" content="Simon Hearne">
+
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<link rel="stylesheet" href="../css/reveal.css">
+		<link rel="stylesheet" href="../css/theme/edge.css" id="theme">
+
+		<!-- Theme used for syntax highlighting of code -->
+		<link rel="stylesheet" href="../lib/css/zenburn.css">
+
+		<link rel="stylesheet" href="../lib/css/animate.min.css">
+
+		<!-- Printing and PDF exports -->
+		<script>
+			var link = document.createElement( 'link' );
+			link.rel = 'stylesheet';
+			link.type = 'text/css';
+			link.href = window.location.search.match( /print-pdf/gi ) ? '../css/print/pdf.css' : '../css/print/paper.css';
+			document.getElementsByTagName( 'head' )[0].appendChild( link );
+		</script>
+
+		<!--[if lt IE 9]>
+		<script src="lib/js/html5shiv.js"></script>
+		<![endif]-->
+	</head>
+
+	<body>
+		<div class="reveal">
+			<div class="smaller tagline">@SimonHearne</div>
+			<div class="smaller tagline bottom-right orange">#EdgeWorld2019</div>
+			<!-- Any section element inside of this container is displayed as a slide -->
+			<div class="slides">
+				<section data-state="title-slide">
+					<h1 style="font-size:2.8em;">Five Surprising Techniques to <span style="display:block; font-style:oblique;">Improve Online Engagement</span></h1>
+					<p style="text-align: center;font-weight:400;">Simon Hearne</p>
+					<p class="smaller" style="text-align: center;font-weight:400;">Web Performance Solutions Engineer @ Akamai</p>
+
+					<aside class="notes">
+						We intuitively know that slow websites cause frustration, but intuition doesn’t pay for developers! In this talk I want to explore the latest research and analysis on the psychology of web performance. I’ll also dig into some of the trillions of user experience beacons we’ve collected through mPulse to try to identify the best timers to represent user experience, and how they impact key performance indicators like time on page and session length.
+					</aside>
+				</section>
+
+				<section>
+					<h3>Coming up...</h3>
+					<ol>
+						<li>Measuring Engagement</li>
+						<li>Defining Site Speed</li>
+						<li>IT Levers on Speed</li>
+						<li>Tips to Maximize Engagement</li>
+						<li>What you can do today</li>
+					</ol>
+				</section>
+				<section>
+					<h3>Data Source 📊</h3>
+					<img class="plain" src="media/mpulse.png">
+					<p class="smallest bottom-right"><a href="https://developer.akamai.com/akamai-mpulse">Akamai mPulse</a></p>
+				</section>
+				<section>
+					<section>
+						<h3>How do we make money?</h3>
+						<ul>
+							<li>Ad impressions &amp; clicks (circulation)</li>
+							<li>Advertorials &amp; sponsored content</li>
+							<li>Subscriptions &amp; paywalls</li>
+						</ul>
+					</section>
+					<section>
+						<h3>How do we make <em>more</em> money?</h3>
+						<ul>
+							<li>More traffic</li>
+							<li>Longer sessions</li>
+							<li>Better content</li>
+						</ul>
+					</section>
+					<section>
+						<h3>We know that speed matters</h3>
+						<table class="twocol">
+							<tr class="fragment">
+								<td><img class="plain" src="media/bbc.png"/></td>
+								<td>The BBC loses an additional 10% of users for every additional second it takes to load</td>
+							</tr>
+							<tr class="fragment">
+								<td><img class="plain" src="media/pinterest.png"/></td>
+								<td>Pinterest improved load time by 40% and saw 15% increase in SEO traffic and 15% increase in conversions</td>
+							</tr>
+							<tr class="fragment">
+								<td><img class="plain" src="media/ft.png"/></td>
+								<td>The Financial times increased user engagement by 30% when they released the new, performance focused FT.com</td>
+							</tr>
+						</table>
+						<p class="subtitle smallest bottom-right"><a href="https://wpostats.com/tags/engagement/">wpostats.com/tags/engagement/</a></p>
+						<aside class="notes">
+							There are also studies which show how engagement increases when speed is improved, but what is engagement, and what is speed? Unfortunately it is extremely rare for these case studies to include the things we really care about - what metric did they use to measure speed? How did they collect it, or aggregate it? The BBC loses an additional 10% of users for every second their site gets slower - what is a lost user? A bounce or a session that never happens? These are all important questions and caveats to bear in mind when viewing case studies, they are useful tools to generate interest in speed but the critical task is to perform this analysis on _your own data_.
+						</aside>
+					</section>
+				</section>
+				<section>
+					<section>
+						<h3>What do we mean by speed?</h3>
+						<div class="fragment tweet" data-src="https://twitter.com/simonhearne/status/1111396048143073280"></div>
+					</section>
+
+					<section data-state="secondary-slide">
+						<h3>POLL 1: What do you measure?</h3>
+						<ol>
+							<li>Page Load</li>
+							<li>Paint Timing</li>
+							<li>Custom Timer</li>
+							<li>Don't know / don't measure</li>
+						</ol>
+					</section>
+
+					<section>
+						<h3>What <em>actually</em> matters?</h3>
+						<ul>
+							<li class="fragment">Is it working?</li>
+							<li class="fragment">Is it useful?</li>
+							<li class="fragment">Is it interactive?</li>
+						</ul>
+					</section>
+
+					<section>
+						<h3>Is it working?</h3>
+						<video muted controls src="media/akamai-1.mov"></video>
+					</section>
+
+					<section>
+						<h3>Is it working?</h3>
+						<ul class="smaller">
+							<li>Time to First Byte</li>
+							<li>First Paint</li>
+						</ul>
+					</section>
+
+					<section>
+						<h3>Is it useful?</h3>
+						<video muted controls src="media/akamai-2.mov"></video>
+					</section>
+
+					<section>
+						<h3>Is it useful?</h3>
+						<ul class="smaller">
+							<li>DOM Content Loaded</li>
+							<li>DOM Complete</li>
+							<li>First Contentful Paint</li>
+							<li>Time to Visually Ready<sup>*</sup></li>
+						</ul>
+						<p class="smallest bottom-right"><sup>*</sup>mPulse only</p>
+					
+					</section>
+
+					<section>
+						<h3>Is it interactive?</h3>
+						<video muted controls src="media/tti.mp4"></video>
+					</section>
+
+					<section>
+						<h3>Is it interactive?</h3>
+						<ul class="smaller">
+							<li>Time to Interactive</li>
+							<li>First Input Delay</li>
+							<li>Time to First Interaction</li>
+							<li>Rage Clicks<sup>*</sup></li>
+						</ul>
+						<p class="smallest bottom-right"><sup>*</sup>mPulse only</p>
+					</section>
+
+					
+					<section>
+						<h3>Timer Summary</h3>
+						<table class="list">
+							<tr class="fragment"><td>Time to First Byte (TTFB)</td><td>The speed of the delivery stack</td></tr>
+							<tr class="fragment"><td>DOM Content Loaded (DCL)</td><td>The speed of critical dependencies</td></tr>
+							<tr class="fragment"><td>First Paint (FP)</td><td>The first time <em>something</em> is rendered</td></tr>
+							<tr class="fragment"><td>First Contentful Paint (FCP)</td><td>When the user <em>might</em> first see content</td></tr>
+							<tr class="fragment"><td>Time To Visually Ready (TTVR)</td><td>When key content is rendered</td></tr>
+							<tr class="fragment"><td>Page Load Time (PLT)</td><td>When the page is complete</td></tr>
+							<tr class="fragment"><td>Time To Interactive (TTI)</td><td>When the app is first responsive to input</td></tr>
+							<tr class="fragment"><td>First Input Delay (FID)</td><td>How long it takes to respond to input</td></tr>
+						</table>
+						<p class="fragment smallest bottom-right"><a href="https://developer.akamai.com/mpulse/whats-in-a-beacon/">developer.akamai.com/mpulse/whats-in-a-beacon/</a></p>
+					</section>
+					
+				</section>
+
+				<section id="engagement">
+					
+					<section>
+						<h2>Performance Levers 🎚</h2>
+					</section>
+
+					<section>
+						<h3>How can we measure engagement?</h3>
+						<ul>
+							<li>Bounce Rate</li>
+							<li>Session Length</li>
+							<li>Retention Rate*</li>
+						</ul>
+						<p class="smallest bottom-right">* rate of visitors who visit another page after this one</p>
+					</section>
+
+					<section data-state="secondary-slide">
+						<h3>POLL 2: How do you measure engagement?</h3>
+						<ol>
+							<li>Bounce Rate</li>
+							<li>Session Length</li>
+							<li>Subscriptions / Registrations</li>
+							<li>Don't know / don't measure</li>
+						</ol>
+					</section>
+
+					<section id="retention-chart">
+						<h3 class="with-subtitle">Performance metrics correlate with engagement</h3>
+						<div class="vega-chart" id="vis1" data-spec="data/retention.json"></div>
+					</section>
+		
+					<section id="sessionlength-chart">
+						<h3 class="with-subtitle">Performance metrics correlate with engagement</h3>
+						<div class="vega-chart" id="vis2" data-spec="data/session_length.json"></div>
+					</section>
+		
+					<section>
+						<h3>Goals for maximum engagement</h3>
+						<table class="compact">
+							<tr><th>Timer</th><th>Goal Speed</th></tr>
+							<tr><td>First Input Delay (FID)</td><td>200ms</td></tr>
+							<tr><td>Time to First Byte (TTFB)</td><td>500ms</td></tr>
+							<tr><td>First Contentful Paint (FCP)</td><td>1,000ms</td></tr>
+							<tr><td>DOM Ready</td><td>2,500ms</td></tr>
+							<tr><td>Time To Visually Ready (TTVR)</td><td>2,500ms</td></tr>
+							<tr><td>Page Load Time (PLT)</td><td>3,000ms</td></tr>
+							<tr><td>Time To Interactive (TTI)</td><td>4,000ms</td></tr>
+						</table>
+						<p class="smallest bottom-right">Based on aggregate data - what are yours?</p>
+					</section>
+
+				</section>
+				
+				<section>
+						<section>
+							<h2>Five tips to improve revenue ️💵</h2>
+						</section>
+						<section>
+							<h3>1: Manage third-parties 🚸</h3>
+						</section>
+						<section id="js-chart">
+							<h3 class="with-subtitle">JavaScript size correlates with TTI</h3>
+							<div class="vega-chart" id="vega-chart-js" data-spec="data/jssize_vs_tti.json"></div>
+						</section>
+						<section data-background="media/requestmap.png">
+							<h3>Third-party scripts are responsible for >70% of publisher requests</h3>
+							<p class="smallest bottom-right"><a href="https://requestmap.webperf.tools/">requestmap.webperf.tools</a></p>
+						</section>
+						<section>
+							<h3>1/3rd of third-parties could be redundant</h3>
+							<blockquote>we had a collection of very old scripts and couldn’t track the original requester. We removed those on the premise that, if they were important, people would get back in touch — no one did.</blockquote>
+							<p class="smallest bottom-right"><a href="https://medium.com/the-telegraph-engineering/improving-third-party-web-performance-at-the-telegraph-a0a1000be5">Improving third-party web performance at The Telegraph</a></p>
+						</section>
+						<section>
+							<h3>Manage third-parties in the client</h3>
+							<p class="smaller">A simple header:</p>
+							<pre><code class="hljs smaller">Content-Security-Policy: default-src 'self'; report-uri http://mysite.com/csp-reports/</code></pre>
+							<p class="smaller">JSON violation reports:</p>
+							<pre><code class="hljs smaller">{
+  "csp-report": {
+    "document-uri": "http://example.org/page.html",
+    "referrer": "http://evil.example.com/",
+    "blocked-uri": "http://evil.example.com/evil.js",
+    "violated-directive": "default-src 'self'",
+    "original-policy": "default 'self'; report-uri http://mysite.com/csp-reports/"
+  }
+}</code></pre>
+							<p class="smallest bottom-right"><a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP">Content Security Policy on MDN</a></p>
+						</section>
+						
+						<section>
+							<h3>1: Manage third-parties 🚸</h3>
+							<ol>
+								<li>Remove unnecessary scripts</li>
+								<li>Defer non-critical scripts</li>
+								<li>Use a Content-Security-Policy</li>
+							</ol>
+						</section>
+						<section>
+							<h3>2: Serve critical content ASAP ⚡️</h3>
+						</section>
+						<section id="ttfb-chart">
+							<h3 class="with-subtitle">TTFB correlates with TTI</h3>
+							<div class="vega-chart" id="vega-chart-ttfb" data-spec="data/ttfb_vs_tti.json"></div>
+						</section>
+						<section>
+							<h3>Cache HTML with prefresh</h3>
+							<p>Always serve quickly, with minimum risk of stale content</p>
+							<img width="50%" src="media/prefreshing.png">
+							<p class="smallest bottom-right"><a href="https://community.akamai.com/customers/s/article/Achieving-Great-Offload-and-Performance-using-Prefresh">Achieving Great Offload and Performance using Prefresh</a></p>
+						</section>
+						<section id="fonts-chart">
+							<h3 class="with-subtitle">Font load correlates with TTI</h3>
+							<div class="vega-chart" id="vega-chart-fonts" data-spec="data/lastfont_vs_tti.json"></div>
+						</section>
+						<section>
+							<h3>Show text as soon as you can</h3>
+							<p>Preloading fonts cheats the browser!</p>
+							<video width="70%" muted controls src="media/fonts.mp4"></video>
+							<p class="smallest bottom-right"><a href="https://andydavies.me/blog/2019/02/12/preloading-fonts-and-the-puzzle-of-priorities/">Preloading Fonts and the Puzzle of Priorities</a></p>
+						</section>
+						<section>
+							<h3>Show text as soon as you can</h3>
+							<p>Swap in the brand font when it downloads</p>
+							<pre style="width:58rem;"><code>font-display: [swap|fallback|optional]</code></pre>
+							<img width="50%" src="media/fonts.png"></img>
+							<p class="smallest bottom-right"><a href="https://developers.google.com/web/updates/2016/02/font-display">Controlling Font Performance with font-display</a></p>
+						</section>
+						<section>
+							<h3>2: Serve critical content ASAP ⚡️</h3>
+							<ul>
+								<li>Cache HTML with prefresh</li>
+								<li>Show text as soon as you can</li>
+							</ul>
+						</section>
+						<section>
+							<h3>3: Optimise image delivery 🌄</h3>
+						</section>
+						<section id="image-chart">
+							<h3 class="with-subtitle">Image count correlates with TTI</h3>
+							<div class="vega-chart" id="vega-chart-image" data-spec="data/images_vs_tti.json"></div>
+						</section>
+						<section>
+							<h3>Automate image management</h3>
+							<img width="70%" src="media/image-manager.jpg"></img>
+							<p class="smallest bottom-right"><a href="https://developer.akamai.com/akamai-image-manager">Akamai Image Manager</a></p>
+						</section>
+						<section>
+							<h3>Defer below-the-fold images</h3>
+							<img width="70%" src="media/without-lazyload@2x.png"></img>
+							<p class="smallest bottom-right"><a href="https://addyosmani.com/blog/lazy-loading/">Native image lazy-loading for the web!</a></p>
+						</section>
+						<section>
+							<h3>3: Optimise image delivery 🌄</h3>
+							<ul>
+								<li>Automate image managemenr</li>
+								<li>Defer below-the-fold images</li>
+							</ul>
+						</section>
+						<section>
+							<h3>4: Reduce DOM complexity 🧠</h3>
+						</section>
+						<section id="dom-chart">
+							<h3 class="with-subtitle">DOM complexity correlates with TTI</h3>
+							<div class="vega-chart" id="vega-chart-dom" data-spec="data/domsize_vs_tti.json"></div>
+						</section>
+						<section>
+							<h3>4: Reduce DOM complexity 🧠</h3>
+							<ul>
+								<li>Render on the server</li>
+								<li>Avoid infinite scroll</li>
+								<li>Adopt a CSS methodology</li>
+							</ul>
+						</section>
+						<section>
+							<h3>5: Reduce or defer JavaScript execution ⚙️</h3>
+						</section>
+						<section id="js-chart2">
+							<h3 class="with-subtitle">JavaScript size correlates with TTI</h3>
+							<div class="vega-chart" id="vega-chart-js2" data-spec="data/jssize_vs_tti.json"></div>
+						</section>
+						<section>
+							<h3>Let the browser focus</h3>
+							<blockquote>The single biggest improvement (and easiest to implement technically) came from deferring all JavaScript, including our own.</blockquote>
+							<img width="70%" src="media/defer.png"></img>
+							<p class="smallest bottom-right"><a href="https://medium.com/the-telegraph-engineering/improving-third-party-web-performance-at-the-telegraph-a0a1000be5">Improving third-party web performance at The Telegraph</a></p>
+						</section>
+						<section>
+							<h3>5: Reduce or defer JavaScript execution</h3>
+							<ul>
+								<li>Only ship necessary JavaScript</li>
+								<li>Consider differential serving for low-end devices</li>
+								<li>Defer everything?!</li>
+							</ul>
+						</section>
+				</section>
+				<section>
+					<section>
+						<h2>Conclusions ✍️</h2>
+						<p>If you're not actively measuring site speed, start now!</p>
+						<p class="fragment">Correlate speed with behaviour</p>
+						<p class="fragment">Find your <em>sweet spots</em> and set speed goals</p>
+					</section>
+				</section>
+				<section>
+					<section>
+						<h2>Thank you 🙏</h2>
+						<h3>Q&amp;A</h3>
+						<p class="smallest bottom-right">simonhearne.com/presentations/digital-revenue/</p>
+					</section>
+				</section>
+	
+			</div>
+			<div id="chart-controls" class="hide"></div>
+
+		</div>
+
+		<script src="../lib/js/head.min.js"></script>
+		<script src="../js/reveal.js"></script>
+		<script src="../lib/js/jquery-3.3.1.min.js"></script>
+
+		<script>
+				function getFragment(event) {
+					return (event.currentSlide.id !== "" ? event.currentSlide.id : null);
+				}
+			// More info https://github.com/hakimel/reveal.js#configuration
+			Reveal.initialize({
+				controls: false,
+				progress: true,
+				history: true,
+				center: true,
+
+				transition: 'none', // none/fade/slide/convex/concave/zoom
+
+				allottedTime: 30 * 60 * 1000, // 30 minutes
+				barColor: 'hsl(220,99%,54%)',
+
+				// More info https://github.com/hakimel/reveal.js#dependencies
+				dependencies: [
+					{ src: '../lib/js/classList.js', condition: function() { return !document.body.classList; } },
+					{ src: '../plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: '../plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: '../plugin/embed-tweet/embed-tweet.js', condition: function() { return !!document.querySelector( 'div.tweet[data-src]' ); } },
+					{ src: '../lib/js/vega.min.js', condition: function() { return !!document.querySelector( 'div.vega-chart' ); } },
+					{ src: '../lib/js/vega-embed.min.js', condition: function() { return !!document.querySelector( 'div.vega-chart' ); } },
+					{ src: '../plugin/elapsed-time-bar/elapsed-time-bar.js'},
+					{ src: '../plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+					{ src: '../plugin/search/search.js', async: true },
+					{ src: '../plugin/zoom-js/zoom.js', async: true },
+					{ src: '../plugin/notes/notes.js', async: true }
+				],
+
+				keyboard: {
+					// pause/resume time when Enter is pressed
+					13: () => {
+						ElapsedTimeBar.isPaused ? ElapsedTimeBar.resume() : ElapsedTimeBar.pause();
+					},
+					// reset timer when 'r' is pressed
+					82: () => {
+						ElapsedTimeBar.reset();
+					}
+				}
+			});
+			Reveal.addEventListener( 'slidechanged', function( event ) {
+				let state = {h: event.indexh, v: event.indexv, name: getFragment(event)};
+			} );
+
+			/* animate.css */
+			// Set animation delay if data-delay is specified
+			Reveal.addEventListener('ready', function ( event ) {
+				$('*[data-delay]').each( function () { 
+					var delay = $(this).attr("data-delay");
+					$(this).css("-webkit-animation-delay", delay+"s"); 
+					$(this).css("animation-delay", delay+"s"); 
+				});
+			});
+
+			// Set animation duration if data-duration is specified
+			Reveal.addEventListener('ready', function ( event ) {
+				$('*[data-duration]').each( function () { 
+					var duration = $(this).attr("data-duration");
+					$(this).css("-webkit-animation-duration", duration+"s"); 
+					$(this).css("animation-duration", duration+"s"); 
+				});
+				let width = window.innerWidth / 2;
+				$(".vega-chart").each(function() {
+					let spec = this.attributes.getNamedItem("data-spec").value;
+					//spec = "https://raw.githubusercontent.com/vega/vega/master/docs/examples/bar-chart.vg.json";
+					vegaEmbed('#'+this.id, spec, {"actions": false, "theme": "dark", "width": width, "renderer": "svg", "config": "data/config.json"}).then(function(result) {
+					// Access the Vega view instance (https://vega.github.io/vega/docs/api/view/) as result.view
+					}).catch(console.error);
+				});				
+			});
+
+			// Animate items that are not in a fragment
+				Reveal.addEventListener('slidechanged', function( event ) {
+				// Animate elements that are not a fragment (or in a fragment)
+				var filter = '*[data-animate]:not(.fragment):not(.fragment *)';
+				
+				$(event.currentSlide).find(filter).each( function () {
+					$(this).addClass('animated');
+					$(this).addClass($(this).attr('data-animate'));
+				});		
+				$(event.previousSlide).find(filter).each( function () {
+					$(this).removeClass('animated');
+					$(this).removeClass($(this).attr('data-animate'));
+				});		
+				});
+
+				// Animate fragments
+				Reveal.addEventListener('fragmentshown', function( event ) {
+					function loop(i, el) { 
+						if ($(el).attr('data-animate')) {
+							$(el).addClass('animated');
+							$(el).addClass($(el).attr('data-animate'));
+						}
+						$.each($(el).children().not('.fragment'), loop);
+					};
+					$.each(event.fragments, loop);
+				});
+
+				// Make the animation runnable again if fragment is hidden
+				Reveal.addEventListener('fragmenthidden', function( event ) {	  
+				function loop(i, el) { 
+					if ($(el).attr('data-animate')) {
+						$(el).removeClass('animated');
+						$(el).removeClass($(el).attr('data-animate'));
+					}
+					$.each($(el).children().not('.fragment'), loop);
+				};
+				$.each(event.fragments, loop);
+			});
+		</script>
+
+	</body>
+</html>
