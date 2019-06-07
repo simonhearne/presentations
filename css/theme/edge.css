@@ -17,6 +17,12 @@ body {
   background-position: bottom left, top right, top left;
   background-repeat: no-repeat;
 }
+html.title-slide body {
+  background: url( 'edge-bottom.jpg' ), url('edge-top-left.jpg');
+  background-position: bottom center, top left;
+  background-size: 100%, auto;
+  background-repeat: no-repeat;
+}
 
 .reveal {
   font-family: "Lato", sans-serif;
@@ -461,6 +467,12 @@ span { display: inline-block; }
 
 .reveal .orange {
   color: #f1892c;
+}
+
+html.title-slide .not-title {
+  display: none;
+  visibility: hidden;
+  opacity: 0;
 }
 
 h3 span.subtitle {
