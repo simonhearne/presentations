@@ -19,7 +19,7 @@ body {
   background-repeat: no-repeat;
 }
 html.title-slide body {
-  background: url( 'edge-bottom.png' ), url('edge-top-left.png');
+  background: url( 'edge-bottom.jpg' ), url('edge-top-left.png');
   background-position: bottom center, top left;
   background-size: 100%, auto;
   background-repeat: no-repeat;
