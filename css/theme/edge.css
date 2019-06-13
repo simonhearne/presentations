@@ -25,6 +25,15 @@ html.title-slide body {
   background-repeat: no-repeat;
   padding-bottom: 10%;
 }
+
+@media screen and (max-width: 1000px) {
+  body {
+    background-size: 50%;
+  }
+  html.title-slide body {
+    background-size: 50%;
+  }
+}
 html.plain-slide body {
   background: none;
   background-color: #fff; 
