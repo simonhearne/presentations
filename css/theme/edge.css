@@ -216,7 +216,7 @@ html.plain-slide body {
 
 .reveal pre code {
   display: block;
-  padding: 5px;
+  padding: 10px;
   overflow: auto;
   max-height: 400px;
   word-wrap: normal; }
