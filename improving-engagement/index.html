@@ -20,7 +20,7 @@
 		<!-- Theme used for syntax highlighting of code -->
 		<link rel="stylesheet" href="../lib/css/zenburn.css">
 
-		<link rel="stylesheet" href="../lib/css/animate.min.css">
+		<!--<link rel="stylesheet" href="../lib/css/animate.min.css">-->
 
 		<!-- Printing and PDF exports -->
 		<script>
@@ -67,9 +67,14 @@
 					</ol>
 				</section>
 				<section>
-					<h3>Data Source 📊</h3>
+					<h3>Data Source 1 📊</h3>
 					<img loading="lazy" class="plain" src="media/mpulse.png">
 					<p class="smallest bottom-right"><a href="https://developer.akamai.com/akamai-mpulse">Akamai mPulse</a></p>
+				</section>
+				<section>
+					<h3>Data Source 2 📊</h3>
+					<img loading="lazy" class="plain" src="media/httparchive.png">
+					<p class="smallest bottom-right"><a href="https://httparchive.org">HTTP Archive</a></p>
 				</section>
 				<section>
 					<section>
@@ -245,11 +250,13 @@
 					<section data-state="plain-slide" id="retention-chart">
 						<h4>Performance correlates with engagement</h4>
 						<div class="vega-chart" id="vis1" data-spec="data/retention.json"></div>
+						<p class="smallest bottom-right">Source: Akamai mPulse (May 2019)</p>
 					</section>
 		
 					<section data-state="plain-slide" id="sessionlength-chart">
 						<h4>Performance correlates with engagement</h4>
 						<div class="vega-chart" id="vis2" data-spec="data/session_length.json"></div>
+						<p class="smallest bottom-right">Source: Akamai mPulse (May 2019)</p>
 					</section>
 		
 					<section>
@@ -276,9 +283,15 @@
 						<section>
 							<h3>1: Manage third-parties 🚸</h3>
 						</section>
-						<section id="js-chart">
-							<h4>JavaScript size correlates with TTI</h4>
-							<div class="vega-chart" id="vega-chart-js" data-spec="data/jssize_vs_tti.json"></div>
+						<section data-state="plain-slide" id="js-chart">
+							<h4>Domain count correlates with TTI</h4>
+							<div class="vega-chart" id="vega-chart-js" data-spec="data/domain_count.json"></div>
+							<p class="smallest bottom-right">Source: Akamai mPulse (May 2019)</p>
+						</section>
+						<section data-state="plain-slide" id="HA-scripts-chart">
+							<h4>JavaScript count correlates with visual readiness</h4>
+							<div class="vega-chart" id="vega-chart-ha-scripts" data-spec="data/ha-scripts.json"></div>
+							<p class="smallest bottom-right">Source: HTTP Archive (May 2019)</p>
 						</section>
 						<section data-state="plain-slide" data-background="media/requestmap.png">
 							<h3>Third-party scripts are responsible for<br/>>70% of requests</h3>
@@ -336,6 +349,7 @@
 						<section id="ttfb-chart">
 							<h4>TTFB correlates with TTI</h4>
 							<div class="vega-chart" id="vega-chart-ttfb" data-spec="data/ttfb_vs_tti.json"></div>
+							<p class="smallest bottom-right">Source: Akamai mPulse (May 2019)</p>
 						</section>
 						<section>
 							<h3>Cache HTML with prefresh</h3>
@@ -343,9 +357,15 @@
 							<img loading="lazy" width="50%" src="media/prefreshing.png">
 							<p class="smallest bottom-right"><a href="https://community.akamai.com/customers/s/article/Achieving-Great-Offload-and-Performance-using-Prefresh">Achieving Great Offload and Performance using Prefresh</a></p>
 						</section>
-						<section id="fonts-chart">
+						<section data-state="plain-slide" id="fonts-chart">
 							<h4>Font load correlates with TTI</h4>
 							<div class="vega-chart" id="vega-chart-fonts" data-spec="data/lastfont_vs_tti.json"></div>
+							<p class="smallest bottom-right">Source: Akamai mPulse (May 2019)</p>
+						</section>
+						<section data-state="plain-slide" id="HA-fonts-chart">
+							<h4>Font weight correlates with visual readiness</h4>
+							<div class="vega-chart" id="vega-chart-ha-fonts" data-spec="data/ha-fonts.json"></div>
+							<p class="smallest bottom-right">Source: HTTP Archive (May 2019)</p>
 						</section>
 						<section>
 							<h3>Show text as soon as you can</h3>
@@ -373,6 +393,17 @@
 						<section data-state="plain-slide" id="image-chart">
 							<h4>Image count correlates with TTI</h4>
 							<div class="vega-chart" id="vega-chart-image" data-spec="data/images_vs_tti.json"></div>
+							<p class="smallest bottom-right">Source: Akamai mPulse (May 2019)</p>
+						</section>
+						<section data-state="plain-slide" id="HA-images-chart">
+							<h4>Image count correlates with visual readiness</h4>
+							<div class="vega-chart" id="vega-chart-ha-images" data-spec="data/ha-images.json"></div>
+							<p class="smallest bottom-right">Source: HTTP Archive (May 2019)</p>
+						</section>
+						<section data-state="plain-slide" id="HA-imagesize-chart">
+							<h4>Image size correlates with visual readiness</h4>
+							<div class="vega-chart" id="vega-chart-ha-imagesize" data-spec="data/ha-imagebytes.json"></div>
+							<p class="smallest bottom-right">Source: HTTP Archive (May 2019)</p>
 						</section>
 						<section>
 							<h3>Automate image management</h3>
@@ -389,14 +420,22 @@
 							<ol>
 								<li>Automate image managemenr</li>
 								<li>Defer below-the-fold images</li>
+								<li>Reconsider low-quality placeholders</li>
+								<li>Use SVG and CSS wherever possible</li>
 							</ol>
 						</section>
 						<section>
 							<h3>4: Reduce DOM complexity 🧠</h3>
 						</section>
-						<section id="dom-chart">
+						<section data-state="plain-slide"id="dom-chart-2">
 							<h4>DOM complexity correlates with TTI</h4>
-							<div class="vega-chart" id="vega-chart-dom" data-spec="data/domsize_vs_tti.json"></div>
+							<div class="vega-chart" id="vega-chart-dom-2" data-spec="data/domsize.json"></div>
+							<p class="smallest bottom-right">Source: Akamai mPulse (May 2019)</p>
+						</section>
+						<section data-state="plain-slide"id="dom-chart-3">
+							<h4>DOM complexity correlates with TTI</h4>
+							<div class="vega-chart" id="vega-chart-dom-3" data-spec="data/ha-docsize.json"></div>
+							<p class="smallest bottom-right">Source: HTTP Archive (May 2019)</p>
 						</section>
 						<section>
 							<h3>4: Reduce DOM complexity 🧠</h3>
@@ -404,19 +443,26 @@
 								<li>Render on the server</li>
 								<li>Avoid infinite scroll</li>
 								<li>Adopt a CSS methodology</li>
+								<li>Aim for &lt;1,500 nodes</li>
 							</ol>
 						</section>
 						<section>
 							<h3>5: Reduce or defer JavaScript execution ⚙️</h3>
 						</section>
-						<section id="js-chart2">
+						<section data-state="plain-slide" id="js-chart2">
 							<h4>JavaScript size correlates with TTI</h4>
 							<div class="vega-chart" id="vega-chart-js2" data-spec="data/jssize_vs_tti.json"></div>
+							<p class="smallest bottom-right">Source: Akamai mPulse (May 2019)</p>
+						</section>
+						<section data-state="plain-slide" id="HA-jsbytes-chart">
+							<h4>JavaScript size correlates with visual readiness</h4>
+							<div class="vega-chart" id="vega-chart-ha-jssize" data-spec="data/ha-jsbytes.json"></div>
+							<p class="smallest bottom-right">Source: HTTP Archive (May 2019)</p>
 						</section>
 						<section>
 							<h3>Let the browser focus</h3>
-							<blockquote>The single biggest improvement (and easiest to implement technically) came from deferring all JavaScript, including our own.</blockquote>
-							<img loading="lazy" width="70%" src="media/defer.png"></img>
+							<blockquote>The single biggest improvement <br>(and easiest to implement technically) <br>came from deferring all JavaScript, <br>including our own.</blockquote>
+							<img loading="lazy" width="80%" src="media/defer.png"></img>
 							<p class="smallest bottom-right"><a href="https://medium.com/the-telegraph-engineering/improving-third-party-web-performance-at-the-telegraph-a0a1000be5">Improving third-party web performance at The Telegraph</a></p>
 						</section>
 						<section>
@@ -431,16 +477,19 @@
 				<section>
 					<section>
 						<h2>Conclusions ✍️</h2>
-						<p>If you're not actively measuring site speed, start now!</p>
-						<p class="fragment">Correlate speed with behavior</p>
-						<p class="fragment">Find your <em>sweet spots</em> and set speed goals</p>
-						<p class="fragment">Maximize the Akamai Platform</p>
+						<ul class="point">
+							<li>Actively measure site speed!</li>
+							<li class="fragment">Correlate speed with behavior</li>
+							<li class="fragment">Set speed goals based on behavior</li>
+							<li class="fragment">Maximize the Akamai Platform</li>
+							<li class="fragment">Help the browser render quickly</li>
+						</ul>
 					</section>
 				</section>
 				<section>
 					<section>
 						<h2>Thank you 🙏</h2>
-						<h3>Q&amp;A</h3>
+						<p>shearne@akamai.com</p>
 						<p class="smallest bottom-right">simonhearne.com/presentations/improving-engagement/</p>
 					</section>
 				</section>

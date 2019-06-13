@@ -1,0 +1,164 @@
+{
+    "$schema": "https://vega.github.io/schema/vega/v5.json",
+    "width": 1000,
+    "height": 500,
+    "padding": 5,
+    "resize": true,
+    
+  
+    "signals": [
+        {
+          "name": "width",
+          "update": "width - 250"
+        },
+        {
+          "name": "height",
+          "update": "height - 50"
+        },
+      {
+        "name": "filename",
+        "value": "HA-jsbytes"
+      },
+      {
+        "name": "key",
+        "value": "bytesJS"
+      },
+      {
+        "name": "label",
+        "value": "JavaScript Size (kB)"
+      },
+      {
+        "name": "div1000",
+        "value": true
+      },
+      {
+        "name": "maxValue",
+        "value": 5000
+      },
+      {
+        "name": "maxSize",
+        "value": 1000
+      }
+    ],
+  
+    "data": [
+      {
+        "name": "source",
+        "url" : {"signal": "'data/'+filename+'.csv'"},
+        "format": {
+          "type": "csv"
+        },
+        "transform": [
+          {
+            "type": "formula",
+            "expr": "div1000 ? datum[key]/1000 : datum[key]",
+            "as": "value"
+          },
+          {
+            "type": "filter",
+            "expr": "datum['FREQ'] >= 1000 && datum['value'] <= maxValue"
+          }
+        ]
+      }
+    ],
+  
+    "scales": [
+      {
+        "name": "x",
+        "type": "linear",
+        "round": true,
+        "nice": true,
+        "zero": true,
+        "domain": {"data": "source", "field": "value"},
+        "range": "width"
+      },
+      {
+        "name": "y",
+        "type": "linear",
+        "round": true,
+        "nice": true,
+        "zero": false,
+        "domain": {"data": "source", "field": "avg_visual_complete"},
+        "range": "height"
+      },
+      {
+        "name": "size",
+        "type": "linear",
+        "nice": false,
+        "domain": {"data": "source", "field": "FREQ"},
+        "range": [10,{"signal":"maxSize"}]
+      },
+      {
+        "name": "opacity",
+        "type": "linear",
+        "nice": false,
+        "zero": true,
+        "domain": {"data": "source", "field": "FREQ"},
+        "range": [0.25,0.75]
+      },
+      {
+        "name": "color",
+        "type": "ordinal",
+        "domain": ["Desktop","Mobile","Tablet"],
+        "range": {"scheme": "plasma"}
+      }
+    ],
+  
+    "axes": [
+      {
+        "scale": "x",
+        "grid": true,
+        "domain": false,
+        "orient": "bottom",
+        "tickCount": 5,
+        "title": {"signal": "label"}
+      },
+      {
+        "scale": "y",
+        "grid": true,
+        "domain": false,
+        "orient": "left",
+        "titlePadding": 5,
+        "title": "Time to Visually Ready (ms)",
+        "format": "~s"
+      }
+    ],
+  
+    "marks": [
+      {
+        "type": "group",
+        "from": {
+          "facet": {
+            "name": "grouped",
+            "data": "source",
+            "groupby": [
+              "DEVICETYPENAME"
+            ]
+          }
+        },
+        "marks": [
+      {
+        "name": "marks",
+        "type": "symbol",
+        "from": {"data": "source"},
+        "encode": {
+          "update": {
+            "x": {"scale": "x", "field": "value"},
+            "y": {"scale": "y", "field": "avg_visual_complete"},
+            "size": {"scale": "size", "field": "FREQ"},
+            "shape": {"value": "circle"},
+            "strokeWidth": {"value": 2},
+            "opacity": {"scale": "opacity", "field": "FREQ"},
+            "fill": {"scale": "color", "field": "DEVICETYPENAME"}
+          }
+        }
+      }
+    ]
+      }
+    ],
+    "legends": [{
+      "fill": "color",
+      "orient": "top-right"
+    }]
+  }
+  

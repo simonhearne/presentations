@@ -1,35 +1,67 @@
 {
   "$schema": "https://vega.github.io/schema/vega/v5.json",
-  "width": 500,
+  "width": 1000,
   "height": 500,
   "padding": 5,
   "resize": true,
+  
+
+  "signals": [
+      {
+        "name": "width",
+        "update": "width - 250"
+      },
+      {
+        "name": "height",
+        "update": "height - 50"
+      },
+    {
+      "name": "key",
+      "value": "LAST_FONT_TIME"
+    },
+    {
+      "name": "label",
+      "value": "Last Font Time (ms)"
+    },
+    {
+      "name": "div1000",
+      "value": false
+    },
+    {
+      "name": "maxValue",
+      "value": 1000000
+    },
+    {
+      "name": "maxSize",
+      "value": 250
+    },
+    {
+      "name": "maxSpeed",
+      "value": 12500
+    }
+  ],
 
   "data": [
     {
-      "name": "data",
-      "url" : "data/lastfont_vs_tti.csv",
+      "name": "source",
+      "url" : "data/lastfont_again.csv",
       "format": {
         "type": "csv"
       },
       "transform": [
-          {
-              "type": "filter",
-              "expr": "datum.TTI <= 10000"
-          }
+        {
+          "type": "formula",
+          "expr": "div1000 ? datum[key]/1000 : datum[key]",
+          "as": "value"
+        },
+        {
+          "type": "filter",
+          "expr": "datum['FREQ'] >= 1000 && datum['value'] <= maxValue && datum['TTI'] <= maxSpeed"
+        }
       ]
     }
   ],
-  "signals": [
-    {
-      "name": "width",
-      "update": "width - 250"
-    },
-    {
-      "name": "height",
-      "update": "height - 50"
-    }
-  ],
+
   "scales": [
     {
       "name": "x",
@@ -37,7 +69,7 @@
       "round": true,
       "nice": true,
       "zero": true,
-      "domain": {"data": "data", "field": "LASTFONT"},
+      "domain": {"data": "source", "field": "value"},
       "range": "width"
     },
     {
@@ -46,15 +78,30 @@
       "round": true,
       "nice": true,
       "zero": true,
-      "domain": {"data": "data", "field": "TTI"},
+      "domain": {"data": "source", "field": "TTI"},
+      "domainMax": {"signal": "maxSpeed"},
       "range": "height"
+    },
+    {
+      "name": "size",
+      "type": "linear",
+      "nice": false,
+      "domain": {"data": "source", "field": "FREQ"},
+      "range": [10,{"signal":"maxSize"}]
     },
     {
       "name": "opacity",
       "type": "linear",
       "nice": false,
-      "domain": {"data": "data", "field": "FREQ"},
-      "range": [0,0.2]
+      "zero": true,
+      "domain": {"data": "source", "field": "FREQ"},
+      "range": [0.25,0.75]
+    },
+    {
+      "name": "color",
+      "type": "ordinal",
+      "domain": ["Desktop","Mobile","Tablet"],
+      "range": {"scheme": "plasma"}
     }
   ],
 
@@ -65,7 +112,7 @@
       "domain": false,
       "orient": "bottom",
       "tickCount": 5,
-      "title": "Last Font Loaded (ms)"
+      "title": {"signal": "label"}
     },
     {
       "scale": "y",
@@ -79,20 +126,38 @@
 
   "marks": [
     {
+      "type": "group",
+      "from": {
+        "facet": {
+          "name": "grouped",
+          "data": "source",
+          "groupby": [
+            "DEVICETYPENAME"
+          ]
+        }
+      },
+      "marks": [
+    {
       "name": "marks",
       "type": "symbol",
-      "from": {"data": "data"},
+      "from": {"data": "source"},
       "encode": {
         "update": {
-          "x": {"scale": "x", "field": "LASTFONT"},
+          "x": {"scale": "x", "field": "value"},
           "y": {"scale": "y", "field": "TTI"},
-          "size": {"value": 50},
+          "size": {"scale": "size", "field": "FREQ"},
           "shape": {"value": "circle"},
           "strokeWidth": {"value": 2},
           "opacity": {"scale": "opacity", "field": "FREQ"},
-          "fill": {"value": "#4682b4"}
+          "fill": {"scale": "color", "field": "DEVICETYPENAME"}
         }
       }
     }
   ]
+    }
+  ],
+  "legends": [{
+    "fill": "color",
+    "orient": "top-right"
+  }]
 }

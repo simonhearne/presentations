@@ -17,11 +17,11 @@
       },
     {
       "name": "key",
-      "value": "IMAGES"
+      "value": "DOM_SIZE"
     },
     {
       "name": "label",
-      "value": "Image Count (#)"
+      "value": "Document Size (# nodes)"
     },
     {
       "name": "div1000",
@@ -29,22 +29,22 @@
     },
     {
       "name": "maxValue",
-      "value": 500
+      "value": 15000
     },
     {
       "name": "maxSize",
-      "value": 500
+      "value": 100
     },
     {
       "name": "maxSpeed",
-      "value": 10000
+      "value": 12500
     }
   ],
 
   "data": [
     {
       "name": "source",
-      "url" : "data/images_again.csv",
+      "url" : "data/domsize_median.csv",
       "format": {
         "type": "csv"
       },
@@ -120,7 +120,8 @@
       "domain": false,
       "orient": "left",
       "titlePadding": 5,
-      "title": "Time to Interactive (ms)"
+      "title": "Time to Interactive (ms)",
+      "format": "~s"
     }
   ],
 

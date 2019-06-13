@@ -1,47 +1,75 @@
 {
   "$schema": "https://vega.github.io/schema/vega/v5.json",
-  "width": 500,
+  "width": 1000,
   "height": 500,
   "padding": 5,
   "resize": true,
   
+
+  "signals": [
+      {
+        "name": "width",
+        "update": "width - 250"
+      },
+      {
+        "name": "height",
+        "update": "height - 50"
+      },
+    {
+      "name": "key",
+      "value": "TTFB"
+    },
+    {
+      "name": "label",
+      "value": "Time to First Byte (ms)"
+    },
+    {
+      "name": "div1000",
+      "value": false
+    },
+    {
+      "name": "maxValue",
+      "value": 5000
+    },
+    {
+      "name": "maxSize",
+      "value": 500
+    },
+    {
+      "name": "maxSpeed",
+      "value": 12500
+    }
+  ],
+
   "data": [
     {
-      "name": "data",
-      "url" : "data/ttfb_vs_tti.csv",
+      "name": "source",
+      "url" : "data/ttfb_again.csv",
       "format": {
         "type": "csv"
       },
       "transform": [
-          {
-              "type": "filter",
-              "expr": "datum.TTFB <= 2500"
-          },
-          {
-              "type": "filter",
-              "expr": "datum.TTI <= 10000"
-          }
+        {
+          "type": "formula",
+          "expr": "div1000 ? datum[key]/1000 : datum[key]",
+          "as": "value"
+        },
+        {
+          "type": "filter",
+          "expr": "datum['FREQ'] >= 1000 && datum['value'] <= maxValue && datum['TTI'] <= maxSpeed"
+        }
       ]
     }
   ],
-  "signals": [
-    {
-      "name": "width",
-      "update": "width - 250"
-    },
-    {
-      "name": "height",
-      "update": "height - 50"
-    }
-  ],
+
   "scales": [
     {
       "name": "x",
       "type": "linear",
       "round": true,
       "nice": true,
-      "zero": false,
-      "domain": {"data": "data", "field": "TTFB"},
+      "zero": true,
+      "domain": {"data": "source", "field": "value"},
       "range": "width"
     },
     {
@@ -49,54 +77,87 @@
       "type": "linear",
       "round": true,
       "nice": true,
-      "zero": false,
-      "domain": {"data": "data", "field": "TTI"},
+      "zero": true,
+      "domain": {"data": "source", "field": "TTI"},
+      "domainMax": {"signal": "maxSpeed"},
       "range": "height"
+    },
+    {
+      "name": "size",
+      "type": "linear",
+      "nice": false,
+      "domain": {"data": "source", "field": "FREQ"},
+      "range": [10,{"signal":"maxSize"}]
     },
     {
       "name": "opacity",
       "type": "linear",
       "nice": false,
-      "domain": {"data": "data", "field": "FREQ"},
-      "range": [0,0.95]
+      "zero": true,
+      "domain": {"data": "source", "field": "FREQ"},
+      "range": [0.25,0.75]
+    },
+    {
+      "name": "color",
+      "type": "ordinal",
+      "domain": ["Desktop","Mobile","Tablet"],
+      "range": {"scheme": "plasma"}
     }
   ],
 
   "axes": [
     {
-      "scale": "y",
-      "grid": true,
-      "domain": false,
-      "orient": "left",
-      "tickCount": 5,
-      "title": "Time to Interactive (ms)"
-    },
-    {
       "scale": "x",
       "grid": true,
       "domain": false,
       "orient": "bottom",
+      "tickCount": 5,
+      "title": {"signal": "label"}
+    },
+    {
+      "scale": "y",
+      "grid": true,
+      "domain": false,
+      "orient": "left",
       "titlePadding": 5,
-      "title": "Time to First Byte (ms)"
+      "title": "Time to Interactive (ms)"
     }
   ],
 
   "marks": [
     {
+      "type": "group",
+      "from": {
+        "facet": {
+          "name": "grouped",
+          "data": "source",
+          "groupby": [
+            "DEVICETYPENAME"
+          ]
+        }
+      },
+      "marks": [
+    {
       "name": "marks",
       "type": "symbol",
-      "from": {"data": "data"},
+      "from": {"data": "source"},
       "encode": {
         "update": {
-          "x": {"scale": "x", "field": "TTFB"},
+          "x": {"scale": "x", "field": "value"},
           "y": {"scale": "y", "field": "TTI"},
-          "size": {"value": 30},
+          "size": {"scale": "size", "field": "FREQ"},
           "shape": {"value": "circle"},
           "strokeWidth": {"value": 2},
           "opacity": {"scale": "opacity", "field": "FREQ"},
-          "fill": {"value": "#4682b4"}
+          "fill": {"scale": "color", "field": "DEVICETYPENAME"}
         }
       }
     }
   ]
+    }
+  ],
+  "legends": [{
+    "fill": "color",
+    "orient": "top-right"
+  }]
 }
