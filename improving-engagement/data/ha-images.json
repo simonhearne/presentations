@@ -7,14 +7,6 @@
     
   
     "signals": [
-        {
-          "name": "width",
-          "update": "width - 250"
-        },
-        {
-          "name": "height",
-          "update": "height - 50"
-        },
       {
         "name": "filename",
         "value": "HA-images"
@@ -67,9 +59,10 @@
         "name": "x",
         "type": "linear",
         "round": true,
-        "nice": true,
+        "nice": false,
         "zero": true,
         "domain": {"data": "source", "field": "value"},
+        "domainMax": {"signal":"maxValue"},
         "range": "width"
       },
       {
@@ -108,7 +101,6 @@
       {
         "scale": "x",
         "grid": true,
-        "domain": false,
         "orient": "bottom",
         "tickCount": 5,
         "title": {"signal": "label"}
@@ -116,7 +108,6 @@
       {
         "scale": "y",
         "grid": true,
-        "domain": false,
         "orient": "left",
         "titlePadding": 5,
         "title": "Time to Visually Ready (ms)",

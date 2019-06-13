@@ -7,14 +7,6 @@
     
   
     "signals": [
-        {
-          "name": "width",
-          "update": "width - 250"
-        },
-        {
-          "name": "height",
-          "update": "height - 50"
-        },
       {
         "name": "key",
         "value": "DOMAINS"
@@ -109,7 +101,6 @@
       {
         "scale": "x",
         "grid": true,
-        "domain": false,
         "orient": "bottom",
         "tickCount": 5,
         "title": {"signal": "label"}
@@ -117,7 +108,6 @@
       {
         "scale": "y",
         "grid": true,
-        "domain": false,
         "orient": "left",
         "titlePadding": 5,
         "title": "Time to Visually Ready (ms)"

@@ -4787,13 +4787,13 @@
 
 			switch( event.keyCode ) {
 				// p, page up
-				case 80: case 33: case 37: navigatePrev(); break;
+				case 80: case 33:  navigatePrev(); break;
 				// n, page down, r (for logitech spotlight)
-				case 78: case 34: case 39: navigateNext(); break;
+				case 78: case 34: navigateNext(); break;
 				// h, left
-				case 72: navigateLeft(); break;
+				case 72: case 37: navigateLeft(); break;
 				// l
-				case 76: navigateRight(); break;
+				case 76: case 39: navigateRight(); break;
 				// k, up
 				case 75: case 38: navigateUp(); break;
 				// j, down

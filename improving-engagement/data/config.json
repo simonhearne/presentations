@@ -15,13 +15,14 @@
     "labelFontSize": 14,
     "titleFont": "Lato, sans-serif;",
     "titleFontSize": 16,
-    "domainOpacity": 0.4,
     "ticks": false,
     "labelPadding": 7,
     "titlePadding": 10,
     "color": "rgb(0,0,0)",
     "labelColor": "rgb(0,0,0)",
-    "titleColor": "rgb(0,0,0)"
+    "titleColor": "rgb(0,0,0)",
+    "gridOpacity": 0.25,
+    "domainOpacity": 0.5
   },
   "legend": {
     "labelFont": "Lato, sans-serif;",

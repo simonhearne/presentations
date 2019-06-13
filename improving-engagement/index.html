@@ -248,13 +248,13 @@
 					</section>
 
 					<section data-state="plain-slide" id="retention-chart">
-						<h4>Performance correlates with engagement</h4>
+						<h4>Performance vs. engagement</h4>
 						<div class="vega-chart" id="vis1" data-spec="data/retention.json"></div>
 						<p class="smallest bottom-right">Source: Akamai mPulse (May 2019)</p>
 					</section>
 		
 					<section data-state="plain-slide" id="sessionlength-chart">
-						<h4>Performance correlates with engagement</h4>
+						<h4>Performance vs. engagement</h4>
 						<div class="vega-chart" id="vis2" data-spec="data/session_length.json"></div>
 						<p class="smallest bottom-right">Source: Akamai mPulse (May 2019)</p>
 					</section>
@@ -278,18 +278,18 @@
 				
 				<section>
 						<section>
-							<h2>Five tips to improve engagement</h2>
+							<h2>Five tips to improve<br>speed &amp; engagement</h2>
 						</section>
 						<section>
 							<h3>1: Manage third-parties 🚸</h3>
 						</section>
 						<section data-state="plain-slide" id="js-chart">
-							<h4>Domain count correlates with TTI</h4>
+							<h4>Domain count vs. TTI</h4>
 							<div class="vega-chart" id="vega-chart-js" data-spec="data/domain_count.json"></div>
 							<p class="smallest bottom-right">Source: Akamai mPulse (May 2019)</p>
 						</section>
 						<section data-state="plain-slide" id="HA-scripts-chart">
-							<h4>JavaScript count correlates with visual readiness</h4>
+							<h4>JavaScript count vs. visual readiness</h4>
 							<div class="vega-chart" id="vega-chart-ha-scripts" data-spec="data/ha-scripts.json"></div>
 							<p class="smallest bottom-right">Source: HTTP Archive (May 2019)</p>
 						</section>
@@ -346,8 +346,8 @@
 						<section>
 							<h3>2: Serve critical content ASAP ⚡️</h3>
 						</section>
-						<section id="ttfb-chart">
-							<h4>TTFB correlates with TTI</h4>
+						<section data-state="plain-slide" id="ttfb-chart">
+							<h4>TTFB vs. TTI</h4>
 							<div class="vega-chart" id="vega-chart-ttfb" data-spec="data/ttfb_vs_tti.json"></div>
 							<p class="smallest bottom-right">Source: Akamai mPulse (May 2019)</p>
 						</section>
@@ -358,12 +358,12 @@
 							<p class="smallest bottom-right"><a href="https://community.akamai.com/customers/s/article/Achieving-Great-Offload-and-Performance-using-Prefresh">Achieving Great Offload and Performance using Prefresh</a></p>
 						</section>
 						<section data-state="plain-slide" id="fonts-chart">
-							<h4>Font load correlates with TTI</h4>
+							<h4>Font load vs. TTI</h4>
 							<div class="vega-chart" id="vega-chart-fonts" data-spec="data/lastfont_vs_tti.json"></div>
 							<p class="smallest bottom-right">Source: Akamai mPulse (May 2019)</p>
 						</section>
 						<section data-state="plain-slide" id="HA-fonts-chart">
-							<h4>Font weight correlates with visual readiness</h4>
+							<h4>Font weight vs. visual readiness</h4>
 							<div class="vega-chart" id="vega-chart-ha-fonts" data-spec="data/ha-fonts.json"></div>
 							<p class="smallest bottom-right">Source: HTTP Archive (May 2019)</p>
 						</section>
@@ -391,17 +391,17 @@
 							<h3>3: Optimize image delivery 🌄</h3>
 						</section>
 						<section data-state="plain-slide" id="image-chart">
-							<h4>Image count correlates with TTI</h4>
+							<h4>Image count vs. TTI</h4>
 							<div class="vega-chart" id="vega-chart-image" data-spec="data/images_vs_tti.json"></div>
 							<p class="smallest bottom-right">Source: Akamai mPulse (May 2019)</p>
 						</section>
 						<section data-state="plain-slide" id="HA-images-chart">
-							<h4>Image count correlates with visual readiness</h4>
+							<h4>Image count vs. visual readiness</h4>
 							<div class="vega-chart" id="vega-chart-ha-images" data-spec="data/ha-images.json"></div>
 							<p class="smallest bottom-right">Source: HTTP Archive (May 2019)</p>
 						</section>
 						<section data-state="plain-slide" id="HA-imagesize-chart">
-							<h4>Image size correlates with visual readiness</h4>
+							<h4>Image size vs. visual readiness</h4>
 							<div class="vega-chart" id="vega-chart-ha-imagesize" data-spec="data/ha-imagebytes.json"></div>
 							<p class="smallest bottom-right">Source: HTTP Archive (May 2019)</p>
 						</section>
@@ -428,12 +428,12 @@
 							<h3>4: Reduce DOM complexity 🧠</h3>
 						</section>
 						<section data-state="plain-slide"id="dom-chart-2">
-							<h4>DOM complexity correlates with TTI</h4>
+							<h4>DOM complexity vs. TTI</h4>
 							<div class="vega-chart" id="vega-chart-dom-2" data-spec="data/domsize.json"></div>
 							<p class="smallest bottom-right">Source: Akamai mPulse (May 2019)</p>
 						</section>
 						<section data-state="plain-slide"id="dom-chart-3">
-							<h4>DOM complexity correlates with TTI</h4>
+							<h4>DOM complexity vs. TTI</h4>
 							<div class="vega-chart" id="vega-chart-dom-3" data-spec="data/ha-docsize.json"></div>
 							<p class="smallest bottom-right">Source: HTTP Archive (May 2019)</p>
 						</section>
@@ -450,12 +450,12 @@
 							<h3>5: Reduce or defer JavaScript execution ⚙️</h3>
 						</section>
 						<section data-state="plain-slide" id="js-chart2">
-							<h4>JavaScript size correlates with TTI</h4>
+							<h4>JavaScript size vs. TTI</h4>
 							<div class="vega-chart" id="vega-chart-js2" data-spec="data/jssize_vs_tti.json"></div>
 							<p class="smallest bottom-right">Source: Akamai mPulse (May 2019)</p>
 						</section>
 						<section data-state="plain-slide" id="HA-jsbytes-chart">
-							<h4>JavaScript size correlates with visual readiness</h4>
+							<h4>JavaScript size vs. visual readiness</h4>
 							<div class="vega-chart" id="vega-chart-ha-jssize" data-spec="data/ha-jsbytes.json"></div>
 							<p class="smallest bottom-right">Source: HTTP Archive (May 2019)</p>
 						</section>
@@ -500,12 +500,30 @@
 		</div>
 
 		<script>
-				function getFragment(event) {
-					return (event.currentSlide.id !== "" ? event.currentSlide.id : null);
+			var presenting = window.location.search.includes('present');
+			var keyboard = {
+				// pause/resume time when Enter is pressed
+				13: () => {
+					ElapsedTimeBar.isPaused ? ElapsedTimeBar.resume() : ElapsedTimeBar.pause();
+				},
+				// reset timer when 'r' is pressed
+				82: () => {
+					ElapsedTimeBar.reset();
 				}
+			};
+			if (presenting) {
+				keyboard = Object.assign(keyboard,{
+					39: 'next',
+					37: 'prev'
+				});
+			};
+    				
+			function getFragment(event) {
+				return (event.currentSlide.id !== "" ? event.currentSlide.id : null);
+			}
 			// More info https://github.com/hakimel/reveal.js#configuration
 			Reveal.initialize({
-				controls: false,
+				controls: !presenting,
 				progress: true,
 				history: true,
 				center: true,
@@ -530,16 +548,7 @@
 					{ src: '../plugin/notes/notes.js', async: true }
 				],
 
-				keyboard: {
-					// pause/resume time when Enter is pressed
-					13: () => {
-						ElapsedTimeBar.isPaused ? ElapsedTimeBar.resume() : ElapsedTimeBar.pause();
-					},
-					// reset timer when 'r' is pressed
-					82: () => {
-						ElapsedTimeBar.reset();
-					}
-				}
+				keyboard: keyboard
 			});
 			Reveal.addEventListener( 'slidechanged', function( event ) {
 				let state = {h: event.indexh, v: event.indexv, name: getFragment(event)};
@@ -568,7 +577,9 @@
 			function embedVegaCharts() {
 				if (window.hasOwnProperty('vegaEmbed')) {
 					console.log("vega-ready");
-					let width = window.innerWidth / 1.75;
+					let width = window.innerWidth / 2;
+					let slideElement = document.getElementsByClassName('slides')[0];
+					if (slideElement) {width = slideElement.offsetWidth};
 					$(".vega-chart").each(function() {
 						let spec = this.attributes.getNamedItem("data-spec").value;
 						//spec = "https://raw.githubusercontent.com/vega/vega/master/docs/examples/bar-chart.vg.json";

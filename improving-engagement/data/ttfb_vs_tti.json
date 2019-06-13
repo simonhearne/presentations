@@ -7,14 +7,6 @@
   
 
   "signals": [
-      {
-        "name": "width",
-        "update": "width - 250"
-      },
-      {
-        "name": "height",
-        "update": "height - 50"
-      },
     {
       "name": "key",
       "value": "TTFB"

@@ -26,14 +26,6 @@ html.title-slide body {
   padding-bottom: 10%;
 }
 
-@media screen and (max-width: 1000px) {
-  body {
-    background-size: 50%;
-  }
-  html.title-slide body {
-    background-size: 50%;
-  }
-}
 html.plain-slide body {
   background: none;
   background-color: #fff; 
@@ -594,4 +586,20 @@ div.vega-bind {
 .reveal table.list {
   font-size: 70%;
   
+}
+
+@media screen and (max-width: 1000px) {
+  body {
+    background-size: 50%;
+    font-size: 70%;
+  }
+  html.title-slide body {
+    background-size: 50%;
+  }
+  .smaller {
+    font-size: 1rem !important;
+  }
+  .smallest {
+    font-size: 0.7rem !important;
+  }
 }
