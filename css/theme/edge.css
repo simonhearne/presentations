@@ -594,7 +594,7 @@ div.vega-bind {
     font-size: 70%;
   }
   html.title-slide body {
-    background-size: 50%;
+    background-size: 100%, 50%;
   }
   .smaller {
     font-size: 1rem !important;
