@@ -21,7 +21,7 @@
     },
     {
       "name": "maxValue",
-      "value": 500
+      "value": 100
     },
     {
       "name": "maxSize",
@@ -29,7 +29,7 @@
     },
     {
       "name": "maxSpeed",
-      "value": 10000
+      "value": 6000
     }
   ],
 

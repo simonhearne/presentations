@@ -25,6 +25,12 @@ html.title-slide body {
   background-repeat: no-repeat;
   padding-bottom: 10%;
 }
+html.plain-title-slide body {
+  background: url('edge-top-left.png');
+  background-position: top left;
+  background-size: auto;
+  background-repeat: no-repeat;
+}
 
 html.plain-slide body {
   background: none;

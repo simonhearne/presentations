@@ -48,7 +48,7 @@
           },
           {
             "type": "filter",
-            "expr": "datum['FREQ'] >= 1000 && datum['value'] <= maxValue"
+            "expr": "datum['FREQ'] >= 1000 && datum['value'] > 0 && datum['value'] <= maxValue"
           }
         ]
       }

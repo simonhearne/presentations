@@ -119,6 +119,31 @@
 
   "marks": [
     {
+      "type": "rect",
+      "encode": {
+        "enter": {
+          "xc": {"scale": "x", "value": 1500},
+          "y": {"signal": "0"},
+          "y2": {"signal": "height"},
+          "stroke": {"value": "purple"}
+        }
+      }
+    },
+    {
+      "type": "text",
+      "encode": {
+        "enter": {
+          "xc": {"scale": "x", "value": 1500},
+          "align": {"value": "center"},
+          "baseline": {"value": "middle"},
+          "y": {"signal": "height + 13"},
+          "fill": {"value": "purple"},
+          "text": {"value": "1,500"},
+          "fontSize": {"value": 14}
+        }
+      }
+    },
+    {
       "type": "group",
       "from": {
         "facet": {

@@ -110,7 +110,7 @@
         "grid": true,
         "orient": "left",
         "titlePadding": 5,
-        "title": "Time to Visually Ready (ms)"
+        "title": "Time to Interactive (ms)"
       }
     ],
   
