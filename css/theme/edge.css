@@ -594,6 +594,12 @@ div.vega-bind {
   
 }
 
+.help-text {
+  font-size: 50% !important;
+  font-family: monospace !important;
+  background: rgba(0,0,0,0.1) !important;
+}
+
 @media screen and (max-width: 1000px) {
   body {
     background-size: 50%;

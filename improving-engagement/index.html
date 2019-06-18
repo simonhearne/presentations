@@ -49,10 +49,7 @@
 					<h1>Five Surprising Techniques to <br>Improve Online Engagement</h1>
 					<br><p style="text-align: center;">Simon Hearne</p>
 					<p class="smaller" style="text-align: center;">Web Performance Solutions Engineer @ Akamai</p>
-
-					<aside class="notes">
-						We intuitively know that slow websites cause frustration, but intuition doesn’t pay for developers! In this talk I want to explore the latest research and analysis on the psychology of web performance. I’ll also dig into some of the trillions of user experience beacons we’ve collected through mPulse to try to identify the best timers to represent user experience, and how they impact key performance indicators like time on page and session length.
-					</aside>
+					<p id="help-text" class="help-text"></p>
 				</section>
 
 				<section>
@@ -501,6 +498,12 @@
 
 		<script>
 			var presenting = window.location.search.includes('present');
+			if (!presenting) {
+				let id = document.getElementById('help-text');
+				if (id) {
+					id.innerHTML = "Use 'n' and 'p' to navigate next and previous slides.<br>Use 'o' to view an overview."
+				}
+			}
 			var keyboard = {
 				// pause/resume time when Enter is pressed
 				13: () => {
