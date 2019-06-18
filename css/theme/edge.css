@@ -587,7 +587,7 @@ span.vega-bind-name::after {
 }
 
 div.vega-bind {
-  line-height: .1em;
+  line-height: 0;
 }
 .reveal table.list {
   font-size: 70%;
