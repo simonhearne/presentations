@@ -1,0 +1,131 @@
+{
+    "$schema": "https://vega.github.io/schema/vega/v5.json",
+    "width": 1000,
+    "height": 500,
+    "padding": 5,
+    "resize": true,
+  
+    "signals": [
+      {
+        "name": "width",
+        "update": "width - 200"
+      },
+      {
+        "name": "height",
+        "update": "height - 50"
+      }
+    ],
+  
+    "data": [
+      {
+        "name": "data",
+        "url" : "data/internet_usage.csv",
+        "format": {
+          "type": "csv"
+        }
+      }
+    ],
+  
+    "scales": [
+      {
+        "name": "x",
+        "type": "time",
+        "range": "width",
+        "domain": {"data": "data", "field": "TIMESTAMP_MS"}
+      },
+      {
+        "name": "y1",
+        "type": "linear",
+        "range": "height",
+        "domain": {"data": "data", "field": "POPULATION"}
+      },
+      {
+        "name": "y2",
+        "type": "linear",
+        "range": "height",
+        "domain": {"data": "data", "field": "Count"}
+      }
+    ],
+  
+    "axes": [
+      {
+        "orient": "bottom",
+        "scale": "x",
+        "title": "Date",
+        "format": "%x"
+      },
+      {
+        "orient": "left",
+        "scale": "y1",
+        "title": "Percentage of Population",
+        "grid": true,
+        "format": ".0%"
+      }
+    ],
+  
+    "marks": [
+      {
+        "type": "line",
+        "from": {"data": "data"},
+        "encode": {
+          "enter": {
+            "x": {"scale": "x", "field": "TIMESTAMP_MS"},
+            "y": {"scale": "y1", "field": "POPULATION"}
+          }
+        }
+      },
+      {
+        "type": "group",
+        "marks": [
+          {
+            "type": "symbol",
+            "encode": {
+              "enter": {
+                "x": {"scale": "x", "value": 1485000000000},
+                "y": {"scale": "y1", "value": 0.5},
+                "fill": {"value": "orangered"},
+                "stroke": {"value": "orangered"}
+              }
+            }
+          },
+          {
+            "type": "rule",
+            "encode": {
+              "enter": {
+                "x": {"scale": "x", "value": 1485000000000, "offset": -20},
+                "y": {"scale": "y1", "value": 0.5, "offset": -20},
+                "y2": {"scale": "y1", "value": 0.5},
+                "x2": {"scale": "x", "value": 1485000000000},
+                "stroke": {"value": "orangered"}
+              }
+            }
+          },
+          {
+            "type": "rule",
+            "encode": {
+              "enter": {
+                "x": {"scale": "x", "value": 1485000000000, "offset": -170},
+                "y": {"scale": "y1", "value": 0.5, "offset": -20},
+                "x2": {"scale": "x", "value": 1485000000000, "offset": -20},
+                "stroke": {"value": "orangered"}
+              }
+            }
+          },
+          {
+            "type": "text",
+            "encode": {
+              "enter": {
+                "fill": {"value": "orangered"},
+                "text": {"value": "50% -  January 21, 2017"},
+                "fontSize": {"value": 13},
+                "align": {"value": "left"},
+                "x": {"scale": "x", "value": 1485000000000, "offset": -169},
+                "y": {"scale": "y1", "value": 0.5, "offset": -25}
+              }
+            }
+          }
+        ]
+      }
+    ]
+  }
+      

@@ -1,0 +1,583 @@
+<!doctype html>
+<html lang="en">
+
+	<head>
+		<meta charset="utf-8">
+
+		<title>The Future of Web Performance - @SimonHearne</title>
+
+		<meta name="description" content="Presentation: The Future of Web Performance.">
+		<meta name="author" content="Simon Hearne">
+
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<link rel="stylesheet" href="../css/reveal.css">
+		<link rel="stylesheet" href="../css/theme/edge.css" id="theme">
+
+		<!-- Theme used for syntax highlighting of code -->
+		<link rel="stylesheet" href="../lib/css/zenburn.css">
+
+		<!--<link rel="stylesheet" href="../lib/css/animate.min.css">-->
+
+		<meta name=”twitter:image” content=”/presentations/social_improving-revenue.jpg”>
+		<meta property=“og:image” content=“/presentations/social_improving-revenue.jpg” />
+		<meta property=”og:image:width” content=”1716" />
+		<meta property=”og:image:height” content=”864″ />
+
+		<!-- Printing and PDF exports -->
+		<script>
+			var link = document.createElement( 'link' );
+			link.rel = 'stylesheet';
+			link.type = 'text/css';
+			link.href = window.location.search.match( /print-pdf/gi ) ? '../css/print/pdf.css' : '../css/print/paper.css';
+			document.getElementsByTagName( 'head' )[0].appendChild( link );
+		</script>
+
+		<script src="../lib/js/head.min.js"></script>
+		<script src="../js/reveal.js"></script>
+		<script src="../lib/js/jquery-3.3.1.min.js"></script>
+
+		<!--[if lt IE 9]>
+		<script src="lib/js/html5shiv.js"></script>
+		<![endif]-->
+	</head>
+
+	<body>
+		<div class="reveal">
+			<div class="smaller tagline">@SimonHearne</div>
+			<!-- Any section element inside of this container is displayed as a slide -->
+			<div class="slides">
+				<section>
+					<h1>The Future of Web Performance</h1>
+					<br><p style="text-align: center;">Simon Hearne</p>
+					<p class="smaller" style="text-align: center;">Web Performance Solutions Engineer @ Akamai</p>
+					<p id="help-text" class="help-text"></p>
+				</section>
+
+				<section>
+					<section data-state="main-slide">
+						<h2>Before the future...</h2>
+					</section>
+					<section>
+						<h3>In the past five years:</h3>
+						<ul>
+							<li class="fragment">Commoditised 4G / LTE Devices</li>
+							<li class="fragment">Google AMP &amp; Facebook Instant Articles</li>
+							<li class="fragment">SPDY, H/2 and Google's gQUIC</li>
+							<li class="fragment">GDPR &amp; cookie law</li>
+						</ul>
+					</section>
+					<section>
+						<h3>And yet...</h3>
+						<p>Does the web <em>feel</em> faster?</p>
+					</section>
+				</section>
+
+				<section>
+					<section data-background-image="media/bttf.jpg"></section>
+					<section data-state="main-slide">
+			
+					<h3>The Future of...</h3>
+					<ul class="point larger">
+						<li class="fragment">Platform (Network)</li>
+						<li class="fragment">Platform (Client)</li>
+						<li class="fragment">Content</li>
+						<li class="fragment">The User</li>
+					</ul>
+					</section>
+				</section>
+
+				<section>
+					<section data-background-size="contain" data-background-image="media/tubes.png" data-background-color="#000"></section>
+					<section data-state="main-slide">
+						<h2>Network Platform</h2>
+						<ul>
+							<li>Application Layer <span class="fragment smaller">(HTTP)</span></li>
+							<li>Presentation Layer <span class="fragment smaller">(TLS)</span></li>
+							<li>Session Layer <span class="fragment smaller">(APIs / Sockets)</span></li>
+							<li>Transport Layer <span class="fragment smaller">(TCP / UDP)</span></li>
+						</ul>
+					</section>
+					<section>
+						<h3>HTTP<span class="fragment">/2</span></h3>
+						<div class="fragment">
+							<ul>
+								<li>Header Compression</li>
+								<li>Binary protocol</li>
+								<li>Server Push</li>
+								<li>Request multiplexing</li>
+								<li>Request pipelining</li>
+							</ul>
+							<img class="caniuse" src="http://caniuse-icon.herokuapp.com/http2"/>
+						</div>
+					</section>
+					<section>
+						<h3>HTTP/2 &amp; the HoL in the Waterfall</h3>
+						<img class="plain" src="media/wf-shape.svg">
+						<p class="smallest bottom-right"><a href="https://calendar.perfplanet.com/2018/http2-hol-waterfall/">HTTP/2 and the HoL in the Waterfall</a></p>
+					</section>
+					<section>
+						<h3>TLS</h3>
+						<img width="60%" class="plain fragment" src="media/tls.png"/>
+					</section>
+					<section>
+						<h3>TLS (1.3)</h3>
+						<ul>
+							<li>Session Resumption</li>
+							<li>TLS False Start</li>
+							<li class="fragment">0-RTT</li>
+						</ul>
+						<img class="caniuse" src="http://caniuse-icon.herokuapp.com/tls1-3"/>
+					</section>
+					<section>
+						<h3>TLS 1.3</h3>
+						<p>Approximatley 50% faster!</p>
+						<div class="tweet" data-src="https://twitter.com/TimVereecke/status/1129032997221609472"></div>
+						<img class="caniuse" src="http://caniuse-icon.herokuapp.com/tls1-3"/>
+					</section>
+					<section>
+						<h3>Sockets</h3>
+						<p>Server-Sent Events for unidirectional data</p>
+						<img class="plain" width="50%" src="media/sse.jpg"/>
+					</section>
+					<section>
+						<h3>TCP / UDP</h3>
+						<img class="plain" width="60%" src="media/quic.png">
+						<p class="smallest bottom-right"><a href="https://medium.com/@codavel/quic-vs-tcp-tls-and-why-quic-is-not-the-next-big-thing-d4ef59143efd">QUIC vs TCP &amp; TLS</a></p>
+					</section>
+					<section>
+						<h3>QUIC Benefits</h3>
+						<ul>
+							<li>0-RTT for known servers</li>
+							<li>Improved congestion control</li>
+							<li>Multiplexing without head-of-line blocking</li>
+							<li>Forward error correction</li>
+							<li>Connection migration</li>
+						</ul>
+					</section>
+					<section>
+						<h3>QUIC vs HTTPS</h3>
+						<img class="plain" src="media/quic.gif">
+					</section>
+					<section>
+						<h3>DNS</h3>
+						<img class="plain fragment" src="media/dns.png"/>
+						<p class="smallest bottom-right"><a href="https://hacks.mozilla.org/2018/05/a-cartoon-intro-to-dns-over-https/">A cartoon intro to DNS over HTTPS</a></p>
+					</section>
+					<section>
+						<h3>DNS over TLS (DoT) &amp;<br>DNS over HTTPS (DoH)</h3>
+						<p>More security, less performance</p>
+					</section>
+					<section>
+						<h3>BGP / Routing</h3>
+						<div class="fragment">
+							<blockquote>Massive route leak impacts major parts of the Internet, including Cloudflare</blockquote>
+							<p class="smallest bottom-right"><a href="https://blog.cloudflare.com/how-verizon-and-a-bgp-optimizer-knocked-large-parts-of-the-internet-offline-today/">How Verizon and a BGP Optimizer Knocked Large Parts of the Internet Offline Today</a></p>
+						</div>
+					</section>
+					<section>
+						<h3>BGP IP4 Table Size</h3>
+						<img src="media/bgpv4.png"/>
+					</section>
+					<section data-background-size="stretch" data-background-image="media/terragraph.png" data-background-color="#000"></section>
+					<section>
+						<h3>OpenR</h3>
+						<ul>
+							<li>Shared data-bus</li>
+							<li>Fast convergence</li>
+							<li>Secure bootstrap</li>
+							<li>Plug &amp; Play Address allocation</li>
+							<li>HW/SW Segregation</li>
+						</ul>
+						<p class="smallest bottom-right"><a href="https://github.com/facebook/openr/blob/master/openr/docs/Overview.md">OpenR Documentation</a></p>
+					</section>
+					<section>
+						<h3>Summary</h3>
+						<p class="fragment">We are almost at the limits of the network</p>
+					</section>
+					<section>
+						<p>But does it matter?</p>
+						<a target="_blank" href="media/waterfall1.png"><img class="plain" height="80%" src="media/waterfall1.png"/></a>
+					</section>
+				</section>
+
+
+				<section>
+						<section data-background-size="stretch" data-background-image="media/devices.jpg" data-background-color="#000"></section>
+						<section data-state="main-slide">
+							<h2>Client Platform</h2>
+						</section>
+						<section>
+							<h3>Service Workers</h3>
+							<img width="50%" class="plain" src="media/sw.png"/>
+							<img class="caniuse" src="http://caniuse-icon.herokuapp.com/serviceworkers"/>
+						</section>
+						<section>
+							<h3>Service Workers</h3>
+							<ul>
+								<li class="fragment">Offline Webpages</li>
+								<li class="fragment">Transpilation</li>
+								<li class="fragment">Performance Proxy</li>
+								<li class="fragment">Third-Party Policing</li>
+							</ul>
+							<img class="caniuse" src="http://caniuse-icon.herokuapp.com/serviceworkers"/>
+						</section>
+						<section>
+							<h3>Reporting API</h3>
+							<ul class="fragment">
+								<li>CSP violations</li>
+								<li>Deprecations</li>
+								<li>Browser interventions</li>
+								<li>Network Error Logging (NEL)</li>
+								<li>Crash reports</li>
+							</ul>
+							<p class="smaller">Available in Chrome 74</p>
+							<p class="bottom-right smallest"><a href="https://developers.google.com/web/updates/2018/09/reportingapi">developers.google.com | Reporting API</a></p>
+						</section>
+						<section>
+							<h3>Web Workers</h3>
+							<img width="50%" class="plain" src="media/webworker.png"/>
+							<img class="caniuse" src="http://caniuse-icon.herokuapp.com/webworkers"/>
+							<p class="bottom-right smallest"><a href="https://auth0.com/blog/speedy-introduction-to-web-workers/">Auth0 | Speedy intorduction to Web Workers</a></p>
+						</section>
+						<section>
+							<h3>Client Hints</h3>
+							<img width="60%" src="media/ch-negotiation.png"/>
+							<p class="smallest bottom-right"><a hreg="https://developers.google.com/web/updates/2015/09/automating-resource-selection-with-client-hints">developers.google.com | Automating Content Selection with Client Hints</a></p>
+						</section>
+						<section>
+							<h3>Client Hints++</h3>
+							<p>Get device and connection details in request headers!</p>
+							<pre><code>Accept-CH: Downlink, RTT, Device-Memory, Save-Data</code></pre>
+							<img src="media/clienthints.png"/>
+							<img class="caniuse" src="http://caniuse-icon.herokuapp.com/netinfo"/>
+							<p class="smallest bottom-right"><a hreg="https://developers.google.com/web/fundamentals/performance/optimizing-content-efficiency/client-hints/">developers.google.com | Optimizing Content Efficiency with Client Hints</a></p>
+						</section>
+						<section>
+							<h3>WebAssembly</h3>
+							<div class="fragment">
+								<p>Coming soon:</p>
+								<ul>
+									<li>ES Imports</li>
+									<li>Memory Management</li>
+									<li>Exception Handling</li>
+									<li>Shared Buffers</li>
+									<li>Non-numeric Types</li>
+								</ul>
+								<p class="smallest bottom-right"><a href="https://blog.scottlogic.com/2018/07/20/wasm-future.html">Scott Logic | The future of WebAssembly</a></p>
+							</div>
+							<img class="caniuse" src="http://caniuse-icon.herokuapp.com/wasm"/>
+						</section>
+						<section>
+							<h3>AMP / FIA</h3>
+							<div class="fragment">
+								<blockquote>AMP is temporary, the core platform should be the web</blockquote>
+								<p class="smallest bottom-right">Malte Ubl, AMP Tech Lead. 2015</p>
+							</div>
+						</section>
+				</section>
+
+				<section>
+					<section data-background-size="stretch" data-background-image="media/content.png" data-background-color="#000"></section>
+					<section data-state="main-slide">
+						<h2>Content</h2>
+					</section>
+					<section>
+						<h3>The rise, and rise of JavaScript</h3>
+						<img src="media/riseofJS.png"/>
+						<p class="smallest bottom-right"><a href="https://httparchive.org/reports/state-of-javascript?start=earliest&end=2018_12_15&view=list">HTTP Archive | State of JavaScript</a></p>
+					</section>
+					<section>
+						<h3>The rise, and rise of JavaScript</h3>
+						<p>Desktop JavaScript is up <em>350%</em> since 2011</p>
+						<p class="fragment">Mobile JavaScript is up <em>650%</em> since 2011</p>
+						<p class="smallest bottom-right"><a href="https://httparchive.org/reports/state-of-javascript?start=earliest&end=2018_12_15&view=list">HTTP Archive | State of JavaScript</a></p>
+					</section>
+					<section>
+						<h3>ES Modules</h3>
+						<img width="70%" class="plain" src="media/modules2.png"/>
+						<img class="caniuse" src="http://caniuse-icon.herokuapp.com/es6-module"/>
+						<p class="smallest bottom-right"><a href="https://hacks.mozilla.org/2018/03/es-modules-a-cartoon-deep-dive/">ES Modules: a cartoon deep dive</a></p>
+					</section>
+					<section>
+						<h3>Dynamic Import</h3>
+						<img width="70%" class="plain" src="media/import.png"/>
+						<img class="caniuse" src="http://caniuse-icon.herokuapp.com/es6-module-dynamic-import"/>
+						<p class="smallest bottom-right"><a href="https://github.com/tc39/proposal-dynamic-import">import() proposal for JavaScript</a></p>
+					</section>
+					<section>
+						<h3>Tree Shaking & Bundle Analysis</h3>
+						<img width="50%" class="plain" src="media/webpack.png"/>
+						<p class="smallest bottom-right"><a href="https://chrisbateman.github.io/webpack-visualizer/">WebPack Visualizer</a></p>
+					</section>
+					
+					<section>
+						<h3>The rise, and rise of Images</h3>
+						<img src="media/riseofImages.png"/>
+						<p class="smallest bottom-right"><a href="https://httparchive.org/reports/state-of-images?start=earliest&end=2018_12_15&view=list">HTTP Archive | State of Images</a></p>
+					</section>
+					<section>
+						<h3>The rise, and rise of Images</h3>
+						<p>Desktop Image Bytes are up <em>330%</em> since 2011</p>
+						<p class="fragment">Mobile Image Bytes are up <em>1050%</em> since 2011</p>
+						<p class="smallest bottom-right"><a href="https://httparchive.org/reports/state-of-images?start=earliest&end=2018_12_15&view=list">HTTP Archive | State of Images</a></p>
+					</section>
+					<section>
+						<h3>Native Image Lazy Loading</h3>
+						<img width="70%" class="plain" src="media/loading-attribute.png"/>
+						<p class="smaller">Available in Chrome 76, polyfill with lazysizes.js</p>
+						<p class="smallest bottom-right"><a href="https://addyosmani.com/blog/lazy-loading/">Addy Osmani | Native image lazy-loading for the web!</a></p>
+					</section>
+					<section>
+						<h3>Listen to the User</h3>
+						<img width="50%" class="plain" src="media/data-saver-chrome.png"/>
+						<p class="smaller">Available in Chrome 49+</p>
+						<p class="smallest bottom-right"><a href="https://developers.google.com/web/fundamentals/performance/optimizing-content-efficiency/save-data/">Delivering Fast and Light Applications with Save-Data</a></p>
+					</section>
+					<section>
+						<h3>Video - HD, 4K, 8K?</h3>
+						<p>Load video only on interaction. E.g. (HTML5):</p>
+						<pre style="width: fit-content;"><code>&lt;video preload="auto" /></code></pre>
+						<pre style="width: fit-content;"><code>&lt;video preload="metadata" /></code></pre>
+					</section>
+					<section data-background-image="media/reqmap.png">
+						<h3>The rise of third-party content</h3>
+					</section>
+					<section>
+						<h3>Summary</h3>
+						<p class="fragment">Content is the biggest factor we can control</p>
+						<p class="fragment">We can deliver only what the user needs</p>
+						<p class="fragment">Third-party content must be managed</p>
+					</section>
+				</section>
+
+				<section>
+					<section data-state="main-slide">
+						<h2>The User</h2>
+						<img width="30%" class="plain" src="media/shrug.png">
+					</section>
+					<section>
+						<h3>The User</h3>
+						<ul>
+							<li>The Next Billion Users</li>
+							<li>Privacy, Tracking and GDPR</li>
+							<li>Personalisation</li>
+							<li>Devices</li>
+						</ul>
+					</section>
+					<section data-background-image="media/connected.png" data-background-color="#000" data-background-size="contain">
+						<h3>The Next Billion Users</h3>	
+					</section>
+					<section>
+						<h3>The Next Billion Users</h3>
+						<ul>
+							<li class="fragment">Mobile-first</li>
+							<li class="fragment">Social Media Natives</li>
+							<li class="fragment">Ecommerce > In-Store</li>
+							<li class="fragment">3G / 4G networks</li>
+							<li class="fragment">Lower-end devices</li>
+							<li class="fragment">Have never known a world without Amazon</li>
+						</ul>
+					</section>
+					<section>
+						<h3>User-focus</h3>
+						<ul>
+							<li class="fragment">GDPR & Cookie Law make it harder to measure</li>
+							<li class="fragment">Browsers blocking trackers</li>
+							<li class="fragment">Browser vendors rendering in the cloud</li>
+						</ul>
+					</section>
+					<section>
+						<h3>User-focus?</h3>
+						<img class="plain" src="media/gdpr.png"/>
+					</section>
+					<section>
+						<h3>Personalisation</h3>
+						<ul>
+							<li class="fragment">Machine learning MVT</li>
+							<li class="fragment">Personalisation at the edge</li>
+							<li class="fragment">1:1 targeting</li>
+						</ul>
+					</section>
+					<section>
+						<h3>Devices</h3>
+						<ul>
+							<li class="fragment">Growth of Android</li>
+							<li class="fragment">Greater Display Density</li>
+							<li class="fragment">New display layouts</li>
+						</ul>
+					</section>
+				</section>
+				<section>
+					<section>
+						<h2>Conclusions ✍️</h2>
+						<ul class="point" style="font-size: 80%;">
+							<li class="fragment">Network improvements will not make the web fast</li>
+							<li class="fragment">Only serve the JavaScript that is required</li>
+							<li class="fragment">Serve content based on client hints</li>
+							<li class="fragment">Personalisation & Optimisation must move to the edge</li>
+							<li class="fragment">Serve offline-first for the next Billion users</li>
+						</ul>
+					</section>
+					<section class="top-align" data-background-image="media/bendy_phone.jpg" data-background-color="#000" data-background-size="stretch">
+						<h2>The Future is Here!</h2>
+					</section>
+				</section>
+				<section>
+					<section>
+						<h2>Thank you 🙏</h2>
+						<p>shearne@akamai.com</p>
+						<p class="smallest bottom-right">simonhearne.com/presentations/future-of-webperf/</p>
+					</section>
+				</section>
+	
+			</div>
+			<div id="chart-controls" class="hide"></div>
+
+		</div>
+
+		<script>
+			var presenting = window.location.search.includes('present');
+			if (!presenting) {
+				let id = document.getElementById('help-text');
+				if (id) {
+					id.innerHTML = "Use 'n' and 'p' to navigate next and previous slides.<br>Use 'o' to view an overview."
+				}
+			}
+			var keyboard = {
+				// pause/resume time when Enter is pressed
+				13: () => {
+					ElapsedTimeBar.isPaused ? ElapsedTimeBar.resume() : ElapsedTimeBar.pause();
+				},
+				// reset timer when 'r' is pressed
+				82: () => {
+					ElapsedTimeBar.reset();
+				}
+			};
+			if (presenting) {
+				keyboard = Object.assign(keyboard,{
+					39: 'next',
+					37: 'prev'
+				});
+			};
+    				
+			function getFragment(event) {
+				return (event.currentSlide.id !== "" ? event.currentSlide.id : null);
+			}
+			// More info https://github.com/hakimel/reveal.js#configuration
+			Reveal.initialize({
+				controls: !presenting,
+				progress: true,
+				history: true,
+				center: true,
+
+				transition: 'none', // none/fade/slide/convex/concave/zoom
+
+				allottedTime: 30 * 60 * 1000, // 30 minutes
+				barColor: 'hsl(220,99%,54%)',
+
+				// More info https://github.com/hakimel/reveal.js#dependencies
+				dependencies: [
+					{ src: '../lib/js/classList.js', condition: function() { return !document.body.classList; } },
+					{ src: '../plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: '../plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: '../plugin/embed-tweet/embed-tweet.js', condition: function() { return !!document.querySelector( 'div.tweet[data-src]' ); } },
+					{ src: '../lib/js/vega.min.js', condition: function() { return !!document.querySelector( 'div.vega-chart' ); } },
+					{ src: '../lib/js/vega-embed.min.js', condition: function() { return !!document.querySelector( 'div.vega-chart' ); } },
+					{ src: '../plugin/elapsed-time-bar/elapsed-time-bar.js'},
+					{ src: '../plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+					{ src: '../plugin/search/search.js', async: true },
+					{ src: '../plugin/zoom-js/zoom.js', async: true },
+					{ src: '../plugin/notes/notes.js', async: true }
+				],
+
+				keyboard: keyboard
+			});
+			Reveal.addEventListener( 'slidechanged', function( event ) {
+				let state = {h: event.indexh, v: event.indexv, name: getFragment(event)};
+			} );
+
+			/* animate.css */
+			// Set animation delay if data-delay is specified
+			Reveal.addEventListener('ready', function ( event ) {
+				$('*[data-delay]').each( function () { 
+					var delay = $(this).attr("data-delay");
+					$(this).css("-webkit-animation-delay", delay+"s"); 
+					$(this).css("animation-delay", delay+"s"); 
+				});
+			});
+
+			// Set animation duration if data-duration is specified
+			Reveal.addEventListener('ready', function ( event ) {
+				$('*[data-duration]').each( function () { 
+					var duration = $(this).attr("data-duration");
+					$(this).css("-webkit-animation-duration", duration+"s"); 
+					$(this).css("animation-duration", duration+"s"); 
+				});
+				embedVegaCharts();
+			});
+
+			function embedVegaCharts() {
+				if (window.hasOwnProperty('vegaEmbed')) {
+					console.log("vega-ready");
+					let width = window.innerWidth / 2;
+					let slideElement = document.getElementsByClassName('slides')[0];
+					if (slideElement) {width = slideElement.offsetWidth};
+					$(".vega-chart").each(function() {
+						let spec = this.attributes.getNamedItem("data-spec").value;
+						//spec = "https://raw.githubusercontent.com/vega/vega/master/docs/examples/bar-chart.vg.json";
+						vegaEmbed('#'+this.id, spec, {"actions": false, "theme": "dark", "width": width, "renderer": "svg", "config": "data/config.json"}).then(function(result) {
+						// Access the Vega view instance (https://vega.github.io/vega/docs/api/view/) as result.view
+						}).catch(console.error);
+					});
+				} else {
+					console.log("vega-not-ready");
+					//setTimeout(embedVegaCharts,1000);
+				}
+			};
+
+			// Animate items that are not in a fragment
+				Reveal.addEventListener('slidechanged', function( event ) {
+				// Animate elements that are not a fragment (or in a fragment)
+				var filter = '*[data-animate]:not(.fragment):not(.fragment *)';
+				
+				$(event.currentSlide).find(filter).each( function () {
+					$(this).addClass('animated');
+					$(this).addClass($(this).attr('data-animate'));
+				});		
+				$(event.previousSlide).find(filter).each( function () {
+					$(this).removeClass('animated');
+					$(this).removeClass($(this).attr('data-animate'));
+				});		
+				});
+
+				// Animate fragments
+				Reveal.addEventListener('fragmentshown', function( event ) {
+					function loop(i, el) { 
+						if ($(el).attr('data-animate')) {
+							$(el).addClass('animated');
+							$(el).addClass($(el).attr('data-animate'));
+						}
+						$.each($(el).children().not('.fragment'), loop);
+					};
+					$.each(event.fragments, loop);
+				});
+
+				// Make the animation runnable again if fragment is hidden
+				Reveal.addEventListener('fragmenthidden', function( event ) {	  
+				function loop(i, el) { 
+					if ($(el).attr('data-animate')) {
+						$(el).removeClass('animated');
+						$(el).removeClass($(el).attr('data-animate'));
+					}
+					$.each($(el).children().not('.fragment'), loop);
+				};
+				$.each(event.fragments, loop);
+			});
+		</script>
+
+	</body>
+</html>

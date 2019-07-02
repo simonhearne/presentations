@@ -1,0 +1,40 @@
+{
+  "autosize": {
+    "type": "fit",
+    "resize": true,
+    "contains": "content"
+  },
+  "background": null,
+  "text": {
+    "font": "Lato, sans-serif;",
+    "fontSize": 18,
+    "fill": "rgb(0,0,0)"
+  },
+  "axis": {
+    "labelFont": "Lato, sans-serif;",
+    "labelFontSize": 14,
+    "titleFont": "Lato, sans-serif;",
+    "titleFontSize": 16,
+    "ticks": false,
+    "labelPadding": 7,
+    "titlePadding": 10,
+    "color": "rgb(0,0,0)",
+    "labelColor": "rgb(0,0,0)",
+    "titleColor": "rgb(0,0,0)",
+    "gridOpacity": 0.25,
+    "domainOpacity": 0.5
+  },
+  "legend": {
+    "labelFont": "Lato, sans-serif;",
+    "labelFontSize": 12,
+    "labelFontWeight": 400,
+    "labelColor": "rgb(0,0,0)",
+    "titleColor": "rgb(0,0,0)"
+  },
+  "title": {
+    "font": "Lato, sans-serif;",
+    "fontSize": 18,
+    "fontWeight": 400,
+    "color": "rgb(0,0,0)"
+  }
+}
