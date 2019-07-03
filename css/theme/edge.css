@@ -629,3 +629,8 @@ img.caniuse {
 section.top-align {
   top: 0 !important;
 }
+
+h2.dark-bg {
+    background-color: rgba(0,0,0,0.75);
+    border-radius: 0.5em;
+}

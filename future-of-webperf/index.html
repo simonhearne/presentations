@@ -3,6 +3,7 @@
 
 	<head>
 		<meta charset="utf-8">
+		<base target="_blank">
 
 		<title>The Future of Web Performance - @SimonHearne</title>
 
@@ -145,7 +146,7 @@
 					</section>
 					<section>
 						<h3>TCP / UDP</h3>
-						<img class="plain" width="60%" src="media/quic.png">
+						<img class="plain fragment" width="60%" src="media/quic.png">
 						<p class="smallest bottom-right"><a href="https://medium.com/@codavel/quic-vs-tcp-tls-and-why-quic-is-not-the-next-big-thing-d4ef59143efd">QUIC vs TCP &amp; TLS</a></p>
 					</section>
 					<section>
@@ -206,9 +207,8 @@
 
 
 				<section>
-						<section data-background-size="stretch" data-background-image="media/devices.jpg" data-background-color="#000"></section>
-						<section data-state="main-slide">
-							<h2>Client Platform</h2>
+						<section class="top-align" data-background-size="stretch" data-background-image="media/devices.jpg" data-background-color="#000">
+							<h2 class="dark-bg">Client Platform</h2>
 						</section>
 						<section>
 							<h3>Service Workers</h3>
@@ -226,18 +226,6 @@
 							<img class="caniuse" src="http://caniuse-icon.herokuapp.com/serviceworkers"/>
 						</section>
 						<section>
-							<h3>Reporting API</h3>
-							<ul class="fragment">
-								<li>CSP violations</li>
-								<li>Deprecations</li>
-								<li>Browser interventions</li>
-								<li>Network Error Logging (NEL)</li>
-								<li>Crash reports</li>
-							</ul>
-							<p class="smaller">Available in Chrome 74</p>
-							<p class="bottom-right smallest"><a href="https://developers.google.com/web/updates/2018/09/reportingapi">developers.google.com | Reporting API</a></p>
-						</section>
-						<section>
 							<h3>Web Workers</h3>
 							<img width="50%" class="plain" src="media/webworker.png"/>
 							<img class="caniuse" src="http://caniuse-icon.herokuapp.com/webworkers"/>
@@ -246,6 +234,7 @@
 						<section>
 							<h3>Client Hints</h3>
 							<img width="60%" src="media/ch-negotiation.png"/>
+							<img class="caniuse" src="http://caniuse-icon.herokuapp.com/client-hints-dpr-width-viewport"/>
 							<p class="smallest bottom-right"><a hreg="https://developers.google.com/web/updates/2015/09/automating-resource-selection-with-client-hints">developers.google.com | Automating Content Selection with Client Hints</a></p>
 						</section>
 						<section>
@@ -278,20 +267,33 @@
 								<p class="smallest bottom-right">Malte Ubl, AMP Tech Lead. 2015</p>
 							</div>
 						</section>
+						<section>
+							<h3>Reporting API</h3>
+							<div class="fragment">
+								<ul>
+									<li>CSP violations</li>
+									<li>Deprecations</li>
+									<li>Browser interventions</li>
+									<li>Network Error Logging (NEL)</li>
+									<li>Crash reports</li>
+								</ul>
+								<p class="smaller">Available in Chrome 74</p>
+								<p class="bottom-right smallest"><a href="https://developers.google.com/web/updates/2018/09/reportingapi">developers.google.com | Reporting API</a></p>
+							</div>
+						</section>	
 				</section>
 
 				<section>
-					<section data-background-size="stretch" data-background-image="media/content.png" data-background-color="#000"></section>
-					<section data-state="main-slide">
-						<h2>Content</h2>
+					<section data-background-size="stretch" data-background-image="media/content.png" data-background-color="#000">
+						<h2 class="dark-bg">Content</h2>
 					</section>
 					<section>
-						<h3>The rise, and rise of JavaScript</h3>
+						<h3>The rise of JavaScript</h3>
 						<img src="media/riseofJS.png"/>
 						<p class="smallest bottom-right"><a href="https://httparchive.org/reports/state-of-javascript?start=earliest&end=2018_12_15&view=list">HTTP Archive | State of JavaScript</a></p>
 					</section>
 					<section>
-						<h3>The rise, and rise of JavaScript</h3>
+						<h3>The rise of JavaScript</h3>
 						<p>Desktop JavaScript is up <em>350%</em> since 2011</p>
 						<p class="fragment">Mobile JavaScript is up <em>650%</em> since 2011</p>
 						<p class="smallest bottom-right"><a href="https://httparchive.org/reports/state-of-javascript?start=earliest&end=2018_12_15&view=list">HTTP Archive | State of JavaScript</a></p>
@@ -312,6 +314,9 @@
 						<h3>Tree Shaking & Bundle Analysis</h3>
 						<img width="50%" class="plain" src="media/webpack.png"/>
 						<p class="smallest bottom-right"><a href="https://chrisbateman.github.io/webpack-visualizer/">WebPack Visualizer</a></p>
+					</section>
+					<section data-background-color="#fff" data-background-size="contain" data-background-image="media/bundlephobia.png">
+						<p class="smallest bottom-right"><a href="https://bundlephobia.com/result?p=d3@5.9.7">BundlePhobia | d3.js</a></p>
 					</section>
 					
 					<section>
@@ -369,7 +374,7 @@
 						</ul>
 					</section>
 					<section data-background-image="media/connected.png" data-background-color="#000" data-background-size="contain">
-						<h3>The Next Billion Users</h3>	
+						<h2 class="dark-bg">The Next Billion Users</h2>	
 					</section>
 					<section>
 						<h3>The Next Billion Users</h3>
