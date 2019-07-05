@@ -1,0 +1,431 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    
+    <title>Web Performance Workshop - @SimonHearne</title>
+    
+    <meta name="description" content="Web Performance Workshop">
+    <meta name="author" content="Simon Hearne">
+    
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    
+    <link rel="stylesheet" href="../css/reveal.css">
+    <link rel="stylesheet" href="../css/theme/edge.css" id="theme">
+    
+    <!-- Theme used for syntax highlighting of code -->
+    <link rel="stylesheet" href="../lib/css/zenburn.css">
+    
+    <!--<link rel="stylesheet" href="../lib/css/animate.min.css">-->
+    
+    <!--
+
+    <meta name=”twitter:image” content=”/presentations/social_improving-revenue.jpg”>
+    <meta property=“og:image” content=“/presentations/social_improving-revenue.jpg” />
+    <meta property=”og:image:width” content=”1716" />
+    <meta property=”og:image:height” content=”864″ />
+    -->
+    <!-- Printing and PDF exports -->
+    <script>
+        var link = document.createElement( 'link' );
+        link.rel = 'stylesheet';
+        link.type = 'text/css';
+        link.href = window.location.search.match( /print-pdf/gi ) ? '../css/print/pdf.css' : '../css/print/paper.css';
+        document.getElementsByTagName( 'head' )[0].appendChild( link );
+    </script>
+    <script src="../lib/js/head.min.js"></script>
+    <script src="../js/reveal.js"></script>
+    <script src="../lib/js/jquery-3.3.1.min.js"></script>
+    
+    <!--[if lt IE 9]>
+        <script src="lib/js/html5shiv.js"></script>
+        <![endif]-->
+    </head>
+    
+    <body>
+        <div class="reveal">
+            <div class="smaller tagline"><a style="color: inherit;" href="https://twitter.com/SimonHearne/">@SimonHearne</a></div>
+            <!-- Any section element inside of this container is displayed as a slide -->
+            <div class="slides">
+                <section class="center">
+                    <h1>Web Performance Workshop</h1>
+                    <p style="text-align: center;">Simon Hearne</p>
+                    <p class="smaller" style="text-align: center;">Web Performance Solutions Engineer @ Akamai</p>
+                    <p id="help-text" class="help-text"></p>
+                </section>
+                
+                <section class="center">
+                    <h2>Agenda</h2>
+                    <ol class="smaller">
+                        <li><a href="./#/intro">Introduction</a></li>
+                        <li><a href="./#/measure">Measuring Performance</a></li>
+                        <li><a href="./#/network">Network</a></li>
+                        <li><a href="./#/clients">Clients</a></li>
+                        <li><a href="./#/images">Images</a></li>
+                        <li><a href="./#/javascript">JavaScript</a></li>
+                        <li><a href="./#/caching">Caching</a></li>
+                        <li><a href="./#/thirdparty">Third-party Content</a></li>
+                        <li><a href="./#/automation">Automation</a></li>
+                        <li><a href="./#/cdn">CDN Optimisations</a></li>
+                        <li><a href="./#/future">Future</a></li>
+                    </ol>
+                </section>
+                
+                <section>
+                    <section id="intro">
+                        <h2>Introduction</h2>
+                    </section>
+                    <section id="wpostats">
+                        <h3>We know that speed matters</h3>
+                        <table class="twocol">
+                            <tr class="fragment">
+                                <td><img loading="lazy" class="plain" src="media/bbc.png"/></td>
+                                <td>The BBC loses an additional 10% of users for every additional second it takes to load</td>
+                            </tr>
+                            <tr class="fragment">
+                                <td><img loading="lazy" class="plain" src="media/pinterest.png"/></td>
+                                <td>Pinterest improved load time by 40% and saw 15% increase in SEO traffic and 15% increase in conversions</td>
+                            </tr>
+                            <tr class="fragment">
+                                <td><img loading="lazy" class="plain" src="media/ft.png"/></td>
+                                <td>Financial Times added a one second delay to every page view and saw a 4.9% drop in the number of articles users read over a 7 day window</td>
+                            </tr>
+                            <tr class="fragment">
+                                <td><img loading="lazy" class="plain" src="media/mobify.png"/></td>
+                                <td>For every 100ms decrease in homepage load speed, Mobify's customer base saw a 1.11% lift in session based conversion</td>
+                            </tr>
+                        </table>
+                        <p class="subtitle smallest bottom-right"><a href="https://wpostats.com/tags/engagement/">wpostats.com/tags/engagement/</a></p>
+                    </section>
+                    <section>
+                        todo
+                    </section>
+
+                </section>
+                
+                <section>
+                    <section class="center" id="measure" data-background-image="media/ruler.jpg" data-background-color="#000" data-background-size="stretch">
+                        <h2>Measuring Performance</h2>
+                    </section>
+                    <section class="center">
+                        <h3>Measurement:</h3>
+                        <ul>
+                            <li>Rule-based</li>
+                            <li>Ad hoc</li>
+                            <li>Synthetic</li>
+                            <li>Real User</li>
+                        </ul>
+                    </section>
+                    <section class="center">
+                        <h3>Measurement:</h3>
+                        <ul class="point">
+                            <li>Rule-based</li>
+                            <li class="skip">Ad hoc</li>
+                            <li class="skip">Synthetic</li>
+                            <li class="skip">Real User</li>
+                        </ul>
+                    </section>
+                    <section>
+                        <h2>Google Lighthouse</h2>
+                        <p class="smaller">In Chrome Developer Tools / Audits</p>
+                        <img width="50%" src="media/lighthouse1.png">
+                        <p class="citation"><a href="https://developers.google.com/web/tools/lighthouse/#devtools">developers.google.com/web/tools/lighthouse/#devtools</a></p>
+                    </section>
+                    <section>
+                        <h2>Google Lighthouse</h2>
+                        <p class="smaller">CLI</p>
+                        <iframe style="width: 70%; height: 40vh;" src="lighthouse.html"></iframe>
+                        <p class="citation"><a href="https://developers.google.com/web/tools/lighthouse/#cli">developers.google.com/web/tools/lighthouse/#cli</a></p>
+                    </section>
+                    <section>
+                        <h2>Google PageSpeed Insights</h2>
+                        <img width="50%" src="media/pagespeed.png">
+                        <p class="citation"><a href="https://developers.google.com/speed/pagespeed/insights/">developers.google.com/speed/pagespeed/insights/</a></p>
+                    </section>
+                    <section class="center">
+                        <h3>Measurement:</h3>
+                        <ul class="point">
+                            <li class="done">Rule-based</li>
+                            <li>Ad hoc</li>
+                            <li class="skip">Synthetic</li>
+                            <li class="skip">Real User</li>
+                        </ul>
+                    </section>
+                    <section>
+                        <h3>Developer Tools</h3>
+                    </section>
+                    <section>
+                        <h3>Remote Debugging!</h3>
+                        <p class="citation"><a href="https://developers.google.com/web/tools/chrome-devtools/remote-debugging/">developers.google.com/web/tools/chrome-devtools/remote-debugging/</a></p>
+                    </section>
+                    <section class="center">
+                        <h3>Ad Hoc Summary</h3>
+                        <ul class="proscons">
+                                <li class="pro">Pro</li>
+                                <li class="con">Con</li>
+                                <li>Neutral</li>
+                        </ul>
+                    </section>
+                    <section>
+                        <h3>WebPageTest.org</h3>
+                    </section>
+                    <section>
+                        <h3>WebPageTest.org</h3>
+                    </section>
+                    <section>
+                        <h3>WebPageTest.org</h3>
+                    </section>
+                    <section class="center">
+                        <h3>Measurement:</h3>
+                        <ul class="point">
+                            <li class="done">Rule-based</li>
+                            <li class="done">Ad hoc</li>
+                            <li>Synthetic</li>
+                            <li class="skip">Real User</li>
+                        </ul>
+                    </section>
+                    <section class="center">
+                        <h3>Measurement:</h3>
+                        <ul class="point">
+                            <li class="done">Rule-based</li>
+                            <li class="done">Ad hoc</li>
+                            <li class="done">Synthetic</li>
+                            <li>Real User</li>
+                        </ul>
+                    </section>
+                    <section class="center">
+                        <h3>Measurement:</h3>
+                        <ul class="point complete">
+                            <li class="done">Rule-based</li>
+                            <li class="done">Ad hoc</li>
+                            <li class="done">Synthetic</li>
+                            <li class="done">Real User</li>
+                        </ul>
+                    </section>
+                </section>
+                
+                <section>
+                    <section id="network">
+                        <h2>The Network</h2>
+                    </section>
+                </section>
+                
+                <section>
+                    <section id="images">
+                        <h2>Images</h2>
+                    </section>
+                </section>
+                
+                <section>
+                    <section id="javascript">
+                        <h2>JavaScript</h2>
+                    </section>
+                </section>
+                
+                <section>
+                    <section id="caching">
+                        <h2>Caching</h2>
+                    </section>
+                </section>
+                
+                <section>
+                    <section id="clients">
+                        <h2>Clients</h2>
+                    </section>
+                </section>
+                
+                <section>
+                    <section id="thirdparty">
+                        <h2>Third-party Content</h2>
+                    </section>
+                </section>
+                
+                <section>
+                    <section id="automation">
+                        <h2>Automation</h2>
+                    </section>
+                </section>
+                
+                <section>
+                    <section id="cdn">
+                        <h2>CDN Optimisations</h2>
+                    </section>
+                </section>
+                
+                <section>
+                    <section id="future">
+                        <h2>Future</h2>
+                    </section>
+                </section>
+                
+                <section>
+                    <section class="center" id="end">
+                        <h2>Thank you 🙏</h2>
+                        <p>shearne@akamai.com</p>
+                        <p class="smallest bottom-right"><a href="https://simonhearne.com/presentations/workshop/">simonhearne.com/presentations/workshop/</a></p>
+                    </section>
+                </section>
+                
+            </div>
+            <div id="chart-controls" class="hide"></div>
+            
+        </div>
+        
+        <script>
+            var presenting = window.location.search.includes('present');
+            if (!presenting) {
+                let id = document.getElementById('help-text');
+                if (id) {
+                    id.innerHTML = "Use 'n' and 'p' to navigate next and previous slides.<br>Use 'o' to view an overview."
+                }
+            }
+            var keyboard = {
+                // pause/resume time when Enter is pressed
+                13: () => {
+                    ElapsedTimeBar.isPaused ? ElapsedTimeBar.resume() : ElapsedTimeBar.pause();
+                },
+                // reset timer when 'r' is pressed
+                82: () => {
+                    ElapsedTimeBar.reset();
+                }
+            };
+            if (presenting) {
+                keyboard = Object.assign(keyboard,{
+                    39: 'next',
+                    37: 'prev'
+                });
+            };
+            
+            function getFragment(event) {
+                return (event.currentSlide.id !== "" ? event.currentSlide.id : null);
+            }
+            // More info https://github.com/hakimel/reveal.js#configuration
+            Reveal.initialize({
+                controls: !presenting,
+                progress: false,
+                history: true,
+                center: false,
+                
+                transition: 'none', // none/fade/slide/convex/concave/zoom
+                
+                allottedTime: 30 * 60 * 1000, // 30 minutes
+                barColor: 'hsl(220,99%,54%)',
+                
+                // More info https://github.com/hakimel/reveal.js#dependencies
+                dependencies: [
+                { src: '../lib/js/classList.js', condition: function() { return !document.body.classList; } },
+                { src: '../plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+                { src: '../plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+                { src: '../plugin/embed-tweet/embed-tweet.js', condition: function() { return !!document.querySelector( 'div.tweet[data-src]' ); } },
+                { src: '../lib/js/vega.min.js', condition: function() { return !!document.querySelector( 'div.vega-chart' ); } },
+                { src: '../lib/js/vega-embed.min.js', condition: function() { return !!document.querySelector( 'div.vega-chart' ); } },
+                { src: '../plugin/elapsed-time-bar/elapsed-time-bar.js'},
+                { src: '../plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+                { src: '../plugin/search/search.js', async: true },
+                { src: '../plugin/zoom-js/zoom.js', async: true },
+                { src: '../plugin/notes/notes.js', async: true }
+                ],
+                
+                keyboard: keyboard
+            });
+            Reveal.addEventListener( 'slidechanged', function( event ) {
+                let state = {h: event.indexh, v: event.indexv, name: getFragment(event)};
+            } );
+            
+            /* animate.css */
+            // Set animation delay if data-delay is specified
+            Reveal.addEventListener('ready', function ( event ) {
+                $('*[data-delay]').each( function () { 
+                    var delay = $(this).attr("data-delay");
+                    $(this).css("-webkit-animation-delay", delay+"s"); 
+                    $(this).css("animation-delay", delay+"s"); 
+                });
+            });
+            
+            // Set animation duration if data-duration is specified
+            Reveal.addEventListener('ready', function ( event ) {
+                $('*[data-duration]').each( function () { 
+                    var duration = $(this).attr("data-duration");
+                    $(this).css("-webkit-animation-duration", duration+"s"); 
+                    $(this).css("animation-duration", duration+"s"); 
+                });
+                embedVegaCharts();
+            });
+            
+            function embedVegaCharts() {
+                if (window.hasOwnProperty('vegaEmbed')) {
+                    console.log("vega-ready");
+                    let width = window.innerWidth / 2;
+                    let slideElement = document.getElementsByClassName('slides')[0];
+                    if (slideElement) {width = slideElement.offsetWidth};
+                    $(".vega-chart").each(function() {
+                        let spec = this.attributes.getNamedItem("data-spec").value;
+                        //spec = "https://raw.githubusercontent.com/vega/vega/master/docs/examples/bar-chart.vg.json";
+                        vegaEmbed('#'+this.id, spec, {"actions": false, "theme": "dark", "width": width, "renderer": "svg", "config": "data/config.json"}).then(function(result) {
+                            // Access the Vega view instance (https://vega.github.io/vega/docs/api/view/) as result.view
+                        }).catch(console.error);
+                    });
+                } else {
+                    console.log("vega-not-ready");
+                    //setTimeout(embedVegaCharts,1000);
+                }
+            };
+            
+            // Animate items that are not in a fragment
+            Reveal.addEventListener('slidechanged', function( event ) {
+                // Animate elements that are not a fragment (or in a fragment)
+                var filter = '*[data-animate]:not(.fragment):not(.fragment *)';
+                
+                $(event.currentSlide).find(filter).each( function () {
+                    $(this).addClass('animated');
+                    $(this).addClass($(this).attr('data-animate'));
+                });		
+                $(event.previousSlide).find(filter).each( function () {
+                    $(this).removeClass('animated');
+                    $(this).removeClass($(this).attr('data-animate'));
+                });		
+            });
+            
+            // Animate fragments
+            Reveal.addEventListener('fragmentshown', function( event ) {
+                function loop(i, el) { 
+                    if ($(el).attr('data-animate')) {
+                        $(el).addClass('animated');
+                        $(el).addClass($(el).attr('data-animate'));
+                    }
+                    $.each($(el).children().not('.fragment'), loop);
+                };
+                $.each(event.fragments, loop);
+            });
+            
+            // Make the animation runnable again if fragment is hidden
+            Reveal.addEventListener('fragmenthidden', function( event ) {	  
+                function loop(i, el) { 
+                    if ($(el).attr('data-animate')) {
+                        $(el).removeClass('animated');
+                        $(el).removeClass($(el).attr('data-animate'));
+                    }
+                    $.each($(el).children().not('.fragment'), loop);
+                };
+                $.each(event.fragments, loop);
+            });
+        </script>
+        <script nonce="googleAnalytics">
+            (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+                (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();
+                i.initAnalytics=function(){a=s.createElement(o),m=s.getElementsByTagName(o)[0];
+                    a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+                }})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+                
+                ga('create', 'UA-6512525-16', 'auto', {'siteSpeedSampleRate': 100});
+                ga('send', 'pageview');
+                
+                window.addEventListener('load',function(){initAnalytics()});
+            </script>
+        </body>
+        </html>
+        

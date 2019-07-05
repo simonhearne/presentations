@@ -78,19 +78,17 @@ html.plain-slide body {
   word-wrap: break-word; }
 
 .reveal h1 {
-  font-size: 1.75em; }
+  font-size: 1.75em; 
+  text-shadow: none; }
 
 .reveal h2 {
-  font-size: 1.9em; }
-
-.reveal h3 {
   font-size: 1.6em; }
 
-.reveal h4 {
-  font-size: 1.3em; }
+.reveal h3 {
+  font-size: 1.4em; }
 
-.reveal h1 {
-  text-shadow: none; }
+.reveal h4 {
+  font-size: 1.2em; }
 
 /*********************************************
  * OTHER
@@ -121,14 +119,41 @@ html.plain-slide body {
   text-align: left;
   margin: 0 0 0 1em; }
 
-.reveal ul.point {
+.reveal ul.point,
+.reveal ul.proscons {
   list-style-type: none;
+  margin: 0 0 0 0; }
+
+  .reveal ul.proscons li:not(.con):not(.pro):before {
+    content: '🤔 ';
+    margin-right: 0.2em;
+  }
+  .reveal ul.proscons li.pro:before {
+    content: '👍 ';
+    margin-right: 0.2em;
+  }
+  .reveal ul.proscons li.con:before {
+    content: '👎 ';
+    margin-right: 0.2em;
+  }
+
+.reveal ul.point li:not(.skip):before {
+  content: '👉 ';
+  margin-right: 0.2em;
 }
 
-.reveal ul.point li:before {
-  content: '👉';
-  margin-right: 0.5em;
+.reveal ul.point li.skip:before {
+  content: '• ';
+  margin-right: 0.2em;
 }
+.reveal ul.point li.done:before {
+  content: '✓ ';
+  margin-right: 0.2em;
+}
+
+.reveal ul.point:not(.complete) li.skip,
+.reveal ul.point:not(.complete) li.done {
+  opacity: 0.5; }
 
 .reveal ol {
   list-style-type: decimal; }
@@ -340,24 +365,24 @@ html.plain-slide body {
 /*********************************************
  * TEXT STYLES
  *********************************************/
- p.subtitle {
+ .subtitle {
   font-size: 80%;
   opacity: 0.7;
   z-index: 10;
   text-align: left !IMPORTANT;
 }
-p.top-right {
+.top-right {
   position: fixed;
   right: 40px;
   top: 60px;
 }
-p.bottom-right {
+.bottom-right {
   position: fixed;
   right: 0px;
   bottom: 0px;
   text-align: right;
 }
-p.bottom-left {
+.bottom-left {
   position: fixed;
   bottom: 0px;
   left: 0px;
@@ -366,6 +391,13 @@ p.bottom-left {
   font-size: 70% !important;
 }
 .smallest {
+  font-size: 50% !important;
+}
+.citation {
+  position: fixed !important;
+  right: 0px !important;
+  bottom: 0px !important;
+  text-align: right !important;
   font-size: 50% !important;
 }
 
@@ -444,10 +476,11 @@ span { display: inline-block; }
 }
 
 .reveal .tagline {
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
   padding: 30px !important;
+  z-index: 999;
 }
 
 .reveal .smaller.tagline.bottom-right {
