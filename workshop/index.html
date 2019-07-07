@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8">
-    
+    <base target="_blank">
     <title>Web Performance Workshop - @SimonHearne</title>
     
     <meta name="description" content="Web Performance Workshop">
@@ -23,11 +23,11 @@
     <!--<link rel="stylesheet" href="../lib/css/animate.min.css">-->
     
     <!--
-
-    <meta name=”twitter:image” content=”/presentations/social_improving-revenue.jpg”>
-    <meta property=“og:image” content=“/presentations/social_improving-revenue.jpg” />
-    <meta property=”og:image:width” content=”1716" />
-    <meta property=”og:image:height” content=”864″ />
+        
+        <meta name=”twitter:image” content=”/presentations/social_improving-revenue.jpg”>
+        <meta property=“og:image” content=“/presentations/social_improving-revenue.jpg” />
+        <meta property=”og:image:width” content=”1716" />
+        <meta property=”og:image:height” content=”864″ />
     -->
     <!-- Printing and PDF exports -->
     <script>
@@ -61,17 +61,18 @@
                 <section class="center">
                     <h2>Agenda</h2>
                     <ol class="smaller">
-                        <li><a href="./#/intro">Introduction</a></li>
-                        <li><a href="./#/measure">Measuring Performance</a></li>
-                        <li><a href="./#/network">Network</a></li>
-                        <li><a href="./#/clients">Clients</a></li>
-                        <li><a href="./#/images">Images</a></li>
-                        <li><a href="./#/javascript">JavaScript</a></li>
-                        <li><a href="./#/caching">Caching</a></li>
-                        <li><a href="./#/thirdparty">Third-party Content</a></li>
-                        <li><a href="./#/automation">Automation</a></li>
-                        <li><a href="./#/cdn">CDN Optimisations</a></li>
-                        <li><a href="./#/future">Future</a></li>
+                        <li><a target="_self" href="./#/intro">Introduction</a></li>
+                        <li><a target="_self" href="./#/measure">Measuring Performance</a></li>
+                        <li><a target="_self" href="./#/network">Network</a></li>
+                        <li><a target="_self" href="./#/clients">Clients</a></li>
+                        <li><a target="_self" href="./#/images">Images</a></li>
+                        <li><a target="_self" href="./#/javascript">JavaScript</a></li>
+                        <li><a target="_self" href="./#/caching">Caching</a></li>
+                        <li><a target="_self" href="./#/thirdparty">Third-party Content</a></li>
+                        <li><a target="_self" href="./#/automation">Automation</a></li>
+                        <li><a target="_self" href="./#/advanced">Advanced Concepts</a></li>
+                        <li><a target="_self" href="./#/cdn">CDN Optimisations</a></li>
+                        <li><a target="_self" href="./#/future">Future</a></li>
                     </ol>
                 </section>
                 
@@ -104,7 +105,7 @@
                     <section>
                         todo
                     </section>
-
+                    
                 </section>
                 
                 <section>
@@ -162,22 +163,18 @@
                         <h3>Remote Debugging!</h3>
                         <p class="citation"><a href="https://developers.google.com/web/tools/chrome-devtools/remote-debugging/">developers.google.com/web/tools/chrome-devtools/remote-debugging/</a></p>
                     </section>
+                    <section>
+                        <h3>WebPageTest.org</h3>
+                        <p class="citation"><a href="https://webpagetest.org/">webpagetest.org</a></p>
+                        
+                    </section>
                     <section class="center">
                         <h3>Ad Hoc Summary</h3>
                         <ul class="proscons">
-                                <li class="pro">Pro</li>
-                                <li class="con">Con</li>
-                                <li>Neutral</li>
+                            <li class="pro">Pro</li>
+                            <li class="con">Con</li>
+                            <li>Neutral</li>
                         </ul>
-                    </section>
-                    <section>
-                        <h3>WebPageTest.org</h3>
-                    </section>
-                    <section>
-                        <h3>WebPageTest.org</h3>
-                    </section>
-                    <section>
-                        <h3>WebPageTest.org</h3>
                     </section>
                     <section class="center">
                         <h3>Measurement:</h3>
@@ -187,6 +184,19 @@
                             <li>Synthetic</li>
                             <li class="skip">Real User</li>
                         </ul>
+                    </section>
+                    <section class="center" data-background-size="stretch" data-background-image="media/synthetic.jpg" data-background-color="#000">
+                        <h3 class="dark-bg">Synthetic Monitoring</h3>
+                    </section>
+                    <section class="center">
+                        <h3>Monitoring Tools</h3>
+                        <ul>
+                            <li><a href="https://speedcurve.com/">SpeedCurve</a></li>
+                            <li><a href="https://www.catchpoint.com/">Catchpoint</a></li>
+                            <li><a href="https://rigor.com/">Rigor</a></li>
+                            <li><a href="https://calibreapp.com/">Calibre</a></li>
+                        </ul>
+                        <p class="citation">* <a href="https://www.google.com/search?q=performance%20monitoring%20tool">other services</a> are available</p>
                     </section>
                     <section class="center">
                         <h3>Measurement:</h3>
@@ -209,55 +219,193 @@
                 </section>
                 
                 <section>
-                    <section id="network">
+                    <section id="network" data-background-size="contain" data-background-image="media/tubes.png" data-background-color="#000"></section>
+                    <section class="center">
                         <h2>The Network</h2>
                     </section>
                 </section>
                 
                 <section>
-                    <section id="images">
+                    <section class="center" id="images">
                         <h2>Images</h2>
                     </section>
                 </section>
                 
                 <section>
-                    <section id="javascript">
+                    <section class="center" id="javascript">
                         <h2>JavaScript</h2>
+                        <blockquote>You’re building your own maze, in a way,<br>and you might just get lost in it.</blockquote>
+                        <p class="citation">Marijn Haverbeke, Eloquent JavaScript: A Modern Introduction to Programming</p>
                     </section>
                 </section>
                 
                 <section>
-                    <section id="caching">
+                    <section class="center" id="caching">
                         <h2>Caching</h2>
+                        <blockquote>The fastest request is the one that is never made</blockquote>
+                    </section>
+                    <section class="center">
+                        <h3>Cache control headers</h3>
+                        <ul class="proscons" style="font-family: monospace;">
+                            <li class="pro">cache-control</li>
+                            <li>last-modified</li>
+                            <li>etag</li>
+                            <li class="con">pragma</li>
+                            <li class="con">expires</li>
+                            <li class="con">last-modified</li>
+                        </ul>
+                    </section>
+                    <section>
+                        <h3>Cache forever</h3>
+                        <p class="smaller">Use for immutable, versioned assets. Best possible caching!</p>
+                        <hr>
+                        <code style="font-size:90%;">cache-control: <span class="fragment" data-fragment-index="1">immutable, </span>
+                            <span class="fragment" data-fragment-index="2">max-age=31536000</span></code>
+                        <hr>
+                        <ul>
+                            <li class="fragment" data-fragment-index="1">Do not revalidate, even on page reload</li>
+                            <li class="fragment" data-fragment-index="2">Cache for up to a year</li>
+                        </ul>
+                    </section>
+                    <section>
+                        <h3>Cache, with revalidation (1)</h3>
+                        <p class="smaller">Use for assets which may change. Validation uses an extra round-trip.</p>
+                        <hr>
+                        <code style="font-size:90%;">cache-control: <span class="fragment" data-fragment-index="1">max-age:86400</span>
+                            <br><span class="fragment" data-fragment-index="2">ETag: "33a64...f89d4"</span></code>
+                        <hr>
+                        <ul>
+                            <li class="fragment" data-fragment-index="1">Cache for up to a day</li>
+                            <li class="fragment" data-fragment-index="2">Serve cached asset if ETag matches</li>
+                        </ul>
+                    </section>
+                    <section>
+                        <h3>Cache, with revalidation (2)</h3>
+                        <p class="smaller">Use for assets which may change. Validation uses an extra round-trip.</p>
+                        <hr>
+                        <code style="font-size:90%;">cache-control: 
+                            <span class="fragment" data-fragment-index="1">max-age:86400</span><br>
+                            <span class="fragment" data-fragment-index="2">Last-Modified: 
+                                <span id="lastmodifieddate"></span></span></code>
+                            <script>document.getElementById("lastmodifieddate").innerText=(new Date()).toUTCString()</script>
+                            <hr>
+                        <ul>
+                            <li class="fragment" data-fragment-index="1">Cache for up to a day</li>
+                            <li class="fragment" data-fragment-index="2">Check if the resource has changed</li>
+                        </ul>
+                    </section>
+                    <section>
+                        <h3>Forced revalidation</h3>
+                        <p class="smaller">Use for frequently updated assets (feeds, product lists)</p>
+                        <hr>
+                        <code style="font-size:90%;">cache-control: <span class="fragment" data-fragment-index="1">no-cache</span>
+                            <br><span class="fragment" data-fragment-index="2">ETag: "33a64...f89d4"</span></code>
+                        <hr>
+                        <ul>
+                            <li class="fragment" data-fragment-index="1">Do not use without validation</li>
+                            <li class="fragment" data-fragment-index="2">(must include a last-modified or ETag header)</li>
+                        </ul>
+                    </section>
+                    <section>
+                        <h3>Don't cache!</h3>
+                        <p class="smaller">Use for sensitive responses (set-cookie, user-specific)</p>
+                        <hr>
+                        <code style="font-size:90%;">cache-control: <span class="fragment" data-fragment-index="1">no-store</span></code>
+                        <hr>
+                        <ul>
+                            <li class="fragment" data-fragment-index="1">Do not store anything about the response</li>
+                        </ul>
+                    </section>
+                    <section>
+                        <h3>Caching Summary</h3>
+                        <img class="plain" width="50%" src="media/http-cache-decision-tree.png"/>
+                        <p class="citation"><a href="https://developers.google.com/web/fundamentals/performance/optimizing-content-efficiency/http-caching">Google Web Fundamentals | HTTP Caching</a></p>
+                    </section>
+                    <section>
+                        <h3>CDN Considerations</h3>
+                        <ul style="font-family:monospace;">
+                            <li>stale-while-revalidate</li>
+                            <li>vary</li>
+                            <li>no-transform</li>
+                        </ul>
                     </section>
                 </section>
                 
                 <section>
-                    <section id="clients">
+                    <section class="center" id="clients">
                         <h2>Clients</h2>
                     </section>
                 </section>
                 
                 <section>
-                    <section id="thirdparty">
+                    <section class="center" id="thirdparty">
                         <h2>Third-party Content</h2>
+                    </section>
+                    <section class="center" data-state="plain-slide" data-background="media/requestmap.png" data-background-color="#000">
+                        <h3>Third-party scripts are responsible for<br/>>70% of requests</h3>
+                        <p class="smallest bottom-right"><a href="https://requestmap.webperf.tools/">requestmap.webperf.tools</a></p>
                     </section>
                 </section>
                 
                 <section>
-                    <section id="automation">
+                    <section class="center" id="automation">
                         <h2>Automation</h2>
                     </section>
                 </section>
                 
                 <section>
-                    <section id="cdn">
+                    <section class="center" id="advanced">
+                        <h2>Advanced Concepts</h2>
+                    </section>
+                    <section>
+                        <h3>Bring on the workers!</h3>
+                        <ul>
+                            <li>Web Worker</li>
+                            <li>Service Worker</li>
+                            <li>Edge Worker</li>
+                        </ul>
+                    </section>
+                    <section>
+                        <h3>Web Worker</h3>
+                    </section>
+                    <section>
+                        <h3>Service Worker</h3>
+                        <ul class="proscons">
+                            <li class="pro">Serves content even when off-line</li>
+                            <li class="pro">Proxy third-party requests and apply timeouts</li>
+                            <li class="pro">Augment requests to add context (e.g. image width)</li>
+                            <li class="con">Does not work for first view</li>
+                            <li class="con">Only one permitted per domain</li>
+                            <li class="con">Hard to test &amp; debug</li>
+                        </ul>
+                    </section>
+                    <section>
+                        <h3>Edge Worker</h3>
+                    </section>
+                    <section>
+                        <h3>Worker Summary</h3>
+                        <ul>
+                            <li class="fragment">Web Worker <span>- offload intensive JS to another thread</span></li>
+                            <li class="fragment">Service Worker <span>- a JS proxy in your browser</span></li>
+                            <li class="fragment">Edge Worker <span>- serverless at the edge</span></li>
+                        </ul>
+                    </section>
+                    <section>
+                        <h3>Web Assembly (WASM)</h3>
+                    </section>
+                    <section>
+                        <h3>CSS Paint API</h3>
+                    </section>
+                </section>
+                
+                <section>
+                    <section class="center" id="cdn">
                         <h2>CDN Optimisations</h2>
                     </section>
                 </section>
                 
                 <section>
-                    <section id="future">
+                    <section class="center" id="future">
                         <h2>Future</h2>
                     </section>
                 </section>

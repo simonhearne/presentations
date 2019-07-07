@@ -125,15 +125,15 @@ html.plain-slide body {
   margin: 0 0 0 0; }
 
   .reveal ul.proscons li:not(.con):not(.pro):before {
-    content: '🤔 ';
+    content: '😑 ';
     margin-right: 0.2em;
   }
   .reveal ul.proscons li.pro:before {
-    content: '👍 ';
+    content: '😀 ';
     margin-right: 0.2em;
   }
   .reveal ul.proscons li.con:before {
-    content: '👎 ';
+    content: '😞 ';
     margin-right: 0.2em;
   }
 
@@ -663,7 +663,7 @@ section.top-align {
   top: 0 !important;
 }
 
-h2.dark-bg {
+.dark-bg {
     background-color: rgba(0,0,0,0.75);
     border-radius: 0.5em;
 }
