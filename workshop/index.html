@@ -104,7 +104,16 @@
                         <p class="subtitle smallest bottom-right"><a href="https://wpostats.com/tags/engagement/">wpostats.com/tags/engagement/</a></p>
                     </section>
                     <section>
-                        todo
+                        <h2>TODO</h2>
+                        <ul>
+                            <li>network section + preload / prefetch / preconnect</li>
+                            <li>CSS &amp; fonts</li>
+                            <li>responsive images</li>
+                            <li>client hints</li>
+                            <li>JavaScript</li>
+                            <li>Automation / CDN</li>
+                            <li>Future</li>
+                        </ul>
                     </section>
                     
                 </section>
@@ -299,6 +308,33 @@
                             <li class="done">Synthetic</li>
                             <li class="done">Real User</li>
                             <li class="done">Application</li>
+                        </ul>
+                    </section>
+                    <section class="center">
+                        <h3>Browser APIs</h3>
+                        <p class="smaller">Provide data for synthetic &amp; real user monitoring</p>
+                        <ul>
+                            <li>Navigation Timing API</li>
+                            <li>Resource Timing API</li>
+                            <li>User Timing API</li>
+                        </ul>
+                    </section>
+                    <section>
+                        <h3>Navigation Timing API</h3>
+                    </section>
+                    <section>
+                        <h3>Resource Timing API</h3>
+                        <p class="smaller">* only total duration for crossorigin requests without timing-allow-origin response header</p>
+                    </section>
+                    <section>
+                        <h3>User Timing API</h3>
+                    </section>
+                    <section class="center">
+                        <h3>Browser APIs</h3>
+                        <ul>
+                            <li><em>Navigation Timing API</em> - page load timings</li>
+                            <li><em>Resource Timing API</em> - individual resource performance</li>
+                            <li><em></em>User Timing API</em> - bespoke performance measures for you</li>
                         </ul>
                     </section>
                 </section>
@@ -654,12 +690,140 @@
                                     </section>
                                     
                                     <section>
-                                        <section class="center" data-state="plain-slide" data-background="media/requestmap.png" data-background-color="#000">
+                                        <section class="center" id="thirdparty" data-state="plain-slide" data-background="media/requestmap.png" data-background-color="#000">
                                             <h2>Third-party Content</h2>
                                         </section>
                                         <section class="center" data-state="plain-slide" data-background="media/requestmap.png" data-background-color="#000">
                                             <h3 class="dark-bg">Third-party scripts account for<br/>&gt;70% of requests</h3>
                                             <p class="smallest bottom-right"><a href="https://requestmap.webperf.tools/">requestmap.webperf.tools</a></p>
+                                        </section>
+                                        <section class="center" data-state="tertiary-slide">
+                                            <h3>Tags serve business goals</h3>
+                                            <ul>
+                                                <li class="fragment">Measurement &amp; Analytics</li>
+                                                <li class="fragment">Ads &amp; Retargeting</li>
+                                                <li class="fragment">Optimisation &amp; Testing</li>
+                                                <li class="fragment">Comments &amp; Live Chat</li>
+                                                <li class="fragment">Tag Management</li>
+                                            </ul>
+                                        </section>
+                                        <section class="center">
+                                            <h3>Blocking tags create availability risk</h3> 
+                                            <pre style="width:fit-content;"><code><script src="//code.jquery.com/jquery-1.7.1.min.js"></script></code></pre>
+                                            <img class="" src="media/spof.png">
+                                            <p class="smaller">Single Point of Failure blank screen duration:<br>Windows: 30s | Android: 60s | MacOS: 75s | iOS: 75s</p>
+                                            <p class="citation"><a href="https://www.webpagetest.org/video/compare.php?tests=190708_Z1_53e4411b2b30d9da5112416223fdd7cf%2C190708_PH_5e8bb8a7a4e1ff30ec41c904f2f90557&thumbSize=200&ival=5000&end=visual">WebPageTest | businessinsider.com</a></p>
+                                        </section>
+                                        <section class="center">
+                                            <h3>Tags create performance risk</h3> 
+                                            <img class="stretch" src="media/3pjs.png">
+                                            <p class="smaller">Main thread blocked for over six seconds by Campaign Monitor</p>
+                                        </section>
+                                        <section class="center">
+                                            <h3>Tags can cause frustration!</h3> 
+                                            <img class="stretch" src="media/onunload.png">
+                                            <p class="smaller">1.6s delay on click event, caused by third-party scripts</p>
+                                        </section>
+                                        <section class="center">
+                                            <h3>Tags can cost us $£€ 😱</h3> 
+                                            <img class="stretch" src="media/ba.png">
+                                            <p class="citation"><a href="https://www.theguardian.com/business/2019/jul/08/ba-fine-customer-data-breach-british-airways">Guardian | BA faces £183m fine over passenger data breach</a></p>
+                                        </section>
+                                        <section class="center">
+                                            <h3>Managing Third Parties</h3>
+                                            <ul>
+                                                <li>Subresource Integrity</li>
+                                                <li>Content Security Policy</li>
+                                                <li>Reporting API</li>
+                                                <li>Self-hosting &amp; Proxying</li>
+                                                <li>Service Worker</li>
+                                            </ul>
+                                        </section>
+                                        <section class="center">
+                                            <h3>Subresource Integrity</h3>
+                                            <p class="smaller">Validate resources against a crypto hash.<br>Protects against malicious code changes, not poor performance!</p>
+                                            <pre><code data-trim>
+                                                &lt;script 
+                                                    src="//thirdparty.com/script.js"
+                                                    integrity="sha256-ivk71nXhz9nsyFDoYoGf2...="&gt;
+                                                &lt;/script&gt;</code></pre>
+                                            <p class="citation"><a href="https://developer.mozilla.org/en-US/docs/Web/Security/Subresource_Integrity">MDN | Subresource Integrity</a></pc>
+                                        </section>
+                                        <section class="center">
+                                            <h3>Content Security Policy</h3>
+                                            <p class="smaller">Only allow scripts / images / frames from pre-approved domains</p>
+                                            <pre><code data-trim>
+                                                Content-Security-Policy:
+                                                    default-src 'self';
+                                                    img-src *;
+                                                    media-src media1.com media2.com;
+                                                    script-src userscripts.example.com
+                                            </code></pre>
+                                            <p class="citation"><a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP">MDN | Content Security Policy</a></pc>
+                                        </section>
+                                        <section class="center">
+                                            <h3>Reporting API</h3>
+                                            <p class="smaller">Validate resources against a crypto hash.<br>Protects against malicious code changes, not poor performance!</p>
+                                            <pre><code class="smaller" data-trim>
+                                                    Report-To:
+                                                    {
+                                                     "group": "csp-endpoint",
+                                                     "max_age": 10886400,
+                                                     "endpoints": [{
+                                                      "url": "https://example.com/csp-reports"
+                                                     }]
+                                                    },{
+                                                     "group": "network-endpoint",
+                                                     "max_age": 10886400,
+                                                     "endpoints": [{
+                                                      "url": "https://example.com/network-errors"
+                                                     }]
+                                                    },{
+                                                     "max_age": 10886400,
+                                                     "endpoints": [{
+                                                      "url": "https://example.com/browser-errors"
+                                                     }]
+                                                    }</code></pre>
+                                            <p class="citation"><a href="https://developer.mozilla.org/en-US/docs/Web/Security/Subresource_Integrity">MDN | Subresource Integrity</a></pc>
+                                        </section>
+                                        <section class="center">
+                                            <h3>Self-hosting &amp; Proxying</h3>
+                                            <p class="smaller">Serve third party content from your domain</p>
+                                            <img class="plain stretch" src="media/casper.png">
+                                            <p class="citation"><a href="https://help.optimizely.com/Set_Up_Optimizely/Optimizely_self-hosting_for_Akamai_users">Optimizely self-hosting for Akamai users</a></pc>
+                                        </section>
+                                        <section class="center">
+                                            <h3>Service Worker</h3>
+                                            <p class="smaller">Time out slow responses</p>
+                                            <pre><code class="smaller hljs">function timeout(delay) {
+    return new Promise(function(resolve, reject) {
+        setTimeout(function(){
+            resolve(new Response('', {
+                status: 408,
+                statusText: 'Request timed out.'
+            }));
+        }, delay);
+    });
+}
+
+self.addEventListener('fetch', function(event) {
+    if (/\.js$/.test(event.request.url)) {
+        event.respondWith(Promise.race([timeout(2000), fetch(event.request.url)]));
+    } else {
+        event.respondWith(fetch(event.request));
+    }
+});</code></pre>
+                                            <p class="citation"><a href="https://community.akamai.com/customers/s/article/5-ways-to-prevent-slow-3rd-party-front-end-services?language=en_US">Akamai | 5 ways to prevent slow 3rd party front-end services</a></pc>
+                                        </section>
+                                        <section class="center">
+                                            <h3>Managing Third Parties</h3>
+                                            <ul>
+                                                <li><em>Subresource Integrity</em> - protects from malicious code</li>
+                                                <li><em>Content Security Policy</em> - only run expected code</li>
+                                                <li><em>Reporting API</em> - report on code erros &amp; CSP violations</li>
+                                                <li><em>Self-hosting &amp; Proxying</em> - maintain control of delivery</li>
+                                                <li><em>Service Worker</em> - race third parties against timeouts</li>
+                                            </ul>
                                         </section>
                                     </section>
                                     
@@ -679,10 +843,10 @@
                                     </section>
                                     
                                     <section>
-                                        <section class="center" id="advanced">
-                                            <h2>Advanced Concepts</h2>
+                                        <section class="center" id="advanced" data-background="media/mountain.jpg" data-background-color="#000">
+                                            <h2 class="dark-bg">Advanced Concepts</h2>
                                         </section>
-                                        <section>
+                                        <section class="center">
                                             <h3>Bring on the workers!</h3>
                                             <ul>
                                                 <li>Web Worker</li>
@@ -690,7 +854,7 @@
                                                 <li>Edge Worker</li>
                                             </ul>
                                         </section>
-                                        <section>
+                                        <section class="center">
                                             <h3>Web Worker</h3>
                                             <ul class="proscons">
                                                 <li class="pro">100% extra threads! 💯</li>
@@ -699,10 +863,10 @@
                                                 <li class="con">Only ArrayBuffers can be transferred for free</li>
                                             </ul>
                                         </section>
-                                        <section>
+                                        <section class="center">
                                             <h3>Service Worker</h3>
                                             <ul class="proscons">
-                                                <li class="pro">Serves content even when off-line</li>
+                                                <li class="pro">Can serve content when offline</li>
                                                 <li class="pro">Proxy third-party requests and apply timeouts</li>
                                                 <li class="pro">Augment requests to add context (e.g. image width)</li>
                                                 <li class="con">Does not work for first view</li>
@@ -710,7 +874,7 @@
                                                 <li class="con">Hard to test &amp; debug</li>
                                             </ul>
                                         </section>
-                                        <section>
+                                        <section class="center">
                                             <h3>Edge Worker</h3>
                                             <ul class="proscons">
                                                 <li class="pro">Logic at the edge means ⬇️ latency</li>
@@ -719,7 +883,7 @@
                                                 <li class="con">Basic functionality only - geo / user agent / cookies</li>
                                             </ul>
                                         </section>
-                                        <section>
+                                        <section class="center">
                                             <h3>Worker Summary</h3>
                                             <ul>
                                                 <li class="fragment">Web Worker <span>- offload intensive JS to another thread</span></li>
@@ -791,7 +955,7 @@
                                 // More info https://github.com/hakimel/reveal.js#configuration
                                 Reveal.initialize({
                                     controls: !presenting,
-                                    progress: false,
+                                    progress: true,
                                     history: true,
                                     center: false,
                                     
@@ -808,7 +972,6 @@
                                     { src: '../plugin/embed-tweet/embed-tweet.js', condition: function() { return !!document.querySelector( 'div.tweet[data-src]' ); } },
                                     { src: '../lib/js/vega.min.js', condition: function() { return !!document.querySelector( 'div.vega-chart' ); } },
                                     { src: '../lib/js/vega-embed.min.js', condition: function() { return !!document.querySelector( 'div.vega-chart' ); } },
-                                    { src: '../plugin/elapsed-time-bar/elapsed-time-bar.js'},
                                     { src: '../plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
                                     { src: '../plugin/search/search.js', async: true },
                                     { src: '../plugin/zoom-js/zoom.js', async: true },
