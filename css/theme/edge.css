@@ -483,6 +483,10 @@ span { display: inline-block; }
   z-index: 999;
 }
 
+.reveal .tagline a {
+  text-shadow: 0 0 10px white;
+}
+
 .reveal .smaller.tagline.bottom-right {
   top: unset;
   left: unset;
@@ -664,8 +668,12 @@ section.top-align {
 }
 
 .dark-bg {
-    background-color: rgba(0,0,0,0.75);
-    border-radius: 0.5em;
+  background-color: rgba(0,0,0,0.75);
+  border-radius: 0.5em;
+}
+.lite-bg {
+  background-color: rgba(255,255,255,0.9);
+  border-radius: 0.5em;
 }
 
 .col {

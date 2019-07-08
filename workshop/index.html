@@ -67,6 +67,7 @@
                         <li><a target="_self" href="./#/devices">Devices</a></li>
                         <li><a target="_self" href="./#/images">Images</a></li>
                         <li><a target="_self" href="./#/javascript">JavaScript</a></li>
+                        <li><a target="_self" href="./#/fontscss">CSS &amp; Fonts</a></li>
                         <li><a target="_self" href="./#/caching">Caching</a></li>
                         <li><a target="_self" href="./#/thirdparty">Third-party Content</a></li>
                         <li><a target="_self" href="./#/automation">Automation</a></li>
@@ -247,15 +248,15 @@
                         </ul>
                     </section>
                     <section class="center">
-                            <h3>Measurement:</h3>
-                            <ul class="point">
-                                <li class="done">Rule-based</li>
-                                <li class="done">Ad hoc</li>
-                                <li class="done">Synthetic</li>
-                                <li>Real User</li>
-                                <li class="skip">Application</li>
-                            </ul>
-                        </section>
+                        <h3>Measurement:</h3>
+                        <ul class="point">
+                            <li class="done">Rule-based</li>
+                            <li class="done">Ad hoc</li>
+                            <li class="done">Synthetic</li>
+                            <li>Real User</li>
+                            <li class="skip">Application</li>
+                        </ul>
+                    </section>
                     <section>
                         <h3>Real User Monitoring (passive)</h3>
                         <img class="plain stretch" src="media/mpulse.png">
@@ -313,17 +314,17 @@
                     <section class="center" id="images" data-background-size="stretch" data-background-image="media/space.jpg" data-background-color="#000">
                         <h2>Images</h2>
                     </section>
-					<section>
-						<h3>The rise of Images</h3>
-						<img class="stretch" src="media/riseofImages2.png"/>
-						<p class="citation"><a href="https://httparchive.org/reports/state-of-images?start=earliest&end=2018_12_15&view=list">HTTP Archive | State of Images</a></p>
-					</section>
-					<section class="center">
-						<h3>The rise of Images</h3>
-						<p>Desktop Image Bytes are up <em>330%</em> since 2011</p>
-						<p class="fragment">Mobile Image Bytes are up <em>1050%</em> since 2011</p>
-						<p class="citation"><a href="https://httparchive.org/reports/state-of-images?start=earliest&end=2018_12_15&view=list">HTTP Archive | State of Images</a></p>
-					</section>
+                    <section>
+                        <h3>The rise of Images</h3>
+                        <img class="stretch" src="media/riseofImages2.png"/>
+                        <p class="citation"><a href="https://httparchive.org/reports/state-of-images?start=earliest&end=2018_12_15&view=list">HTTP Archive | State of Images</a></p>
+                    </section>
+                    <section class="center">
+                        <h3>The rise of Images</h3>
+                        <p>Desktop Image Bytes are up <em>330%</em> since 2011</p>
+                        <p class="fragment">Mobile Image Bytes are up <em>1050%</em> since 2011</p>
+                        <p class="citation"><a href="https://httparchive.org/reports/state-of-images?start=earliest&end=2018_12_15&view=list">HTTP Archive | State of Images</a></p>
+                    </section>
                     <section class="center">
                         <h3>Bitmap vs. Vector</h3>
                         <div class="row">
@@ -399,41 +400,89 @@
                                 <div class="img-valign">
                                     <img class="plain" width="50%" src="media/jpeg.png">
                                 </div>
-                                <p class="bold foot">JPG</p>
+                                <p class="bold foot">JPG<br><span style="font-size:80%;font-weight:300">(lossy compression)</span></p>
                             </div>
                             <div class="col third">
                                 <p>Icons &amp; Graphics</p>
                                 <div class="img-valign">
                                     <img class="plain" width="50%" src="media/icons.png">
                                 </div>
-                                <p class="bold foot">SVG / PNG</p>
+                                <p class="bold foot">SVG / PNG<span style="font-size:80%;font-weight:300">(lossless compression)</span></p>
                             </div>
                             <div class="col third">
-                                <p>Loading Spinners</p>
+                                <p>Animations</p>
                                 <div class="img-valign">
                                     <img class="plain" width="50%" src="media/gif.gif">
                                 </div>
-                                <p class="bold foot">GIF / CSS</p>
+                                <p class="bold foot">GIF / CSS<span style="font-size:80%;font-weight:300">(lossless compression)</span></p>
+                            </div>
+                        </div>
+                    </section>
+                    <section class="center">
+                        <h3>Browser-Specific Formats</h3>
+                        <div class="row">
+                            <div class="col third">
+                                <div class="img-valign">
+                                    <img class="plain" width="50%" src="media/webp.jpg">
+                                </div>
+                                <p class="foot">Chrome &amp; Opera</p>
+                            </div>
+                            <div class="col third">
+                                <div class="img-valign">
+                                    <img class="plain" width="50%" src="media/jpeg2000-logo.svg">
+                                </div>
+                                <p class="foot">Safari</p>
+                            </div>
+                            <div class="col third">
+                                <div class="img-valign">
+                                    <img class="plain" width="50%" src="media/jpegxr-logo.svg">
+                                </div>
+                                <p class="foot">Internet Explorer</p>
                             </div>
                         </div>
                     </section>
                     <section>
-                        format selection
+                        <h3>Baseline vs. Progressive JPEGs</h3>
+                        <img width="70%" class="plain" src="media/jpeg_baseline.jpg">
+                        <img width="70%" class="plain" src="media/jpeg_progressive.jpg">
+                        <p class="citation"><a href="https://code.fb.com/ios/faster-photos-in-facebook-for-ios/">Faster Photos in Facebook for iOS</a></p>
                     </section>
-                    <section>
-                        browser specific formats
+                    <section class="center">
+                        <h3>Optimising JPEG Images</h3>
+                        <ul>
+                            <li><a href="https://linux.die.net/man/1/jpegtran">jpegtran</a> - linux cmd-line</li>
+                            <li><a href="https://github.com/imagemin/imagemin">imagemin</a> - node module</li>
+                            <li><a href="https://tinypng.com/">tinypng</a> - web-based (yes for JPEGs!)</li>
+                            <li><a href="https://squoosh.app">squoosh.app</a> - web-based</li>
+                        </ul>
                     </section>
-                    <section>
-                        optimsation - png
+                    <section class="center">
+                        <h3>Optimising PNG Images</h3>
+                        <ul>
+                            <li><a href="http://optipng.sourceforge.net/">OptiPNG</a> - lossless, multiple binaries</li>
+                            <li><a href="https://pngquant.org/">pngquant</a> - lossy(!), multiple binaries</li>
+                            <li><a href="https://tinypng.com/">tinypng</a> - web-based</li>
+                            <li><a href="https://squoosh.app">squoosh.app</a> - web-based</li>
+                        </ul>
                     </section>
-                    <section>
-                        optimsation - jpg
+                    <section class="center">
+                        <h3>Optimising SVG Images</h3>
+                        <ul>
+                            <li><a href="https://github.com/svg/svgo">SVGO</a> - node module</li>
+                            <li><a href="https://jakearchibald.github.io/svgomg/">SVGOMG</a> - web-based SVGO</li>
+                        </ul>
                     </section>
-                    <section>
-                        placeholders
+                    <section class="center">
+                        <h3>Responsive Images</h3>
+                        <img class="plain stretch" src="media/devices.png">
+                        <p>Responsive web design presents an image problem.</p>
                     </section>
-                    <section>
-                        lazy loading
+                    <section class="center">
+                        <h3>Lazy-Loading Images</h3>
+                        <pre style="width:fit-content;"><code><img loading="auto|eager|lazy" src=".."></code></pre>
+                        <p>Allows the browser to determine which images to download immediately, based on viewport and connection speed.</p>
+                        <p class="smaller">Available in Chrome 76, polyfill with <a href="https://github.com/aFarkas/lazysizes">lazysizes.js</a></p>
+						<p class="smallest bottom-right"><a href="https://addyosmani.com/blog/lazy-loading/">Addy Osmani | Native image lazy-loading for the web!</a></p>
                     </section>
                 </section>
                 
@@ -447,7 +496,12 @@
                         <p class="citation">Marijn Haverbeke, Eloquent JavaScript: A Modern Introduction to Programming</p>
                     </section>
                 </section>
-                
+
+                <section>
+                    <section class="center" id="fontscss"  data-background-size="stretch" data-background-image="media/fonts.jpg" data-background-color="#fff">
+                        <h2 class="lite-bg">CSS &amp; Fonts</h2>
+                    </section>
+                </section>
                 <section>
                     <section class="center" id="caching"  data-background-size="stretch" data-background-image="media/organiser.jpg" data-background-color="#000">
                         <h2 class="dark-bg">Caching</h2>
