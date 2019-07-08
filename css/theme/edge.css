@@ -667,3 +667,36 @@ section.top-align {
     background-color: rgba(0,0,0,0.75);
     border-radius: 0.5em;
 }
+
+.col {
+  float: left;
+  text-align: center;
+  height: 100%;
+}
+
+.col.half{
+  width: 50%;
+}
+.col.third{
+  width: 33.3%;
+}
+
+.col img {
+  display: block;
+  margin: 0 auto !important;
+}
+
+.foot {
+  align-self: flex-end;
+}
+
+.bold {
+  font-weight: bold !important;
+}
+
+.img-valign {
+  height: 20vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

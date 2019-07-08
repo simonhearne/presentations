@@ -324,8 +324,98 @@
 						<p class="fragment">Mobile Image Bytes are up <em>1050%</em> since 2011</p>
 						<p class="citation"><a href="https://httparchive.org/reports/state-of-images?start=earliest&end=2018_12_15&view=list">HTTP Archive | State of Images</a></p>
 					</section>
-                    <section>
-                        formats
+                    <section class="center">
+                        <h3>Bitmap vs. Vector</h3>
+                        <div class="row">
+                            <div class="col half">
+                                <p>Bitmap (PNG / JPG)</p>
+                                <img class="plain" src="media/kfc_png.png">
+                                <p class="smaller">Grid of pixels, does not scale well</p>
+                            </div>
+                            <div class="col half">
+                                <p>Vector (SVG)</p>
+                                <img class="plain" src="media/kfc_svg.png">
+                                <p class="smaller">Shapes defined in XML, scales infinitely!</p>
+                            </div>
+                        </div>
+                    </section>
+                    <section class="center">
+                        <h3>Bitmap Scaling</h3>
+                        <div class="row">
+                            <div class="col third">
+                                <p>150px</p>
+                                <div class="img-valign">
+                                    <img class="plain" width="20%" src="media/kfc.png">
+                                </div>
+                                <p class="bold foot">20kB</p>
+                            </div>
+                            <div class="fragment col third">
+                                <p>300px</p>
+                                <div class="img-valign">
+                                    <img class="plain" width="40%" src="media/kfc.png">
+                                </div>
+                                <p class="bold foot">27kB</p>
+                            </div>
+                            <div class="fragment col third">
+                                <p>450px</p>
+                                <div class="img-valign">
+                                    <img class="plain" width="60%" src="media/kfc.png">
+                                </div>
+                                <p class="bold foot">86kB</p>
+                            </div>
+                        </div>
+                    </section>
+                    <section class="center">
+                        <h3>Vector Scaling</h3>
+                        <div class="row">
+                            <div class="col third">
+                                <p>150px</p>
+                                <div class="img-valign">
+                                    <img class="plain" width="20%" src="media/kfc.png">
+                                </div>
+                                <p class="bold foot">18kB</p>
+                            </div>
+                            <div class="fragment col third">
+                                <p>300px</p>
+                                <div class="img-valign">
+                                    <img class="plain" width="40%" src="media/kfc.png">
+                                </div>
+                                <p class="bold foot">18kB</p>
+                            </div>
+                            <div class="fragment col third">
+                                <p>450px</p>
+                                <div class="img-valign">
+                                    <img class="plain" width="60%" src="media/kfc.png">
+                                </div>
+                                <p class="bold foot">18kB</p>
+                            </div>
+                        </div>
+                    </section>
+                    <section class="center">
+                        <h3>Choose Appropriate Formats</h3>
+                        <div class="row">
+                            <div class="col third">
+                                <p>Photo Imagery</p>
+                                <div class="img-valign">
+                                    <img class="plain" width="50%" src="media/jpeg.png">
+                                </div>
+                                <p class="bold foot">JPG</p>
+                            </div>
+                            <div class="col third">
+                                <p>Icons &amp; Graphics</p>
+                                <div class="img-valign">
+                                    <img class="plain" width="50%" src="media/icons.png">
+                                </div>
+                                <p class="bold foot">SVG / PNG</p>
+                            </div>
+                            <div class="col third">
+                                <p>Loading Spinners</p>
+                                <div class="img-valign">
+                                    <img class="plain" width="50%" src="media/gif.gif">
+                                </div>
+                                <p class="bold foot">GIF / CSS</p>
+                            </div>
+                        </div>
                     </section>
                     <section>
                         format selection
