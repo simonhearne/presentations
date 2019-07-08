@@ -119,6 +119,7 @@
                             <li>Ad hoc</li>
                             <li>Synthetic</li>
                             <li>Real User</li>
+                            <li>Application</li>
                         </ul>
                     </section>
                     <section class="center">
@@ -128,6 +129,7 @@
                             <li class="skip">Ad hoc</li>
                             <li class="skip">Synthetic</li>
                             <li class="skip">Real User</li>
+                            <li class="skip">Application</li>
                         </ul>
                     </section>
                     <section>
@@ -154,26 +156,54 @@
                             <li>Ad hoc</li>
                             <li class="skip">Synthetic</li>
                             <li class="skip">Real User</li>
+                            <li class="skip">Application</li>
                         </ul>
                     </section>
                     <section>
                         <h3>Developer Tools</h3>
+                        <img class="plain stretch" src="media/devtools1.png">
+                        <p class="smaller">Identify large &amp; slow resources</p>
                     </section>
                     <section>
-                        <h3>Remote Debugging!</h3>
+                        <h3>Developer Tools</h3>
+                        <img class="plain stretch" src="media/devtools2.png">
+                        <p class="smaller">Identify rendering &amp; JavaScript bottlenecks</p>
+                    </section>
+                    <section class="center">
+                        <h3>Works on real devices too</h3>
+                        <img class="plain stretch" src="media/remote-debugging.png">
                         <p class="citation"><a href="https://developers.google.com/web/tools/chrome-devtools/remote-debugging/">developers.google.com/web/tools/chrome-devtools/remote-debugging/</a></p>
                     </section>
                     <section>
                         <h3>WebPageTest.org</h3>
+                        <img class="plain stretch" src="media/wpt.png">
                         <p class="citation"><a href="https://webpagetest.org/">webpagetest.org</a></p>
-                        
+                    </section>
+                    <section>
+                        <h3>WPT Waterfall</h3>
+                        <img class="plain stretch" src="media/wpt_waterfall.png">
+                        <p class="smaller">Analyse resources over the network.</p>
+                        <p class="citation"><a href="https://www.webpagetest.org/result/190708_SP_3016e4b465ca0aaabb706d29af46f672/1/details/">Amazon.com Waterfall</a></p>
+                    </section>
+                    <section class="center">
+                        <h3>WPT Filmstrip</h3>
+                        <img class="plain stretch" src="media/wpt_filmstrip.png">
+                        <p class="smaller">Compare visual output to the network waterfall.</p>
+                        <p class="citation"><a href="https://www.webpagetest.org/video/compare.php?tests=190708_SP_3016e4b465ca0aaabb706d29af46f672-r%3A1-c%3A0&thumbSize=200&ival=100&end=visual">Amazon.com Filmstrip</a></p>
+                    </section>
+                    <section class="center">
+                        <h3>Host your own WPT</h3>
+                        <img width="70%" src="media/wpt_ami.png">
+                        <p class="smaller">Test internal environments, bulk tests, API key management.</p>
+                        <p class="citation"><a href="https://github.com/WPO-Foundation/webpagetest-docs/blob/master/user/Private%20Instances/README.md">WPT Private Instances</a></p>
                     </section>
                     <section class="center">
                         <h3>Ad Hoc Summary</h3>
                         <ul class="proscons">
-                            <li class="pro">Pro</li>
-                            <li class="con">Con</li>
-                            <li>Neutral</li>
+                            <li class="fragment pro">Results in seconds</li>
+                            <li class="fragment pro">High level of detail</li>
+                            <li class="fragment con">Does not scale well</li>
+                            <li class="fragment con">Relies on device emulation</li>
                         </ul>
                     </section>
                     <section class="center">
@@ -183,13 +213,20 @@
                             <li class="done">Ad hoc</li>
                             <li>Synthetic</li>
                             <li class="skip">Real User</li>
+                            <li class="skip">Application</li>
                         </ul>
                     </section>
                     <section class="center" data-background-size="stretch" data-background-image="media/synthetic.jpg" data-background-color="#000">
                         <h3 class="dark-bg">Synthetic Monitoring</h3>
                     </section>
+                    <section>
+                        <h3>Actively measure performance</h3>
+                        <img class="stretch" src="media/rigor.png"/>
+                        <p class="smaller">Regular tests on fixed pages / journeys, using browsers hosted on servers.</p>
+                        <p class="smaller">Good for testing availability and infrastructure performance.</p>
+                    </section>
                     <section class="center">
-                        <h3>Monitoring Tools</h3>
+                        <h3>Synthetic Monitoring Tools</h3>
                         <ul>
                             <li><a href="https://speedcurve.com/">SpeedCurve</a></li>
                             <li><a href="https://www.catchpoint.com/">Catchpoint</a></li>
@@ -199,12 +236,58 @@
                         <p class="citation">* <a href="https://www.google.com/search?q=performance%20monitoring%20tool">other services</a> are available</p>
                     </section>
                     <section class="center">
+                        <h3>Synthetic Summary</h3>
+                        <ul class="proscons">
+                            <li class="fragment pro">Tests production environment</li>
+                            <li class="fragment pro">Active monitoring 24x7</li>
+                            <li class="fragment pro">Controlled environment - easy to spot changes</li>
+                            <li class="fragment con">Small number of test locations</li>
+                            <li class="fragment con">Does not measure user experience</li>
+                            <li class="fragment con">Difficult to test pre-production</li>
+                        </ul>
+                    </section>
+                    <section class="center">
+                            <h3>Measurement:</h3>
+                            <ul class="point">
+                                <li class="done">Rule-based</li>
+                                <li class="done">Ad hoc</li>
+                                <li class="done">Synthetic</li>
+                                <li>Real User</li>
+                                <li class="skip">Application</li>
+                            </ul>
+                        </section>
+                    <section>
+                        <h3>Real User Monitoring (passive)</h3>
+                        <img class="plain stretch" src="media/mpulse.png">
+                        <p class="smaller">Collect performance data from every visitor</p>
+                    </section>
+                    <section class="center">
+                        <h3>Real User Monitoring Tools</h3>
+                        <ul>
+                            <li><a href="https://www.akamai.com/uk/en/products/performance/mpulse-real-user-monitoring.jsp">Akamai mPulse</a></li>
+                            <li><a href="https://speedcurve.com/features/lux/">SpeedCurve Lux</a></li>
+                            <li><a href="https://raygun.com/platform/real-user-monitoring#rum-startup">Raygun</a></li>
+                        </ul>
+                        <p class="citation">* <a href="https://www.google.com/search?q=real%20user%20monitoring%20tool">other services</a> are available</p>
+                    </section>
+                    <section class="center">
+                        <h3>Real User Monitoring Summary</h3>
+                        <ul class="proscons">
+                            <li class="fragment pro">Measures real user experience!</li>
+                            <li class="fragment pro">Correlate performance with business metrics</li>
+                            <li class="fragment pro">Global coverage</li>
+                            <li class="fragment con">Requires implentation in client-side code</li>
+                            <li class="fragment con">May be blocked by tracker blockers</li>
+                        </ul>
+                    </section>
+                    <section class="center">
                         <h3>Measurement:</h3>
                         <ul class="point">
                             <li class="done">Rule-based</li>
                             <li class="done">Ad hoc</li>
                             <li class="done">Synthetic</li>
-                            <li>Real User</li>
+                            <li class="done">Real User</li>
+                            <li>Application</li>
                         </ul>
                     </section>
                     <section class="center">
@@ -214,6 +297,7 @@
                             <li class="done">Ad hoc</li>
                             <li class="done">Synthetic</li>
                             <li class="done">Real User</li>
+                            <li class="done">Application</li>
                         </ul>
                     </section>
                 </section>
