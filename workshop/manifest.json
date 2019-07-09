@@ -1,0 +1,15 @@
+{
+    "short_name": "WebPerf Workshop",
+    "name": "Web Performance Workshop | Simon Hearne",
+    "icons": [
+      {
+        "src": "/images/simon.jpg",
+        "type": "image/jpg",
+        "sizes": "320x320"
+      }
+    ],
+    "start_url": "/presentations/workshop?source=pwa",
+    "display": "standalone",
+    "scope": "/presentation/workshop/",
+    "theme_color": "#3367D6"
+  }
