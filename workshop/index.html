@@ -816,24 +816,24 @@
                             <li><a href="https://jakearchibald.github.io/svgomg/">SVGOMG</a> - web-based SVGO</li>
                         </ul>
                     </section>
-                    <section class="center">
+                    <section>
                         <h3>Responsive Images</h3>
                         <img class="plain stretch" src="media/devices.png">
                         <p>Responsive web design gives us an image problem.</p>
                     </section>
-                    <section class="center">
+                    <section>
                         <h3>Responsive Images: <code>srcset</code></h3>
                         <p class="smaller">Send the right DPR image, e.g. 1x to desktop &amp; 2x to retina</p>
                         <img class="plain stretch" src="media/image-src.png" srcset="media/image-1x.png 1x, media/image-2x.png 2x, media/image-3x.png 3x, media/image-4x.png 4x">
                         <pre class="fit"><code class="hlhtml smaller" data-trim>&lt;img src="src.png" srcset="1x.png 1x, 2x.png 2x, 3x.png 3x, 4x.png 4x"&gt;</code></pre>
                     </section>
-                    <section class="center">
+                    <section>
                         <h3>Responsive Images: <code>srcset</code></h3>
-                        <p class="smaller">Do you need &gt; 2x?</p>
-                        
-                        <p class="citation"><a href="https://code.fb.com/ios/faster-photos-in-facebook-for-ios/">Faster Photos in Facebook for iOS</a></p>
+                        <p class="smaller">You probably don't need &gt; 2x?</p>
+                        <img class="plain stretch" src="media/dpr.png">
+                        <p class="citation"><a href="https://observablehq.com/@eeeps/visual-acuity-and-device-pixel-ratio">Visual acuity and device-pixel-ratio</a></p>
                     </section>
-                    <section class="center">
+                    <section>
                         <h3>Responsive Images: <code>srcset</code></h3>
                         <p class="smaller">Send an image scaled to the viewport</p>
                         <img class="plain stretch" src="media/srcset-medium.jpg" srcset="media/srcset-medium.jpg 500w, media/srcset-large.jpg 1000w, media/srcset-extralarge.jpg">
@@ -852,7 +852,7 @@
                             &lt;img src="medium.jpg" srcset="medium.jpg 800w, large.jpg" sizes="(max-width: 800px) 100vw, 33vw"&gt;
                       </code></pre>
                     </section>
-                    <section class="center">
+                    <section>
                         <h3>Responsive Images: <code>&lt;picture&gt;</code></h3>
                         <p class="smaller">Art direction for different displays</p>
                         <picture>
@@ -866,7 +866,7 @@
                                 &lt;/picture&gt;
                           </code></pre>
                     </section>
-                    <section class="center">
+                    <section>
                         <h3><code>&lt;picture&gt;</code> &amp; <code>srcset</code></h3>
                         <p class="smaller">It gets complicated...</p>
                         <pre><code class="hlhtml smaller" data-trim>
@@ -880,21 +880,21 @@
                         &lt;/picture&gt;
                         </code></pre>
                     </section>
-                    <section class="center">
+                    <section >
                         <h3>Responsive Images: client hints</h3>
                         <p class="small">Perform content selection on the server / CDN</p>
                         <img class="stretch" src="media/ch-negotiation.png"/>
                         <!--<img class="caniuse" src="http://caniuse-icon.herokuapp.com/client-hints-dpr-width-viewport"/>-->
                         <p class="smallest bottom-right"><a hreg="https://developers.google.com/web/updates/2015/09/automating-resource-selection-with-client-hints">developers.google.com | Automating Content Selection with Client Hints</a></p>
                     </section>
-                    <section class="center">
+                    <section>
                         <h3>Lazy-Loading Images</h3>
                         <pre class="fit"><code>&lt;img loading="auto|eager|lazy" src="..."&gt;</code></pre>
                         <p class="smaller">Allows the browser to determine which images to download immediately, based on viewport and connection speed.</p>
                         <p class="smaller">Available in Chrome 76, polyfill with <a href="https://github.com/aFarkas/lazysizes">lazysizes.js</a></p>
                         <p class="smallest bottom-right"><a href="https://addyosmani.com/blog/lazy-loading/">Addy Osmani | Native image lazy-loading for the web!</a></p>
                     </section>
-                    <section>
+                    <section class="center">
                         <h3>Images Summary</h3>
                         <ul>
                             <li>Send different images based on device requirements</li>
