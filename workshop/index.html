@@ -255,7 +255,7 @@
                         <ul class="proscons">
                             <li class="fragment pro">Tests production environment</li>
                             <li class="fragment pro">Active monitoring 24x7</li>
-                            <li class="fragment pro">Controlled environment - easy to spot changes</li>
+                            <li class="fragment pro">Lab testing - easy to spot changes</li>
                             <li class="fragment con">Small number of test locations</li>
                             <li class="fragment con">Does not measure user experience</li>
                             <li class="fragment con">Difficult to test pre-production</li>
@@ -293,6 +293,7 @@
                             <li class="fragment pro">Global coverage</li>
                             <li class="fragment con">Requires implentation in client-side code</li>
                             <li class="fragment con">May be blocked by tracker blockers</li>
+                            <li class="fragment con">Can only measure in production</li>
                         </ul>
                     </section>
                     <section class="center">
@@ -303,6 +304,29 @@
                             <li class="done">Synthetic</li>
                             <li class="done">Real User</li>
                             <li>Application</li>
+                        </ul>
+                    </section>
+                    <section class="center">
+                        <h3>Application Performance Measurement (APM)</h3>
+                        <img class="plain stretch" src="media/appd.jpg">
+                    </section>
+                    <section class="center">
+                        <h3>APM Tools</h3>
+                        <ul>
+                            <li><a href="https://www.appdynamics.com/">AppDynamics</a></li>
+                            <li><a href="https://newrelic.com/">NewRelic</a></li>
+                            <li><a href="https://www.dynatrace.com/">Dynatrace</a></li>
+                        </ul>
+                        <p class="citation">* <a href="https://www.google.com/search?q=application+performance+management+tools">other services</a> are available</p>
+                    </section>
+                    <section class="center">
+                        <h3>APM Summary</h3>
+                        <ul class="proscons">
+                            <li class="fragment pro">Code-level profiling</li>
+                            <li class="fragment pro">Database query profiling</li>
+                            <li class="fragment pro">Architecture discovery</li>
+                            <li class="fragment con">Priced per server / VM</li>
+                            <li class="fragment con">Limited / no view of UX</li>
                         </ul>
                     </section>
                     <section class="center">
@@ -431,7 +455,7 @@
                     </section>
                     <section>
                         <h3>TLS 1.3</h3>
-                        <p>Approximatley 50% faster than TLS 1.2!</p>
+                        <p>Approximately 50% faster than TLS 1.2!</p>
                         <div class="tweet" data-src="https://twitter.com/TimVereecke/status/1129032997221609472"></div>
                         <img class="caniuse" src="http://caniuse-icon.herokuapp.com/tls1-3"/>
                     </section>
@@ -1081,285 +1105,285 @@
                                 <p class="smaller">Time out slow responses</p>
                                 <pre><code class="smaller hljs" data-trim>
                                     function timeout(delay) {
-                                    return new Promise(function(resolve, reject) {
-                                        setTimeout(function(){
-                                            resolve(new Response('', {
-                                                status: 408,
-                                                statusText: 'Request timed out.'
-                                            }));
-                                        }, delay);
-                                    });
-                                }
-                                
-                                self.addEventListener('fetch', function(event) {
-                                    if (/\.js$/.test(event.request.url)) {
-                                        event.respondWith(Promise.race([timeout(2000), fetch(event.request.url)]));
-                                    } else {
-                                        event.respondWith(fetch(event.request));
+                                        return new Promise(function(resolve, reject) {
+                                            setTimeout(function(){
+                                                resolve(new Response('', {
+                                                    status: 408,
+                                                    statusText: 'Request timed out.'
+                                                }));
+                                            }, delay);
+                                        });
                                     }
-                                });</code></pre>
-                                <p class="citation"><a href="https://community.akamai.com/customers/s/article/5-ways-to-prevent-slow-3rd-party-front-end-services?language=en_US">Akamai | 5 ways to prevent slow 3rd party front-end services</a></p>
+                                    
+                                    self.addEventListener('fetch', function(event) {
+                                        if (/\.js$/.test(event.request.url)) {
+                                            event.respondWith(Promise.race([timeout(2000), fetch(event.request.url)]));
+                                        } else {
+                                            event.respondWith(fetch(event.request));
+                                        }
+                                    });</code></pre>
+                                    <p class="citation"><a href="https://community.akamai.com/customers/s/article/5-ways-to-prevent-slow-3rd-party-front-end-services?language=en_US">Akamai | 5 ways to prevent slow 3rd party front-end services</a></p>
+                                </section>
+                                <section class="center">
+                                    <h3>Managing Third Parties</h3>
+                                    <ul>
+                                        <li><em>Subresource Integrity</em> - protects from malicious code</li>
+                                        <li><em>Content Security Policy</em> - only run expected code</li>
+                                        <li><em>Reporting API</em> - report on code erros &amp; CSP violations</li>
+                                        <li><em>Self-hosting &amp; Proxying</em> - maintain control of delivery</li>
+                                        <li><em>Service Worker</em> - race third parties against timeouts</li>
+                                    </ul>
+                                </section>
                             </section>
-                            <section class="center">
-                                <h3>Managing Third Parties</h3>
-                                <ul>
-                                    <li><em>Subresource Integrity</em> - protects from malicious code</li>
-                                    <li><em>Content Security Policy</em> - only run expected code</li>
-                                    <li><em>Reporting API</em> - report on code erros &amp; CSP violations</li>
-                                    <li><em>Self-hosting &amp; Proxying</em> - maintain control of delivery</li>
-                                    <li><em>Service Worker</em> - race third parties against timeouts</li>
-                                </ul>
-                            </section>
-                        </section>
-                        
-                        <section>
-                            <section class="center" id="automation" data-background-image="media/automation.jpg" data-background-color="#000">
-                                <h2 class="dark-bg">Automation</h2>
-                            </section>
-                            <section class="center">
-                                <h3>Automation:</h3>
-                                <ul class="point">
-                                    <li class="fragment">Screen resolution (DPR)</li>
-                                    <li class="fragment">Processing (CPU &amp; RAM)</li>
-                                    <li class="fragment">Mobile Network</li>
-                                    <li class="fragment">Browsing Context</li>
-                                </ul>
-                            </section>
-                        </section>
-                        
-                        <section>
-                            <section class="center" id="advanced" data-background="media/mountain.jpg" data-background-color="#000">
-                                <h2 class="dark-bg">Advanced Concepts</h2>
-                            </section>
-                            <section class="center">
-                                <h3>Bring on the workers!</h3>
-                                <ul>
-                                    <li>Web Worker</li>
-                                    <li>Service Worker</li>
-                                    <li>Edge Worker</li>
-                                </ul>
-                            </section>
-                            <section class="center">
-                                <h3>Web Worker</h3>
-                                <ul class="proscons">
-                                    <li class="pro">100% extra threads! 💯</li>
-                                    <li class="pro">Logical separation of compute vs. UI</li>
-                                    <li class="con">postMessage communication is slow</li>
-                                    <li class="con">Only ArrayBuffers can be transferred for free</li>
-                                </ul>
-                            </section>
-                            <section class="center">
-                                <h3>Service Worker</h3>
-                                <ul class="proscons">
-                                    <li class="pro">Can serve content when offline</li>
-                                    <li class="pro">Proxy third-party requests and apply timeouts</li>
-                                    <li class="pro">Augment requests to add context (e.g. image width)</li>
-                                    <li class="con">Does not work for first view</li>
-                                    <li class="con">Only one permitted per domain</li>
-                                    <li class="con">Hard to test &amp; debug</li>
-                                </ul>
-                            </section>
-                            <section class="center">
-                                <h3>Edge Worker</h3>
-                                <ul class="proscons">
-                                    <li class="pro">Logic at the edge means ⬇️ latency</li>
-                                    <li class="pro">Offload expensive logic from the client</li>
-                                    <li class="con">Lack of standards = vendor lock-in</li>
-                                    <li class="con">Basic functionality only - geo / user agent / cookies</li>
-                                </ul>
-                            </section>
-                            <section class="center">
-                                <h3>Worker Summary</h3>
-                                <ul>
-                                    <li class="fragment">Web Worker <span>- offload intensive JS to another thread</span></li>
-                                    <li class="fragment">Service Worker <span>- a JS proxy in your browser</span></li>
-                                    <li class="fragment">Edge Worker <span>- serverless at the edge</span></li>
-                                </ul>
-                            </section>
+                            
                             <section>
-                                <h3>Web Assembly (WASM)</h3>
+                                <section class="center" id="automation" data-background-image="media/automation.jpg" data-background-color="#000">
+                                    <h2 class="dark-bg">Automation</h2>
+                                </section>
+                                <section class="center">
+                                    <h3>Automation:</h3>
+                                    <ul class="point">
+                                        <li class="fragment">Screen resolution (DPR)</li>
+                                        <li class="fragment">Processing (CPU &amp; RAM)</li>
+                                        <li class="fragment">Mobile Network</li>
+                                        <li class="fragment">Browsing Context</li>
+                                    </ul>
+                                </section>
                             </section>
+                            
                             <section>
-                                <h3>CSS Paint API</h3>
+                                <section class="center" id="advanced" data-background="media/mountain.jpg" data-background-color="#000">
+                                    <h2 class="dark-bg">Advanced Concepts</h2>
+                                </section>
+                                <section class="center">
+                                    <h3>Bring on the workers!</h3>
+                                    <ul>
+                                        <li>Web Worker</li>
+                                        <li>Service Worker</li>
+                                        <li>Edge Worker</li>
+                                    </ul>
+                                </section>
+                                <section class="center">
+                                    <h3>Web Worker</h3>
+                                    <ul class="proscons">
+                                        <li class="pro">100% extra threads! 💯</li>
+                                        <li class="pro">Logical separation of compute vs. UI</li>
+                                        <li class="con">postMessage communication is slow</li>
+                                        <li class="con">Only ArrayBuffers can be transferred for free</li>
+                                    </ul>
+                                </section>
+                                <section class="center">
+                                    <h3>Service Worker</h3>
+                                    <ul class="proscons">
+                                        <li class="pro">Can serve content when offline</li>
+                                        <li class="pro">Proxy third-party requests and apply timeouts</li>
+                                        <li class="pro">Augment requests to add context (e.g. image width)</li>
+                                        <li class="con">Does not work for first view</li>
+                                        <li class="con">Only one permitted per domain</li>
+                                        <li class="con">Hard to test &amp; debug</li>
+                                    </ul>
+                                </section>
+                                <section class="center">
+                                    <h3>Edge Worker</h3>
+                                    <ul class="proscons">
+                                        <li class="pro">Logic at the edge means ⬇️ latency</li>
+                                        <li class="pro">Offload expensive logic from the client</li>
+                                        <li class="con">Lack of standards = vendor lock-in</li>
+                                        <li class="con">Basic functionality only - geo / user agent / cookies</li>
+                                    </ul>
+                                </section>
+                                <section class="center">
+                                    <h3>Worker Summary</h3>
+                                    <ul>
+                                        <li class="fragment">Web Worker <span>- offload intensive JS to another thread</span></li>
+                                        <li class="fragment">Service Worker <span>- a JS proxy in your browser</span></li>
+                                        <li class="fragment">Edge Worker <span>- serverless at the edge</span></li>
+                                    </ul>
+                                </section>
+                                <section>
+                                    <h3>Web Assembly (WASM)</h3>
+                                </section>
+                                <section>
+                                    <h3>CSS Paint API</h3>
+                                </section>
                             </section>
-                        </section>
-                        
-                        <section>
-                            <section class="center" id="cdn">
-                                <h2>CDN Optimisations</h2>
+                            
+                            <section>
+                                <section class="center" id="cdn">
+                                    <h2>CDN Optimisations</h2>
+                                </section>
                             </section>
-                        </section>
-                        
-                        <section>
-                            <section class="center" id="future">
-                                <h2>Future</h2>
+                            
+                            <section>
+                                <section class="center" id="future">
+                                    <h2>Future</h2>
+                                </section>
                             </section>
-                        </section>
-                        
-                        <section>
-                            <section class="center" id="end">
-                                <h2>Thank you 🙏</h2>
-                                <p>shearne@akamai.com</p>
-                                <p class="smallest bottom-right"><a href="https://simonhearne.com/presentations/workshop/">simonhearne.com/presentations/workshop/</a></p>
+                            
+                            <section>
+                                <section class="center" id="end">
+                                    <h2>Thank you 🙏</h2>
+                                    <p>shearne@akamai.com</p>
+                                    <p class="smallest bottom-right"><a href="https://simonhearne.com/presentations/workshop/">simonhearne.com/presentations/workshop/</a></p>
+                                </section>
                             </section>
-                        </section>
+                            
+                        </div>
+                        <div id="chart-controls" class="hide"></div>
                         
                     </div>
-                    <div id="chart-controls" class="hide"></div>
                     
-                </div>
-                
-                <script>
-                    var presenting = window.location.search.includes('present');
-                    if (!presenting) {
-                        let id = document.getElementById('help-text');
-                        if (id) {
-                            id.innerHTML = "Use 'n' and 'p' to navigate next and previous slides.<br>Use 'o' to view an overview."
+                    <script>
+                        var presenting = window.location.search.includes('present');
+                        if (!presenting) {
+                            let id = document.getElementById('help-text');
+                            if (id) {
+                                id.innerHTML = "Use 'n' and 'p' to navigate next and previous slides.<br>Use 'o' to view an overview."
+                            }
                         }
-                    }
-                    var keyboard = {
-                        // pause/resume time when Enter is pressed
-                        13: () => {
-                            ElapsedTimeBar.isPaused ? ElapsedTimeBar.resume() : ElapsedTimeBar.pause();
-                        },
-                        // reset timer when 'r' is pressed
-                        82: () => {
-                            ElapsedTimeBar.reset();
-                        }
-                    };
-                    if (presenting) {
-                        keyboard = Object.assign(keyboard,{
-                            39: 'next',
-                            37: 'prev'
-                        });
-                    };
-                    
-                    function getFragment(event) {
-                        return (event.currentSlide.id !== "" ? event.currentSlide.id : null);
-                    }
-                    // More info https://github.com/hakimel/reveal.js#configuration
-                    Reveal.initialize({
-                        controls: !presenting,
-                        progress: true,
-                        history: true,
-                        center: false,
-                        slideNumber: 'c',
-                        
-                        transition: 'none', // none/fade/slide/convex/concave/zoom
-                        
-                        allottedTime: 30 * 60 * 1000, // 30 minutes
-                        barColor: 'hsl(220,99%,54%)',
-                        
-                        // More info https://github.com/hakimel/reveal.js#dependencies
-                        dependencies: [
-                        { src: '../lib/js/classList.js', condition: function() { return !document.body.classList; } },
-                        { src: '../plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
-                        { src: '../plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
-                        { src: '../plugin/embed-tweet/embed-tweet.js', condition: function() { return !!document.querySelector( 'div.tweet[data-src]' ); } },
-                        { src: '../lib/js/vega.min.js', condition: function() { return !!document.querySelector( 'div.vega-chart' ); } },
-                        { src: '../lib/js/vega-embed.min.js', condition: function() { return !!document.querySelector( 'div.vega-chart' ); } },
-                        { src: '../plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
-                        { src: '../plugin/search/search.js', async: true },
-                        { src: '../plugin/zoom-js/zoom.js', async: true },
-                        { src: '../plugin/notes/notes.js', async: true }
-                        ],
-                        
-                        keyboard: keyboard
-                    });
-                    Reveal.addEventListener( 'slidechanged', function( event ) {
-                        let state = {h: event.indexh, v: event.indexv, name: getFragment(event)};
-                    } );
-                    
-                    /* animate.css */
-                    // Set animation delay if data-delay is specified
-                    Reveal.addEventListener('ready', function ( event ) {
-                        $('*[data-delay]').each( function () { 
-                            var delay = $(this).attr("data-delay");
-                            $(this).css("-webkit-animation-delay", delay+"s"); 
-                            $(this).css("animation-delay", delay+"s"); 
-                        });
-                    });
-                    
-                    // Set animation duration if data-duration is specified
-                    Reveal.addEventListener('ready', function ( event ) {
-                        $('*[data-duration]').each( function () { 
-                            var duration = $(this).attr("data-duration");
-                            $(this).css("-webkit-animation-duration", duration+"s"); 
-                            $(this).css("animation-duration", duration+"s"); 
-                        });
-                        embedVegaCharts();
-                    });
-                    
-                    function embedVegaCharts() {
-                        if (window.hasOwnProperty('vegaEmbed')) {
-                            console.log("vega-ready");
-                            let width = window.innerWidth / 2;
-                            let slideElement = document.getElementsByClassName('slides')[0];
-                            if (slideElement) {width = slideElement.offsetWidth};
-                            $(".vega-chart").each(function() {
-                                let spec = this.attributes.getNamedItem("data-spec").value;
-                                //spec = "https://raw.githubusercontent.com/vega/vega/master/docs/examples/bar-chart.vg.json";
-                                vegaEmbed('#'+this.id, spec, {"actions": false, "theme": "dark", "width": width, "renderer": "svg", "config": "data/config.json"}).then(function(result) {
-                                    // Access the Vega view instance (https://vega.github.io/vega/docs/api/view/) as result.view
-                                }).catch(console.error);
+                        var keyboard = {
+                            // pause/resume time when Enter is pressed
+                            13: () => {
+                                ElapsedTimeBar.isPaused ? ElapsedTimeBar.resume() : ElapsedTimeBar.pause();
+                            },
+                            // reset timer when 'r' is pressed
+                            82: () => {
+                                ElapsedTimeBar.reset();
+                            }
+                        };
+                        if (presenting) {
+                            keyboard = Object.assign(keyboard,{
+                                39: 'next',
+                                37: 'prev'
                             });
-                        } else {
-                            console.log("vega-not-ready");
-                            //setTimeout(embedVegaCharts,1000);
+                        };
+                        
+                        function getFragment(event) {
+                            return (event.currentSlide.id !== "" ? event.currentSlide.id : null);
                         }
-                    };
-                    
-                    // Animate items that are not in a fragment
-                    Reveal.addEventListener('slidechanged', function( event ) {
-                        // Animate elements that are not a fragment (or in a fragment)
-                        var filter = '*[data-animate]:not(.fragment):not(.fragment *)';
+                        // More info https://github.com/hakimel/reveal.js#configuration
+                        Reveal.initialize({
+                            controls: !presenting,
+                            progress: true,
+                            history: true,
+                            center: false,
+                            slideNumber: 'c',
+                            
+                            transition: 'none', // none/fade/slide/convex/concave/zoom
+                            
+                            allottedTime: 30 * 60 * 1000, // 30 minutes
+                            barColor: 'hsl(220,99%,54%)',
+                            
+                            // More info https://github.com/hakimel/reveal.js#dependencies
+                            dependencies: [
+                            { src: '../lib/js/classList.js', condition: function() { return !document.body.classList; } },
+                            { src: '../plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+                            { src: '../plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+                            { src: '../plugin/embed-tweet/embed-tweet.js', condition: function() { return !!document.querySelector( 'div.tweet[data-src]' ); } },
+                            { src: '../lib/js/vega.min.js', condition: function() { return !!document.querySelector( 'div.vega-chart' ); } },
+                            { src: '../lib/js/vega-embed.min.js', condition: function() { return !!document.querySelector( 'div.vega-chart' ); } },
+                            { src: '../plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+                            { src: '../plugin/search/search.js', async: true },
+                            { src: '../plugin/zoom-js/zoom.js', async: true },
+                            { src: '../plugin/notes/notes.js', async: true }
+                            ],
+                            
+                            keyboard: keyboard
+                        });
+                        Reveal.addEventListener( 'slidechanged', function( event ) {
+                            let state = {h: event.indexh, v: event.indexv, name: getFragment(event)};
+                        } );
                         
-                        $(event.currentSlide).find(filter).each( function () {
-                            $(this).addClass('animated');
-                            $(this).addClass($(this).attr('data-animate'));
-                        });		
-                        $(event.previousSlide).find(filter).each( function () {
-                            $(this).removeClass('animated');
-                            $(this).removeClass($(this).attr('data-animate'));
-                        });		
-                    });
-                    
-                    // Animate fragments
-                    Reveal.addEventListener('fragmentshown', function( event ) {
-                        function loop(i, el) { 
-                            if ($(el).attr('data-animate')) {
-                                $(el).addClass('animated');
-                                $(el).addClass($(el).attr('data-animate'));
+                        /* animate.css */
+                        // Set animation delay if data-delay is specified
+                        Reveal.addEventListener('ready', function ( event ) {
+                            $('*[data-delay]').each( function () { 
+                                var delay = $(this).attr("data-delay");
+                                $(this).css("-webkit-animation-delay", delay+"s"); 
+                                $(this).css("animation-delay", delay+"s"); 
+                            });
+                        });
+                        
+                        // Set animation duration if data-duration is specified
+                        Reveal.addEventListener('ready', function ( event ) {
+                            $('*[data-duration]').each( function () { 
+                                var duration = $(this).attr("data-duration");
+                                $(this).css("-webkit-animation-duration", duration+"s"); 
+                                $(this).css("animation-duration", duration+"s"); 
+                            });
+                            embedVegaCharts();
+                        });
+                        
+                        function embedVegaCharts() {
+                            if (window.hasOwnProperty('vegaEmbed')) {
+                                console.log("vega-ready");
+                                let width = window.innerWidth / 2;
+                                let slideElement = document.getElementsByClassName('slides')[0];
+                                if (slideElement) {width = slideElement.offsetWidth};
+                                $(".vega-chart").each(function() {
+                                    let spec = this.attributes.getNamedItem("data-spec").value;
+                                    //spec = "https://raw.githubusercontent.com/vega/vega/master/docs/examples/bar-chart.vg.json";
+                                    vegaEmbed('#'+this.id, spec, {"actions": false, "theme": "dark", "width": width, "renderer": "svg", "config": "data/config.json"}).then(function(result) {
+                                        // Access the Vega view instance (https://vega.github.io/vega/docs/api/view/) as result.view
+                                    }).catch(console.error);
+                                });
+                            } else {
+                                console.log("vega-not-ready");
+                                //setTimeout(embedVegaCharts,1000);
                             }
-                            $.each($(el).children().not('.fragment'), loop);
                         };
-                        $.each(event.fragments, loop);
-                    });
-                    
-                    // Make the animation runnable again if fragment is hidden
-                    Reveal.addEventListener('fragmenthidden', function( event ) {	  
-                        function loop(i, el) { 
-                            if ($(el).attr('data-animate')) {
-                                $(el).removeClass('animated');
-                                $(el).removeClass($(el).attr('data-animate'));
-                            }
-                            $.each($(el).children().not('.fragment'), loop);
-                        };
-                        $.each(event.fragments, loop);
-                    });
-                </script>
-                <script nonce="googleAnalytics">
-                    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-                        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();
-                        i.initAnalytics=function(){a=s.createElement(o),m=s.getElementsByTagName(o)[0];
-                            a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-                        }})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
                         
-                        ga('create', 'UA-6512525-16', 'auto', {'siteSpeedSampleRate': 100});
-                        ga('send', 'pageview');
+                        // Animate items that are not in a fragment
+                        Reveal.addEventListener('slidechanged', function( event ) {
+                            // Animate elements that are not a fragment (or in a fragment)
+                            var filter = '*[data-animate]:not(.fragment):not(.fragment *)';
+                            
+                            $(event.currentSlide).find(filter).each( function () {
+                                $(this).addClass('animated');
+                                $(this).addClass($(this).attr('data-animate'));
+                            });		
+                            $(event.previousSlide).find(filter).each( function () {
+                                $(this).removeClass('animated');
+                                $(this).removeClass($(this).attr('data-animate'));
+                            });		
+                        });
                         
-                        window.addEventListener('load',function(){initAnalytics()});
+                        // Animate fragments
+                        Reveal.addEventListener('fragmentshown', function( event ) {
+                            function loop(i, el) { 
+                                if ($(el).attr('data-animate')) {
+                                    $(el).addClass('animated');
+                                    $(el).addClass($(el).attr('data-animate'));
+                                }
+                                $.each($(el).children().not('.fragment'), loop);
+                            };
+                            $.each(event.fragments, loop);
+                        });
+                        
+                        // Make the animation runnable again if fragment is hidden
+                        Reveal.addEventListener('fragmenthidden', function( event ) {	  
+                            function loop(i, el) { 
+                                if ($(el).attr('data-animate')) {
+                                    $(el).removeClass('animated');
+                                    $(el).removeClass($(el).attr('data-animate'));
+                                }
+                                $.each($(el).children().not('.fragment'), loop);
+                            };
+                            $.each(event.fragments, loop);
+                        });
                     </script>
-                </body>
-                </html>
-                
+                    <script nonce="googleAnalytics">
+                        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+                            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();
+                            i.initAnalytics=function(){a=s.createElement(o),m=s.getElementsByTagName(o)[0];
+                                a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+                            }})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+                            
+                            ga('create', 'UA-6512525-16', 'auto', {'siteSpeedSampleRate': 100});
+                            ga('send', 'pageview');
+                            
+                            window.addEventListener('load',function(){initAnalytics()});
+                        </script>
+                    </body>
+                    </html>
+                    
