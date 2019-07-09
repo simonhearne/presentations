@@ -763,3 +763,11 @@ img.responsive-images-demo {
     width: 100% !important; 
   }
 }
+.two-columns {
+  -moz-column-count: 2;
+  -moz-column-gap: 3em;
+  -webkit-column-count: 2;
+  -webkit-column-gap: 3em;
+  column-count: 2;
+  column-gap: 3em;
+}
