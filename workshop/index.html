@@ -524,6 +524,10 @@
                         </ul>
                     </section>
                     <section>
+                        <h3>HTTP/1.1 vs HTTP/2</h3>
+                        <img class="plain stretch" src="media/h1h2.png">
+                    </section>
+                    <section>
                         <h3>HTTP/2 Performance Challenges</h3>
                         <ul>
                             <li>Minimising impact of packet loss</li>
@@ -553,7 +557,22 @@
                     <section>
                         <h3>TCP Congestion Control</h3>
                         <p>Finding the maximum safe bandwidth on a connection</p>
-                        
+                        <img class="plain stretch" src="media/congestion.svg">
+                        <p class="smallest"><sup>*</sup>HTTP/2 only has one connection per domain, so packet loss has a much greater impact.</p>
+                        <p class="citation"><a href="https://witestlab.poly.edu/blog/tcp-congestion-control-in-lossy-wireless-networks/">Fraida Fund | TCP congestion control in lossy wireless networks</a></p>
+                    </section>
+                    <section>
+                        <h3>TCP Congestion Control</h3>
+                        <p class="smaller">Increasing the initial congestion window from 10 (default) to 32 increases the first round trip response size from ~14kB to ~45kB.</p>
+                        <img class="plain stretch" src="media/initcwnd.png">
+                        <p class="smaller">Ensure that your HTML document (including response headers) fit comfortably into your initial congestion window.</p>
+                        <p class="citation"><a href="https://tylercipriani.com/blog/2016/09/25/the-14kb-in-the-tcp-initial-window/">Tyler Cipriani | The 14KB In The TCP Initial Window</a></p>
+                    </section>
+                    <section>
+                        <h3>TCP Congestion Control</h3>
+                        <p class="smaller">Increasing the initial congestion window from 10 (default) to 32 increases the first round trip response size from ~14kB to ~45kB.</p>
+                        <img class="plain stretch" src="media/initcwnd.png">
+                        <p class="smaller">initcwnd can be configured on all web servers</p>
                     </section>
                     <section class="center">
                         <h3>Network Fundamentals</h3>
@@ -587,24 +606,37 @@
                     <section class="center">
                         <h3>Other Optimisations</h3>
                         <ul>
-                            <li>Preconnect, Prefetch &amp; Preload</li>
+                            <li>Resource Hints</li>
                             <li>Priority Hints</li>
                             <li>Lazy Loading</li>
                         </ul>
                     </section>
-                    <section>
-                        <h3>Preconnect, Prefetch &amp; Preload</h3>
-                        <p>Give the browser a hint</p>
-                        
+                    <section class="center">
+                        <h3>Resource Hints</h3>
+                        <pre class="fit"><code>&lt;link rel="dns-prefetch|preconnect|prefetch|preload" href="..."&gt;</code></pre>
+                        <ul class="plain small">
+                                <li><code>dns-prefetch</code> - resolve hostname as soon as possible</li>
+                                <li><code>preconnect</code> - establish TCP & TLS connection</li>
+                                <li><code>prefetch</code> - download this when you're ready</li>
+                                <li><code>preload</code> - download this as soon as possible!</li>
+                        </ul>
+                        <p class="smallest"><sup>*</sup> use with caution - too many can break browser prioritisation and make a page slower!</p>
+                        <p class="citation"><a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Preloading_content">MDN | Preloading Content</a></p>
                     </section>
-                    <section>
+                    <section class="center">
                         <h3>Priority Hints</h3>
                         <p>Tell the browser what is important</p>
-                        
+                        <pre class="fit"><code>&lt;link rel="dns-prefetch|preconnect|prefetch|preload" href="..."&gt;</code></pre>
+                        <p class="smaller">Available in Chrome 74 as origin trial, general availability in Chrome 76</a></p>
+                        <p class="citation"><a href="https://developers.google.com/web/updates/2019/02/priority-hints">Google Developers | Priority Hints</a></p>
                     </section>
-                    <section>
-                        <h3>Lazy Loading</h3>
+                    <section class="center">
+                        <h3>(Native) Lazy Loading</h3>
                         <p>Free up the network for critical resources</p>
+                        <pre class="fit"><code>&lt;img loading="auto|eager|lazy" src="..."&gt;
+&lt;iframe loading="auto|eager|lazy" src="..."&gt;&lt;/iframe&gt;
+                        </code></pre>
+                        <p class="citation"><a href="https://addyosmani.com/blog/lazy-loading/">Addy Osmani | Native image lazy-loading for the web!</a></p>
                     </section>
                 </section>
                 
@@ -786,7 +818,7 @@
                     </section>
                     <section class="center">
                         <h3>Lazy-Loading Images</h3>
-                        <pre style="width:fit-content;"><code><img loading="auto|eager|lazy" src=".."></code></pre>
+                        <pre class="fit"><code>&lt;img loading="auto|eager|lazy" src="..."&gt;</code></pre>
                         <p>Allows the browser to determine which images to download immediately, based on viewport and connection speed.</p>
                         <p class="smaller">Available in Chrome 76, polyfill with <a href="https://github.com/aFarkas/lazysizes">lazysizes.js</a></p>
                         <p class="smallest bottom-right"><a href="https://addyosmani.com/blog/lazy-loading/">Addy Osmani | Native image lazy-loading for the web!</a></p>
@@ -1017,7 +1049,7 @@
                     </section>
                     <section class="center">
                         <h3>Blocking tags create availability risk</h3> 
-                        <pre style="width:fit-content;"><code><script src="//code.jquery.com/jquery-1.7.1.min.js"></script></code></pre>
+                        <pre class="fit"><code><script src="//code.jquery.com/jquery-1.7.1.min.js"></script></code></pre>
                         <img class="" src="media/spof.png">
                         <p class="smaller">Single Point of Failure blank screen duration:<br>Windows: 30s | Android: 60s | MacOS: 75s | iOS: 75s</p>
                         <p class="citation"><a href="https://www.webpagetest.org/video/compare.php?tests=190708_Z1_53e4411b2b30d9da5112416223fdd7cf%2C190708_PH_5e8bb8a7a4e1ff30ec41c904f2f90557&thumbSize=200&ival=5000&end=visual">WebPageTest | businessinsider.com</a></p>
