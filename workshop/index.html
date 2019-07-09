@@ -104,13 +104,29 @@
                         <p class="subtitle smallest bottom-right"><a href="https://wpostats.com/tags/engagement/">wpostats.com/tags/engagement/</a></p>
                     </section>
                     <section>
-                        <h3></h3>
+                        <h3>Speed is a ranking factor</h3>
+                        <img class="stretch" src="media/ranking.png">
+                        <p class="citation"><a href="https://developers.google.com/web/updates/2018/07/search-ads-speed#the_mobile_speed_score_for_ads_landing_pages">Speed is now a landing page factor for Google Search and Ads</a></p>
+                    </section>
+                    <section>
+                        <h3>Everyone is affected by site speed</h3>
+                        <ul class="plain">
+                            <li>User Experience</li>
+                            <li>Marketing</li>
+                            <li>Business Intelligence</li>
+                            <li>SEO</li>
+                            <li>Product</li>
+                            <li>Development</li>
+                            <li>Operations</li>
+                        </ul>
+                        <p class="fragment">But who owns it?</p>
+                    </section>
+                    <section>
+
                     </section>
                     <section>
                         <h2>TODO</h2>
                         <ul>
-                            <li>network section + preload / prefetch / preconnect</li>
-                            <li>Priority hints + <a href="https://twitter.com/kazuho/status/1148218070596382722">H/3 proposal</a></li>
                             <li>CSS &amp; fonts</li>
                             <li>responsive images</li>
                             <li>benchmarking / goals / budgets?</li>
@@ -163,6 +179,11 @@
                         <h2>Google PageSpeed Insights</h2>
                         <img class="stretch" src="media/pagespeed.png">
                         <p class="citation"><a href="https://developers.google.com/speed/pagespeed/insights/">developers.google.com/speed/pagespeed/insights/</a></p>
+                    </section>
+                    <section>
+                        <h3>PageSpeed is a Ranking Factor</h3>
+
+                        <p class="citation"><a href="https://calibreapp.com/blog/how-pagespeed-works/">Calibre | How PageSpeed Works</a></p>
                     </section>
                     <section class="center">
                         <h3>Measurement:</h3>
@@ -558,21 +579,14 @@
                         <h3>TCP Congestion Control</h3>
                         <p>Finding the maximum safe bandwidth on a connection</p>
                         <img class="plain stretch" src="media/congestion.svg">
-                        <p class="smallest"><sup>*</sup>HTTP/2 only has one connection per domain, so packet loss has a much greater impact.</p>
+                        <p class="smallest"><sup>*</sup>HTTP/2 only has one connection per domain, packet loss has a greater impact than HTTP/1.x</p>
                         <p class="citation"><a href="https://witestlab.poly.edu/blog/tcp-congestion-control-in-lossy-wireless-networks/">Fraida Fund | TCP congestion control in lossy wireless networks</a></p>
                     </section>
                     <section>
                         <h3>TCP Congestion Control</h3>
-                        <p class="smaller">Increasing the initial congestion window from 10 (default) to 32 increases the first round trip response size from ~14kB to ~45kB.</p>
                         <img class="plain stretch" src="media/initcwnd.png">
-                        <p class="smaller">Ensure that your HTML document (including response headers) fit comfortably into your initial congestion window.</p>
+                        <p class="smaller">Ensure that your HTML document (including response headers) fits comfortably into your initial congestion window (<code>initcwnd * 1400B</code>)</p>
                         <p class="citation"><a href="https://tylercipriani.com/blog/2016/09/25/the-14kb-in-the-tcp-initial-window/">Tyler Cipriani | The 14KB In The TCP Initial Window</a></p>
-                    </section>
-                    <section>
-                        <h3>TCP Congestion Control</h3>
-                        <p class="smaller">Increasing the initial congestion window from 10 (default) to 32 increases the first round trip response size from ~14kB to ~45kB.</p>
-                        <img class="plain stretch" src="media/initcwnd.png">
-                        <p class="smaller">initcwnd can be configured on all web servers</p>
                     </section>
                     <section class="center">
                         <h3>Network Fundamentals</h3>
@@ -809,19 +823,84 @@
                     </section>
                     <section class="center">
                         <h3>Responsive Images: <code>srcset</code></h3>
+                        <p class="smaller">Send the right DPR image, e.g. 1x to desktop &amp; 2x to retina</p>
+                        <img class="plain stretch" src="media/image-src.png" srcset="media/image-1x.png 1x, media/image-2x.png 2x, media/image-3x.png 3x, media/image-4x.png 4x">
+                        <pre class="fit"><code class="hlhtml smaller" data-trim>&lt;img src="src.png" srcset="1x.png 1x, 2x.png 2x, 3x.png 3x, 4x.png 4x"&gt;</code></pre>
+                    </section>
+                    <section class="center">
+                        <h3>Responsive Images: <code>srcset</code></h3>
+                        <p class="smaller">Do you need &gt; 2x?</p>
+                        
+                        <p class="citation"><a href="https://code.fb.com/ios/faster-photos-in-facebook-for-ios/">Faster Photos in Facebook for iOS</a></p>
+                    </section>
+                    <section class="center">
+                        <h3>Responsive Images: <code>srcset</code></h3>
+                        <p class="smaller">Send an image scaled to the viewport</p>
+                        <img class="plain stretch" src="media/srcset-medium.jpg" srcset="media/srcset-medium.jpg 500w, media/srcset-large.jpg 1000w, media/srcset-extralarge.jpg">
+                        <pre class="fit"><code class="hlhtml smaller" data-trim>&lt;img src="medium.jpg" srcset="medium.jpg 500w, large.jpg 1000w, extralarge.jpg"&gt;</code></pre>
+                    </section>
+                    <section>
+                        <h3>Responsive Images: <code>srcset</code></h3>
+                        <img class="plain stretch" src="media/devices.png">
+                        <p>Is the viewport relevant to image size?</p>
+                    </section>
+                    <section>
+                        <h3>Responsive Images: <code>srcset</code></h3>
+                        <p class="smaller">Including responsive breakpoints</p>
+                        <img class="plain responsive-images-demo" src="media/srcset-medium.jpg" srcset="media/srcset-medium.jpg 500w, media/srcset-large.jpg" sizes="(max-width: 800px) 100vw,33vw">
+                        <pre><code class="hlhtml smaller" data-trim>
+                            &lt;img src="medium.jpg" srcset="medium.jpg 800w, large.jpg" sizes="(max-width: 800px) 100vw, 33vw"&gt;
+                      </code></pre>
                     </section>
                     <section class="center">
                         <h3>Responsive Images: <code>&lt;picture&gt;</code></h3>
+                        <p class="smaller">Art direction for different displays</p>
+                        <picture>
+                            <source srcset="media/picture1.png" media="(min-width: 800px)">
+                            <img src="media/picture2.png" srcset="media/picture2.png" >
+                        </picture>
+                        <pre><code class="hlhtml smaller" data-trim>
+                                &lt;picture&gt;
+                                &lt;source srcset="wide.png" media="(min-width: 800px)"&gt;
+                                &lt;img src="slim.png" srcset="slim.png"&gt;
+                                &lt;/picture&gt;
+                          </code></pre>
+                    </section>
+                    <section class="center">
+                        <h3><code>&lt;picture&gt;</code> &amp; <code>srcset</code></h3>
+                        <p class="smaller">It gets complicated...</p>
+                        <pre><code class="hlhtml smaller" data-trim>
+                        &lt;picture&gt;
+                            &lt;source srcset="xsmall.jpg 1x, xsmall@2x.jpg 2x" media="(max-width: 37.4375em)"&gt;
+                            &lt;source srcset="small.jpg 1x, small@2x.jpg 2x" media="(min-width: 37.5em) and (max-width: 64.4375em)"&gt;
+                            &lt;source srcset="medium.jpg 1x, medium@2x.jpg 2x" media="(min-width: 64.5em) and (max-width: 79.9375em)"&gt;
+                            &lt;source srcset="large.jpg 1x, large@2x.jpg 2x" media="(min-width: 80em) and (max-width: 119.9375em)"&gt;
+                            &lt;source srcset="xlarge.jpg 1x, xlarge@2x.jpg 2x" media="(min-width: 120em)"&gt;
+                            &lt;img src="medium.jpg"&gt;
+                        &lt;/picture&gt;
+                        </code></pre>
                     </section>
                     <section class="center">
                         <h3>Responsive Images: client hints</h3>
+                        <p class="small">Perform content selection on the server / CDN</p>
+                        <img class="stretch" src="media/ch-negotiation.png"/>
+                        <!--<img class="caniuse" src="http://caniuse-icon.herokuapp.com/client-hints-dpr-width-viewport"/>-->
+                        <p class="smallest bottom-right"><a hreg="https://developers.google.com/web/updates/2015/09/automating-resource-selection-with-client-hints">developers.google.com | Automating Content Selection with Client Hints</a></p>
                     </section>
                     <section class="center">
                         <h3>Lazy-Loading Images</h3>
                         <pre class="fit"><code>&lt;img loading="auto|eager|lazy" src="..."&gt;</code></pre>
-                        <p>Allows the browser to determine which images to download immediately, based on viewport and connection speed.</p>
+                        <p class="smaller">Allows the browser to determine which images to download immediately, based on viewport and connection speed.</p>
                         <p class="smaller">Available in Chrome 76, polyfill with <a href="https://github.com/aFarkas/lazysizes">lazysizes.js</a></p>
                         <p class="smallest bottom-right"><a href="https://addyosmani.com/blog/lazy-loading/">Addy Osmani | Native image lazy-loading for the web!</a></p>
+                    </section>
+                    <section>
+                        <h3>Images Summary</h3>
+                        <ul>
+                            <li>Send different images based on device requirements</li>
+                            <li>Defer non-critical images</li>
+                            <li>Select format &amp; compression to minimise bytes</li>
+                        </ul>
                     </section>
                 </section>
                 

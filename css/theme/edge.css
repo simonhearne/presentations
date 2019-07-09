@@ -754,3 +754,12 @@ section.top-align {
   /* fade the background imagery a little */
   background-color: #fffa;
 }
+
+img.responsive-images-demo {
+  width: 33% !important; 
+}
+@media screen and (max-width: 800px) {
+  img.responsive-images-demo {
+    width: 100% !important; 
+  }
+}
