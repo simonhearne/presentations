@@ -208,8 +208,8 @@ html.plain-slide body {
 */
 
 .reveal blockquote {
-  background: #f9f9f9;
-  border-left: 10px solid #ccc;
+  background: #f9f9f988;
+  /*border-left: 10px solid #ccc;*/
   margin: 1.5em 10px;
   padding: 0.5em 10px;
   quotes: "\201C""\201D""\2018""\2019";
@@ -707,4 +707,32 @@ section.top-align {
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.reveal .slide-number {
+  position: absolute;
+  display: block;
+  right: 8px;
+  bottom: 8px;
+  z-index: 31;
+  font-family: Helvetica, sans-serif;
+  font-size: 12px;
+  line-height: 1;
+  color: #fff;
+  background-color: rgba(0, 0, 0, 0.4);
+  padding: 3px;
+  border-radius: 5px;
+}
+
+.reveal .controls {
+  display: none;
+  position: absolute;
+  top: auto;
+  bottom: 6px;
+  right: 6px;
+  left: auto;
+  z-index: 1;
+  color: #000;
+  pointer-events: none;
+  font-size: 10px;
 }
