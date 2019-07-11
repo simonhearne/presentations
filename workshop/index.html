@@ -7,9 +7,13 @@
     <title>Web Performance Workshop - @SimonHearne</title>
     <meta name="description" content="Web Performance Workshop">
     <meta name="author" content="Simon Hearne">
-    
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+    <link rel="preload" href="../lib/font/lato-v14-latin/lato-v14-latin-300.woff2" as="font/woff2">
+    <link rel="preload" href="../lib/font/lato-v14-latin/lato-v14-latin-300italic.woff2" as="font/woff2">
+    <link rel="preload" href="../lib/font/lato-v14-latin/lato-v14-latin-300.woff" as="font/woff">
+    <link rel="preload" href="../lib/font/lato-v14-latin/lato-v14-latin-300italic.woff" as="font/woff">
     
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     
@@ -25,7 +29,6 @@
     <!--<link rel="stylesheet" href="../lib/css/animate.min.css">-->
     
     <!--
-        
         <meta name=”twitter:image” content=”/presentations/social_improving-revenue.jpg”>
         <meta property=“og:image” content=“/presentations/social_improving-revenue.jpg” />
         <meta property=”og:image:width” content=”1716" />
@@ -33,19 +36,12 @@
     -->
     <!-- Printing and PDF exports -->
     <link rel="manifest" href="./manifest.json">
-    <script>
-        var link = document.createElement( 'link' );
-        link.rel = 'stylesheet';
-        link.type = 'text/css';
-        link.href = window.location.search.match( /print-pdf/gi ) ? '../css/print/pdf.css' : '../css/print/paper.css';
-        document.getElementsByTagName( 'head' )[0].appendChild( link );
-    </script>
-    <script src="../lib/js/head.min.js"></script>
-    <script src="../js/reveal.js"></script>
-    <script src="../lib/js/jquery-3.3.1.min.js"></script>
+    <script defer src="../lib/js/head.min.js"></script>
+    <script defer src="../js/reveal.js"></script>
+    <script defer src="../lib/js/jquery-3.3.1.min.js"></script>
     
     <!--[if lt IE 9]>
-        <script src="lib/js/html5shiv.js"></script>
+        <script src="../lib/js/html5shiv.js"></script>
         <![endif]-->
     </head>
     
@@ -1109,7 +1105,7 @@
                     </section>
                     <section class="center">
                         <h3>Blocking tags create availability risk</h3> 
-                        <pre class="fit"><code><script src="//code.jquery.com/jquery-1.7.1.min.js"></script></code></pre>
+                        <pre class="fit"><code>&lt;script src="//code.jquery.com/jquery-1.7.1.min.js"&gt;&lt;/script&gt;</code></pre>
                         <img loading="lazy" class="" src="media/spof.png">
                         <p class="smaller">Single Point of Failure blank screen duration:<br>Windows: 30s | Android: 60s | MacOS: 75s | iOS: 75s</p>
                         <p class="citation"><a href="https://www.webpagetest.org/video/compare.php?tests=190708_Z1_53e4411b2b30d9da5112416223fdd7cf%2C190708_PH_5e8bb8a7a4e1ff30ec41c904f2f90557&thumbSize=200&ival=5000&end=visual">WebPageTest | businessinsider.com</a></p>
