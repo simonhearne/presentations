@@ -1,5 +1,6 @@
 /* smythe-regular - latin */
 @font-face {
+	font-display: swap;
     font-family: 'Smythe';
     font-style: normal;
     font-weight: 400;

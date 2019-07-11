@@ -17,7 +17,6 @@ body {
   background: url( 'edge-bottom-left.png' ), url('edge-top-right.png'), url('edge-top-left.png');
   background-position: bottom left, top right, top left;
   background-repeat: no-repeat;
-  font-display: swap;
 }
 html.title-slide body {
   background: url( 'edge-bottom.jpg' ), url('edge-top-left.png');
@@ -39,7 +38,6 @@ html.plain-slide body {
 }
 
 .reveal {
-  font-display: swap;
   font-family: "Lato", sans-serif;
   font-size: 40px;
   font-weight: 300;
