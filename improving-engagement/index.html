@@ -119,38 +119,19 @@
 						<p class="subtitle smallest bottom-right"><a href="https://wpostats.com/tags/engagement/">wpostats.com/tags/engagement/</a></p>
 					</section>
 					<section>
-						<h3>We know that speed matters</h3>
-						<table class="twocol">
-							<tr class="fragment">
-								<td><img loading="lazy" class="plain" src="media/cook.png"/></td>
-								<td>COOK increased conversion rate by 7% after cutting average page load time by 0.85 seconds. Bounce rate fell by 7% and session length increased by 10%.</td>
-							</tr>
-							<tr class="fragment">
-								<td><img loading="lazy" class="plain" src="media/mobify.png"/></td>
-								<td>For every 100ms decrease in homepage load speed, Mobify's customer base saw a 1.11% lift in session based conversion</td>
-							</tr>
-							<tr class="fragment">
-								<td><img loading="lazy" class="plain" src="media/gq.png"/></td>
-								<td>GQ cut load time by 80% and saw an 80% increase in traffic. Median time spent on the site also increased by 32%</td>
-							</tr>
-						</table>
-						<p class="subtitle smallest bottom-right"><a href="https://wpostats.com/tags/engagement/">wpostats.com/tags/engagement/</a></p>
+						<h3>You know that speed matters!</h3>
+						<img class="stretch" src="media/tmg1.png">
+					</section>
+					<section>
+						<h3>You know that speed matters!</h3>
+						<blockquote>The results proved that our hypothesis was right – even small incremental performance improvements could ripple out to make a massive downstream impact for publishers like us</blockquote>
+						<p class="subtitle smallest bottom-right">Toby Wright</p>
 					</section>
 				</section>
 				<section>
 					<section>
 						<h3>What do we mean by speed?</h3>
 						<div class="fragment tweet" data-src="https://twitter.com/simonhearne/status/1111396048143073280"></div>
-					</section>
-
-					<section data-state="secondary-slide">
-						<h3>POLL 1: What do you measure?</h3>
-						<ol>
-							<li>Page Load</li>
-							<li>Paint Timing</li>
-							<li>Custom Timer</li>
-							<li>Don't know / don't measure</li>
-						</ol>
 					</section>
 
 					<section>
@@ -242,16 +223,6 @@
 						<p class="smallest bottom-right">* rate of visitors who visit another page after this one</p>
 					</section>
 
-					<section data-state="secondary-slide">
-						<h3>POLL 2: How do you measure engagement?</h3>
-						<ol>
-							<li>Bounce Rate</li>
-							<li>Session Length</li>
-							<li>Subscriptions / Registrations</li>
-							<li>Don't know / don't measure</li>
-						</ol>
-					</section>
-
 					<section data-state="plain-slide" id="retention-chart">
 						<h4>Performance vs. engagement</h4>
 						<div class="vega-chart" id="vis1" data-spec="data/retention.json"></div>
@@ -259,9 +230,13 @@
 					</section>
 		
 					<section data-state="plain-slide" id="sessionlength-chart">
-						<h4>Performance vs. engagement</h4>
-						<div class="vega-chart" id="vis2" data-spec="data/session_length.json"></div>
-						<p class="smallest bottom-right">Source: Akamai mPulse (May 2019)</p>
+							<h4>Performance vs. engagement</h4>
+							<div class="vega-chart" id="vis2" data-spec="data/session_length.json"></div>
+							<p class="smallest bottom-right">Source: Akamai mPulse (May 2019)</p>
+					</section>
+					<section data-state="plain-slide" id="sessionlength-chart">
+						<h4>Retention by Page Group</h4>
+						<img class="stretch plain" src="media/tmg_retention.png">
 					</section>
 		
 					<section>
@@ -293,13 +268,8 @@
 							<div class="vega-chart" id="vega-chart-js" data-spec="data/domain_count.json"></div>
 							<p class="smallest bottom-right">Source: Akamai mPulse (May 2019)</p>
 						</section>
-						<section data-state="plain-slide" id="HA-scripts-chart">
-							<h4>JavaScript count vs. visual readiness</h4>
-							<div class="vega-chart" id="vega-chart-ha-scripts" data-spec="data/ha-scripts.json"></div>
-							<p class="smallest bottom-right">Source: HTTP Archive (May 2019)</p>
-						</section>
-						<section data-state="plain-slide" data-background="media/requestmap.png">
-							<h3>Third-party scripts are responsible for<br/>>70% of requests</h3>
+						<section data-state="plain-slide" data-background="media/requestmap_tmg.png">
+							<h3 class="fragment fade-out">Third-party scripts are responsible for<br/>>70% of requests</h3>
 							<p class="smallest bottom-right"><a href="https://requestmap.webperf.tools/">requestmap.webperf.tools</a></p>
 						</section>
 						<section>
@@ -362,6 +332,10 @@
 							<img loading="lazy" width="50%" src="media/prefreshing.png">
 							<p class="smallest bottom-right"><a href="https://community.akamai.com/customers/s/article/Achieving-Great-Offload-and-Performance-using-Prefresh">Achieving Great Offload and Performance using Prefresh</a></p>
 						</section>
+						<section>
+							<div class="tweet" data-src="https://twitter.com/TimVereecke/status/1087818855731417089"></div>
+						</section>
+
 						<section data-state="plain-slide" id="fonts-chart">
 							<h4>Font load vs. TTI</h4>
 							<div class="vega-chart" id="vega-chart-fonts" data-spec="data/lastfont_vs_tti.json"></div>
@@ -373,18 +347,18 @@
 							<p class="smallest bottom-right">Source: HTTP Archive (May 2019)</p>
 						</section>
 						<section>
-							<h3>Cheat by preloading fonts</h3>
-							<pre style="width:fit-content;text-align:center;"><code>&lt;link rel="preload" as="font" type="font/woff2" href="font.woff2"&gt;</code></pre>
-							
-							<video loading="lazy" width="70%" muted controls src="media/fonts.mp4"></video>
-							<p class="smallest bottom-right"><a href="https://andydavies.me/blog/2019/02/12/preloading-fonts-and-the-puzzle-of-priorities/">Preloading Fonts and the Puzzle of Priorities</a></p>
-						</section>
-						<section>
 							<h3>Show text as soon as you can</h3>
 							<p>Swap in the brand font when it downloads</p>
 							<pre style="width:fit-content;text-align:center;"><code>font-display: [swap|fallback|optional]</code></pre>
 							<img loading="lazy" width="50%" src="media/fonts.png"></img>
 							<p class="smallest bottom-right"><a href="https://developers.google.com/web/updates/2016/02/font-display">Controlling Font Performance with font-display</a></p>
+						</section>
+						<section>
+							<h3>Cheat by preloading fonts</h3>
+							<pre style="width:fit-content;text-align:center;"><code>&lt;link rel="preload" as="font" type="font/woff2" href="font.woff2"&gt;</code></pre>
+							
+							<video loading="lazy" width="70%" muted controls src="media/fonts.mp4"></video>
+							<p class="smallest bottom-right"><a href="https://andydavies.me/blog/2019/02/12/preloading-fonts-and-the-puzzle-of-priorities/">Preloading Fonts and the Puzzle of Priorities</a></p>
 						</section>
 						<section>
 							<h3>2: Serve critical content ASAP ⚡️</h3>
@@ -395,11 +369,6 @@
 						</section>
 						<section>
 							<h3>3: Optimize image delivery 🌄</h3>
-						</section>
-						<section data-state="plain-slide" id="image-chart">
-							<h4>Image count vs. TTI</h4>
-							<div class="vega-chart" id="vega-chart-image" data-spec="data/images_vs_tti.json"></div>
-							<p class="smallest bottom-right">Source: Akamai mPulse (May 2019)</p>
 						</section>
 						<section data-state="plain-slide" id="HA-images-chart">
 							<h4>Image count vs. visual readiness</h4>
@@ -416,10 +385,13 @@
 							<img loading="lazy" width="70%" src="media/image-manager.jpg"></img>
 							<p class="smallest bottom-right"><a href="https://developer.akamai.com/akamai-image-manager">Akamai Image Manager</a></p>
 						</section>
-						<section>
-							<h3>Defer below-the-fold images</h3>
-							<img loading="lazy" width="70%" src="media/without-lazyload@2x.png"></img>
-							<p class="smallest bottom-right"><a href="https://addyosmani.com/blog/lazy-loading/">Native image lazy-loading for the web!</a></p>
+						<section class="center">
+							<h3>(Native) Lazy Loading</h3>
+							<p>Free up the network for critical resources</p>
+							<pre class="fit"><code>&lt;img loading="auto|eager|lazy" src="..."&gt;
+	&lt;iframe loading="auto|eager|lazy" src="..."&gt;&lt;/iframe&gt;
+							</code></pre>
+							<p class="citation"><a href="https://addyosmani.com/blog/lazy-loading/">Addy Osmani | Native image lazy-loading for the web!</a></p>
 						</section>
 						<section>
 							<h3>3: Optimize image delivery 🌄</h3>
@@ -438,11 +410,6 @@
 							<div class="vega-chart" id="vega-chart-dom-2" data-spec="data/domsize.json"></div>
 							<p class="smallest bottom-right">Source: Akamai mPulse (May 2019)</p>
 						</section>
-						<section data-state="plain-slide"id="dom-chart-3">
-							<h4>DOM complexity vs. TTI</h4>
-							<div class="vega-chart" id="vega-chart-dom-3" data-spec="data/ha-docsize.json"></div>
-							<p class="smallest bottom-right">Source: HTTP Archive (May 2019)</p>
-						</section>
 						<section>
 							<h3>4: Reduce DOM complexity 🧠</h3>
 							<ol>
@@ -454,11 +421,6 @@
 						</section>
 						<section>
 							<h3>5: Reduce or defer JavaScript execution ⚙️</h3>
-						</section>
-						<section data-state="plain-slide" id="js-chart2">
-							<h4>JavaScript size vs. TTI</h4>
-							<div class="vega-chart" id="vega-chart-js2" data-spec="data/jssize_vs_tti.json"></div>
-							<p class="smallest bottom-right">Source: Akamai mPulse (May 2019)</p>
 						</section>
 						<section data-state="plain-slide" id="HA-jsbytes-chart">
 							<h4>JavaScript size vs. visual readiness</h4>
@@ -476,7 +438,7 @@
 							<ol>
 								<li>Only ship necessary JavaScript</li>
 								<li>Consider differential serving for low-end devices</li>
-								<li>Defer everything?!</li>
+								<li>Implement a business process for tags</li>
 							</ol>
 						</section>
 				</section>
