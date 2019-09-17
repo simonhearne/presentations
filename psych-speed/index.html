@@ -102,8 +102,8 @@
 					</section>
 
 					<section>
-						<h3>Navigation Timing API</h3>
-						<img data-src="media/navtiming.png"/>
+						<h3>There are plenty of technical measures</h3>
+						<img class="stretch" data-src="media/navtiming.png"/>
 						<p class="subtitle smallest bottom-right"><a href="https://w3c.github.io/perf-timing-primer/">w3c.github.io/perf-timing-primer/</a></p>
 					</section>
 
@@ -118,7 +118,7 @@
 
 					<section>
 						<h3>Is it working?</h3>
-						<video muted controls data-src="media/akamai-1.mov"></video>
+						<video class="stretch" muted autoplay data-autoplay data-src="media/akamai-1.mov"></video>
 					</section>
 
 					<section>
@@ -131,7 +131,7 @@
 
 					<section>
 						<h3>Is it useful?</h3>
-						<video muted controls data-src="media/akamai-2.mov"></video>
+						<video class="stretch" muted autoplay data-autoplay data-src="media/akamai-2.mov"></video>
 					</section>
 
 					<section>
@@ -148,7 +148,7 @@
 
 					<section>
 						<h3>Is it interactive?</h3>
-						<video muted controls data-src="media/tti.mp4"></video>
+						<video class="stretch" muted autoplay loop data-autoplay data-src="media/tti.mp4"></video>
 					</section>
 
 					<section>
@@ -165,6 +165,13 @@
 					<section id="poll-1" data-state="secondary-slide">
 						<h2>POLL 1</h2>
 						<p>What do you measure?</p>
+						<ul>
+							<li>Page Load Time</li>
+							<li>DOM [ready|interactive|complete]</li>
+							<li>First [contentful|meaningful] Paint</li>
+							<li>Time to Interactive</li>
+							<li>Custom Timers</li>
+						</ul>
 					</section>
 
 					<section>
@@ -400,20 +407,20 @@ window.addEventListener(
 					</section>
 					<section>
 						<h3>Keep Users Engaged<span class="subtitle">Skeleton UI</span></h3>
-						<video style="height: 9rem;" muted autoplay loop data-src="media/slack.mov"/>
+						<video class="stretch" style="height: 9rem;" muted autoplay loop data-src="media/slack.mov"/>
 					</section>
 					<section>
 						<h3>Keep Users Engaged<span class="subtitle">Skeleton UI</span></h3>
-						<img class="plain" style="height: 9rem;" data-src="media/facebook.gif"/>
+						<img class="plain stretch" style="height: 9rem;" data-src="media/facebook.gif"/>
 						<p class="fragment smallest bottom-right"><sup>*</sup>use sparingly</p>
 					</section>
 					<section>
 						<h3>Assume success</h3>
-						<video style="width:40%;" autoplay muted loop data-src="media/allbirds-mobile.mov"/>
+						<video class="stretch" autoplay muted loop data-src="media/allbirds-mobile.mov"/>
 					</section>
 					<section>
 						<h3>Fill the gaps</h3>
-						<video style="width:40%;" autoplay muted loop data-src="media/all-birds-mobile1.mov"/>
+						<video class="stretch"" autoplay muted loop data-src="media/all-birds-mobile1.mov"/>
 					</section>
 				</section>	
 
@@ -535,6 +542,7 @@ window.addEventListener(
 					window.demoBtnData.mousedown && (document.getElementById("demo-btn-down").innerHTML = (now - window.demoBtnData.mousedown).toFixed(2)+'ms');
 					document.getElementById("demo-btn-click").innerHTML = "0ms";
 				});
+				/*
 				document.getElementById('demo-btn-3').addEventListener("mouseover",()=>{
 					fetch('media/pavlov.jpg').then(console.log('Pavlov Fetched!'));
 				});
@@ -544,6 +552,7 @@ window.addEventListener(
 				document.getElementById('demo-btn-2').addEventListener("click",()=>{
 					document.getElementById("demo-btn-img-2").innerHTML = "<img src='media/pavlov.jpg'/>";
 				});
+				*/
 				
 			});
 
