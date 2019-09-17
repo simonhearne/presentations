@@ -620,10 +620,12 @@ img.cursor {
 .animate-hover {
   transition: border 0.5s ease-in;
   transition: color 0.5s ease-out;
+  transition: 0.5s ease-out;
 }
 .animate-hover:hover {
   border: 4px solid green;
   color: green;
+  transform: rotateX(20deg);
 }
 
 .btn-big:active {
