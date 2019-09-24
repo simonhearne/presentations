@@ -98,7 +98,6 @@
 				<section>
 					<section>
 						<h3>What do we mean by speed?</h3>
-						<div class="fragment tweet" data-src="https://twitter.com/simonhearne/status/1111396048143073280"></div>
 					</section>
 
 					<section>
@@ -108,12 +107,12 @@
 					</section>
 
 					<section>
-						<h3>What <em>actually</em> matters?</h3>
-						<ul>
+						<h3>What <em>actually</em> matters? 🤔</h3>
+						<ol>
 							<li class="fragment">Is it working?</li>
 							<li class="fragment">Is it useful?</li>
 							<li class="fragment">Is it interactive?</li>
-						</ul>
+						</ol>
 					</section>
 
 					<section>
@@ -136,9 +135,8 @@
 
 					<section>
 						<h3>Is it useful?</h3>
-						<ul class="smaller">
+						<ul>
 							<li>DOM Content Loaded</li>
-							<li>DOM Complete</li>
 							<li>First Contentful Paint</li>
 							<li>Time to Visually Ready<sup>*</sup></li>
 						</ul>
@@ -153,10 +151,9 @@
 
 					<section>
 						<h3>Is it interactive?</h3>
-						<ul class="smaller">
+						<ul>
 							<li>Time to Interactive</li>
 							<li>First Input Delay</li>
-							<li>Time to First Interaction</li>
 							<li>Rage Clicks<sup>*</sup></li>
 						</ul>
 						<p class="smallest bottom-right"><sup>*</sup>mPulse only</p>
@@ -167,10 +164,10 @@
 						<p>What do you measure?</p>
 						<ul>
 							<li>Page Load Time</li>
-							<li>DOM [ready|interactive|complete]</li>
-							<li>First [contentful|meaningful] Paint</li>
+							<li>DOM Timings</li>
+							<li>Paint Timings</li>
 							<li>Time to Interactive</li>
-							<li>Custom Timers</li>
+							<li>Custom Timers?</li>
 						</ul>
 					</section>
 
@@ -206,14 +203,6 @@ window.addEventListener(
 							<tr><td>First Input Delay (FID)</td><td>How long it takes to respond to input</td></tr>
 						</table>
 						<p class="fragment smallest bottom-right"><a href="https://developer.akamai.com/mpulse/whats-in-a-beacon/">developer.akamai.com/mpulse/whats-in-a-beacon/</a></p>
-					</section>
-					
-					<section>
-						<h3>My requirements<span class="subtitle">(for multi-app analysis)</span></h3>
-						<ol>
-							<li class="fragment">Available in <em>most</em> browsers</li>
-							<li class="fragment">Representative of user experience</li>
-						</ol>
 					</section>
 				</section>
 
@@ -256,13 +245,40 @@ window.addEventListener(
 						<p class="subtitle smallest bottom-right"><a href="https://davidmaister.com/articles/the-psychology-of-waiting-lines/">The Psychology of Waiting Lines by David Maister</a></p>
 					</section>
 					<section>
-						<h3>We can optimise for subjective time...</h3>
-						<ul>
-							<li class="fragment">Progressive loading</li>
-							<li class="fragment">Skeleton UI</li>
-							<li class="fragment">Optimistic UI</li>
-							<li class="fragment">Progress Indicators</li>
-						</ul>
+						<h3>But we can optimise perception...</h3>
+						<p class="bottom-right smallest"><a href="https://signalvnoise.com/posts/1244-defining-the-problem-of-elevator-waiting-times">Defining the Problem of Elevetaor Waiting Times</a></p>
+					</section>
+					<section>
+						<h3>Slow elevators...</h3>
+						<img class="plain stretch" src="media/elevator1.jpg"/>
+						<p class="bottom-right smallest"><a href="https://signalvnoise.com/posts/1244-defining-the-problem-of-elevator-waiting-times">Defining the Problem of Elevetaor Waiting Times</a></p>
+					</section>
+					<section>
+						<h3>Waiting for baggage...</h3>
+						<img class="plain stretch" src="media/baggage1.jpg"/>
+					</section>
+					<section>
+						<h3>Crossing the street...</h3>
+						<img class="plain stretch" src="media/crosswalk1.jpg"/>
+					</section>
+					<section>
+						<h3>We can do this on the web!</h3>
+					</section>
+					<section>
+						<h3>Progressive loading</h3>
+						<img class="plain stretch" style="height: 9rem;" data-src="media/facebook.gif"/>
+					</section>
+					<section>
+						<h3>Skeleton UI</h3>
+						<video class="stretch" style="height: 9rem;" muted autoplay loop data-src="media/slack.mov"/>
+					</section>
+					<section>
+						<h3>Optimistic UI</h3>
+						<video class="stretch" autoplay muted loop data-src="media/allbirds-mobile.mov"/>
+					</section>
+					<section>
+						<h3>Progress Indicators</h3>
+						<video class="stretch"" autoplay muted loop data-src="media/all-birds-mobile1.mov"/>
 					</section>
 				</section>
 
@@ -290,6 +306,39 @@ window.addEventListener(
 						</ul>
 					</section>
 				</section>
+
+				<section id="intermission-2" data-state="main-slide">
+					<section class="center">
+						<h2 class="intermission">&lt; psychology &gt;</h2>
+					</section>
+					<section>
+						<h2>Just Noticeable Difference</h2>
+					</section>
+					<section>
+						<h3>Faster, slower or the same?</h3>
+						<div class="demo-container">
+							<div class="demo-background-container">
+								<div data-demo="1" class="demo-bar demo-background"></div>
+								<div data-demo="2" class="demo-bar demo-background"></div>
+								<div data-demo="3" class="demo-bar demo-background"></div>
+							</div>
+							<div class="demo-foreground-container">
+								<div data-demo="1" id="demo-bar-1" class="demo-bar demo-foreground demo-med"></div>
+								<div data-demo="2" id="demo-bar-2" class="demo-bar demo-foreground demo-fast"></div>
+								<div data-demo="3" id="demo-bar-3" class="demo-bar demo-foreground demo-faster"></div>
+							</div>
+						</div>
+						<div class="demo-controls clickable smaller"><span id="demo-reset">reset</span> | <span id="demo-all">all</span></div>
+						<!--<img class="cursor" data-animate="bounceOutUp" data-delay="1" src="media/cursor.png"/>-->
+						<p class="fragment smallest bottom-right">The 20% Rule: "Designing and Engineering Time" by Steven C. Seow, Ph.D.</p>
+					</section>
+					<section>
+						<h3>So what?</h3>
+						<p class="fragment">Get <em>20% faster</em> for existing customers to notice</p>
+						<p class="fragment">Be <em>20% faster</em> than your peers &amp; competitors</p>
+					</section>
+				</section>
+
 				<section id="engagement">
 					
 					<section>
@@ -321,7 +370,7 @@ window.addEventListener(
 						<h3 class="with-subtitle">Performance metrics correlate with engagement<span class="subtitle">(session length)</span></h3>
 						<div class="vega-chart" id="vis1" data-spec="data/sessionlength.json"></div>
 						<p class="smallest bottom-right">~1Bn mPulse pageview beacons - early March 2019</p>
-						<img class="cursor" style="position: absolute; right: 9%; top: 44%;" data-animate="bounceOutUp" data-delay="1" src="media/cursor.png"/>
+						<!--<img class="cursor" style="position: absolute; right: 9%; top: 44%;" data-animate="bounceOutUp" data-delay="1" src="media/cursor.png"/>-->
 					</section>
 
 					<section>
@@ -387,9 +436,6 @@ window.addEventListener(
 						<h2 class="intermission">&lt; psychology &gt;</h2>
 					</section>
 					<section>
-						<h2>Hacking human perception</h2>
-					</section>
-					<section>
 						<h3>There are no guarantees on performance</h3>
 						<p class="fragment">but you can buy some time</p>
 					</section>
@@ -404,23 +450,6 @@ window.addEventListener(
 							<tr><td>click</td><td id="demo-btn-click">-</td></tr>
 						</table>
 						<p class="smaller">Use to anticipate navigations, product viewer actions etc.</p>
-					</section>
-					<section>
-						<h3>Keep Users Engaged<span class="subtitle">Skeleton UI</span></h3>
-						<video class="stretch" style="height: 9rem;" muted autoplay loop data-src="media/slack.mov"/>
-					</section>
-					<section>
-						<h3>Keep Users Engaged<span class="subtitle">Skeleton UI</span></h3>
-						<img class="plain stretch" style="height: 9rem;" data-src="media/facebook.gif"/>
-						<p class="fragment smallest bottom-right"><sup>*</sup>use sparingly</p>
-					</section>
-					<section>
-						<h3>Assume success</h3>
-						<video class="stretch" autoplay muted loop data-src="media/allbirds-mobile.mov"/>
-					</section>
-					<section>
-						<h3>Fill the gaps</h3>
-						<video class="stretch"" autoplay muted loop data-src="media/all-birds-mobile1.mov"/>
 					</section>
 				</section>	
 
@@ -442,12 +471,35 @@ window.addEventListener(
 		<script src="../lib/js/jquery-3.3.1.min.js"></script>
 
 		<script>
+			var presenting = window.location.search.includes('present');
+			if (!presenting) {
+				let id = document.getElementById('help-text');
+				if (id) {
+					id.innerHTML = "Use 'n' and 'p' to navigate next and previous slides.<br>Use 'o' to view an overview."
+				}
+			}
+			var keyboard = {
+				// pause/resume time when Enter is pressed
+				13: () => {
+					ElapsedTimeBar.isPaused ? ElapsedTimeBar.resume() : ElapsedTimeBar.pause();
+				},
+				// reset timer when 'r' is pressed
+				82: () => {
+					ElapsedTimeBar.reset();
+				}
+			};
+			if (presenting) {
+				keyboard = Object.assign(keyboard,{
+					39: 'next',
+					37: 'prev'
+				});
+			};
 				function getFragment(event) {
 					return (event.currentSlide.id !== "" ? event.currentSlide.id : null);
 				}
 			// More info https://github.com/hakimel/reveal.js#configuration
 			Reveal.initialize({
-				controls: false,
+				controls: !presenting,
 				progress: true,
 				history: true,
 				center: true,
@@ -472,16 +524,7 @@ window.addEventListener(
 					{ src: '../plugin/notes/notes.js', async: true }
 				],
 
-				keyboard: {
-					// pause/resume time when Enter is pressed
-					13: () => {
-						ElapsedTimeBar.isPaused ? ElapsedTimeBar.resume() : ElapsedTimeBar.pause();
-					},
-					// reset timer when 'r' is pressed
-					82: () => {
-						ElapsedTimeBar.reset();
-					}
-				}
+				keyboard: keyboard
 			});
 			Reveal.addEventListener( 'slidechanged', function( event ) {
 				let state = {h: event.indexh, v: event.indexv, name: getFragment(event)};
