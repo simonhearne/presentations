@@ -654,3 +654,12 @@ span.vega-bind-name::after {
 div.vega-bind {
   line-height: 0.5em;
 }
+
+.dark-bg {
+  background-color: rgba(0,0,0,0.5);
+  border-radius: 0.5em;
+}
+.lite-bg {
+  background-color: rgba(255,255,255,0.9);
+  border-radius: 0.5em;
+}
