@@ -40,10 +40,6 @@ html.tertiary-slide body {
   background: -webkit-radial-gradient(center, circle cover, rgb(26, 1, 141) 0%, #1c1e20 100%);
 }
 
-html.intermission body {
-  
-}
-
 .reveal table.list {
   font-size: 70%;
   
@@ -96,7 +92,7 @@ html.intermission body {
 .reveal h6 {
   margin: 0 0 40px 0;
   color: #eee;
-  font-family: "Sigmar One", "League Gothic", Impact, sans-serif;
+  font-family: "League Gothic", Impact, sans-serif;
   font-weight: normal;
   line-height: 1.2;
   letter-spacing: normal;
