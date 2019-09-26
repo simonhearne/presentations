@@ -4,9 +4,9 @@
 	<head>
 		<meta charset="utf-8">
 
-		<title>Ad Block Performance - @SimonHearne</title>
+		<title>The state of third-party tag performance - @SimonHearne</title>
 
-		<meta name="description" content="Presentation: Ad Block Performance">
+		<meta name="description" content="Presentation: The state of third-party tag performance">
 		<meta name="author" content="Simon Hearne">
 
 		<meta name="apple-mobile-web-app-capable" content="yes">
@@ -22,14 +22,14 @@
 
 		<!--<link rel="stylesheet" href="../lib/css/animate.min.css">-->
 
-		<meta property=“og:image” content="https://simonhearne.com/presentations/social_improving-revenue.jpg" />
+		<!--<meta property=“og:image” content="https://simonhearne.com/presentations/social_improving-revenue.jpg" />-->
 		<meta property=”og:image:width” content=”1716" />
 		<meta property=”og:image:height” content=”864″ />
 		<meta name="twitter:card" content="summary_large_image" />
 		<meta name="twitter:creator" content="@SimonHearne" />
-		<meta name="twitter:title" content="Five Surprising Techniques to Improve Online Engagement.">
-		<meta name="twitter:description" content="An interactive presentation exploring the relationship between speed and user engagement, with five simple techniques to optimise both! Originally presented at Akamai Edge World 2019 in Las Vegas, Nevada." />
-		<meta name="twitter:image" content="https://simonhearne.com/presentations/social_improving-revenue.jpg" />
+		<meta name="twitter:title" content="The state of third-party tag performance">
+		<meta name="twitter:description" content="" />
+		<!--<meta name="twitter:image" content="https://simonhearne.com/presentations/social_improving-revenue.jpg" />-->
 		
 		<!-- Printing and PDF exports -->
 		<script>
@@ -55,7 +55,7 @@
 			<!-- Any section element inside of this container is displayed as a slide -->
 			<div class="slides">
 				<section data-background-color="#000" data-background-image="media/underwater.jpg" data-background-fit="stretch">
-					<h1>Ad Block Performance in 2019</h1>
+					<h1>The state of third-party tag performance</h1>
 					<div class="bottom" style="position: fixed;bottom: 0;width: 100%;text-align: center;">
 						<p style="margin-bottom:0;">Simon Hearne</p>
 						<p class="smaller">Web Performance Solutions Engineer @ Akamai</p>		
@@ -66,10 +66,11 @@
 				<section>
 					<h3>Coming up...</h3>
 					<ol>
-						<li>State of the Nation</li>
 						<li>The Importance of Speed</li>
 						<li>Getting Speed Data</li>
-						<li>Ad (Block) Impact</li>
+						<li>Tags?</li>
+						<li>Tag Performance</li>
+						<li>The Impact of Ad Blockers</li>
 					</ol>
 				</section>
 				<section>
@@ -82,10 +83,42 @@
 					<img class="plain stretch" data-src="media/httparchive.png">
 					<p class="smallest bottom-right"><a href="https://httparchive.org">HTTP Archive</a></p>
 				</section>
+				<section>
+					<h3>Data Source 3 📊</h3>
+					<img class="plain stretch" data-src="media/httparchive.png">
+				</section>
 
 				<section>
 					<section>
 						<h2>The Importance of Speed</h2>
+					</section>
+					<section>
+						<h3>Speed matters</h3>
+						<table class="twocol">
+							<tr>
+								<td><img class="plain" data-src="media/bbc.png"/></td>
+								<td>The BBC loses an additional 10% of users for every additional second it takes to load</td>
+							</tr>
+							<tr class="fragment">
+								<td><img class="plain" data-src="media/pinterest.png"/></td>
+								<td>Pinterest improved load time by 40% and saw 15% increase in SEO traffic and 15% increase in conversions</td>
+							</tr>
+							<tr class="fragment">
+								<td><img class="plain" data-src="media/ft.png"/></td>
+								<td>The Financial times increased user engagement by 30% when they released the new, performance focused FT.com</td>
+							</tr>
+						</table>
+						<p class="subtitle smallest bottom-right"><a href="https://wpostats.com/tags/engagement/">wpostats.com/tags/engagement/</a></p>
+					</section>
+					<section>
+						<h3>Speed Correlates with Engagement</h3>
+						<div class="vega-chart" id="vis1" data-spec="data/sessionlength.json"></div>
+						<p class="smallest bottom-right">~1Bn mPulse pageview beacons - early March 2019</p>
+					</section>
+					<section>
+						<h3>Speed Correlates with Engagement</h3>
+						<div class="vega-chart" id="vis2" data-spec="data/bouncerates.json"></div>
+						<p class="smallest bottom-right">~1Bn mPulse pageview beacons - early March 2019</p>
 					</section>
 				</section>
 
@@ -93,11 +126,115 @@
 					<section>
 						<h2>Getting Speed Data</h2>
 					</section>
+					<section>
+						<h3>Collecting Data 🔎</h3>
+						<div style="width:100%;text-align:center;background-color:#fff4;">
+							<div class="fragment" style="float:left;width:33%;">
+								<h5>Ad Hoc 🛠</h5>
+								<ul class="smaller">
+									<li>Developer Tools</li>
+									<li>PageSpeed Insights</li>
+									<li>WebPageTest</li>
+								</ul>
+							</div>
+							<div class="fragment" style="float:left;width:33%;">
+								<h5>Synthetics 🤖</h5>
+								<ul class="smaller" >
+									<li>Rigor</li>
+									<li>Catchpoint</li>
+									<li>SpeedCurve</li>
+								</ul>
+							</div>
+							<div class="fragment" style="float:left;width:33%;">
+								<h5>RUM 🥃</h5>
+								<ul class="smaller">
+									<li>Analytics?</li>
+									<li>APM</li>
+									<li>mPulse 👍</li>
+								</ul>
+							</div>
+						</div>
+					</section>
+					<section>
+						<h3>Data Points</h3>
+						<p>APIs</p>
+					</section>
+					<section>
+						<h3>Data Points</h3>
+						<p>Custom stuff</p>
+					</section>
+					<section>
+						<h3>Doing something with it</h3>
+					</section>
 				</section>
 
 				<section>
 					<section>
-						<h2>The Impact of Ads</h2>
+						<h2>Tags?</h2>
+						<img class="plain stretch" data-src="media/tag.png"/>
+					</section>
+					<section>
+						<h2>Tags!</h2>
+						<img class="plain stretch" data-src="media/net.png"/>
+					</section>
+					<section class="center" data-state="plain-slide" data-background="media/requestmap.png" data-background-color="#000">
+                        <h3 class="dark-bg">27% of pages have <br/>&gt;90% third-party requests</h3>
+                        <p class="smallest bottom-right"><a href="https://discuss.httparchive.org/t/what-is-the-distribution-of-1st-party-vs-3rd-party-resources/100">HTTP Archive</a></p>
+                    </section>
+					<section data-background-image="media/why.png" data-background-size="contain" data-background-color="#fff">
+					</section>
+					<section>
+						<h3>Tags serve business goals 💵</h3>
+						<ul>
+							<li class="fragment">Measurement &amp; Analytics</li>
+							<li class="fragment">Personalization &amp; Testing</li>
+							<li class="fragment">Comments &amp; Live Chat</li>
+							<li class="fragment">Tag Management</li>
+							<li class="fragment"><b>Ads &amp; Retargeting</b></li>
+						</ul>
+					</section>
+					<section data-background-image="media/requestmap-ok.png" data-background-size="contain">
+						<h3>Tags can get out of control 😱</h3>
+						<ul>
+							<li>352 Requests</li>
+							<li>147 Domains</li>
+							<li>2,300kB (1,700kB tags)</li>
+						</ul>
+						<aside class="notes">https://requestmap.herokuapp.com/render.php?server=wpt.webperf.tools&id=190926_QV_52830ac2c7b5cb3acde53ed7f3c01a2f&legend=0&hidelabels=1#</aside>
+					</section>
+					<section>
+						<h3>Tag managers are enablers</h3>
+						<p>tag management thingy</p>
+					</section>
+					<section>
+						<h3>Ad Networks are greedy</h3>
+						<img class="plain stretch" style="background-color:#fffc;" data-src="media/requestmap-ok2.png"/>
+					</section>
+					<section>
+						<h3>"Who put Facebook on the site?!"</h3>
+						<img class="plain" style="width:30%;" data-src="media/stopfacebook.png"/>
+					</section>
+				</section>
+
+				<section>
+					<section>
+						<h2>Tag Performance</h2>
+					</section>
+					<section>
+						<h3>What's the Risk?</h3>
+						<p>SPOF</p>
+					</section>
+					<section>
+						<h3>What's the Risk?</h3>
+						<p>OnLoad SPOF</p>
+					</section>
+					<section>
+						<h3>What's the Risk?</h3>
+						<p>Main Thread Work</p>
+					</section>
+					<section>
+						<h3>Measuring the Impact</h3>
+						<p>...</p>
 					</section>
 				</section>
 
@@ -105,8 +242,26 @@
 					<section>
 						<h2>The Impact of Ad Blockers</h2>
 					</section>
+					<section>
+						<h3>Methodology</h3>
+						<p>set a global variable when the ad bundle executes</p>
+						<p>split traffic on ad block presence over 14 days (Sep 2019)</p>
+					</section>
+					<section>
+						<h3>Results</h3>
+						<p>Overall Ad Block usage = <em>8.98%</em></p>
+					</section>
+					<section>
+						<h3>By Device Type</h3>
+					</section>
+					<section>
+						<h3>Focus on Chrome</h3>
+					</section>
+					<section>
+						<h3>Focus on Modern Chrome</h3>
+					</section>
 				</section>
-
+			
 				<section>
 					<section>
 						<h2>Thank you 🙏</h2>
@@ -122,12 +277,6 @@
 
 		<script>
 			var presenting = window.location.search.includes('present');
-			if (!presenting) {
-				let id = document.getElementById('help-text');
-				if (id) {
-					id.innerHTML = "Use 'n' and 'p' to navigate next and previous slides.<br>Use 'o' to view an overview."
-				}
-			}
 			var keyboard = {
 				// pause/resume time when Enter is pressed
 				13: () => {
@@ -188,6 +337,15 @@
 					var delay = $(this).attr("data-delay");
 					$(this).css("-webkit-animation-delay", delay+"s"); 
 					$(this).css("animation-delay", delay+"s"); 
+				});
+
+				let width = window.innerWidth / 2;
+				$(".vega-chart").each(function() {
+					let spec = this.attributes.getNamedItem("data-spec").value;
+					//spec = "https://raw.githubusercontent.com/vega/vega/master/docs/examples/bar-chart.vg.json";
+					vegaEmbed('#'+this.id, spec, {"actions": false, "theme": "dark", "width": width, "renderer": "svg", "config": "data/config.json"}).then(function(result) {
+					// Access the Vega view instance (https://vega.github.io/vega/docs/api/view/) as result.view
+					}).catch(console.error);
 				});
 			});
 
