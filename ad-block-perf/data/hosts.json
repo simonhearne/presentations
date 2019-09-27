@@ -1,0 +1,108 @@
+{
+    "$schema": "https://vega.github.io/schema/vega/v5.json",
+    "width": 500,
+    "height": 500,
+    "padding": 10,
+    "background": "transparent",
+    "autosize": {
+        "type": "fit",
+        "contains": "padding"
+    },
+    "title": "90th Percentile Load Time & frequency for top 100 third-party hosts. n=1,080M",
+    "signals": [
+      {
+        "name": "interpolate",
+        "value": "catmull-rom"
+      },
+      {
+        "name": "sort",
+        "value": "P90"
+      }
+    ],
+  
+    "data": [
+      {
+        "name": "table",
+        "url": "data/hosts.tsv",
+        "format": {
+          "type": "tsv",
+          "parse": {"P90": "number", "FREQ": "number"}
+        }
+      }
+    ],
+  
+    "scales": [
+      {
+        "name": "xscale",
+        "type": "point",
+        "range": "width",
+        "domain": {"data": "table", "field": "HOST"},
+        "padding": 0.5
+      },
+      {
+        "name": "yscale",
+        "type": "linear",
+        "range": "height",
+        "nice": true,
+        "zero": true,
+        "domain": {"data": "table", "field": "FREQ"}
+      },
+      {
+        "name": "y2scale",
+        "type": "linear",
+        "range": "height",
+        "nice": true,
+        "zero": true,
+        "domain": {"data": "table", "field": "P90"}
+      }
+    ],
+  
+    "axes": [
+      {"orient": "bottom", "scale": "xscale","labelAngle":90,"labelAlign":"left","title": "Host", "labelFontSize":8,"titlePadding":0},
+      {"orient": "left", "scale": "yscale", "labels":false,"title": "Volume"},
+      {"orient": "right", "scale": "y2scale","title": "p90 Load Time"}
+    ],
+  
+    "marks": [
+      {
+        "type": "rect",
+        "from": {"data": "table"},
+        "encode": {
+          "enter": {
+            "x": {"scale": "xscale", "field": "HOST", "offset": -2.5},
+            "x2": {"scale": "xscale", "field": "HOST", "offset": 2.5},
+            "y": {"scale": "yscale", "field": "FREQ"},
+            "y2": {"scale": "yscale", "value": 0},
+            "fill": {"value": "steelblue"}
+          },
+          "update": {
+            "interpolate": {"signal": "interpolate"},
+            "fillOpacity": {"value": 1},
+            "tooltip": {"signal": "{'title':datum.HOST,'90th Percentile': datum.P90+'ms','Median':datum.P50+'ms','Std Dev':datum.STD_DEV}"}
+          },
+          "hover": {
+            "fillOpacity": {"value": 0.5}
+          }
+        }
+      },
+      {
+        "type": "symbol",
+        "from": {"data": "table"},
+        "encode": {
+          "enter": {
+            "x": {"scale": "xscale", "field": "HOST"},
+            "y": {"scale": "y2scale", "field": "P90"},
+            "fill": {"value": "orangered"}
+          },
+          "update": {
+            "fillOpacity": {"value": 1},
+            "tooltip": {"signal": "{'title':datum.HOST,'90th Percentile': datum.P90+'ms','Median':datum.P50+'ms','Std Dev':datum.STD_DEV}"}
+          },
+          "hover": {
+            "fillOpacity": {"value": 0.5}
+          }
+        }
+      }
+    ]
+  }
+  

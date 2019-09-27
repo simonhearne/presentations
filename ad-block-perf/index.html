@@ -1,0 +1,496 @@
+<!doctype html>
+<html lang="en">
+
+	<head>
+		<meta charset="utf-8">
+
+		<title>The state of third-party tag performance - @SimonHearne</title>
+
+		<meta name="description" content="Presentation: The state of third-party tag performance">
+		<meta name="author" content="Simon Hearne">
+
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<link rel="stylesheet" href="../css/reveal.css">
+		<link rel="stylesheet" href="../css/theme/simon.css" id="theme">
+
+		<!-- Theme used for syntax highlighting of code -->
+		<link rel="stylesheet" href="../lib/css/zenburn.css">
+
+		<!--<link rel="stylesheet" href="../lib/css/animate.min.css">-->
+
+		<meta property=“og:image” content="https://simonhearne.com/presentations/social_adblock.jpg" />
+		<meta property=”og:image:width” content=1000" />
+		<meta property=”og:image:height” content=606 />
+		<meta name="twitter:card" content="summary_large_image" />
+		<meta name="twitter:creator" content="@SimonHearne" />
+		<meta name="twitter:title" content="The state of third-party tag performance">
+		<meta name="twitter:description" content="" />
+		<meta name="twitter:image" content="https://simonhearne.com/presentations/social_adblock.jpg" />
+		
+		<!-- Printing and PDF exports -->
+		<script>
+			var link = document.createElement( 'link' );
+			link.rel = 'stylesheet';
+			link.type = 'text/css';
+			link.href = window.location.search.match( /print-pdf/gi ) ? '../css/print/pdf.css' : '../css/print/paper.css';
+			document.getElementsByTagName( 'head' )[0].appendChild( link );
+		</script>
+
+		<script src="../lib/js/head.min.js"></script>
+		<script src="../js/reveal.js"></script>
+		<script src="../lib/js/jquery-3.3.1.min.js"></script>
+		<base target="_blank">
+		<!--[if lt IE 9]>
+		<script src="lib/js/html5shiv.js"></script>
+		<![endif]-->
+	</head>
+
+	<body>
+		<div class="reveal">
+			<div class="smaller tagline">@SimonHearne</div>
+			<!-- Any section element inside of this container is displayed as a slide -->
+			<div class="slides">
+				<section data-background-color="#000" data-background-image="media/underwater.jpg" data-background-fit="stretch">
+					<h1 style="line-height: 0.95;">The State of<br>Third-Party<br>Tag Performance</h1>
+					<div class="bottom" style="position: fixed;bottom: 0;width: 100%;text-align: center;">
+						<p style="margin-bottom:0;">Simon Hearne</p>
+						<p class="smaller">Web Performance Solutions Engineer @ Akamai</p>		
+						<p id="help-text" class="help-text"></p>
+					</div>
+				</section>
+				<section>
+					<h3>We sold ad blockers on speed</h3>
+					<blockquote>Experience a cleaner, faster web</blockquote>
+					<p class="smallest bottom-right">adblockplus.org - Sep 2019</p>
+				</section>
+				<section>
+					<h3>Users want speed</h3>
+					<p>Top Motivations for Using an Ad Blocker:</p>
+					<ol class="smaller">
+						<li>Too many ads (48%)</li>
+						<li>Irrelevant ads (47%)</li>
+						<li>Ads are intrusive (44%)</li>
+						<li>Viruses / bugs (38%)</li>
+						<li>Ads take up space (38%)</li>
+						<li><b>Improve page load speed (33%)</b></li>
+						<li>Avoid video ads (29%)</li>
+						<li>Privacy concerns (26%)</li>
+						<li><b>Preserve data budget (23%)</b></li>
+						<li><b>Preserve device battery (23%)</b></li>
+					</ol>
+					<p class="smallest bottom-right"><a href="https://www.digitalinformationworld.com/2019/04/global-ad-blocking-behaviors-infographic.html">GlobalWebIndex Q3 2018</a></p>
+				</section>
+				<section>
+					<h3>Coming up...</h3>
+					<img class="plain stretch" data-src="media/headline.jpg">
+				</section>
+				<section>
+					<h3>But first:</h3>
+					<ol>
+						<li>The Importance of Speed</li>
+						<li>Getting Speed Data</li>
+						<li>Tags?</li>
+						<li>Tag Performance</li>
+						<li>The Impact of Ad Blockers</li>
+					</ol>
+				</section>
+				<section>
+					<h3>Data Source 1 📊</h3>
+					<img class="plain stretch" data-src="media/mpulse.png">
+					<p class="smallest bottom-right"><a href="https://developer.akamai.com/akamai-mpulse">Akamai mPulse</a></p>
+				</section>
+				<section>
+					<h3>Data Source 2 📊</h3>
+					<img class="plain stretch" data-src="media/httparchive.png">
+					<p class="smallest bottom-right"><a href="https://httparchive.org">HTTP Archive</a></p>
+				</section>
+
+				<section>
+					<section>
+						<h2>The Importance of Speed</h2>
+					</section>
+					<section>
+						<h3>Speed matters</h3>
+						<table class="twocol">
+							<tr>
+								<td><img class="plain" data-src="media/bbc.png"/></td>
+								<td>The BBC loses an additional 10% of users for every additional second it takes to load</td>
+							</tr>
+							<tr class="fragment">
+								<td><img class="plain" data-src="media/pinterest.png"/></td>
+								<td>Pinterest improved load time by 40% and saw 15% increase in SEO traffic and 15% increase in conversions</td>
+							</tr>
+							<tr class="fragment">
+								<td><img class="plain" data-src="media/ft.png"/></td>
+								<td>The Financial times increased user engagement by 30% when they released the new, performance focused FT.com</td>
+							</tr>
+						</table>
+						<p class="subtitle smallest bottom-right"><a href="https://wpostats.com/tags/engagement/">wpostats.com/tags/engagement/</a></p>
+					</section>
+					<section>
+						<h3>Speed Correlates with Engagement</h3>
+						<div class="vega-chart" id="vis1" data-spec="data/sessionlength.json"></div>
+						<p class="smallest bottom-right">~1Bn mPulse pageview beacons - early March 2019</p>
+					</section>
+				</section>
+
+				<section>
+					<section>
+						<h2>Getting Speed Data ⚡️</h2>
+					</section>
+					<section>
+						<h3>Collecting Data 🔎</h3>
+						<div style="width:100%;text-align:center;background-color:#fff4;">
+							<div class="fragment" style="float:left;width:33%;">
+								<h5>Ad Hoc 🛠</h5>
+								<ul class="smaller">
+									<li>Developer Tools</li>
+									<li>PageSpeed Insights</li>
+									<li>WebPageTest</li>
+								</ul>
+							</div>
+							<div class="fragment" style="float:left;width:33%;">
+								<h5>Synthetics 🤖</h5>
+								<ul class="smaller" >
+									<li>Rigor</li>
+									<li>Catchpoint</li>
+									<li>SpeedCurve</li>
+								</ul>
+							</div>
+							<div class="fragment" style="float:left;width:33%;">
+								<h5>RUM 🥃</h5>
+								<ul class="smaller">
+									<li>Analytics?</li>
+									<li>APM</li>
+									<li>mPulse 👍</li>
+								</ul>
+							</div>
+						</div>
+					</section>
+					<section>
+						<h3>Data Points</h3>
+						<img class="stretch" style="background: rgba(255, 255, 255, 0.7);" data-src="media/rtapi.svg">
+						<p class="smallest bottom-right"><a href="https://www.w3.org/TR/resource-timing-2/">Resource Timing API Level 2 - W3.org</a></p>
+					</section>
+					<section data-background-image="media/newspaper.jpeg" data-background-size="stretch">
+						<h3 class="dark-bg">A Willing Victim</h3>
+					</section>
+					<section>
+						<h3>Gotchas 1/3</h3>
+						<blockquote>The Timing-Allow-Origin response header specifies origins that are allowed to see values [..] which would otherwise be reported as zero due to cross-origin restrictions.</blockquote>
+						<p class="smallest bottom-right"><a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Timing-Allow-Origin">Timing-Allow-Origin</a></p>
+					</section>
+					<section>
+						<h3>Gotchas 2/3</h3>
+						<blockquote>all content loaded from cross-origin IFRAMEs (and below) are completely hidden to ResourceTiming.</blockquote>
+						<p class="smallest bottom-right"><a href="https://github.com/w3c/resource-timing/issues/210">Cross-origin IFRAME opting-in to sharing ResourceTiming data</a></p>
+					</section>
+					<section>
+						<h3>Gotchas 3/3</h3>
+						<p>Ad Block detection on one national publisher, with a narrow demographic.</p>
+					</section>
+					
+				</section>
+
+				<section>
+					<section>
+						<h2>Tags?</h2>
+						<img class="plain stretch" data-src="media/tag.png"/>
+					</section>
+					<section>
+						<h2>Tags!</h2>
+						<img class="plain stretch" data-src="media/net.png"/>
+					</section>
+					<section class="center" data-state="plain-slide" data-background="media/requestmap.png" data-background-color="#000">
+                        <h3 class="dark-bg">1/4 of web pages have <br/>&gt;90% third-party requests</h3>
+                        <p class="smallest bottom-right"><a href="https://discuss.httparchive.org/t/what-is-the-distribution-of-1st-party-vs-3rd-party-resources/100">HTTP Archive</a></p>
+                    </section>
+					<section data-background-image="media/why.png" data-background-size="contain" data-background-color="#fff">
+					</section>
+					<section>
+						<h3>Tags serve business goals 💵</h3>
+						<ul class="no-bullets">
+							<li class="fragment">💹 Measurement &amp; Analytics</li>
+							<li class="fragment">🧪 Personalization &amp; Testing</li>
+							<li class="fragment">💬 Comments &amp; Live Chat</li>
+							<li class="fragment">🏷 Tag Management</li>
+							<li class="fragment">💸 <b>Ads &amp; Retargeting</b></li>
+						</ul>
+					</section>
+					<section>
+						<h3>"Who put Facebook on the site?!"</h3>
+						<img class="plain" style="width:30%;" data-src="media/stopfacebook.png"/>
+					</section>
+					<section data-background-image="media/requestmap-ok.png" data-background-size="contain">
+						<h3>Tags can get out of control 😱</h3>
+						<ul>
+							<li>352 Requests</li>
+							<li>147 Domains</li>
+							<li>2,300kB (1,700kB tags)</li>
+						</ul>
+						<p class="smallest bottom-right"><a href="https://requestmap.herokuapp.com/render.php?server=wpt.webperf.tools&id=190926_QV_52830ac2c7b5cb3acde53ed7f3c01a2f&legend=0&hidelabels=0&dark=1#">RequestMap</a></p>
+					</section>
+					<section data-background-image="media/requestmap-gtm.png" data-background-size="contain" data-background-position="center bottom">
+						<h3>Tag managers are enablers</h3>
+					</section>
+					<section data-background-image="media/requestmap-ads.png" data-background-size="contain" data-background-position="center bottom">
+						<h3>Ad Networks are greedy</h3>
+					</section>
+					<section>
+						<h3>So what?</h3>
+						<p>¯\_(ツ)_/¯</p>
+					</section>
+				</section>
+
+				<section>
+					<section data-background-image="media/bees.jpg" data-background-size="stretch">
+						<h2 class="dark-bg">Tag Performance</h2>
+					</section>
+					<section>
+						<h3>What's the Risk?</h3>
+						<h4>SPOF</h4><br>
+						<video class="stretch" muted autoplay data-autoplay data-src="media/spof.mp4"></video>
+					</section>
+					<section>
+						<h3>What's the Risk?</h3>
+						<h4>OnLoad SPOF</h4>
+						<img class="plain stretch" data-src="media/onloadspof.png">
+						<p class="smallest bottom-right"><a href="https://wpt.webperf.tools/result/190927_7Z_4/1/details/#waterfall_view_step1">WebPageTest.org</a></p>
+					</section>
+					<section>
+						<h3>Lucky they're always fast, right?</h3>
+						<div class="vega-chart" id="vis3" data-spec="data/hosts.json"></div>
+					</section>
+					<section>
+						<h3>What's the Risk?</h3>
+						<h4>Interactivity</h4>
+						<img class="plain stretch" data-src="media/cpu.png">
+					</section>
+				</section>
+
+				<section>
+					<section>
+						<h2>The Impact of Ad Blockers</h2>
+					</section>
+					<section data-background-image="media/dominos.jpg" data-background-size="stretch">
+						<h3>Positive, right?</h3>
+					</section>
+					<section>
+						<h3>A simple test</h3>
+						<img class="plain stretch" data-src="media/webtest.app.png">
+						<p class="smallest bottom-right"><a href="https://webtest.app/">webtest.app</a></p>
+					</section>
+					<section data-background-image="media/newspaper.jpeg" data-background-size="stretch">
+						<h3 class="dark-bg">What about the wild?</h3>
+					</section>
+					<section>
+						<h3>Results</h3>
+						<p><em>8.98%</em> of pageviews with ads blocked (n=50M)</p>
+						<table class="smaller">
+							<tr><th>Metric</th><th>With Ads</th><th>Without Ads</th><th>Difference</th></tr>
+							<tr class="fragment"><td>Page Load Time (ms)</td><td>6,130</td><td>4,600</td><td>-25%</td></tr>
+							<tr class="fragment"><td>Time to Interactive (ms)</td><td>5,480</td><td>4,260</td><td>-22%</td></tr>
+							<tr class="fragment"><td>First Input Delay (ms)</td><td>86</td><td>8</td><td>-93%</td></tr>
+							<tr class="fragment"><td>Page Size (MB)</td><td>2.69</td><td>1.99</td><td>-26%</td></tr>
+							<tr class="fragment"><td>Bounce Rate</td><td>68.8%</td><td>67.0%</td><td>-2%</td></tr>
+							<tr class="fragment"><td>Time on Site (s)</td><td>410</td><td>708</td><td>+72%</td></tr>
+							<tr class="fragment"><td>Session Length (pages)</td><td>2.80</td><td>4.41</td><td>+58%</td></tr>
+							<tr class="fragment"><td>JavaScript Errors per Page</td><td>1.92</td><td>0.18</td><td>-91%</td></tr>
+						</table>
+					</section>
+				</section>
+				
+				<section>
+					<section>
+						<h3>Conclusions</h3>
+						<ul>
+							<li>Third-party tags are pernicious</li>
+							<li>Ad Blockers improve performance</li>
+							<li>Users with Ad Blocking enabled engage more</li>
+							<li>Measuring real users is critical</li>
+						</ul>
+					</section>
+				</section>
+			
+				<section>
+					<section>
+						<h2>Thank you 🙏</h2>
+						<ul class="no-bullets">
+							<li>📧&nbsp;&nbsp;shearne@akamai.com</li>
+							<li>📣&nbsp;&nbsp;@SimonHearne</li>
+							<li>🌎&nbsp;&nbsp;simonhearne.com</li>
+						</ul>
+						<p class="smallest bottom-right">simonhearne.com/presentations/ad-block-perf/</p>
+					</section>
+				</section>
+	
+			</div>
+			<div id="chart-controls" class="hide"></div>
+
+		</div>
+
+		<script>
+			var presenting = window.location.search.includes('present');
+			var keyboard = {
+				// pause/resume time when Enter is pressed
+				13: () => {
+					ElapsedTimeBar.isPaused ? ElapsedTimeBar.resume() : ElapsedTimeBar.pause();
+				},
+				// reset timer when 'r' is pressed
+				82: () => {
+					ElapsedTimeBar.reset();
+				},
+				48: () => {
+					Reveal.slide( 0 );
+					ElapsedTimeBar.reset();
+				}
+			};
+			if (presenting) {
+				keyboard = Object.assign(keyboard,{
+					39: 'next',
+					37: 'prev'
+				});
+			};
+    				
+			function getFragment(event) {
+				return (event.currentSlide.id !== "" ? event.currentSlide.id : null);
+			}
+			// More info https://github.com/hakimel/reveal.js#configuration
+			Reveal.initialize({
+				controls: !presenting,
+				progress: true,
+				history: true,
+				center: true,
+
+				transition: 'none', // none/fade/slide/convex/concave/zoom
+
+				allottedTime: 30 * 60 * 1000, // 30 minutes
+				barColor: 'hsl(220,99%,54%)',
+
+				// More info https://github.com/hakimel/reveal.js#dependencies
+				dependencies: [
+					{ src: '../lib/js/classList.js', condition: function() { return !document.body.classList; } },
+					{ src: '../plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: '../plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: '../plugin/embed-tweet/embed-tweet.js', condition: function() { return !!document.querySelector( 'div.tweet[data-src]' ); } },
+					{ src: '../lib/js/vega.min.js', condition: function() { return !!document.querySelector( 'div.vega-chart' ); } },
+					{ src: '../lib/js/vega-embed.min.js', condition: function() { return !!document.querySelector( 'div.vega-chart' ); } },
+					{ src: '../plugin/elapsed-time-bar/elapsed-time-bar.js'},
+					{ src: '../plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+					{ src: '../plugin/search/search.js', async: true },
+					{ src: '../plugin/zoom-js/zoom.js', async: true },
+					{ src: '../plugin/notes/notes.js', async: true }
+				],
+
+				keyboard: keyboard
+			});
+			Reveal.addEventListener( 'slidechanged', function( event ) {
+				let state = {h: event.indexh, v: event.indexv, name: getFragment(event)};
+			} );
+
+			/* animate.css */
+			// Set animation delay if data-delay is specified
+			Reveal.addEventListener('ready', function ( event ) {
+				$('*[data-delay]').each( function () { 
+					var delay = $(this).attr("data-delay");
+					$(this).css("-webkit-animation-delay", delay+"s"); 
+					$(this).css("animation-delay", delay+"s"); 
+				});
+
+				let width = window.innerWidth / 2;
+				$(".vega-chart").each(function() {
+					let spec = this.attributes.getNamedItem("data-spec").value;
+					//spec = "https://raw.githubusercontent.com/vega/vega/master/docs/examples/bar-chart.vg.json";
+					vegaEmbed('#'+this.id, spec, {"actions": false, "theme": "dark", "width": width, "renderer": "svg", "config": "data/config.json"}).then(function(result) {
+					// Access the Vega view instance (https://vega.github.io/vega/docs/api/view/) as result.view
+					}).catch(console.error);
+				});
+			});
+
+			// Set animation duration if data-duration is specified
+			Reveal.addEventListener('ready', function ( event ) {
+				$('*[data-duration]').each( function () { 
+					var duration = $(this).attr("data-duration");
+					$(this).css("-webkit-animation-duration", duration+"s"); 
+					$(this).css("animation-duration", duration+"s"); 
+				});
+				embedVegaCharts();
+			});
+
+			function embedVegaCharts() {
+				if (window.hasOwnProperty('vegaEmbed')) {
+					console.log("vega-ready");
+					let width = window.innerWidth / 2;
+					let slideElement = document.getElementsByClassName('slides')[0];
+					if (slideElement) {width = slideElement.offsetWidth};
+					$(".vega-chart").each(function() {
+						let spec = this.attributes.getNamedItem("data-spec").value;
+						//spec = "https://raw.githubusercontent.com/vega/vega/master/docs/examples/bar-chart.vg.json";
+						vegaEmbed('#'+this.id, spec, {"actions": false, "theme": "dark", "width": width, "renderer": "svg", "config": "data/config.json"}).then(function(result) {
+						// Access the Vega view instance (https://vega.github.io/vega/docs/api/view/) as result.view
+						}).catch(console.error);
+					});
+				} else {
+					console.log("vega-not-ready");
+					setTimeout(embedVegaCharts,1000);
+				}
+			};
+
+			// Animate items that are not in a fragment
+				Reveal.addEventListener('slidechanged', function( event ) {
+				// Animate elements that are not a fragment (or in a fragment)
+				var filter = '*[data-animate]:not(.fragment):not(.fragment *)';
+				
+				$(event.currentSlide).find(filter).each( function () {
+					$(this).addClass('animated');
+					$(this).addClass($(this).attr('data-animate'));
+				});		
+				$(event.previousSlide).find(filter).each( function () {
+					$(this).removeClass('animated');
+					$(this).removeClass($(this).attr('data-animate'));
+				});		
+				});
+
+				// Animate fragments
+				Reveal.addEventListener('fragmentshown', function( event ) {
+					function loop(i, el) { 
+						if ($(el).attr('data-animate')) {
+							$(el).addClass('animated');
+							$(el).addClass($(el).attr('data-animate'));
+						}
+						$.each($(el).children().not('.fragment'), loop);
+					};
+					$.each(event.fragments, loop);
+				});
+
+				// Make the animation runnable again if fragment is hidden
+				Reveal.addEventListener('fragmenthidden', function( event ) {	  
+				function loop(i, el) { 
+					if ($(el).attr('data-animate')) {
+						$(el).removeClass('animated');
+						$(el).removeClass($(el).attr('data-animate'));
+					}
+					$.each($(el).children().not('.fragment'), loop);
+				};
+				$.each(event.fragments, loop);
+			});
+		</script>
+
+		<script nonce="googleAnalytics">
+			(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+			(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();
+			i.initAnalytics=function(){a=s.createElement(o),m=s.getElementsByTagName(o)[0];
+			a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+			}})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+			
+			ga('create', 'UA-6512525-16', 'auto', {'siteSpeedSampleRate': 100});
+			ga('send', 'pageview');
+			
+			window.addEventListener('load',function(){initAnalytics()});
+		</script>
+	</body>
+</html>

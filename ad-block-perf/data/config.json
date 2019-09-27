@@ -1,0 +1,27 @@
+{
+    "text": {
+      "font": "Lato, sans-serif;",
+      "fontSize": 18
+    },
+    "axis": {
+      "labelFont": "Lato, sans-serif;",
+      "labelFontSize": 14,
+      "titleFont": "Lato, sans-serif;",
+      "titleFontSize": 16,
+      "domainOpacity": 0.4,
+      "ticks": false,
+      "labelPadding": 7,
+      "titlePadding": 10
+    },
+    "legend": {
+      "labelFont": "Lato, sans-serif;",
+      "labelFontSize": 12,
+      "labelFontWeight": 400,
+      "orient": "top-right"
+    },
+    "title": {
+      "font": "Lato, sans-serif;",
+      "fontSize": 18,
+      "fontWeight": 400
+    }
+  }

@@ -1,0 +1,175 @@
+{
+    "$schema": "https://vega.github.io/schema/vega/v5.json",
+    "width": 500,
+    "height": 500,
+    "padding": 10,
+    "background": "transparent",
+    "autosize": {
+        "type": "fit",
+        "contains": "padding"
+    },
+    "signals": [
+        {
+            "name": "max_BOUNCE_RATE",
+            "value": 1
+        },
+        {
+            "name": "max_loadtime",
+            "value": 10000,
+            "on": [{"events": "*:mouseup", "update": "max_loadtime === 10000 ? 5000 : 10000"}]
+        },
+        {
+            "name": "highlight_timer",
+            "value": null,
+            "on": [
+                {
+                    "events": "@legendSymbol:mouseover, @legendLabel:mouseover",
+                    "update": "datum.value",
+                    "force": true
+                },
+                {
+                    "events": "@legendSymbol:mouseout, @legendLabel:mouseout",
+                    "update": "null",
+                    "force": true
+                }
+            ]
+        }
+    ],
+    "data": [
+        {
+            "name": "source",
+            "url": "data/bouncerates.tsv",
+            "format": {
+                "type": "tsv",
+                "parse": {
+                    "VALUE": "number",
+                    "BOUNCE_RATE": "number",
+                    "FREQUENCY": "number"
+                }
+            },
+            "transform": [
+                {
+                    "type": "filter",
+                    "expr": "datum.VALUE < max_loadtime && datum.BOUNCE_RATE < max_BOUNCE_RATE"
+                }
+            ]
+        }
+    ],
+    
+    "scales": [
+        {
+            "name": "x",
+            "type": "linear",
+            "round": true,
+            "nice": true,
+            "zero": true,
+            "domain": {"data": "source", "field": "VALUE"},
+            "range": "width",
+            "clamp": true
+        },
+        {
+            "name": "y",
+            "type": "linear",
+            "round": true,
+            "nice": true,
+            "zero": true,
+            "domain": {"data": "source", "field": "BOUNCE_RATE"},
+            "domainMax": {"signal": "max_BOUNCE_RATE"},
+            "range": "height",
+            "clamp": true
+        },
+        {
+            "name": "color",
+            "type": "ordinal",
+            "range": {
+                "scheme": "set3"
+            },
+            "domain": {
+                "data": "source", "field": "TIMER"
+            }
+        }
+    ],
+    
+    "axes": [
+        {
+            "scale": "x",
+            "orient": "bottom",
+            "tickCount": 10,
+            "title": "First Page Speed (ms)",
+            "grid": true
+        },
+        {
+            "scale": "y",
+            "orient": "left",
+            "titlePadding": 5,
+            "format": "%",
+            "title": "Bounce Rate"
+        }
+    ],
+    
+    "legends": [
+        {
+            "fill": "color",
+            "title": "Timer",
+            "orient": "top-right",
+            "encode": {
+                "symbols": {
+                    "name": "legendSymbol",
+                    "interactive": true,
+                    "update": {
+                        "opacity": {
+                            "signal": "highlight_timer ? (highlight_timer === datum.value ? 1 : 0.05) : 0.9"
+                        }
+                    }
+                },
+                "labels": {
+                    "name": "legendLabel",
+                    "interactive": true,
+                    "update": {
+                        "opacity": {
+                            "signal": "highlight_timer ? (highlight_timer === datum.value ? 1 : 0.05) : 0.9"
+                        }
+                    }
+                }
+            }
+        }
+    ],
+    
+    "marks": [
+        {
+            "type": "group",
+            "from": {
+                "facet": {
+                    "data": "source",
+                    "name": "timers",
+                    "groupby": [
+                        "TIMER"
+                    ]
+                }
+            },
+            "marks": [
+                {
+                    "name": "line",
+                    "type": "line",
+                    "from": {"data": "timers"},
+                    "sort": {"field": "datum.VALUE"},
+                    "encode": {
+                        "update": {
+                            "interpolate": {"value": "basis"},
+                            "x": {"scale": "x", "field": "VALUE"},
+                            "y": {"scale": "y", "field": "BOUNCE_RATE"},
+                            "stroke": {"scale": "color", "field": "TIMER"},
+                            "strokeWidth": {"value": 0.5},
+                            "opacity": {
+                                "signal": "highlight_timer ? (highlight_timer === datum.TIMER ? 1 : 0.05) : 0.7"
+                            },
+                            "tooltip": {
+                                "signal": "{title: datum.TIMER,'Load Time (ms)':format(datum.VALUE, ',d'),'Bounce Rate':format(datum.BOUNCE_RATE,'%')}"
+                            }
+                        }
+                    }
+                }
+            ]
+        }
+    ]
+}
