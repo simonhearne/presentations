@@ -63,18 +63,6 @@
 					</div>
 				</section>
 				<section>
-					<h3>TODO</h3>
-					<ul>
-						<li>HTTP Archive data?</li>
-						<li>Ad Blockers promised speed</li>
-						<li>People use adblockers because of speed</li>
-						<li>What is mPulse</li>
-						<li>Vega charts / excel charts</li>
-						<li>SPoF examples</li>
-						<li>Conclusion?</li>
-					</ul>
-				</section>
-				<section>
 					<h3>We sold ad blockers on speed</h3>
 					<blockquote>Experience a cleaner, faster web</blockquote>
 					<p class="smallest bottom-right">adblockplus.org - Sep 2019</p>
@@ -193,13 +181,6 @@
 						<img class="stretch" style="background: rgba(255, 255, 255, 0.7);" data-src="media/rtapi.svg">
 						<p class="smallest bottom-right"><a href="https://www.w3.org/TR/resource-timing-2/">Resource Timing API Level 2 - W3.org</a></p>
 					</section>
-					<section>
-						<h3>Data Points</h3>
-						<p>Custom stuff</p>
-					</section>
-					<section>
-						<h3>Doing something with it</h3>
-					</section>
 				</section>
 
 				<section>
@@ -258,14 +239,18 @@
 					</section>
 					<section>
 						<h3>What's the Risk?</h3>
-						<h4>SPOF</h4>
-
+						<h4>SPOF</h4><br>
+						<video class="stretch" muted autoplay data-autoplay data-src="media/spof.mp4"></video>
 					</section>
 					<section>
 						<h3>What's the Risk?</h3>
 						<h4>OnLoad SPOF</h4>
 						<img class="plain stretch" data-src="media/onloadspof.png">
 						<p class="smallest bottom-right"><a href="https://wpt.webperf.tools/result/190927_7Z_4/1/details/#waterfall_view_step1">WebPageTest.org</a></p>
+					</section>
+					<section>
+						<h3>Lucky they're always fast, right?</h3>
+						<div class="vega-chart" id="vis3" data-spec="data/hosts.json"></div>
 					</section>
 					<section>
 						<h3>What's the Risk?</h3>
@@ -320,7 +305,11 @@
 				<section>
 					<section>
 						<h2>Thank you 🙏</h2>
-						<p>shearne@akamai.com</p>
+						<ul class="no-bullets">
+							<li>📧&nbsp;&nbsp;shearne@akamai.com</li>
+							<li>📣&nbsp;&nbsp;@SimonHearne</li>
+							<li>🌎&nbsp;&nbsp;simonhearne.com</li>
+						</ul>
 						<p class="smallest bottom-right">simonhearne.com/presentations/ad-block-perf/</p>
 					</section>
 				</section>
@@ -339,6 +328,10 @@
 				},
 				// reset timer when 'r' is pressed
 				82: () => {
+					ElapsedTimeBar.reset();
+				},
+				48: () => {
+					Reveal.slide( 0 );
 					ElapsedTimeBar.reset();
 				}
 			};
