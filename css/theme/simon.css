@@ -190,7 +190,7 @@ html.tertiary-slide body {
   display: block;
   position: relative;
   width: 70%;
-  margin: 20px auto;
+  margin: 0 auto;
   padding: 5px;
   font-style: italic;
   background: rgba(255, 255, 255, 0.05);
@@ -208,6 +208,17 @@ html.tertiary-slide body {
 .reveal blockquote p:first-child,
 .reveal blockquote p:last-child {
   display: inline-block; }
+
+.reveal .quote-attr {
+  display: block;
+  position: relative;
+  margin: 5px auto;
+  padding: 5px;
+  width: 70%;
+  text-align: right;
+  font-size: 70%;
+  margin-top: 0;
+}
 
 .reveal q {
   font-style: italic; }
