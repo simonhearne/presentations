@@ -50,6 +50,7 @@
 		<link rel="preload" as="font" type="font/woff2" crossorigin href="../lib/font/lato-v14-latin/lato-v14-latin-300italic.woff2">
 		<link rel="preload" as="font" type="font/woff2" crossorigin href="../lib/font/lato-v14-latin/lato-v14-latin-regular.woff2">
 		<link rel="preload" as="image" href="media/underwater.jpg">
+		<link rel="preconnect" href="https://www.google-analytics.com">
 		<base target="_blank">
 		<!--[if lt IE 9]>
 		<script src="lib/js/html5shiv.js"></script>
@@ -384,11 +385,7 @@
 						{ src: '../plugin/embed-tweet/embed-tweet.js', condition: function() { return !!document.querySelector( 'div.tweet[data-src]' ); } },
 						{ src: '../lib/js/vega.min.js', condition: function() { return !!document.querySelector( 'div.vega-chart' ); } },
 						{ src: '../lib/js/vega-embed.min.js', condition: function() { return !!document.querySelector( 'div.vega-chart' ); } },
-						{ src: '../plugin/elapsed-time-bar/elapsed-time-bar.js'},
-						{ src: '../plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
-						{ src: '../plugin/search/search.js', async: true },
-						{ src: '../plugin/zoom-js/zoom.js', async: true },
-						{ src: '../plugin/notes/notes.js', async: true }
+						{ src: '../plugin/elapsed-time-bar/elapsed-time-bar.js', condition: presenting}
 					],
 
 					keyboard: keyboard
