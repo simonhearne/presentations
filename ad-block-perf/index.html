@@ -136,11 +136,6 @@
 						<div class="vega-chart" id="vis1" data-spec="data/sessionlength.json"></div>
 						<p class="smallest bottom-right">~1Bn mPulse pageview beacons - early March 2019</p>
 					</section>
-					<section>
-						<h3>Speed Correlates with Engagement</h3>
-						<div class="vega-chart" id="vis2" data-spec="data/bouncerates.json"></div>
-						<p class="smallest bottom-right">~1Bn mPulse pageview beacons - early March 2019</p>
-					</section>
 				</section>
 
 				<section>
@@ -181,6 +176,24 @@
 						<img class="stretch" style="background: rgba(255, 255, 255, 0.7);" data-src="media/rtapi.svg">
 						<p class="smallest bottom-right"><a href="https://www.w3.org/TR/resource-timing-2/">Resource Timing API Level 2 - W3.org</a></p>
 					</section>
+					<section data-background-image="media/newspaper.jpeg" data-background-size="stretch">
+						<h3 class="dark-bg">A Willing Victim</h3>
+					</section>
+					<section>
+						<h3>Gotchas 1/3</h3>
+						<blockquote>The Timing-Allow-Origin response header specifies origins that are allowed to see values [..] which would otherwise be reported as zero due to cross-origin restrictions.</blockquote>
+						<p class="smallest bottom-right"><a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Timing-Allow-Origin">Timing-Allow-Origin</a></p>
+					</section>
+					<section>
+						<h3>Gotchas 2/3</h3>
+						<blockquote>all content loaded from cross-origin IFRAMEs (and below) are completely hidden to ResourceTiming.</blockquote>
+						<p class="smallest bottom-right"><a href="https://github.com/w3c/resource-timing/issues/210">Cross-origin IFRAME opting-in to sharing ResourceTiming data</a></p>
+					</section>
+					<section>
+						<h3>Gotchas 3/3</h3>
+						<p>Ad Block detection on one national publisher, with a narrow demographic.</p>
+					</section>
+					
 				</section>
 
 				<section>
