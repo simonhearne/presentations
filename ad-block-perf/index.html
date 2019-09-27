@@ -43,7 +43,7 @@
 		<script src="../lib/js/head.min.js"></script>
 		<script src="../js/reveal.js"></script>
 		<script src="../lib/js/jquery-3.3.1.min.js"></script>
-
+		<base target="_blank">
 		<!--[if lt IE 9]>
 		<script src="lib/js/html5shiv.js"></script>
 		<![endif]-->
@@ -76,13 +76,29 @@
 				</section>
 				<section>
 					<h3>We sold ad blockers on speed</h3>
+					<blockquote>Experience a cleaner, faster web</blockquote>
+					<p class="smallest bottom-right">adblockplus.org - Sep 2019</p>
 				</section>
 				<section>
 					<h3>Users want speed</h3>
+					<p>Top Motivations for Using an Ad Blocker:</p>
+					<ol class="smaller">
+						<li>Too many ads (48%)</li>
+						<li>Irrelevant ads (47%)</li>
+						<li>Ads are intrusive (44%)</li>
+						<li>Viruses / bugs (38%)</li>
+						<li>Ads take up space (38%)</li>
+						<li><b>Improve page load speed (33%)</b></li>
+						<li>Avoid video ads (29%)</li>
+						<li>Privacy concerns (26%)</li>
+						<li><b>Preserve data budget (23%)</b></li>
+						<li><b>Preserve device battery (23%)</b></li>
+					</ol>
+					<p class="smallest bottom-right"><a href="https://www.digitalinformationworld.com/2019/04/global-ad-blocking-behaviors-infographic.html">GlobalWebIndex Q3 2018</a></p>
 				</section>
 				<section>
 					<h3>Coming up...</h3>
-					<img class="plain stretch" data-src="media/photo.jpeg">
+					<img class="plain stretch" data-src="media/headline.jpg">
 				</section>
 				<section>
 					<h3>But first:</h3>
@@ -174,7 +190,8 @@
 					</section>
 					<section>
 						<h3>Data Points</h3>
-						<p>APIs</p>
+						<img class="stretch" style="background: rgba(255, 255, 255, 0.7);" data-src="media/rtapi.svg">
+						<p class="smallest bottom-right"><a href="https://www.w3.org/TR/resource-timing-2/">Resource Timing API Level 2 - W3.org</a></p>
 					</section>
 					<section>
 						<h3>Data Points</h3>
@@ -195,7 +212,7 @@
 						<img class="plain stretch" data-src="media/net.png"/>
 					</section>
 					<section class="center" data-state="plain-slide" data-background="media/requestmap.png" data-background-color="#000">
-                        <h3 class="dark-bg">1/4 of all pages have <br/>&gt;90% third-party requests</h3>
+                        <h3 class="dark-bg">1/4 of web pages have <br/>&gt;90% third-party requests</h3>
                         <p class="smallest bottom-right"><a href="https://discuss.httparchive.org/t/what-is-the-distribution-of-1st-party-vs-3rd-party-resources/100">HTTP Archive</a></p>
                     </section>
 					<section data-background-image="media/why.png" data-background-size="contain" data-background-color="#fff">
@@ -210,6 +227,10 @@
 							<li class="fragment">💸 <b>Ads &amp; Retargeting</b></li>
 						</ul>
 					</section>
+					<section>
+						<h3>"Who put Facebook on the site?!"</h3>
+						<img class="plain" style="width:30%;" data-src="media/stopfacebook.png"/>
+					</section>
 					<section data-background-image="media/requestmap-ok.png" data-background-size="contain">
 						<h3>Tags can get out of control 😱</h3>
 						<ul>
@@ -217,23 +238,13 @@
 							<li>147 Domains</li>
 							<li>2,300kB (1,700kB tags)</li>
 						</ul>
-						<aside class="notes">
-							https://requestmap.herokuapp.com/render.php?server=wpt.webperf.tools&id=190926_QV_52830ac2c7b5cb3acde53ed7f3c01a2f&legend=0&hidelabels=1#
-							https://wpt.webperf.tools/result/190926_QV_52830ac2c7b5cb3acde53ed7f3c01a2f/
-						</aside>
+						<p class="smallest bottom-right"><a href="https://requestmap.herokuapp.com/render.php?server=wpt.webperf.tools&id=190926_QV_52830ac2c7b5cb3acde53ed7f3c01a2f&legend=0&hidelabels=0&dark=1#">RequestMap</a></p>
 					</section>
-					<section>
+					<section data-background-image="media/requestmap-gtm.png" data-background-size="contain" data-background-position="center bottom">
 						<h3>Tag managers are enablers</h3>
-						<p>tag management thingy</p>
-						<p>https://giphy.com/gifs/car-oprah-winfrey-26gsiCIKW7ANEmxKE</p>
 					</section>
-					<section>
+					<section data-background-image="media/requestmap-ads.png" data-background-size="contain" data-background-position="center bottom">
 						<h3>Ad Networks are greedy</h3>
-						<img class="plain stretch" style="background-color:#fffc;" data-src="media/requestmap-ok2.png"/>
-					</section>
-					<section>
-						<h3>"Who put Facebook on the site?!"</h3>
-						<img class="plain" style="width:30%;" data-src="media/stopfacebook.png"/>
 					</section>
 					<section>
 						<h3>So what?</h3>
@@ -242,36 +253,24 @@
 				</section>
 
 				<section>
-					<section>
-						<h2>Tag Performance</h2>
-						<p class="todo">Death Spiral? Death by a thousand cuts? Last straw?</p>
-						http://nationalinterest.org/files/imagecache/resize-340/images/spiral_cc_22814.jpg
+					<section data-background-image="media/bees.jpg" data-background-size="stretch">
+						<h2 class="dark-bg">Tag Performance</h2>
 					</section>
 					<section>
 						<h3>What's the Risk?</h3>
-						<p>SPOF</p>
+						<h4>SPOF</h4>
+
 					</section>
 					<section>
 						<h3>What's the Risk?</h3>
-						<p>OnLoad SPOF</p>
-						<p>Loss of analytics data!</p>
+						<h4>OnLoad SPOF</h4>
+						<img class="plain stretch" data-src="media/onloadspof.png">
+						<p class="smallest bottom-right"><a href="https://wpt.webperf.tools/result/190927_7Z_4/1/details/#waterfall_view_step1">WebPageTest.org</a></p>
 					</section>
 					<section>
 						<h3>What's the Risk?</h3>
-						<p>Main Thread Work</p>
-					</section>
-					<section>
-						<h3>Measuring the Impact</h3>
-						<p>Resource Timing API</p>
-					</section>
-					<section>
-						<h3>Measuring the Impact</h3>
-						<p>Resource Timing API Limitations</p>
-					</section>
-					<section>
-						<h3>Measuring the Impact</h3>
-						<p>LongTasks (lack of attribution)</p>
-						<p>Access-Control-Allow-Origin: *</p>
+						<h4>Interactivity</h4>
+						<img class="plain stretch" data-src="media/cpu.png">
 					</section>
 				</section>
 
@@ -283,13 +282,16 @@
 						<h3>Positive, right?</h3>
 					</section>
 					<section>
-						<h3>Methodology</h3>
-						<p>set a global variable when the ad bundle executes</p>
-						<p>split traffic on ad block presence over 14 days (Sep 2019)</p>
+						<h3>A simple test</h3>
+						<img class="plain stretch" data-src="media/webtest.app.png">
+						<p class="smallest bottom-right"><a href="https://webtest.app/">webtest.app</a></p>
+					</section>
+					<section data-background-image="media/newspaper.jpeg" data-background-size="stretch">
+						<h3 class="dark-bg">What about the wild?</h3>
 					</section>
 					<section>
 						<h3>Results</h3>
-						<p>Overall Ad Block usage = <em>8.98%</em></p>
+						<p><em>8.98%</em> of pageviews with ads blocked</p>
 					</section>
 					<section>
 						<h3>By Device Type</h3>

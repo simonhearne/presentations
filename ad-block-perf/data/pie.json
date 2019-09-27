@@ -1,0 +1,241 @@
+{
+    "$schema": "https://vega.github.io/schema/vega/v5.json",
+    "width": 400,
+    "height": 400,
+    "autosize": "none",
+  
+    "signals": [
+      {
+        "name": "startAngle", "value": 0
+      },
+      {
+        "name": "endAngle", "value": 6.29
+      },
+      {
+        "name": "padAngle", "value": 0
+      },
+      {
+        "name": "innerRadius", "update": "width / 4"
+      },
+      {
+        "name": "cornerRadius", "value": 5
+      },
+      {
+        "name": "sort", "value": true
+      }
+    ],
+  
+    "data": [
+      {
+        "name": "table",
+        "values": [
+          {
+            "Device": "Mobile",
+            "AdBlocker": "No",
+            "Beacons": "13338185",
+            "Page Load": "8160",
+            "Percent with AdBlock": "0.9844",
+            "Bounce Rate": "0.7414",
+            "Session Duration (s)": "196",
+            "Session Length": "1.81",
+            "App Errors": "10330360",
+            "Error Rate": "0.77",
+            "All Asset Size (MB)": "3.48",
+            "Time to Interactive (ms)": "6740",
+            "First Input Delay": "195"
+          },
+          {
+            "Device": "Mobile",
+            "AdBlocker": "Yes",
+            "Beacons": "211838",
+            "Page Load": "8900",
+            "Percent with AdBlock": "0.0156",
+            "Bounce Rate": "0.7076",
+            "Session Duration (s)": "285",
+            "Session Length": "2.03",
+            "App Errors": "76443",
+            "Error Rate": "0.36",
+            "All Asset Size (MB)": "3.04",
+            "Time to Interactive (ms)": "6130",
+            "First Input Delay": "11"
+          },
+          {
+            "Device": "Desktop",
+            "AdBlocker": "No",
+            "Beacons": "23987452",
+            "Page Load": "5100",
+            "Percent with AdBlock": "0.861",
+            "Bounce Rate": "0.6541",
+            "Session Duration (s)": "685",
+            "Session Length": "4.03",
+            "App Errors": "65745533",
+            "Error Rate": "2.74",
+            "All Asset Size (MB)": "1.95",
+            "Time to Interactive (ms)": "4530",
+            "First Input Delay": "11"
+          },
+          {
+            "Device": "Desktop",
+            "AdBlocker": "Yes",
+            "Beacons": "3871588",
+            "Page Load": "4230",
+            "Percent with AdBlock": "0.139",
+            "Bounce Rate": "0.6602",
+            "Session Duration (s)": "799",
+            "Session Length": "4.91",
+            "App Errors": "514022",
+            "Error Rate": "0.13",
+            "All Asset Size (MB)": "1.86",
+            "Time to Interactive (ms)": "4040",
+            "First Input Delay": "6"
+          },
+          {
+            "Device": "Tablet",
+            "AdBlocker": "No",
+            "Beacons": "6661470",
+            "Page Load": "7600",
+            "Percent with AdBlock": "0.9631",
+            "Bounce Rate": "0.6345",
+            "Session Duration (s)": "285",
+            "Session Length": "2.31",
+            "App Errors": "8572834",
+            "Error Rate": "1.29",
+            "All Asset Size (MB)": "3.2",
+            "Time to Interactive (ms)": "7000",
+            "First Input Delay": "1390"
+          },
+          {
+            "Device": "Tablet",
+            "AdBlocker": "Yes",
+            "Beacons": "255348",
+            "Page Load": "1491",
+            "Percent with AdBlock": "0.0369",
+            "Bounce Rate": "0.7329",
+            "Session Duration (s)": "296",
+            "Session Length": "2.22",
+            "App Errors": "195690",
+            "Error Rate": "0.77",
+            "All Asset Size (MB)": "3.31",
+            "Time to Interactive (ms)": "12210",
+            "First Input Delay": "24"
+          },
+          {
+            "Device": "All",
+            "AdBlocker": "No",
+            "Beacons": "44133919",
+            "Page Load": "6130",
+            "Percent with AdBlock": "0.9102",
+            "Bounce Rate": "0.6881",
+            "Session Duration (s)": "410",
+            "Session Length": "2.8",
+            "App Errors": "84904440",
+            "Error Rate": "1.92",
+            "All Asset Size (MB)": "2.69",
+            "Time to Interactive (ms)": "5480",
+            "First Input Delay": "86"
+          },
+          {
+            "Device": "All",
+            "AdBlocker": "Yes",
+            "Beacons": "4354336",
+            "Page Load": "4600",
+            "Percent with AdBlock": "0.0898",
+            "Bounce Rate": "0.6707",
+            "Session Duration (s)": "708",
+            "Session Length": "4.41",
+            "App Errors": "787762",
+            "Error Rate": "0.18",
+            "All Asset Size (MB)": "1.99",
+            "Time to Interactive (ms)": "4260",
+            "First Input Delay": "8"
+          }
+        ],
+        "transform": [
+          {
+            "type": "filter",
+            "expr": "datum.Device == 'All'"
+          },
+          {
+            "type": "pie",
+            "field": "Percent with AdBlock"
+          }
+        ]
+      }
+    ],
+  
+    "scales": [
+      {
+        "name": "color",
+        "type": "ordinal",
+        "domain": {"data": "table", "field": "AdBlocker"},
+        "range": {"scheme": "category20"}
+      }
+    ],
+  
+    "marks": [
+      {
+        "type": "arc",
+        "from": {"data": "table"},
+        "encode": {
+          "enter": {
+            "fill": {"scale": "color", "field": "AdBlocker"},
+            "x": {"signal": "width / 2"},
+            "y": {"signal": "height / 2"}
+          },
+          "update": {
+            "startAngle": {"field": "startAngle"},
+            "endAngle": {"field": "endAngle"},
+            "padAngle": {"signal": "padAngle"},
+            "innerRadius": {"signal": "innerRadius"},
+            "outerRadius": {"signal": "width / 2"},
+            "cornerRadius": {"signal": "cornerRadius"}
+          }
+        }
+      },
+      {
+        "name": "mark_population",
+        "type": "text",
+        "from": {"data": "table"},
+        "encode": {
+          "enter": {
+            "text": {
+              "signal": "if(datum['endAngle'] - datum['startAngle'] < 0.3, '', format(datum['Percent with AdBlock'], '.1%'))"
+            },
+            "x": {"signal": "if(width >= height, height, width) / 2"},
+            "y": {"signal": "if(width >= height, height, width) / 2"},
+            "radius": {
+              "signal": "if(width >= height, height, width) / 2 * 0.8"
+            },
+            "theta": {"signal": "(datum['startAngle'] + datum['endAngle'])/2"},
+            "fill": {"value": "white"},
+            "fontSize": {"value": 12},
+            "align": {"value": "center"},
+            "baseline": {"value": "middle"}
+          }
+        }
+      },
+      {
+        "type": "text",
+        "encode": {
+          "enter": {"fill": {"value": "#525252"}, "text": {"value": ""}},
+          "update": {
+            "opacity": {"value": 1},
+            "x": {"signal": "width / 2"},
+            "y": {"signal": "height / 2"},
+            "align": {"value": "center"},
+            "baseline": {"value": "middle"},
+            "fontSize": {"signal": "if(width >= height, height, width) * 0.05"},
+            "text": {"value": "Ad Block Usage"}
+          }
+        }
+      }
+    ],
+    "legends": [
+      {
+        "fill": "color",
+        "title": "Ad Block",
+        "orient": "top-right"
+      }
+    ]
+  }
+  
