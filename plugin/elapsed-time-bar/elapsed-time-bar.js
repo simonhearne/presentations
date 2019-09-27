@@ -84,7 +84,7 @@ var ElapsedTimeBar = {
       this.isFinished = true;
     } else {
       this.timeProgressBar.style.width = elapsedTime / this.allottedTime * 100 + '%';
-      requestAnimationFrame(this.loop.bind(this));
+      setTimeout(requestAnimationFrame(this.loop.bind(this)),1000);
     }
   },
 
