@@ -21,6 +21,7 @@
 		<link rel="stylesheet" href="../lib/css/zenburn.css">
 		<link rel="stylesheet" href="../lib/css/animate.min.css">
 
+		<link rel="preload" as="font" type="font/woff2" crossorigin href="../lib/font/league-gothic/league-gothic.woff2">
 		<link rel="preload" as="font" type="font/woff" crossorigin href="../lib/font/league-gothic/league-gothic.woff">
 
 		<!-- Printing and PDF exports -->
@@ -484,9 +485,9 @@ window.addEventListener(
 
 		</div>
 
-		<script src="../lib/js/head.min.js"></script>
-		<script src="../js/reveal.js"></script>
-		<script src="../lib/js/jquery-3.3.1.min.js"></script>
+		<script async src="../lib/js/head.min.js"></script>
+		<script async src="../js/reveal.js"></script>
+		<script async src="../lib/js/jquery-3.3.1.min.js"></script>
 
 		<script>
 			function getQueryVariable(variable)
@@ -506,26 +507,23 @@ window.addEventListener(
 				if (id) {
 					id.innerHTML = "Use 'n' and 'p' to navigate next and previous slides.<br>Use 'o' to view an overview."
 				}
-			}
-			var keyboard = {
-				// pause/resume time when Enter is pressed
-				13: () => {
-					ElapsedTimeBar.isPaused ? ElapsedTimeBar.resume() : ElapsedTimeBar.pause();
-				},
-				// reset timer when 'r' is pressed
-				82: () => {
-					ElapsedTimeBar.reset();
-				}
-			};
-			if (presenting) {
-				keyboard = Object.assign(keyboard,{
+			} else {
+				var keyboard = {
+					// pause/resume time when Enter is pressed
+					13: () => {
+						ElapsedTimeBar.isPaused ? ElapsedTimeBar.resume() : ElapsedTimeBar.pause();
+					},
+					// reset timer when 'r' is pressed
+					82: () => {
+						ElapsedTimeBar.reset();
+					},
 					39: 'next',
 					37: 'prev'
-				});
-			};
-				function getFragment(event) {
-					return (event.currentSlide.id !== "" ? event.currentSlide.id : null);
-				}
+				};
+			}
+			function getFragment(event) {
+				return (event.currentSlide.id !== "" ? event.currentSlide.id : null);
+			}
 			// More info https://github.com/hakimel/reveal.js#configuration
 			Reveal.initialize({
 				controls: !presenting,
@@ -540,17 +538,17 @@ window.addEventListener(
 
 				// More info https://github.com/hakimel/reveal.js#dependencies
 				dependencies: [
-					{ src: '../lib/js/classList.js', condition: function() { return !document.body.classList; } },
-					{ src: '../plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
-					{ src: '../plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
-					{ src: '../plugin/embed-tweet/embed-tweet.js', condition: function() { return !!document.querySelector( 'div.tweet[data-src]' ); } },
-					{ src: '../lib/js/vega.min.js', condition: function() { return !!document.querySelector( 'div.vega-chart' ); } },
-					{ src: '../lib/js/vega-embed.min.js', condition: function() { return !!document.querySelector( 'div.vega-chart' ); } },
-					{ src: '../plugin/elapsed-time-bar/elapsed-time-bar.js'},
-					{ src: '../plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
-					{ src: '../plugin/search/search.js', async: true },
-					{ src: '../plugin/zoom-js/zoom.js', async: true },
-					{ src: '../plugin/notes/notes.js', async: true }
+					{ src: '../lib/js/classList.js', 				async: true, condition: function() { return !document.body.classList; } },
+					{ src: '../plugin/markdown/marked.js', 			async: true, condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: '../plugin/markdown/markdown.js', 		async: true, condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: '../plugin/embed-tweet/embed-tweet.js', 	async: true, condition: function() { return !!document.querySelector( 'div.tweet[data-src]' ); } },
+					{ src: '../lib/js/vega.min.js', 				async: true, condition: function() { return !!document.querySelector( 'div.vega-chart' ); } },
+					{ src: '../lib/js/vega-embed.min.js', 			async: true, condition: function() { return !!document.querySelector( 'div.vega-chart' ); } },
+					{ src: '../plugin/elapsed-time-bar/elapsed-time-bar.js', async: true, condition: function() { return presenting}},
+					{ src: '../plugin/highlight/highlight.js', 		async: true, condition: function() {return !!document.querySelector('code')},async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+					{ src: '../plugin/search/search.js', 			async: true },
+					{ src: '../plugin/zoom-js/zoom.js', 			async: true },
+					{ src: '../plugin/notes/notes.js', 				async: true }
 				],
 
 				keyboard: keyboard
