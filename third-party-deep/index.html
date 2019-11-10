@@ -1,54 +1,49 @@
 <!doctype html>
 <html lang="en">
 
-	<head>
-		<meta charset="utf-8">
-
-		<title>Third-party content: a deep dive - @SimonHearne</title>
-
-		<meta name="description" content="Presentation: Third-party content: a deep dive">
-		<meta name="author" content="Simon Hearne">
-
-		<meta name="apple-mobile-web-app-capable" content="yes">
-		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-
-		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-
-		<link rel="stylesheet" href="../css/reveal.css">
-		<link rel="stylesheet" href="../css/theme/simon.css" id="theme">
-
-		<!-- Theme used for syntax highlighting of code -->
-		<link rel="stylesheet" href="../lib/css/zenburn.css">
-
-		<!--<link rel="stylesheet" href="../lib/css/animate.min.css">-->
-
-		<meta property=“og:image” content="https://simonhearne.com/presentations/social_improving-revenue.jpg" />
-		<meta property=”og:image:width” content=”1716" />
-		<meta property=”og:image:height” content=”864″ />
-		<meta name="twitter:card" content="summary_large_image" />
-		<meta name="twitter:creator" content="@SimonHearne" />
-		<meta name="twitter:title" content="Five Surprising Techniques to Improve Online Engagement.">
-		<meta name="twitter:description" content="An interactive presentation exploring the relationship between speed and user engagement, with five simple techniques to optimise both! Originally presented at Akamai Edge World 2019 in Las Vegas, Nevada." />
-		<meta name="twitter:image" content="https://simonhearne.com/presentations/social_improving-revenue.jpg" />
-		
-		<!-- Printing and PDF exports -->
-		<script>
-			var link = document.createElement( 'link' );
-			link.rel = 'stylesheet';
-			link.type = 'text/css';
-			link.href = window.location.search.match( /print-pdf/gi ) ? '../css/print/pdf.css' : '../css/print/paper.css';
-			document.getElementsByTagName( 'head' )[0].appendChild( link );
-		</script>
-
-		<script src="../lib/js/head.min.js"></script>
-		<script src="../js/reveal.js"></script>
-		<script src="../lib/js/jquery-3.3.1.min.js"></script>
-
-		<!--[if lt IE 9]>
+<head>
+	<meta charset="utf-8">
+	
+	<title>Third-party content: a deep dive - @SimonHearne</title>
+	
+	<meta name="description" content="Presentation: Third-party content: a deep dive">
+	<meta name="author" content="Simon Hearne">
+	
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+	
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	
+	<link rel="stylesheet" href="../css/reveal.css">
+	<link rel="stylesheet" href="../css/theme/simon.css" id="theme">
+	
+	<meta property=“og:image” content="https://simonhearne.com/presentations/social_improving-revenue.jpg" />
+	<meta property=”og:image:width” content=”1716" />
+	<meta property=”og:image:height” content=”864″ />
+	<meta name="twitter:card" content="summary_large_image" />
+	<meta name="twitter:creator" content="@SimonHearne" />
+	<meta name="twitter:title" content="Five Surprising Techniques to Improve Online Engagement.">
+	<meta name="twitter:description" content="An interactive presentation exploring the relationship between speed and user engagement, with five simple techniques to optimise both! Originally presented at Akamai Edge World 2019 in Las Vegas, Nevada." />
+	<meta name="twitter:image" content="https://simonhearne.com/presentations/social_improving-revenue.jpg" />
+	
+	<!-- Printing and PDF exports -->
+	<script>
+		var link = document.createElement( 'link' );
+		link.rel = 'stylesheet';
+		link.type = 'text/css';
+		link.href = window.location.search.match( /print-pdf/gi ) ? '../css/print/pdf.css' : '../css/print/paper.css';
+		document.getElementsByTagName( 'head' )[0].appendChild( link );
+	</script>
+	
+	<script src="../lib/js/head.min.js"></script>
+	<script src="../js/reveal.js"></script>
+	<script src="../lib/js/jquery-3.3.1.min.js"></script>
+	
+	<!--[if lt IE 9]>
 		<script src="lib/js/html5shiv.js"></script>
 		<![endif]-->
 	</head>
-
+	
 	<body>
 		<div class="reveal">
 			<div class="smaller tagline">@SimonHearne</div>
@@ -62,13 +57,12 @@
 						<p id="help-text" class="help-text"></p>
 					</div>
 				</section>
-
+				
 				<section>
-					<h3>Coming up...</h3>
-					<ol>
-						<li>Third-parties?</li>
-					</ol>
+					<h2>Five years ago...</h2>
+					<img class="plain stretch" src="media/velocity2014.jpg">
 				</section>
+
 				<section>
 					<h3>Data Source 1 📊</h3>
 					<img class="plain stretch" data-src="media/mpulse.png">
@@ -81,26 +75,116 @@
 				</section>
 
 				<section>
+					<h3>Coming up...</h3>
+					<ol>
+						<li>Third-parties?</li>
+					</ol>
+				</section>
+				
+				<section class="dive">
+					<section>
+						<h2>Bundled code</h2>
+					</section>
+				</section>
+				
+				<section class="dive">
+					<section>
+						<h2>Explicitly included scripts</h2>
+					</section>
+				</section>
+				
+				<section class="dive">
+					<section>
+						<h2>Injected scripts</h2>
+					</section>
+				</section>
+				
+				<section class="dive">
+					<section>
+						<h2>Tag managers...</h2>
+					</section>
+				</section>
+				
+				<section class="dive">
+					<section>
+						<h2>Ad networks...</h2>
+					</section>
+				</section>
+				
+				<section class="dive">
+					<section>
+						<h2>Intermediary injected</h2>
+					</section>
+				</section>
+				
+				<section class="dive">
+					<section>
+						<h2>n<sup>th</sup>-party</h2>
+					</section>
+				</section>
+				
+				<section class="dive">
+					<section>
+						<h2>extensions</h2>
+					</section>
+				</section>
+				
+				<section id="impact">
+					
+				</section>
+				
+				<section id="defense">
+					
+				</section>
+				
+				<section>
 					<section>
 						<h2>Thank you 🙏</h2>
 						<p>shearne@akamai.com</p>
 						<p class="smallest bottom-right">simonhearne.com/presentations/third-party-deep/</p>
 					</section>
 				</section>
-	
+				
 			</div>
 			<div id="chart-controls" class="hide"></div>
-
+			
 		</div>
-
+		
 		<script>
-			var presenting = window.location.search.includes('present');
-			if (!presenting) {
-				let id = document.getElementById('help-text');
-				if (id) {
-					id.innerHTML = "Use 'n' and 'p' to navigate next and previous slides.<br>Use 'o' to view an overview."
+			!function init() {
+				let levels = document.getElementsByClassName('dive');
+				if (levels) {
+					let st = 75;
+					let en = 5;
+					var i = 0;
+					let numLevels = levels.length;
+					let step = (st - en) / (numLevels - 1);
+					console.log(`${numLevels} levels`);
+					[].forEach.call(levels, function(level) {
+						level.id = 'dive-' + (i + 1);
+						let co = st - (step * i);
+						/*data-transition="slide" data-background-transition="slide" data-background-color="hsla(202, 100%, 50%, 1)">*/
+						level.setAttribute('data-transition','fade');
+						//level.setAttribute('data-background-transition','slide');
+						level.setAttribute('data-background-color',`hsla(240, 100%, ${co}%, 1)`);
+						i-=-1;
+					});
 				}
+			}()
+			function getQueryVariable(variable)
+			{
+				var query = window.location.search.substring(1);
+				var vars = query.split("&");
+				for (var i=0;i<vars.length;i++) {
+					var pair = vars[i].split("=");
+					if(pair[0] == variable){return pair[1];}
+				}
+				return(false);
 			}
+			var presenting = window.location.search.includes('present');
+			var duration = getQueryVariable('duration') || 30;
+			var hasCode = !!document.querySelector('code');
+			var hasAnims = !!document.querySelector('[data-animate]');
 			var keyboard = {
 				// pause/resume time when Enter is pressed
 				13: () => {
@@ -110,14 +194,19 @@
 				82: () => {
 					ElapsedTimeBar.reset();
 				}
-			};
-			if (presenting) {
-				keyboard = Object.assign(keyboard,{
+			}
+			if (!presenting) {
+				let id = document.getElementById('help-text');
+				if (id) {
+					id.innerHTML = "Use 'n' and 'p' to navigate next and previous slides.<br>Use 'o' to view an overview."
+				}
+			} else {
+				keyboard = Object.assign(keyboard,
+				{
 					39: 'next',
 					37: 'prev'
 				});
-			};
-    				
+			}
 			function getFragment(event) {
 				return (event.currentSlide.id !== "" ? event.currentSlide.id : null);
 			}
@@ -127,33 +216,34 @@
 				progress: true,
 				history: true,
 				center: true,
-
+				transitionSpeed: 'slow', // default/fast/slow
+				
 				transition: 'none', // none/fade/slide/convex/concave/zoom
-
-				allottedTime: 30 * 60 * 1000, // 30 minutes
+				
+				allottedTime: duration * 60 * 1000, // 30 minutes
 				barColor: 'hsl(220,99%,54%)',
-
+				
 				// More info https://github.com/hakimel/reveal.js#dependencies
 				dependencies: [
-					{ src: '../lib/js/classList.js', condition: function() { return !document.body.classList; } },
-					{ src: '../plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
-					{ src: '../plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
-					{ src: '../plugin/embed-tweet/embed-tweet.js', condition: function() { return !!document.querySelector( 'div.tweet[data-src]' ); } },
-					{ src: '../lib/js/vega.min.js', condition: function() { return !!document.querySelector( 'div.vega-chart' ); } },
-					{ src: '../lib/js/vega-embed.min.js', condition: function() { return !!document.querySelector( 'div.vega-chart' ); } },
-					{ src: '../plugin/elapsed-time-bar/elapsed-time-bar.js'},
-					{ src: '../plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
-					{ src: '../plugin/search/search.js', async: true },
-					{ src: '../plugin/zoom-js/zoom.js', async: true },
-					{ src: '../plugin/notes/notes.js', async: true }
+				{ src: '../lib/js/classList.js', 				async: true, condition: function() { return !document.body.classList; } },
+				{ src: '../plugin/markdown/marked.js', 			async: true, condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+				{ src: '../plugin/markdown/markdown.js', 		async: true, condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+				{ src: '../plugin/embed-tweet/embed-tweet.js', 	async: true, condition: function() { return !!document.querySelector( 'div.tweet[data-src]' ); } },
+				{ src: '../lib/js/vega.min.js', 				condition: function() { return !!document.querySelector( 'div.vega-chart' ); } },
+				{ src: '../lib/js/vega-embed.min.js', 			condition: function() { return !!document.querySelector( 'div.vega-chart' ); } },
+				{ src: '../plugin/elapsed-time-bar/elapsed-time-bar.js', async: true, condition: function() { return presenting}},
+				{ src: '../plugin/highlight/highlight.js', 		async: true, condition: function() {return hasCode},async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+				{ src: '../plugin/search/search.js', 			async: true },
+				{ src: '../plugin/zoom-js/zoom.js', 			async: true },
+				{ src: '../plugin/notes/notes.js', 				async: true }
 				],
-
+				
 				keyboard: keyboard
 			});
 			Reveal.addEventListener( 'slidechanged', function( event ) {
 				let state = {h: event.indexh, v: event.indexv, name: getFragment(event)};
 			} );
-
+			
 			/* animate.css */
 			// Set animation delay if data-delay is specified
 			Reveal.addEventListener('ready', function ( event ) {
@@ -163,7 +253,7 @@
 					$(this).css("animation-delay", delay+"s"); 
 				});
 			});
-
+			
 			// Set animation duration if data-duration is specified
 			Reveal.addEventListener('ready', function ( event ) {
 				$('*[data-duration]').each( function () { 
@@ -171,30 +261,18 @@
 					$(this).css("-webkit-animation-duration", duration+"s"); 
 					$(this).css("animation-duration", duration+"s"); 
 				});
-				embedVegaCharts();
-			});
-
-			function embedVegaCharts() {
-				if (window.hasOwnProperty('vegaEmbed')) {
-					console.log("vega-ready");
-					let width = window.innerWidth / 2;
-					let slideElement = document.getElementsByClassName('slides')[0];
-					if (slideElement) {width = slideElement.offsetWidth};
-					$(".vega-chart").each(function() {
-						let spec = this.attributes.getNamedItem("data-spec").value;
-						//spec = "https://raw.githubusercontent.com/vega/vega/master/docs/examples/bar-chart.vg.json";
-						vegaEmbed('#'+this.id, spec, {"actions": false, "theme": "dark", "width": width, "renderer": "svg", "config": "data/config.json"}).then(function(result) {
+				let width = window.innerWidth / 2;
+				$(".vega-chart").each(function() {
+					let spec = this.attributes.getNamedItem("data-spec").value;
+					//spec = "https://raw.githubusercontent.com/vega/vega/master/docs/examples/bar-chart.vg.json";
+					vegaEmbed('#'+this.id, spec, {"actions": false, "theme": "dark", "width": width, "renderer": "svg", "config": "data/config.json"}).then(function(result) {
 						// Access the Vega view instance (https://vega.github.io/vega/docs/api/view/) as result.view
-						}).catch(console.error);
-					});
-				} else {
-					console.log("vega-not-ready");
-					setTimeout(embedVegaCharts,1000);
-				}
-			};
-
+					}).catch(console.error);
+				});
+			});
+			
 			// Animate items that are not in a fragment
-				Reveal.addEventListener('slidechanged', function( event ) {
+			Reveal.addEventListener('slidechanged', function( event ) {
 				// Animate elements that are not a fragment (or in a fragment)
 				var filter = '*[data-animate]:not(.fragment):not(.fragment *)';
 				
@@ -206,22 +284,22 @@
 					$(this).removeClass('animated');
 					$(this).removeClass($(this).attr('data-animate'));
 				});		
-				});
-
-				// Animate fragments
-				Reveal.addEventListener('fragmentshown', function( event ) {
-					function loop(i, el) { 
-						if ($(el).attr('data-animate')) {
-							$(el).addClass('animated');
-							$(el).addClass($(el).attr('data-animate'));
-						}
-						$.each($(el).children().not('.fragment'), loop);
-					};
-					$.each(event.fragments, loop);
-				});
-
-				// Make the animation runnable again if fragment is hidden
-				Reveal.addEventListener('fragmenthidden', function( event ) {	  
+			});
+			
+			// Animate fragments
+			Reveal.addEventListener('fragmentshown', function( event ) {
+				function loop(i, el) { 
+					if ($(el).attr('data-animate')) {
+						$(el).addClass('animated');
+						$(el).addClass($(el).attr('data-animate'));
+					}
+					$.each($(el).children().not('.fragment'), loop);
+				};
+				$.each(event.fragments, loop);
+			});
+			
+			// Make the animation runnable again if fragment is hidden
+			Reveal.addEventListener('fragmenthidden', function( event ) {	  
 				function loop(i, el) { 
 					if ($(el).attr('data-animate')) {
 						$(el).removeClass('animated');
@@ -231,19 +309,32 @@
 				};
 				$.each(event.fragments, loop);
 			});
+			if (hasCode) {
+				var l = document.createElement('link');
+				l.rel="stylesheet";
+				l.href = "../lib/css/zenburn.css"
+				document.head.appendChild(l);
+			}
+			if (hasAnims) {
+				var l = document.createElement('link');
+				l.rel="stylesheet";
+				l.href = "../lib/css/animate.min.css"
+				document.head.appendChild(l);
+			}
 		</script>
-
+		
 		<script nonce="googleAnalytics">
 			(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-			(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();
-			i.initAnalytics=function(){a=s.createElement(o),m=s.getElementsByTagName(o)[0];
-			a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-			}})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-			
-			ga('create', 'UA-6512525-16', 'auto', {'siteSpeedSampleRate': 100});
-			ga('send', 'pageview');
-			
-			window.addEventListener('load',function(){initAnalytics()});
-		</script>
-	</body>
-</html>
+				(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();
+				i.initAnalytics=function(){a=s.createElement(o),m=s.getElementsByTagName(o)[0];
+					a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+				}})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+				
+				ga('create', 'UA-6512525-16', 'auto', {'siteSpeedSampleRate': 100});
+				ga('send', 'pageview');
+				
+				window.addEventListener('load',function(){initAnalytics()});
+			</script>
+		</body>
+		</html>
+		
