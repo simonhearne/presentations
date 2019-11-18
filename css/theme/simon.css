@@ -716,3 +716,102 @@ div.vega-bind {
 .reveal section.left {
   text-align: left;
 }
+
+/* --- WATERFALL */
+* {
+  box-sizing: border-box; 
+}
+.wf-container {
+  width: 100%;
+  height: 100%;
+  background-color: #f6f6f622;
+  padding: 1em;
+  font-family: monospace !important;
+  text-align: left;
+  zoom: 0.4;
+}
+.wf-row {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  padding: 0.2em !important;
+  margin: 0 !important;
+}
+.wf-row:nth-child(odd) {
+  background-color: #ddd2
+}
+.wf-elem {
+  flex-basis: 1em;
+  height: 1.5em;
+  transition: all 1000ms ease-in-out;
+  opacity: 0.5;
+}
+.wf-elem.wf-width-1 {  flex-basis: 1em;}
+.wf-elem.wf-width-2 {  flex-basis: 2em;}
+.wf-elem.wf-width-3 {  flex-basis: 3em;}
+.wf-elem.wf-width-4 {  flex-basis: 4em;}
+.wf-elem.wf-width-5 {  flex-basis: 5em;}
+.wf-elem.wf-width-6 {  flex-basis: 6em;}
+.wf-elem.wf-width-7 {  flex-basis: 7em;}
+.wf-elem.wf-width-8 {  flex-basis: 8em;}
+.wf-elem.wf-width-9 {  flex-basis: 9em;}
+.wf-elem.wf-label {
+  width: 8em;
+  flex-basis: 8em;
+  flex-shrink: 0;
+  padding-right: 1em;
+  line-height: 1.5em;
+  text-align: right;
+  display:inline-block;
+}
+.wf-elem.wf-blk {
+  background-color: transparent;
+}
+.wf-dns, .wf-tcp, .wf-tls, .wf-tfb {
+  margin-top: 0.5em !important;
+  height: 0.6em;
+}
+.wf-elem.wf-dns {
+  background-color: rgb(48,150,158);
+}
+.wf-elem.wf-tcp {
+  background-color: rgb(255, 157, 66);
+}
+.wf-elem.wf-tls {
+  background-color: rgb(213,102, 223);
+}
+.wf-elem.wf-tfb {
+  background-color: rgb(64, 255, 64);
+}
+.wf-elem.wf-dld {
+  background-color: rgb(52,150,255);
+}
+.wf-elem.wf-htm {
+  background-color: rgb(130,181,252);
+}
+.wf-elem.wf-jss {
+  background-color: rgb(254,197,132);
+}
+.wf-elem.wf-css {
+  background-color: rgb(178,234,148);
+}
+.wf-elem.wf-img {
+  background-color: rgb(196,154,232);
+}
+.wf-elem.wf-fnt {
+  background-color: rgb(255,82,62);
+}
+.wf-elem.wf-event {
+  border-radius: 2em;
+  height: 1em;
+  margin-top: 0.25em;
+}
+.wf-container .wf-loadtime {
+  line-height: 1.5em;
+  flex-grow: 1;
+  padding-left: 0;
+}
+.wf-container .wf-loadtime::before {
+  content: ' |< ';
+  color: red;
+}

@@ -25,11 +25,6 @@
 	<meta name="twitter:title" content="Five Surprising Techniques to Improve Online Engagement.">
 	<meta name="twitter:description" content="An interactive presentation exploring the relationship between speed and user engagement, with five simple techniques to optimise both! Originally presented at Akamai Edge World 2019 in Las Vegas, Nevada." />
 	<meta name="twitter:image" content="https://simonhearne.com/presentations/social_improving-revenue.jpg" />
-	<style>
-		body {
-		/*background: #000;*/
-		}
-	</style>
 	<!-- Printing and PDF exports -->
 	<script>
 		var link = document.createElement( 'link' );
@@ -68,7 +63,7 @@
 				</section>
 				
 				<section data-background-image="media/velocity2014.jpg" data-background-fit="stretch" data-background-opacity="0.5">
-					<p class="dark-bg">This isn't a new problem</p>
+					<h3 class="dark-bg">This isn't a new problem</h3>
 					<aside class="notes">
 						We've been talking about third-party performance for years! In my case it's been five years, to the day!<br>
 						I've given a few talks about third-parties, I've given workshops, audits and reports.
@@ -76,14 +71,14 @@
 				</section>
 				
 				<section class="bottom" data-background-image="../backgrounds/shout.jpg" data-background-fit="stretch">
-					<p class="dark-bg">Sometimes it feels like we're getting nowhere</p>
+					<h3 class="dark-bg">Sometimes it feels like we're getting nowhere</h3>
 					<aside class="notes">
 						Unfortunately not a huge amount has changed, we're using more third-parties than ever
 					</aside>
 				</section>
 				
 				<section class="center" data-background-image="../backgrounds/crack.jpg" data-background-fit="stretch" data-background-opacity="">
-					<p class="dark-bg">It can feel like 'us vs them'</p>
+					<h3 class="dark-bg">It can feel like 'us vs them'</h3>
 					<aside class="notes">
 						It feels like there's a disconnect between the many folks who have ownership of a web app
 					</aside>
@@ -97,7 +92,7 @@
 				
 				<section class="" data-background-image="../backgrounds/youarehere.jpg" data-background-fit="stretch" data-background-opacity="">
 					<aside class="notes">
-						As you are at this conference, I'm going to make an assumption that you are hands-on.<br>
+						As you are viewing this slide deck, I'm going to make an assumption that you are hands-on.<br>
 						How many in the audience actively work on a web product (developer / product / ops / marketing)?<br>
 						Keep your hand up if you touch code.<br>
 						<br>
@@ -133,12 +128,12 @@
 					<section>
 						<section>
 							<p>
-								1) jQuery included by a third-party broke a checkout button
+								1) jQuery included by a third-prty broke a checkout button
 								2) Facebook script = 30s delay for users in China
 								3) Dyn outage wiped out multiple A/B testing providers
 								4) Event listener on beforeUnload added 500ms of latency
 								5) CryptoMiner on UK gov’t sites
-								6) AdServer compromised to inject different ads
+								6) AdServer compromiased to inject different ads
 								7) User replay script sending passwords in plaintext
 								8) Magecart + visa skimmer https://usa.visa.com/dam/VCOM/global/support-legal/documents/pfd-identifies-new-javascript-skimmer.pdf
 							</p>
@@ -156,438 +151,615 @@
 				-->
 				<section>
 					<section data-background-image="../backgrounds/bored.jpg" data-background-fit="stretch">
-						<h2>Incident 1: the 30s wait</h2>
+						<h2 class="dark-bg">Incident 1: the 30s wait</h2>
 						<aside class="notes">
 							This is the incident that got me interested in third-parties in the first place.<br>
 							A client had just launched a new version of their site across asia<br>
 							All the pre-production tests worked fine, they tested from servers in the target geos and performance was good
 						</aside>
 					</section>
-					<section data-background-image="../backgrounds/greatwall.jpg" data-background-fit="stretch">
+					<section data-background-image="../backgrounds/bored.jpg" data-background-fit="stretch" data-background-color="#000" data-background-opacity="0.1">
 						<h3 class="light-bg">Launched in China 🇨🇳</h3>
+						<ul class="no-bullets">
+							<li class="fragment">👍 localisation</li>
+							<li class="fragment">👍 dev testing</li>
+							<li class="fragment">👍 QA in China</li>
+						</ul>
 						<aside class="notes">
 							The launch was continued to China.<br>
 							Feedback from local users was extremely poor and analytics showed page load times of over 30s.
 						</aside>
 					</section>
-					<section class="center">
+					<section data-background-image="../backgrounds/bored.jpg" data-background-fit="stretch" data-background-color="#000" data-background-opacity="0.1">
 						<h3>The problem</h3>
-						<ul>
-							<li class="fragment">a rogue <code class="inline-code">&lt;script&gt;</code> tag (comment platform)</li>
-							<li class="fragment">a fourth-party call to facebook social login</li>
+						<div class="wf-container" id="wf1">
+							<div class="wf-row">
+								<div class="wf-elem wf-label">index.html</div>
+								<div class="wf-elem wf-dns"></div>
+								<div class="wf-elem wf-tcp"></div>
+								<div class="wf-elem wf-tls"></div>
+								<div id="dld1" class="wf-elem wf-htm wf-width-2"></div>
+							</div>
+							<div class="wf-row">
+								<div class="wf-elem wf-label">style.css</div>
+								<div id="css1" class="wf-elem wf-blk wf-dep-1" data-offset="3" style="flex-basis: 5em"></div>
+								<div class="wf-elem wf-css wf-width-3"></div>
+							</div>
+							<div class="wf-row">
+								<div class="wf-elem wf-label">image1.jpg</div>
+								<div id="css1" class="wf-elem wf-blk wf-dep-1" data-offset="3" style="flex-basis: 5em"></div>
+								<div class="wf-elem wf-img wf-width-5"></div>
+							</div>
+							<div class="wf-row">
+								<div class="wf-elem wf-label">image2.jpg</div>
+								<div id="css1" class="wf-elem wf-blk wf-dep-1" data-offset="3" style="flex-basis: 5em"></div>
+								<div class="wf-elem wf-img wf-width-6"></div>
+							</div>
+							<div class="wf-row">
+								<div class="wf-elem wf-label">font.woff2</div>
+								<div id="css1" class="wf-elem wf-blk wf-dep-1" data-offset="3" style="flex-basis: 5em"></div>
+								<div class="wf-elem wf-dns"></div>
+								<div class="wf-elem wf-tcp"></div>
+								<div class="wf-elem wf-tls"></div>
+								<div class="wf-elem wf-fnt wf-width-4"></div>
+							</div>
+							<div class="wf-row">
+								<div class="wf-elem wf-label">script.js</div>
+								<div id="js1" class="wf-elem wf-blk wf-dep-1" data-offset="3" style="flex-basis: 5em"></div>
+								<div class="wf-elem wf-jss wf-width-5"></div>
+							</div>
+							<div class="wf-row">
+								<div class="wf-elem wf-label">social.js</div>
+								<div class="wf-elem wf-blk wf-dep-1" data-offset="3" style="flex-basis: 5em"></div>
+								<div class="wf-elem wf-dns"></div>
+								<div class="wf-elem wf-tcp"></div>
+								<div class="wf-elem wf-tls"></div>
+								<div class="wf-elem wf-jss wf-width-3"></div>
+							</div>
+							<div class="wf-row">
+								<div class="wf-elem wf-label">image3.jpg</div>
+								<div id="css1" class="wf-elem wf-blk wf-dep-1" data-offset="6" style="flex-basis: 10em"></div>
+								<div class="wf-elem wf-img wf-width-6"></div>
+							</div>
+							<div class="wf-row">
+								<div class="wf-elem wf-label">image4.jpg</div>
+								<div id="css1" class="wf-elem wf-blk wf-dep-1" data-offset="6" style="flex-basis: 10.2em"></div>
+								<div class="wf-elem wf-img wf-width-8"></div>
+								<div class="wf-elem wf-loadtime" id="wf-plt-1" style="opacity:1">doc.ready()</div>
+							</div>
+							<div style="background-color: #fb0d0d38" class="wf-row fragment">
+								<div class="wf-elem wf-label">fb.js</div>
+								<div class="wf-elem wf-blk wf-dep-1" data-offset="3" style="flex-basis: 11em"></div>
+								<div id="wf-js-dur-1" class="wf-elem wf-dns"></div>
+								<div class="wf-elem wf-tcp"></div>
+								<div class="wf-elem wf-tls"></div>
+								<div id="wf-js-dur-1" class="wf-elem wf-jss wf-width-3"></div>
+								<div class="wf-elem wf-loadtime" id="wf-plt-2" style="opacity:0">doc.ready()</div>
+							</div>
+							<div class="wf-row">
+								<div class="wf-elem wf-label">important!</div>
+								<div id="wf-js-dur-2" class="wf-elem wf-blk wf-dep-1" data-offset="11" style="flex-basis: 18.5em"></div>
+								<div style="opacity:1" class="wf-elem wf-fnt wf-event"></div>
+							</div>
+						</div>
+						<script>
+							!function randomize() {
+								let els = document.querySelectorAll('.wf-dns, .wf-tls, .wf-tcp');
+								[].forEach.call(els,(el)=>{
+									let w = Math.random() + 0.5;
+									el.setAttribute('style','flex-basis:'+w+'em');
+								})
+							}()
+							function simDelay1(d = 10) {
+								var dld = document.getElementById("dld1")
+								var dep1 = document.getElementById('wf-js-dur-1')
+								var dep2 = document.getElementById('wf-js-dur-2')
+								let r;
+								if (!d) { r = 0.5} else { r = d + Math.random()*5}
+								dep1.setAttribute('style',`flex-basis:${r}em`);
+								if (d > 5) {
+									document.getElementById('wf-plt-1').setAttribute('style',`opacity:0`);
+									document.getElementById('wf-plt-2').setAttribute('style',`opacity:1`);
+									dep2.setAttribute('style',`flex-basis:${r+16}em`);
+								} else {
+									document.getElementById('wf-plt-1').setAttribute('style',`opacity:1`);
+									document.getElementById('wf-plt-2').setAttribute('style',`opacity:0`);
+									dep2.setAttribute('style',`flex-basis:${18.5}em`);
+								}
+							}
+						</script>
+						<div class="fragment" data-eval-show="simDelay1(10)" data-eval-hide="simDelay1(false)"></div>
+						<div class="fragment" data-eval-show="simDelay1(20)" data-eval-hide="simDelay1(10)"></div>
+						<aside class="notes">
+							The problem was an assumption that the document.ready event would not be impacted by the script.<br>
+							The application design had critical event management logic on document.ready so the application was unavailable until it fired!
+						</aside>
+					</section>
+					<section data-background-image="../backgrounds/bored.jpg" data-background-fit="stretch" data-background-color="#000" data-background-opacity="0.1">
+						<h3>The defense</h3>
+						<ul class="no-bullets">
+							<li class="fragment">🇨🇳 feature flag</li>
+							<li class="fragment">don't wait for onload</li>
+							<li class="fragment"><code>&lt;script defer &gt;</code></li>
 						</ul>
 						<aside class="notes">
-							
 						</aside>
 					</section>
+					<section class="center">
+						<h3>Beware your script loading strategy</h3>
+						<embed class="plain stretch" id="nav-timing-svg" src="media/performance_api_blocking.svg">
+							<script>
+								function toggleSVGVis(obj,ele,show=true) {
+									let svgEl = document.getElementById(obj);
+									if (svgEl) {
+										let svgObj = svgEl.getSVGDocument()
+										if (svgObj) {
+											let i = svgObj.getElementById(ele);
+											if (i) {
+												if (show) {
+													i.setAttribute('style','')
+												} else {
+													i.setAttribute('style','display:none')
+												}
+											}
+										}
+									}
+								}
+							</script>
+							<div class="fragment" data-eval-show="toggleSVGVis('nav-timing-svg','g4382')" data-eval-hide="toggleSVGVis('nav-timing-svg','g4382',false)"></div>
+						</section>
+						<section>
+							<h3>Tag managers allow for this</h3>
+							<img class="plain stretch" src="media/gtm_trigger_type.png">
+							<p>Push as much as late as possible</p>
+							<aside class="notes">
+								Tag managers offer flexibility to define when scripts are loaded.<br>
+								By default, you'll probably find them loading too early (marketers always want their scripts to execute as soon as possible).<br>
+							</aside>
+						</section>
+					</section>
+					
+					
 					<section>
-						<h3>The discovery</h3>
-						<aside class="notes">
-						</aside>
+						<section data-background-image="../backgrounds/burnmoney.jpg" data-background-fit="stretch">
+							<h2 class="dark-bg">Incident 2: the missing revenue</h2>
+							<aside class="notes">
+								I was working with a UK retailer who had initiated a war room because their conversion rate had dropped by 30%.<br>
+								Their automated tests were showing 100% success, they had not released any code and there were no stock changes.
+							</aside>
+						</section>
+						<section class="center" data-background-image="../backgrounds/burnmoney.jpg" data-background-fit="stretch" data-background-color="#000" data-background-opacity="0.1">
+							<h3>The problem</h3>
+							<h4>Conversion rate down 30% overnight 📉</h4>
+							<p class="fragment">with no changes to the site</p>
+							<aside class="notes">
+							</aside>
+						</section>
+						<section data-background-image="../backgrounds/burnmoney.jpg" data-background-fit="stretch" data-background-color="#000" data-background-opacity="0.1">
+							<h3>The discovery</h3><br>
+							<pre style="width:100%; font-size: 50%; overflow: hidden;"><code class="js" data-trim="true">
+								/**
+								* This file uses jQuery materials and hashchange plugin 
+								* Portions, Copyright (c) 2010 "Cowboy" Ben Alman
+								* http://benalman.com/projects/jquery-hashchange-plugin/
+								* Portions, Copyright 2012 jQueryFoundation and other contributors
+								* http://jquery.com/
+							</code></pre>
+							<p class="subtitle monospace">thirdparty.js</p>
+							<aside class="notes">
+							</aside>
+						</section>
+						<section data-background-image="../backgrounds/burnmoney.jpg" data-background-fit="stretch" data-background-color="#000" data-background-opacity="0.1">
+							<h3>The solution</h3>
+							<aside class="notes">
+							</aside>
+						</section>
+						<section data-background-image="../backgrounds/burnmoney.jpg" data-background-fit="stretch" data-background-color="#000" data-background-opacity="0.1">
+							<h3>The defense</h3>
+							<aside class="notes">
+							</aside>
+						</section>
+					</section>
+					
+					
+					<section>
+						<section data-background-image="../backgrounds/chart.jpg" data-background-fit="stretch">
+							<h2 class="dark-bg">Incident 4: the performance "monitor"</h2>
+							<aside class="notes">
+							</aside>
+						</section>
+						<section data-background-image="../backgrounds/chart.jpg" data-background-fit="stretch" data-background-color="#000" data-background-opacity="0.1">
+							<h3>The problem</h3>
+							<br>
+							<blockquote>The site feels "laggy"</blockquote>
+							<p>🧐</p>
+							<aside class="notes">
+							</aside>
+						</section>
+						<style>
+							.indicator {
+								width: 8em;
+								height: 8em;
+								background-color: blue;
+								margin: 1em !important;
+							}
+							.indicator.activated {
+								background-color: orange;
+							}
+						</style>
+						<section data-background-image="../backgrounds/chart.jpg" data-background-fit="stretch" data-background-color="#000" data-background-opacity="0.1">
+							<h3>The discovery</h3>
+							<div class="fragment" data-eval-show="toggleIndicators()" data-eval-hide="toggleIndicators()" style="font-family: monospace; font-size: 90%">clicked!</div>
+							<div>
+								<span id="indicator-1" class="indicator"></span>
+								<span id="indicator-2" class="indicator"></span>
+							</div>
+							<script>
+								toggleIndicators = (delayMs=500) => {
+									document.getElementById('indicator-1').classList.toggle('activated');
+									window.setTimeout(()=>{
+										document.getElementById('indicator-2').classList.toggle('activated');
+									},delayMs)
+								}
+							</script>
+							<aside class="notes">
+							</aside>
+						</section>
+						<section data-background-image="../backgrounds/chart.jpg" data-background-fit="stretch" data-background-color="#000" data-background-opacity="0.1">
+							<h3>The discovery</h3>
+							<img class="plain stretch" src="media/onunload.png">
+							<aside class="notes">
+							</aside>
+						</section>
+						<section data-background-image="../backgrounds/chart.jpg" data-background-fit="stretch" data-background-color="#000" data-background-opacity="0.1">
+							<h3>The solution</h3>
+							<aside class="notes">
+							</aside>
+						</section>
+						<section data-background-image="../backgrounds/chart.jpg" data-background-fit="stretch" data-background-color="#000" data-background-opacity="0.1">
+							<h3>The defense</h3>
+							<aside class="notes">
+							</aside>
+						</section>
+					</section>
+					
+					
+					<section>
+						<section data-background-image="../backgrounds/monero.jpg" data-background-fit="stretch">
+							<h2 class="dark-bg">Incident 5: the crypto miner</h2>
+							<aside class="notes">
+							</aside>
+						</section>
+						<section data-background-image="../backgrounds/monero.jpg" data-background-fit="stretch" data-background-color="#000" data-background-opacity="0.1">
+							<h3>The problem</h3>
+							<aside class="notes">
+							</aside>
+						</section>
+						<section data-background-image="../backgrounds/monero.jpg" data-background-fit="stretch" data-background-color="#000" data-background-opacity="0.1">
+							<h3>The discovery</h3>
+							<aside class="notes">
+							</aside>
+						</section>
+						<section data-background-image="../backgrounds/monero.jpg" data-background-fit="stretch" data-background-color="#000" data-background-opacity="0.1">
+							<h3>The solution</h3>
+							<aside class="notes">
+							</aside>
+						</section>
+						<section data-background-image="../backgrounds/monero.jpg" data-background-fit="stretch" data-background-color="#000" data-background-opacity="0.1">
+							<h3>The defense</h3>
+							<aside class="notes">
+							</aside>
+						</section>
+					</section>
+					
+					
+					<section>
+						<section data-background-image="../backgrounds/ads.jpg" data-background-fit="stretch">
+							<h2 class="dark-bg">Incident 6: the malicious ads</h2>
+							<aside class="notes">
+							</aside>
+						</section>
+						<section data-background-image="../backgrounds/ads.jpg" data-background-fit="stretch" data-background-color="#000" data-background-opacity="0.1">
+							<h3>The problem</h3>
+							<aside class="notes">
+							</aside>
+						</section>
+						<section data-background-image="../backgrounds/ads.jpg" data-background-fit="stretch" data-background-color="#000" data-background-opacity="0.1">
+							<h3>The discovery</h3>
+							<aside class="notes">
+							</aside>
+						</section>
+						<section data-background-image="../backgrounds/ads.jpg" data-background-fit="stretch" data-background-color="#000" data-background-opacity="0.1">
+							<h3>The solution</h3>
+							<aside class="notes">
+							</aside>
+						</section>
+						<section data-background-image="../backgrounds/ads.jpg" data-background-fit="stretch" data-background-color="#000" data-background-opacity="0.1">
+							<h3>The defense</h3>
+							<aside class="notes">
+							</aside>
+						</section>
+					</section>
+					
+					
+					<section>
+						<section data-background-image="../backgrounds/code.jpg" data-background-fit="stretch">
+							<h2 class="dark-bg">Incident 7: the plaintext passwords</h2>
+							<aside class="notes">
+							</aside>
+						</section>
+						<section data-background-image="../backgrounds/code.jpg" data-background-fit="stretch" data-background-color="#000" data-background-opacity="0.1">
+							<h3>The problem</h3>
+							<aside class="notes">
+							</aside>
+						</section>
+						<section data-background-image="../backgrounds/code.jpg" data-background-fit="stretch" data-background-color="#000" data-background-opacity="0.1">
+							<h3>The discovery</h3>
+							<aside class="notes">
+							</aside>
+						</section>
+						<section data-background-image="../backgrounds/code.jpg" data-background-fit="stretch" data-background-color="#000" data-background-opacity="0.1">
+							<h3>The solution</h3>
+							<aside class="notes">
+							</aside>
+						</section>
+						<section data-background-image="../backgrounds/code.jpg" data-background-fit="stretch" data-background-color="#000" data-background-opacity="0.1">
+							<h3>The defense</h3>
+							<aside class="notes">
+							</aside>
+						</section>
+					</section>
+					
+					
+					<section>
+						<section>
+							<h2>Incident 9: the broken DNS</h2>
+							<aside class="notes">
+							</aside>
+						</section>
+						<section>
+							<h3>The problem</h3>
+							<aside class="notes">
+							</aside>
+						</section>
+						<section>
+							<h3>The discovery</h3>
+							<aside class="notes">
+							</aside>
+						</section>
+						<section>
+							<h3>The solution</h3>
+							<aside class="notes">
+							</aside>
+						</section>
+						<section>
+							<h3>The defense</h3>
+							<aside class="notes">
+							</aside>
+						</section>
+					</section>
+					
+					<section>
+						<h2>What we should learn</h2>
+					</section>
+					
+					<section>
+						<section>
+							<h3>Visibility &amp; Discovery are Key</h3>
+						</section>
 					</section>
 					<section>
-						<h3>The solution</h3>
-						<aside class="notes">
-						</aside>
+						<section>
+							<h3>Ownership is Critical</h3>
+						</section>
 					</section>
 					<section>
-						<h3>The protection</h3>
-						<aside class="notes">
-						</aside>
+						<section>
+							<h3>Assume the Worst</h3>
+						</section>
 					</section>
-				</section>
-				
-				
-				<section>
+					
+					
 					<section>
-						<h2>Incident 2: the missing revenue</h2>
-						<aside class="notes">
-							I was working with a UK retailer who had initiated a war room because their conversion rate had dropped by 30%.<br>
-							Their automated tests were showing 100% success, they had not released any code and there were no stock changes.
-						</aside>
+						<section>
+							<h2>Three actions to take now</h2>
+							<ol>
+								<li>Audit what's there</li>
+								<li>Create a Content-Security-Policy</li>
+								<li></li>
+							</ol>
+						</section>
 					</section>
+					
+					
+					<section class="" data-background-image="../backgrounds/chain.jpg" data-background-fit="stretch" data-background-opacity="">
+						<p class="dark-bg">Data can build the link</p>
+					</section>
+					
 					<section>
-						<h3>The problem</h3>
-						<aside class="notes">
-						</aside>
+						<section class="center left" data-background-image="../backgrounds/polarbear.jpg" data-background-fit="stretch" data-background-opacity="">
+							<h2>Thank you</h2>
+							<p><a href="https://twitter.com/SimonHearne">@SimonHearne</a></p>
+							<p><a href="mailto:simon@hearne.me">simon@hearne.me</a></p>
+							<p class="smallest"><a href="https://simonhearne.com/talks/">simonhearne.com/talks/</a></p>
+						</section>
 					</section>
-					<section>
-						<h3>The discovery</h3>
-						<aside class="notes">
-						</aside>
-					</section>
-					<section>
-						<h3>The solution</h3>
-						<aside class="notes">
-						</aside>
-					</section>
-					<section>
-						<h3>The protection</h3>
-						<aside class="notes">
-						</aside>
-					</section>
-				</section>
-
-				
-				<section>
-					<section>
-						<h2>Incident 4: the performance "monitor"</h2>
-						<aside class="notes">
-						</aside>
-					</section>
-					<section>
-						<h3>The problem</h3>
-						<aside class="notes">
-						</aside>
-					</section>
-					<section>
-						<h3>The discovery</h3>
-						<aside class="notes">
-						</aside>
-					</section>
-					<section>
-						<h3>The solution</h3>
-						<aside class="notes">
-						</aside>
-					</section>
-					<section>
-						<h3>The protection</h3>
-						<aside class="notes">
-						</aside>
-					</section>
-				</section>
-				
-				
-				<section>
-					<section data-background-image="../backgrounds/monero.jpg" data-background-fit="stretch">
-						<h2>Incident 5: the crypto miner</h2>
-						<aside class="notes">
-						</aside>
-					</section>
-					<section>
-						<h3>The problem</h3>
-						<aside class="notes">
-						</aside>
-					</section>
-					<section>
-						<h3>The discovery</h3>
-						<aside class="notes">
-						</aside>
-					</section>
-					<section>
-						<h3>The solution</h3>
-						<aside class="notes">
-						</aside>
-					</section>
-					<section>
-						<h3>The protection</h3>
-						<aside class="notes">
-						</aside>
-					</section>
-				</section>
-				
-				
-				<section>
-					<section data-background-image="../backgrounds/ads.jpg" data-background-fit="stretch">
-						<h2 class="dark-bg">Incident 6: the malicious ads</h2>
-						<aside class="notes">
-						</aside>
-					</section>
-					<section>
-						<h3>The problem</h3>
-						<aside class="notes">
-						</aside>
-					</section>
-					<section>
-						<h3>The discovery</h3>
-						<aside class="notes">
-						</aside>
-					</section>
-					<section>
-						<h3>The solution</h3>
-						<aside class="notes">
-						</aside>
-					</section>
-					<section>
-						<h3>The protection</h3>
-						<aside class="notes">
-						</aside>
-					</section>
-				</section>
-
-				
-				<section>
-					<section data-background-image="../backgrounds/code.jpg" data-background-fit="stretch">
-						<h2 class="dark-bg">Incident 8: the plaintext passwords</h2>
-						<aside class="notes">
-						</aside>
-					</section>
-					<section>
-						<h3>The problem</h3>
-						<aside class="notes">
-						</aside>
-					</section>
-					<section>
-						<h3>The discovery</h3>
-						<aside class="notes">
-						</aside>
-					</section>
-					<section>
-						<h3>The solution</h3>
-						<aside class="notes">
-						</aside>
-					</section>
-					<section>
-						<h3>The protection</h3>
-						<aside class="notes">
-						</aside>
-					</section>
-				</section>
-				
-				
-				<section>
-					<section>
-						<h2>Incident 9: the broken DNS</h2>
-						<aside class="notes">
-						</aside>
-					</section>
-					<section>
-						<h3>The problem</h3>
-						<aside class="notes">
-						</aside>
-					</section>
-					<section>
-						<h3>The discovery</h3>
-						<aside class="notes">
-						</aside>
-					</section>
-					<section>
-						<h3>The solution</h3>
-						<aside class="notes">
-						</aside>
-					</section>
-					<section>
-						<h3>The protection</h3>
-						<aside class="notes">
-						</aside>
-					</section>
-				</section>
-				
-				<section>
-					<h2>What we should learn</h2>
-				</section>
-				
-				<section>
-					<section>
-						<h3>Visibility &amp; Discovery are Key</h3>
-					</section>
-				</section>
-				<section>
-					<section>
-						<h3>Ownership is Critical</h3>
-					</section>
-				</section>
-				<section>
-					<section>
-						<h3>Assume the Worst</h3>
-					</section>
-				</section>
-				
-				
-				<section>
-					<section>
-						<h2>Three actions to take now</h2>
-						<ol>
-							<li>Audit what's there</li>
-							<li>Create a Content-Security-Policy</li>
-							<li></li>
-						</ol>
-					</section>
-				</section>
-				
-				
-				<section class="" data-background-image="../backgrounds/chain.jpg" data-background-fit="stretch" data-background-opacity="">
-					<p class="dark-bg">Data can build the link</p>
-				</section>
-				
-				<section>
-					<section class="center left" data-background-image="../backgrounds/polarbear.jpg" data-background-fit="stretch" data-background-opacity="">
-						<h2>Thank you</h2>
-						<p>@SimonHearne</p>
-						<p>Simon@Hearne.me</p>
-						<p class="smallest">simonhearne.com/presentations/third-party-deep/</p>
-					</section>
-				</section>
+					
+				</div>
+				<div id="chart-controls" class="hide"></div>
 				
 			</div>
-			<div id="chart-controls" class="hide"></div>
 			
-		</div>
-		
-		<script>
-			!function init() {
-				/* do something straight away */
-			}()
-			function getQueryVariable(variable)
-			{
-				var query = window.location.search.substring(1);
-				var vars = query.split("&");
-				for (var i=0;i<vars.length;i++) {
-					var pair = vars[i].split("=");
-					if(pair[0] == variable){return pair[1];}
-				}
-				return(false);
-			}
-			var presenting = window.location.search.includes('present');
-			var duration = getQueryVariable('duration') || 30;
-			var hasCode = !!document.querySelector('code');
-			var hasAnims = !!document.querySelector('[data-animate]');
-			var keyboard = {
-				// pause/resume time when Enter is pressed
-				13: () => {
-					ElapsedTimeBar.isPaused ? ElapsedTimeBar.resume() : ElapsedTimeBar.pause();
-				},
-				// reset timer when 'r' is pressed
-				82: () => {
-					ElapsedTimeBar.reset();
-				}
-			}
-			if (presenting) {
-				keyboard = Object.assign(keyboard,
+			<script>
+				!function init() {
+					/* do something straight away */
+				}()
+				function getQueryVariable(variable)
 				{
-					39: 'next',
-					37: 'prev'
-				});
-			}
-			function getFragment(event) {
-				return (event.currentSlide.id !== "" ? event.currentSlide.id : null);
-			}
-			// More info https://github.com/hakimel/reveal.js#configuration
-			Reveal.initialize({
-				controls: !presenting,
-				showNotes: !presenting,
-				progress: true,
-				history: true,
-				center: false,
-				transitionSpeed: 'default', // default/fast/slow
-				
-				transition: 'none', // none/fade/slide/convex/concave/zoom
-				
-				allottedTime: duration * 60 * 1000, // 30 minutes
-				barColor: 'hsl(220,99%,54%)',
-				
-				// More info https://github.com/hakimel/reveal.js#dependencies
-				dependencies: [
-				{ src: '../lib/js/classList.js', 				async: true, condition: function() { return !document.body.classList; } },
-				{ src: '../plugin/markdown/marked.js', 			async: true, condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
-				{ src: '../plugin/markdown/markdown.js', 		async: true, condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
-				{ src: '../plugin/embed-tweet/embed-tweet.js', 	async: true, condition: function() { return !!document.querySelector( 'div.tweet[data-src]' ); } },
-				{ src: '../lib/js/vega.min.js', 				condition: function() { return !!document.querySelector( 'div.vega-chart' ); } },
-				{ src: '../lib/js/vega-embed.min.js', 			condition: function() { return !!document.querySelector( 'div.vega-chart' ); } },
-				{ src: '../plugin/elapsed-time-bar/elapsed-time-bar.js', async: true, condition: function() { return presenting}},
-				{ src: '../plugin/highlight/highlight.js', 		async: true, condition: function() {return hasCode},async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
-				{ src: '../plugin/search/search.js', 			async: true },
-				{ src: '../plugin/zoom-js/zoom.js', 			async: true },
-				{ src: '../plugin/notes/notes.js', 				async: true }
-				],
-				
-				keyboard: keyboard
-			});
-			Reveal.addEventListener( 'slidechanged', function( event ) {
-				let state = {h: event.indexh, v: event.indexv, name: getFragment(event)};
-			} );
-			
-			/* animate.css */
-			// Set animation delay if data-delay is specified
-			Reveal.addEventListener('ready', function ( event ) {
-				$('*[data-delay]').each( function () { 
-					var delay = $(this).attr("data-delay");
-					$(this).css("-webkit-animation-delay", delay+"s"); 
-					$(this).css("animation-delay", delay+"s"); 
-				});
-			});
-			
-			// Set animation duration if data-duration is specified
-			Reveal.addEventListener('ready', function ( event ) {
-				$('*[data-duration]').each( function () { 
-					var duration = $(this).attr("data-duration");
-					$(this).css("-webkit-animation-duration", duration+"s"); 
-					$(this).css("animation-duration", duration+"s"); 
-				});
-				let width = window.innerWidth / 2;
-				$(".vega-chart").each(function() {
-					let spec = this.attributes.getNamedItem("data-spec").value;
-					//spec = "https://raw.githubusercontent.com/vega/vega/master/docs/examples/bar-chart.vg.json";
-					vegaEmbed('#'+this.id, spec, {"actions": false, "theme": "dark", "width": width, "renderer": "svg", "config": "data/config.json"}).then(function(result) {
-						// Access the Vega view instance (https://vega.github.io/vega/docs/api/view/) as result.view
-					}).catch(console.error);
-				});
-			});
-			
-			// Animate items that are not in a fragment
-			Reveal.addEventListener('slidechanged', function( event ) {
-				// Animate elements that are not a fragment (or in a fragment)
-				var filter = '*[data-animate]:not(.fragment):not(.fragment *)';
-				
-				$(event.currentSlide).find(filter).each( function () {
-					$(this).addClass('animated');
-					$(this).addClass($(this).attr('data-animate'));
-				});		
-				$(event.previousSlide).find(filter).each( function () {
-					$(this).removeClass('animated');
-					$(this).removeClass($(this).attr('data-animate'));
-				});		
-			});
-			
-			// Animate fragments
-			Reveal.addEventListener('fragmentshown', function( event ) {
-				function loop(i, el) { 
-					if ($(el).attr('data-animate')) {
-						$(el).addClass('animated');
-						$(el).addClass($(el).attr('data-animate'));
+					var query = window.location.search.substring(1);
+					var vars = query.split("&");
+					for (var i=0;i<vars.length;i++) {
+						var pair = vars[i].split("=");
+						if(pair[0] == variable){return pair[1];}
 					}
-					$.each($(el).children().not('.fragment'), loop);
-				};
-				$.each(event.fragments, loop);
-			});
-			
-			// Make the animation runnable again if fragment is hidden
-			Reveal.addEventListener('fragmenthidden', function( event ) {	  
-				function loop(i, el) { 
-					if ($(el).attr('data-animate')) {
-						$(el).removeClass('animated');
-						$(el).removeClass($(el).attr('data-animate'));
+					return(false);
+				}
+				var presenting = window.location.search.includes('present');
+				var duration = getQueryVariable('duration') || 30;
+				var hasCode = !!document.querySelector('code');
+				var hasAnims = !!document.querySelector('[data-animate]');
+				var keyboard = {
+					// pause/resume time when Enter is pressed
+					13: () => {
+						ElapsedTimeBar.isPaused ? ElapsedTimeBar.resume() : ElapsedTimeBar.pause();
+					},
+					// reset timer when 'r' is pressed
+					82: () => {
+						ElapsedTimeBar.reset();
 					}
-					$.each($(el).children().not('.fragment'), loop);
-				};
-				$.each(event.fragments, loop);
-			});
-			if (hasCode) {
-				var l = document.createElement('link');
-				l.rel="stylesheet";
-				l.href = "../lib/css/zenburn.css"
-				document.head.appendChild(l);
-			}
-			if (hasAnims) {
-				var l = document.createElement('link');
-				l.rel="stylesheet";
-				l.href = "../lib/css/animate.min.css"
-				document.head.appendChild(l);
-			}
-		</script>
-		
-		<script nonce="googleAnalytics">
-			(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-				(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();
-				i.initAnalytics=function(){a=s.createElement(o),m=s.getElementsByTagName(o)[0];
-					a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-				}})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+				}
+				if (presenting) {
+					keyboard = Object.assign(keyboard,
+					{
+						39: 'next',
+						37: 'prev'
+					});
+				}
+				function getFragment(event) {
+					return (event.currentSlide.id !== "" ? event.currentSlide.id : null);
+				}
+				// More info https://github.com/hakimel/reveal.js#configuration
+				Reveal.initialize({
+					controls: !presenting,
+					showNotes: !presenting,
+					progress: true,
+					history: true,
+					center: false,
+					transitionSpeed: 'default', // default/fast/slow
+					
+					transition: 'none', // none/fade/slide/convex/concave/zoom
+					
+					allottedTime: duration * 60 * 1000, // 30 minutes
+					barColor: 'hsl(220,99%,54%)',
+					
+					// More info https://github.com/hakimel/reveal.js#dependencies
+					dependencies: [
+					{ src: '../lib/js/classList.js', 				async: true, condition: function() { return !document.body.classList; } },
+					{ src: '../plugin/markdown/marked.js', 			async: true, condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: '../plugin/markdown/markdown.js', 		async: true, condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: '../plugin/embed-tweet/embed-tweet.js', 	async: true, condition: function() { return !!document.querySelector( 'div.tweet[data-src]' ); } },
+					{ src: '../lib/js/vega.min.js', 				condition: function() { return !!document.querySelector( 'div.vega-chart' ); } },
+					{ src: '../lib/js/vega-embed.min.js', 			condition: function() { return !!document.querySelector( 'div.vega-chart' ); } },
+					{ src: '../plugin/elapsed-time-bar/elapsed-time-bar.js', async: true, condition: function() { return presenting}},
+					{ src: '../plugin/highlight/highlight.js', 		async: true, condition: function() {return hasCode},async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+					{ src: '../plugin/search/search.js', 			async: true },
+					{ src: '../plugin/zoom-js/zoom.js', 			async: true },
+					{ src: '../plugin/notes/notes.js', 				async: true }
+					],
+					
+					keyboard: keyboard
+				});
+				Reveal.addEventListener( 'slidechanged', function( event ) {
+					let state = {h: event.indexh, v: event.indexv, name: getFragment(event)};
+				} );
 				
-				ga('create', 'UA-6512525-16', 'auto', {'siteSpeedSampleRate': 100});
-				ga('send', 'pageview');
+				/* animate.css */
+				// Set animation delay if data-delay is specified
+				Reveal.addEventListener('ready', function ( event ) {
+					$('*[data-delay]').each( function () { 
+						var delay = $(this).attr("data-delay");
+						$(this).css("-webkit-animation-delay", delay+"s"); 
+						$(this).css("animation-delay", delay+"s"); 
+					});
+				});
 				
-				window.addEventListener('load',function(){initAnalytics()});
+				// Set animation duration if data-duration is specified
+				Reveal.addEventListener('ready', function ( event ) {
+					$('*[data-duration]').each( function () { 
+						var duration = $(this).attr("data-duration");
+						$(this).css("-webkit-animation-duration", duration+"s"); 
+						$(this).css("animation-duration", duration+"s"); 
+					});
+					let width = window.innerWidth / 2;
+					$(".vega-chart").each(function() {
+						let spec = this.attributes.getNamedItem("data-spec").value;
+						//spec = "https://raw.githubusercontent.com/vega/vega/master/docs/examples/bar-chart.vg.json";
+						vegaEmbed('#'+this.id, spec, {"actions": false, "theme": "dark", "width": width, "renderer": "svg", "config": "data/config.json"}).then(function(result) {
+							// Access the Vega view instance (https://vega.github.io/vega/docs/api/view/) as result.view
+						}).catch(console.error);
+					});
+				});
+				
+				// Animate items that are not in a fragment
+				Reveal.addEventListener('slidechanged', function( event ) {
+					// Animate elements that are not a fragment (or in a fragment)
+					var filter = '*[data-animate]:not(.fragment):not(.fragment *)';
+					
+					$(event.currentSlide).find(filter).each( function () {
+						$(this).addClass('animated');
+						$(this).addClass($(this).attr('data-animate'));
+					});		
+					$(event.previousSlide).find(filter).each( function () {
+						$(this).removeClass('animated');
+						$(this).removeClass($(this).attr('data-animate'));
+					});		
+				});
+				
+				// Animate fragments
+				Reveal.addEventListener('fragmentshown', function( event ) {
+					function loop(i, el) { 
+						if ($(el).attr('data-animate')) {
+							$(el).addClass('animated');
+							$(el).addClass($(el).attr('data-animate'));
+						}
+						$.each($(el).children().not('.fragment'), loop);
+						if ($(el).attr('data-eval-show')) {
+							eval($(el).attr('data-eval-show'))
+						}
+					};
+					$.each(event.fragments, loop);
+				});
+				
+				// Make the animation runnable again if fragment is hidden
+				Reveal.addEventListener('fragmenthidden', function( event ) {	  
+					function loop(i, el) { 
+						if ($(el).attr('data-animate')) {
+							$(el).removeClass('animated');
+							$(el).removeClass($(el).attr('data-animate'));
+						}
+						$.each($(el).children().not('.fragment'), loop);
+						if ($(el).attr('data-eval-hide')) {
+							eval($(el).attr('data-eval-hide'))
+						}
+					};
+					$.each(event.fragments, loop);
+				});
+				if (hasCode) {
+					var l = document.createElement('link');
+					l.rel="stylesheet";
+					l.href = "../lib/css/zenburn.css"
+					document.head.appendChild(l);
+				}
+				if (hasAnims) {
+					var l = document.createElement('link');
+					l.rel="stylesheet";
+					l.href = "../lib/css/animate.min.css"
+					document.head.appendChild(l);
+				}
 			</script>
-		</body>
-		</html>
-		
+			
+			<script nonce="googleAnalytics">
+				(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+					(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();
+					i.initAnalytics=function(){a=s.createElement(o),m=s.getElementsByTagName(o)[0];
+						a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+					}})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+					
+					ga('create', 'UA-6512525-16', 'auto', {'siteSpeedSampleRate': 100});
+					ga('send', 'pageview');
+					
+					window.addEventListener('load',function(){initAnalytics()});
+				</script>
+			</body>
+			</html>
+			
