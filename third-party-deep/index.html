@@ -276,6 +276,11 @@
 						</aside>
 					</section>
 					<section data-background-image="../backgrounds/bored.jpg" data-background-fit="stretch" data-background-color="#000" data-background-opacity="0.1">
+						<h3>sync is still king(!)</h3>
+						<div style="zoom:0.75" class="vega-chart" id="vis1" data-spec="data/sync_vs_async.json"></div>
+						<p class="smallest bottom-right">Source: HTTP Archive. 2016-05-15 to 2019-10-01</p>
+					</section>
+					<section data-background-image="../backgrounds/bored.jpg" data-background-fit="stretch" data-background-color="#000" data-background-opacity="0.1">
 						<h3>The defense</h3>
 						<ul class="no-bullets">
 							<li class="fragment">🇨🇳 feature flag</li>
@@ -380,6 +385,7 @@
 							.indicator {
 								width: 8em;
 								height: 8em;
+								line-height: 7.5em !important;
 								background-color: blue;
 								margin: 1em !important;
 							}
@@ -388,11 +394,11 @@
 							}
 						</style>
 						<section data-background-image="../backgrounds/chart.jpg" data-background-fit="stretch" data-background-color="#000" data-background-opacity="0.1">
-							<h3>The discovery</h3>
+							<h3>The problem</h3>
 							<div class="fragment" data-eval-show="toggleIndicators()" data-eval-hide="toggleIndicators()" style="font-family: monospace; font-size: 90%">clicked!</div>
 							<div>
-								<span id="indicator-1" class="indicator"></span>
-								<span id="indicator-2" class="indicator"></span>
+								<span id="indicator-1" class="indicator">instant</span>
+								<span id="indicator-2" class="indicator">500ms delay</span>
 							</div>
 							<script>
 								toggleIndicators = (delayMs=500) => {
@@ -427,6 +433,7 @@
 					<section>
 						<section data-background-image="../backgrounds/monero.jpg" data-background-fit="stretch">
 							<h2 class="dark-bg">Incident 5: the crypto miner</h2>
+							<!-- https://discuss.httparchive.org/t/the-performance-impact-of-cryptocurrency-mining-on-the-web/1126/11 -->
 							<aside class="notes">
 							</aside>
 						</section>
@@ -504,35 +511,6 @@
 							</aside>
 						</section>
 						<section data-background-image="../backgrounds/code.jpg" data-background-fit="stretch" data-background-color="#000" data-background-opacity="0.1">
-							<h3>The defense</h3>
-							<aside class="notes">
-							</aside>
-						</section>
-					</section>
-					
-					
-					<section>
-						<section>
-							<h2>Incident 9: the broken DNS</h2>
-							<aside class="notes">
-							</aside>
-						</section>
-						<section>
-							<h3>The problem</h3>
-							<aside class="notes">
-							</aside>
-						</section>
-						<section>
-							<h3>The discovery</h3>
-							<aside class="notes">
-							</aside>
-						</section>
-						<section>
-							<h3>The solution</h3>
-							<aside class="notes">
-							</aside>
-						</section>
-						<section>
 							<h3>The defense</h3>
 							<aside class="notes">
 							</aside>
