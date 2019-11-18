@@ -89,7 +89,7 @@
 				
 				<section class="center">
 					<p style="line-height:1.9">
-						everyone who works on a web product<br><i style="font-size:130%">shares ownership of performance and security</i><br><span class="fragment">(whether they know it or not!)</span>
+						everyone who works on a web product<br><i style="font-size:130%">shares ownership of performance and security</i><br><span class="fragment">(whether they know it or not)</span>
 					</p>
 				</section>
 				
@@ -118,49 +118,64 @@
 				</section>
 				
 				
-				<section class="bottom" data-background-image="../backgrounds/bigdata.jpg" data-background-fit="stretch" data-background-opacity="">
-					<p class="dark-bg">...</p>
+				<section class="" data-background-image="../backgrounds/super.jpg" data-background-fit="stretch" data-background-opacity="">
+					<h3>Fancy a super power?</h3>
 					<aside class="notes">
 						It's unlikely that anyone will become a full-time third-party regulator. What you can become is the subject matter expert.<br>
 						I've known a number of engineers who have become the third-party SME, accidentally or purposefully, and it has been a net positive on their careers and the products they work on.<br>
 						In the next half hour I will try to arm you with the stories, tools and techniques to manage third-party content. I'll do this through post-mortems of some recent incidents.
 					</aside>
 				</section>
-
-				<section>
-					<p>
-							1) jQuery included by a third-party broke a checkout button
-							2) Facebook script blocked users in China
-							3) Dyn outage wiped out multiple A/B testing providers
-							4) Event listener on beforeUnload added 500ms of latency
-							5) CryptoMiner on UK gov’t sites
-							6) AdServer compromised to inject different ads
-							7) User replay script sending passwords in plaintext
-							8) Magecart + visa skimmer https://usa.visa.com/dam/VCOM/global/support-legal/documents/pfd-identifies-new-javascript-skimmer.pdf
-
-
-					</p>
-				</section>
 				
-				<section>
+				<!--
 					<section>
-						<h2>Incident 1: the 30s page load</h2>
+						<section>
+							<p>
+								1) jQuery included by a third-party broke a checkout button
+								2) Facebook script = 30s delay for users in China
+								3) Dyn outage wiped out multiple A/B testing providers
+								4) Event listener on beforeUnload added 500ms of latency
+								5) CryptoMiner on UK gov’t sites
+								6) AdServer compromised to inject different ads
+								7) User replay script sending passwords in plaintext
+								8) Magecart + visa skimmer https://usa.visa.com/dam/VCOM/global/support-legal/documents/pfd-identifies-new-javascript-skimmer.pdf
+							</p>
+						</section>
+						<Ssection>
+							<p>
+								What happened?
+								What was the impact
+								How was it detected
+								How was it fixed
+								How could it be avoided?
+							</p>
+						</Ssection>
+					</section>
+				-->
+				<section>
+					<section data-background-image="../backgrounds/bored.jpg" data-background-fit="stretch">
+						<h2>Incident 1: the 30s wait</h2>
 						<aside class="notes">
 							This is the incident that got me interested in third-parties in the first place.<br>
 							A client had just launched a new version of their site across asia<br>
 							All the pre-production tests worked fine, they tested from servers in the target geos and performance was good
 						</aside>
 					</section>
-					<section>
-						<h3>Launching in China 🇨🇳</h3>
+					<section data-background-image="../backgrounds/greatwall.jpg" data-background-fit="stretch">
+						<h3 class="light-bg">Launched in China 🇨🇳</h3>
 						<aside class="notes">
 							The launch was continued to China.<br>
 							Feedback from local users was extremely poor and analytics showed page load times of over 30s.
 						</aside>
 					</section>
-					<section>
+					<section class="center">
 						<h3>The problem</h3>
+						<ul>
+							<li class="fragment">a rogue <code class="inline-code">&lt;script&gt;</code> tag (comment platform)</li>
+							<li class="fragment">a fourth-party call to facebook social login</li>
+						</ul>
 						<aside class="notes">
+							
 						</aside>
 					</section>
 					<section>
@@ -210,36 +225,7 @@
 						</aside>
 					</section>
 				</section>
-				
-				
-				<section>
-					<section>
-						<h2>Incident 3: the performance "optimiser"</h2>
-						<aside class="notes">
-						</aside>
-					</section>
-					<section>
-						<h3>The problem</h3>
-						<aside class="notes">
-						</aside>
-					</section>
-					<section>
-						<h3>The discovery</h3>
-						<aside class="notes">
-						</aside>
-					</section>
-					<section>
-						<h3>The solution</h3>
-						<aside class="notes">
-						</aside>
-					</section>
-					<section>
-						<h3>The protection</h3>
-						<aside class="notes">
-						</aside>
-					</section>
-				</section>
-				
+
 				
 				<section>
 					<section>
@@ -271,7 +257,7 @@
 				
 				
 				<section>
-					<section>
+					<section data-background-image="../backgrounds/monero.jpg" data-background-fit="stretch">
 						<h2>Incident 5: the crypto miner</h2>
 						<aside class="notes">
 						</aside>
@@ -300,8 +286,8 @@
 				
 				
 				<section>
-					<section>
-						<h2>Incident 6: the malicious ads</h2>
+					<section data-background-image="../backgrounds/ads.jpg" data-background-fit="stretch">
+						<h2 class="dark-bg">Incident 6: the malicious ads</h2>
 						<aside class="notes">
 						</aside>
 					</section>
@@ -326,40 +312,11 @@
 						</aside>
 					</section>
 				</section>
-				
-				
-				<section>
-					<section>
-						<h2>Incident 7: the broken Facebook</h2>
-						<aside class="notes">
-						</aside>
-					</section>
-					<section>
-						<h3>The problem</h3>
-						<aside class="notes">
-						</aside>
-					</section>
-					<section>
-						<h3>The discovery</h3>
-						<aside class="notes">
-						</aside>
-					</section>
-					<section>
-						<h3>The solution</h3>
-						<aside class="notes">
-						</aside>
-					</section>
-					<section>
-						<h3>The protection</h3>
-						<aside class="notes">
-						</aside>
-					</section>
-				</section>
-				
+
 				
 				<section>
-					<section>
-						<h2>Incident 8: the plaintext passwords</h2>
+					<section data-background-image="../backgrounds/code.jpg" data-background-fit="stretch">
+						<h2 class="dark-bg">Incident 8: the plaintext passwords</h2>
 						<aside class="notes">
 						</aside>
 					</section>
@@ -414,13 +371,33 @@
 					</section>
 				</section>
 				
+				<section>
+					<h2>What we should learn</h2>
+				</section>
 				
 				<section>
 					<section>
-						<h2>Three things to do next week</h2>
+						<h3>Visibility &amp; Discovery are Key</h3>
+					</section>
+				</section>
+				<section>
+					<section>
+						<h3>Ownership is Critical</h3>
+					</section>
+				</section>
+				<section>
+					<section>
+						<h3>Assume the Worst</h3>
+					</section>
+				</section>
+				
+				
+				<section>
+					<section>
+						<h2>Three actions to take now</h2>
 						<ol>
-							<li></li>
-							<li></li>
+							<li>Audit what's there</li>
+							<li>Create a Content-Security-Policy</li>
 							<li></li>
 						</ol>
 					</section>
