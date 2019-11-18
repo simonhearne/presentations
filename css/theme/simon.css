@@ -712,3 +712,7 @@ div.vega-bind {
     margin: 0;
   }
 }
+
+.reveal section.left {
+  text-align: left;
+}

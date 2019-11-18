@@ -27,7 +27,7 @@
 	<meta name="twitter:image" content="https://simonhearne.com/presentations/social_improving-revenue.jpg" />
 	<style>
 		body {
-			background: #000;
+		/*background: #000;*/
 		}
 	</style>
 	<!-- Printing and PDF exports -->
@@ -61,7 +61,9 @@
 						<p id="help-text" class="help-text"></p>
 					</div>
 					<aside class="notes">
-						As far as I know I only have two fears.<br>One of them is speaking straight after Tim Kadlec. The other is thalassophobia - the fear of deep water. So today I am facing my fears!
+						Welcome to this talk on third-party content.<br>
+						If you are viewing this live, use keys 'n' and 'p' to navigate the slides.
+						Use key 'o' to view an overview.
 					</aside>
 				</section>
 				
@@ -409,10 +411,11 @@
 				</section>
 				
 				<section>
-					<section class="center">
-						<h2>Thank you 🙏</h2>
-						<p>shearne@akamai.com</p>
-						<p class="smallest bottom-right">simonhearne.com/presentations/third-party-deep/</p>
+					<section class="center left" data-background-image="../backgrounds/polarbear.jpg" data-background-fit="stretch" data-background-opacity="">
+						<h2>Thank you</h2>
+						<p>@SimonHearne</p>
+						<p>Simon@Hearne.me</p>
+						<p class="smallest">simonhearne.com/presentations/third-party-deep/</p>
 					</section>
 				</section>
 				
@@ -449,12 +452,7 @@
 					ElapsedTimeBar.reset();
 				}
 			}
-			if (!presenting) {
-				let id = document.getElementById('help-text');
-				if (id) {
-					id.innerHTML = "Use 'n' and 'p' to navigate next and previous slides.<br>Use 'o' to view an overview."
-				}
-			} else {
+			if (presenting) {
 				keyboard = Object.assign(keyboard,
 				{
 					39: 'next',
