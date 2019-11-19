@@ -123,7 +123,7 @@
        stroke-opacity="1"
        stroke="none"
        fill-opacity="1"
-       fill="#000000"
+       fill="#fff"
        y="692.36"
        x="1320" />
     <text
@@ -406,7 +406,7 @@
        stroke-opacity="1"
        stroke="none"
        fill-opacity="1"
-       fill="#000000"><flowRegion
+       fill="#fff"><flowRegion
          id="flowRegion78"><path
            id="path80"
            d="M850 960h390v210H850z" /></flowRegion><flowPara
@@ -425,7 +425,7 @@
        stroke-opacity="1"
        stroke="none"
        fill-opacity="1"
-       fill="#000000"><flowRegion
+       fill="#fff"><flowRegion
          id="flowRegion86"><path
            id="path88"
            d="M1740 250h5.7v190h-5.7z" /></flowRegion><flowPara
@@ -446,7 +446,7 @@
        stroke-opacity="1"
        stroke="none"
        fill-opacity="1"
-       fill="#000000"
+       fill="#fff"
        y="752.63"
        x="690.62"><tspan
          id="tspan94"
@@ -469,7 +469,7 @@
        stroke-opacity="1"
        stroke="none"
        fill-opacity="1"
-       fill="#000000"
+       fill="#fff"
        y="770.82"
        x="732.83"><tspan
          id="tspan98"
@@ -492,7 +492,7 @@
        stroke-opacity="1"
        stroke="none"
        fill-opacity="1"
-       fill="#000000"
+       fill="#fff"
        y="787.43"
        x="763.34"><tspan
          id="tspan102"
@@ -515,7 +515,7 @@
        stroke-opacity="1"
        stroke="none"
        fill-opacity="1"
-       fill="#000000"
+       fill="#fff"
        y="802.92"
        x="793.74"><tspan
          id="tspan106"
@@ -538,7 +538,7 @@
        stroke-opacity="1"
        stroke="none"
        fill-opacity="1"
-       fill="#000000"
+       fill="#fff"
        y="721.13"
        x="78.68"><tspan
          id="tspan110"
@@ -561,7 +561,7 @@
        stroke-opacity="1"
        stroke="none"
        fill-opacity="1"
-       fill="#000000"
+       fill="#fff"
        y="739.4"
        x="107.74"><tspan
          id="tspan114"
@@ -584,7 +584,7 @@
        stroke-opacity="1"
        stroke="none"
        fill-opacity="1"
-       fill="#000000"
+       fill="#fff"
        y="756.91"
        x="140"><tspan
          id="tspan118"
@@ -607,7 +607,7 @@
        stroke-opacity="1"
        stroke="none"
        fill-opacity="1"
-       fill="#000000"
+       fill="#fff"
        y="773.8"
        x="173.07"><tspan
          id="tspan122"
@@ -630,7 +630,7 @@
        stroke-opacity="1"
        stroke="none"
        fill-opacity="1"
-       fill="#000000"
+       fill="#fff"
        y="790.72"
        x="202.96"><tspan
          id="tspan126"
@@ -653,7 +653,7 @@
        stroke-opacity="1"
        stroke="none"
        fill-opacity="1"
-       fill="#000000"
+       fill="#fff"
        y="808.94"
        x="234.93"><tspan
          id="tspan130"
@@ -676,7 +676,7 @@
        stroke-opacity="1"
        stroke="none"
        fill-opacity="1"
-       fill="#000000"
+       fill="#fff"
        y="720.99"
        x="343.29"><tspan
          id="tspan134"
@@ -699,7 +699,7 @@
        stroke-opacity="1"
        stroke="none"
        fill-opacity="1"
-       fill="#000000"
+       fill="#fff"
        y="736.55"
        x="375.75"><tspan
          id="tspan138"
@@ -722,7 +722,7 @@
        stroke-opacity="1"
        stroke="none"
        fill-opacity="1"
-       fill="#000000"
+       fill="#fff"
        y="752.58"
        x="406.26"><tspan
          id="tspan142"
@@ -745,7 +745,7 @@
        stroke-opacity="1"
        stroke="none"
        fill-opacity="1"
-       fill="#000000"
+       fill="#fff"
        y="768.47"
        x="438.1"><tspan
          id="tspan146"
@@ -768,7 +768,7 @@
        stroke-opacity="1"
        stroke="none"
        fill-opacity="1"
-       fill="#000000"
+       fill="#fff"
        y="786.92"
        x="460.27"><tspan
          id="tspan150"
@@ -791,7 +791,7 @@
        stroke-opacity="1"
        stroke="none"
        fill-opacity="1"
-       fill="#000000"
+       fill="#fff"
        y="804.04"
        x="488.87"><tspan
          id="tspan154"
@@ -814,7 +814,7 @@
        stroke-opacity="1"
        stroke="none"
        fill-opacity="1"
-       fill="#000000"
+       fill="#fff"
        y="720.32"
        x="628.34"><tspan
          id="tspan158"
@@ -837,7 +837,7 @@
        stroke-opacity="1"
        stroke="none"
        fill-opacity="1"
-       fill="#000000"
+       fill="#fff"
        y="736.04"
        x="657.38"><tspan
          id="tspan162"
@@ -1180,7 +1180,7 @@
        stroke-opacity="1"
        stroke="none"
        fill-opacity="1"
-       fill="#000000"
+       fill="#fff"
        y="994.66"
        x="103.07"><tspan
          id="tspan220"
@@ -1203,7 +1203,7 @@
        stroke-opacity="1"
        stroke="none"
        fill-opacity="1"
-       fill="#000000"
+       fill="#fff"
        y="994.76"
        x="270.75"><tspan
          id="tspan224"
@@ -1226,7 +1226,7 @@
        stroke-opacity="1"
        stroke="none"
        fill-opacity="1"
-       fill="#000000"
+       fill="#fff"
        y="994.76"
        x="435.65"><tspan
          id="tspan228"
@@ -1247,7 +1247,7 @@
        stroke-opacity="1"
        stroke="none"
        fill-opacity="1"
-       fill="#000000"
+       fill="#fff"
        y="1007.36"
        x="495" />
     <text
@@ -1267,7 +1267,7 @@
        stroke-opacity="1"
        stroke="none"
        fill-opacity="1"
-       fill="#000000"
+       fill="#fff"
        y="994.76"
        x="554.45"><tspan
          id="tspan234"
@@ -1290,7 +1290,7 @@
        stroke-opacity="1"
        stroke="none"
        fill-opacity="1"
-       fill="#000000"
+       fill="#fff"
        y="994.66"
        x="667.99"><tspan
          id="tspan238"
@@ -1313,7 +1313,7 @@
        stroke-opacity="1"
        stroke="none"
        fill-opacity="1"
-       fill="#000000"
+       fill="#fff"
        y="995.19"
        x="806.94"><tspan
          id="tspan242"

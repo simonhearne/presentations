@@ -692,6 +692,10 @@ div.vega-bind {
   background: rgba(0,0,0,0.1) !important;
 }
 
+.monospace {
+  font-family: monospace !important;
+}
+
 @media screen and (min-width: 1025px) {
   .reveal.show-notes {
     max-width: 100vw;
@@ -814,4 +818,57 @@ div.vega-bind {
 .wf-container .wf-loadtime::before {
   content: ' |< ';
   color: red;
+}
+
+code.wrap {
+  white-space: pre-line;
+  line-height: 1.75;
+  font-size: 80%;
+}
+/* table thingy */
+
+table.table {
+  font-size: 60%;
+  width: max-content;
+}
+
+table.table tr:nth-child(even) {
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+table.matrix {
+  font-size: 47%;
+}
+
+table.matrix td {
+  text-align: center;
+  vertical-align: middle;
+}
+
+table.matrix td.cell-lo {
+  background-color: #ffff001a;
+}
+
+table.matrix td.cell-lo::after {
+  content: '•';
+}
+
+table.matrix td.cell-md {
+  background-color: #ffff0078;
+}
+
+table.matrix td.cell-md::after {
+  content: '✔︎';
+}
+
+table.matrix td.cell-hi {
+  background-color: #00ff2278;
+}
+
+table.matrix td.cell-hi::after {
+  content: '✔︎︎︎✔︎';
+}
+
+table.matrix td:nth-child(4), th:nth-child(4) {
+  border-right: 1px solid;
 }

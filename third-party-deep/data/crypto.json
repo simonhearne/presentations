@@ -1,0 +1,87 @@
+{
+    "$schema": "https://vega.github.io/schema/vega/v5.json",
+    "width": 500,
+    "height": 500,
+    "padding": 5,
+    "resize": true,
+    "data": [
+      {
+        "name": "table",
+        "url": "data/crypto.csv",
+        "format": {"type":"csv","parse":{"date": "date"}},
+        "transform": [
+        ]
+      }
+    ],
+  
+    "scales": [
+      {
+        "name": "x",
+        "type": "time",
+        "range": "width",
+        "domain": {"data": "table", "field": "date"}
+      },
+      {
+        "name": "y",
+        "type": "linear",
+        "range": "height",
+        "nice": true, "zero": true,
+        "domain": {"data": "table", "field": "count"}
+      },
+      {
+        "name": "color",
+        "type": "ordinal",
+        "range": "category",
+        "domain": {"data": "table", "field": "platform"}
+      }
+    ],
+  
+    "axes": [
+      {"orient": "bottom", "scale": "x", "zindex": 1},
+      {"orient": "left", "scale": "y", "zindex": 1}
+    ],
+  
+    "marks": [
+      {
+        "name": "group",
+        "type": "group",
+        "from": {
+          "facet": {
+            "data": "table",
+            "name": "group",
+            "groupby": "platform"
+          }
+        },
+        "marks": [
+          {
+            "type": "area",
+            "from": {"data": "group"},
+            "encode": {
+              "enter": {
+                "x": {"scale": "x", "field": "date"},
+                "width": {"scale": "x", "band": 1, "offset": -1},
+                "y": {"scale": "y", "field": "count"},
+                "y2": {"scale": "y", "value": 0},
+                "fill": {"scale": "color", "field": "platform"},
+                "opacity": {"value": 0.5}
+              },
+              "update": {
+                "fillOpacity": {"value": 1}
+              },
+              "hover": {
+                "fillOpacity": {"value": 0.5}
+              }
+            }
+          }
+        ]
+      }
+    ],
+  
+    "legends": [
+      {
+        "fill": "color",
+        "orient": "top-right"
+      }
+    ]
+  }
+  
