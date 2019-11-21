@@ -2290,7 +2290,7 @@
 						slide.style.top = (size.height - slide.scrollHeight) + 'px';
 					}
 					else {
-						slide.style.top = '20px';
+						slide.style.top = '';
 					}
 
 				}

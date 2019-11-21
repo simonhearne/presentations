@@ -537,8 +537,8 @@ span { display: inline-block; }
   position: absolute;
   top: 0;
   left: 0;
-  padding-top: 30px !important;
-  padding-left: 33px !important;
+  padding-top: 20px !important;
+  padding-left: 20px !important;
   opacity: 0.5;
   font-weight: 400;
   z-index: 999;
@@ -698,6 +698,16 @@ div.vega-bind {
 p.todo {
   background-color: yellow;
   color: #000;
+}
+
+.columns-three {
+  display: grid;
+  grid-template-columns: auto auto auto;
+  padding: 10px;
+}
+.column-three {
+  padding: 20px;
+  text-align: center;
 }
 /*
 @media screen and (min-width: 1025px) {
