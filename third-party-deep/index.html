@@ -129,7 +129,7 @@
 				
 				
 				<section class="" data-background-image="../backgrounds/super.jpg" data-background-fit="stretch">
-					<h3>Fancy a super power?</h3>
+					<h2>Fancy a super power?</h2>
 					<aside class="notes">
 						It's unlikely that anyone will become a full-time third-party regulator. What you can become is the subject matter expert.<br>
 						I've known a number of engineers who have become the third-party SME, accidentally or purposefully, and it has been a net positive on their careers and the products they work on.<br>
@@ -280,330 +280,312 @@
 					</section>
 					<section data-background-image="../backgrounds/bored.jpg" data-background-fit="stretch" data-background-color="#000" data-background-opacity="0.1">
 						<h3>Beware your script loading strategy</h3>
-						<embed class="plain stretch" id="nav-timing-svg" src="media/performance_api_blocking.svg">
-							<script>
-								function toggleSVGVis(obj,ele,show=true) {
-									let svgEl = document.getElementById(obj);
-									if (svgEl) {
-										let svgObj = svgEl.getSVGDocument()
-										if (svgObj) {
-											let i = svgObj.getElementById(ele);
-											if (i) {
-												if (show) {
-													i.setAttribute('style','')
-												} else {
-													i.setAttribute('style','display:none')
-												}
+						<embed class="plain stretch" id="nav-timing-svg" src="media/performance_api_blocking.svg" />
+						<script>
+							function toggleSVGVis(obj,ele,show=true) {
+								let svgEl = document.getElementById(obj);
+								if (svgEl) {
+									let svgObj = svgEl.getSVGDocument()
+									if (svgObj) {
+										let i = svgObj.getElementById(ele);
+										if (i) {
+											if (show) {
+												i.setAttribute('style','')
+											} else {
+												i.setAttribute('style','display:none')
 											}
 										}
 									}
 								}
-							</script>
-							<div class="fragment" data-eval-show="toggleSVGVis('nav-timing-svg','g4382')" data-eval-hide="toggleSVGVis('nav-timing-svg','g4382',false)"></div>
-						</section>
-						<section data-background-image="../backgrounds/bored.jpg" data-background-fit="stretch" data-background-color="#000" data-background-opacity="0.1">
-							<h3>Tag managers allow for this</h3>
-							<img class="plain stretch" data-src="media/gtm_trigger_type.png">
-							<p>Push as much as late as possible</p>
-							<aside class="notes">
-								Tag managers offer flexibility to define when scripts are loaded.<br>
-								By default, you'll probably find them loading too early (marketers always want their scripts to execute as soon as possible).<br>
-							</aside>
-						</section>
+							}
+						</script>
+						<div class="fragment" data-eval-show="toggleSVGVis('nav-timing-svg','g4382')" data-eval-hide="toggleSVGVis('nav-timing-svg','g4382',false)"></div>
 					</section>
-					
-					
-					<section>
-						<section data-background-image="../backgrounds/burnmoney.jpg" data-background-fit="stretch">
-							<h2 class="dark-bg">Incident 2: the missing revenue</h2>
-							<aside class="notes">
-								I was working with a UK retailer who had initiated a war room because their conversion rate had dropped by 30%.<br>
-								Their automated tests were showing 100% success, they had not released any code and there were no stock changes.
-							</aside>
-						</section>
-						<section class="center" data-background-image="../backgrounds/burnmoney.jpg" data-background-fit="stretch" data-background-color="#000" data-background-opacity="0.1">
-							<h3>The problem</h3>
-							<h4>Conversion rate down 30% overnight 📉</h4>
-							<aside class="notes">
-							</aside>
-						</section>
-						<section data-background-image="../backgrounds/burnmoney.jpg" data-background-fit="stretch" data-background-color="#000" data-background-opacity="0.1">
-							<h3>The discovery</h3><br>
-							<pre style="width:100%; font-size: 50%; overflow: hidden;"><code class="js" data-trim="true">
-								/**
-								* This file uses jQuery materials and hashchange plugin 
-								* Portions, Copyright (c) 2010 "Cowboy" Ben Alman
-								* http://benalman.com/projects/jquery-hashchange-plugin/
-								* Portions, Copyright 2012 jQueryFoundation and other contributors
-								* http://jquery.com/
-							</code></pre>
-							<p class="smaller monospace">&lt;script async src="//thirdparty.com/embed.js"&gt;</p>
-							<aside class="notes">
-							</aside>
-						</section>
-						<section data-background-image="../backgrounds/burnmoney.jpg" data-background-fit="stretch" data-background-color="#000" data-background-opacity="0.1">
-							<h3>The defense</h3>
-							<ul>
-								<li>subresource integrity</li>
-							</ul>
-							<aside class="notes">
-							</aside>
-						</section>
+					<section data-background-image="../backgrounds/bored.jpg" data-background-fit="stretch" data-background-color="#000" data-background-opacity="0.1">
+						<h3>Tag managers allow for this</h3>
+						<img class="plain stretch" data-src="media/gtm_trigger_type.png">
+						<p>Push as much as late as possible</p>
+						<aside class="notes">
+							Tag managers offer flexibility to define when scripts are loaded.<br>
+							By default, you'll probably find them loading too early (marketers always want their scripts to execute as soon as possible).<br>
+						</aside>
 					</section>
-					
-					
-					<section>
-							<section data-background-image="../backgrounds/chart.jpg" data-background-fit="stretch">
-								<h2 class="dark-bg">Incident 3: the "performance" tool</h2>
-								<aside class="notes">
-								</aside>
-							</section>
-							<section data-background-image="../backgrounds/chart.jpg" data-background-fit="stretch" data-background-color="#000" data-background-opacity="0.1">
-								<h3>The problem</h3>
-								<br>
-								<blockquote>The site feels "laggy"</blockquote>
-								<p>🧐</p>
-								<aside class="notes">
-								</aside>
-							</section>
-							<style>
-								.indicator {
-									width: 8em;
-									height: 8em;
-									line-height: 7.5em !important;
-									background-color: blue;
-									margin: 1em !important;
-								}
-								.indicator.activated {
-									background-color: orange;
-								}
-							</style>
-							<section data-background-image="../backgrounds/chart.jpg" data-background-fit="stretch" data-background-color="#000" data-background-opacity="0.1">
-								<h3>The problem</h3>
-								<div class="fragment" data-eval-show="toggleIndicators()" data-eval-hide="toggleIndicators()" style="font-family: monospace; font-size: 90%">clicked!</div>
-								<div>
-									<span id="indicator-1" class="indicator">instant</span>
-									<span id="indicator-2" class="indicator">500ms delay</span>
-								</div>
-								<script>
-									toggleIndicators = (delayMs=500) => {
-										document.getElementById('indicator-1').classList.toggle('activated');
-										window.setTimeout(()=>{
-											document.getElementById('indicator-2').classList.toggle('activated');
-										},delayMs)
-									}
-								</script>
-								<aside class="notes">
-								</aside>
-							</section>
-							<section data-background-image="../backgrounds/chart.jpg" data-background-fit="stretch" data-background-color="#000" data-background-opacity="0.1">
-								<h3>The discovery</h3>
-								<img class="plain stretch" data-src="media/onunload.png">
-								<aside class="notes">
-								</aside>
-							</section>
-							<section data-background-image="../backgrounds/chart.jpg" data-background-fit="stretch" data-background-color="#000" data-background-opacity="0.1">
-								<h3>The discovery</h3>
-								<img class="plain stretch" data-src="media/unload_mpulse.png">
-								<aside class="notes">
-								</aside>
-							</section>
-							<section data-background-image="../backgrounds/chart.jpg" data-background-fit="stretch" data-background-color="#000" data-background-opacity="0.1">
-								<h3>The discovery</h3>
-								<img class="plain stretch" data-src="media/unload_data.png">
-								<aside class="notes">
-								</aside>
-							</section>
-							<section data-background-image="../backgrounds/chart.jpg" data-background-fit="stretch" data-background-color="#000" data-background-opacity="0.1">
-								<h3>The defense</h3>
-								<ul>
-									<li>End-to-end performance testing</li>
-									<li>Use low-end devices</li>
-									<li>Track unload in RUM</li>
-								</ul>
-								<aside class="notes">
-								</aside>
-							</section>
-						</section>
-					
-						<section>
-								<section data-background-image="../backgrounds/chart.jpg" data-background-fit="stretch">
-									<h2 class="dark-bg">Incident 4: the A/B testing tool</h2>
-									<aside class="notes">
-									</aside>
-								</section>
-								<section data-background-image="../backgrounds/chart.jpg" data-background-fit="stretch" data-background-color="#000" data-background-opacity="0.1">
-									<h3>The problem</h3>
-									<br>
-									<blockquote>The site feels "laggy"</blockquote>
-									<p>🧐</p>
-									<aside class="notes">
-									</aside>
-								</section>
-								<style>
-									.indicator {
-										width: 8em;
-										height: 8em;
-										line-height: 7.5em !important;
-										background-color: blue;
-										margin: 1em !important;
-									}
-									.indicator.activated {
-										background-color: orange;
-									}
-								</style>
-								<section data-background-image="../backgrounds/chart.jpg" data-background-fit="stretch" data-background-color="#000" data-background-opacity="0.1">
-									<h3>The problem</h3>
-									<div class="fragment" data-eval-show="toggleIndicators()" data-eval-hide="toggleIndicators()" style="font-family: monospace; font-size: 90%">clicked!</div>
-									<div>
-										<span id="indicator-1" class="indicator">instant</span>
-										<span id="indicator-2" class="indicator">500ms delay</span>
-									</div>
-									<script>
-										toggleIndicators = (delayMs=500) => {
-											document.getElementById('indicator-1').classList.toggle('activated');
-											window.setTimeout(()=>{
-												document.getElementById('indicator-2').classList.toggle('activated');
-											},delayMs)
-										}
-									</script>
-									<aside class="notes">
-									</aside>
-								</section>
-								<section data-background-image="../backgrounds/chart.jpg" data-background-fit="stretch" data-background-color="#000" data-background-opacity="0.1">
-									<h3>The discovery</h3>
-									<img class="plain stretch" data-src="media/onunload.png">
-									<aside class="notes">
-									</aside>
-								</section>
-								<section data-background-image="../backgrounds/chart.jpg" data-background-fit="stretch" data-background-color="#000" data-background-opacity="0.1">
-									<h3>The discovery</h3>
-									<img class="plain stretch" data-src="media/unload_mpulse.png">
-									<aside class="notes">
-									</aside>
-								</section>
-								<section data-background-image="../backgrounds/chart.jpg" data-background-fit="stretch" data-background-color="#000" data-background-opacity="0.1">
-									<h3>The discovery</h3>
-									<img class="plain stretch" data-src="media/unload_data.png">
-									<aside class="notes">
-									</aside>
-								</section>
-								<section data-background-image="../backgrounds/chart.jpg" data-background-fit="stretch" data-background-color="#000" data-background-opacity="0.1">
-									<h3>The defense</h3>
-									<ul>
-										<li>End-to-end performance testing</li>
-										<li>Use low-end devices</li>
-										<li>Track unload in RUM</li>
-									</ul>
-									<aside class="notes">
-									</aside>
-								</section>
-							</section>
-								
-					
-					<section>
-						<section data-background-image="../backgrounds/monero.jpg" data-background-fit="stretch">
-							<h2 class="dark-bg">Incident 5: the crypto miner</h2>
-							<!-- https://discuss.httparchive.org/t/the-performance-impact-of-cryptocurrency-mining-on-the-web/1126/11 -->
-							<aside class="notes">
-							</aside>
-						</section>
-						<section data-background-image="../backgrounds/monero.jpg" data-background-fit="stretch" data-background-color="#000" data-background-opacity="0.1">
-							<h3>The problem</h3>
-							<img class="plain stretch" data-src="media/coinhive1.png"/>
-							<aside class="notes">
-							</aside>
-						</section>
-						<section data-background-image="../backgrounds/monero.jpg" data-background-fit="stretch" data-background-color="#000" data-background-opacity="0.1">
-							<h3>The problem</h3>
-							<img class="plain stretch" data-src="media/cryptoloot1.png"/>
-							<aside class="notes">
-							</aside>
-						</section>
-						<section data-background-image="../backgrounds/monero.jpg" data-background-fit="stretch" data-background-color="#000" data-background-opacity="0.1">
-							<h3>The discovery</h3>
-							<div style="zoom:0.75" class="vega-chart" id="vis2" data-spec="data/crypto.json"></div>
-							<p class="smallest bottom-right">Source: HTTP Archive. 2017-09-15 to 2019-10-01</p>
-							<aside class="notes">
-							</aside>
-						</section>
-						<section data-background-image="../backgrounds/monero.jpg" data-background-fit="stretch" data-background-color="#000" data-background-opacity="0.1">
-							<h3>The discovery</h3>
-							<aside class="notes">
-							</aside>
-						</section>
-						<section data-background-image="../backgrounds/monero.jpg" data-background-fit="stretch" data-background-color="#000" data-background-opacity="0.1">
-							<h3>The defense</h3>
-							<ul>
-								<li>Subresource Integrity</li>
-							</ul>
-							<aside class="notes">
-							</aside>
-						</section>
+				</section>
+				
+				
+				<section>
+					<section data-background-image="../backgrounds/burnmoney.jpg" data-background-fit="stretch">
+						<h2 class="dark-bg">Incident 2: the missing revenue</h2>
+						<aside class="notes">
+							I was working with a UK retailer who had initiated a war room because their conversion rate had dropped by 30%.<br>
+							Their automated tests were showing 100% success, they had not released any code and there were no stock changes.
+						</aside>
 					</section>
-					
-					
-					<section>
-						<section data-background-image="../backgrounds/ads.jpg" data-background-fit="stretch">
-							<h2 class="dark-bg">Incident 6: the malicious ads</h2>
-							<aside class="notes">
-							</aside>
-						</section>
-						<section data-background-image="../backgrounds/ads.jpg" data-background-fit="stretch" data-background-color="#000" data-background-opacity="0.1">
-							<h3>The problem</h3>
-							<aside class="notes">
-							</aside>
-						</section>
-						<section data-background-image="../backgrounds/ads.jpg" data-background-fit="stretch" data-background-color="#000" data-background-opacity="0.1">
-							<h3>The discovery</h3>
-							<img class="plain stretch" data-src="media/csp_mpulse.png">
-							<aside class="notes">
-							</aside>
-						</section>
-						<section data-background-image="../backgrounds/ads.jpg" data-background-fit="stretch" data-background-color="#000" data-background-opacity="0.1">
-							<h3>The defense</h3>
-							<ul>
-								<li>Content Security Policy</li>
-							</ul>
-							<aside class="notes">
-							</aside>
-						</section>
-						<section data-background-image="../backgrounds/ads.jpg" data-background-fit="stretch" data-background-color="#000" data-background-opacity="0.1">
-							<h3>Content Security Policy</h3>
-							<pre><code data-trim class="csp wrap">
-								content-security-policy: default-src *;
-								script-src 'self' 'unsafe-inline' 'unsafe-eval' *.go-mpulse.net maps.googleapis.com;
-								object-src *;
-								style-src 'self' 'unsafe-inline' fonts.googleapis.com;
-								img-src 'self' data: img.youtube.com *.akstat.io *.gstatic.com *.googleapis.com *.google-analytics.com *.ytimg.com;
-								media-src 'self';
-								frame-src 'self' *.youtube-nocookie.com;
-								font-src 'self' *.gstatic.com data:;
-								connect-src 'self' *.akstat.io *.go-mpulse.net *.google-analytics.com;
-								report-uri https://akstat.io/report/&lt;api-key&gt;</code></pre>
-						</section>
-						<section data-background-image="../backgrounds/ads.jpg" data-background-fit="stretch" data-background-color="#000" data-background-opacity="0.1">
-							<h3>Content Security Policy</h3>
-							<table class="table">
-								<tr><th>CSP Directive</th><th>HTML / JS Features</th></tr>
-								<tr><td>default-src</td><td>*</td></tr>
-								<tr><td>connect-src</td><td>XMLHttpRequest(), WebSocket(),<br>EventSource(), sendBeacon(), fetch()</td></tr>
-								<tr><td>style-src</td><td>&lt;link rel="stylesheet"&gt;</td></tr>
-								<tr><td>script-src</td><td>&lt;script&gt;</td></tr>
-								<tr><td>form-action</td><td>&lt;form&gt;</td></tr>
-								<tr><td>font-src</td><td>@font-face</td></tr>
-								<tr><td>child-src</td><td>&lt;iframe&gt;, Worker()</td></tr>
-								<tr><td>object-src</td><td>&lt;object&gt;, &lt;embed&gt;</td></tr>
-								<tr><td>media-src</td><td>&lt;video&gt;, &lt;audio&gt;</td></tr>
-								<tr><td>img-src</td><td>&lt;img&gt;</td></tr>
-								<tr><td>manifest-src</td><td>&lt;link rel="manifest"&gt;</td></tr>
-							</table>
-							<aside class="notes">
-							</aside>
-						</section>
+					<section class="center" data-background-image="../backgrounds/burnmoney.jpg" data-background-fit="stretch" data-background-color="#000" data-background-opacity="0.1">
+						<h3>The problem</h3>
+						<h4>Conversion rate down 30% overnight 📉</h4>
+						<aside class="notes">
+						</aside>
 					</section>
-					
-					
+					<section data-background-image="../backgrounds/burnmoney.jpg" data-background-fit="stretch" data-background-color="#000" data-background-opacity="0.1">
+						<h3>The discovery</h3><br>
+						<pre style="width:100%; font-size: 50%; overflow: hidden;"><code class="js" data-trim="true">
+							/**
+							* This file uses jQuery materials and hashchange plugin 
+							* Portions, Copyright (c) 2010 "Cowboy" Ben Alman
+							* http://benalman.com/projects/jquery-hashchange-plugin/
+							* Portions, Copyright 2012 jQueryFoundation and other contributors
+							* http://jquery.com/
+						</code></pre>
+						<p class="smaller monospace">&lt;script async src="//thirdparty.com/embed.js"&gt;</p>
+						<aside class="notes">
+						</aside>
+					</section>
+					<section data-background-image="../backgrounds/burnmoney.jpg" data-background-fit="stretch" data-background-color="#000" data-background-opacity="0.1">
+						<h3>The defense</h3>
+						<div class="fragment"><br>
+							<h4>Subresource Integrity</h4>
+							<pre><code class="hlhtml" data-trim>
+								&lt;script
+								src="//thirdparty.com/embed.js"
+								integrity="sha256-ivk71nXhz9nsyFDoYoGf2...="
+								crossorigin="anonymous"&gt;
+							</code>
+						</pre>
+						<p class="smallest bottom-right"><a href="https://developer.mozilla.org/en-US/docs/Web/Security/Subresource_Integrity">SRI on MDN</a></p></div>
+						
+						<p class="fragment"> = only execute this code if it matches the hash</p>
+						<aside class="notes">
+						</aside>
+					</section>
+				</section>
+				
+				
+				<section>
+					<section data-background-image="../backgrounds/chart.jpg" data-background-fit="stretch">
+						<h2 class="dark-bg">Incident 3: the "performance" tool</h2>
+						<aside class="notes">
+						</aside>
+					</section>
+					<section data-background-image="../backgrounds/chart.jpg" data-background-fit="stretch" data-background-color="#000" data-background-opacity="0.1">
+						<h3>The problem</h3>
+						<br>
+						<blockquote>The site feels "laggy"</blockquote>
+						<p>🧐</p>
+						<aside class="notes">
+						</aside>
+					</section>
+					<style>
+						.indicator {
+							width: 8em;
+							height: 8em;
+							line-height: 7.5em !important;
+							background-color: blue;
+							margin: 1em !important;
+						}
+						.indicator.activated {
+							background-color: orange;
+						}
+					</style>
+					<section data-background-image="../backgrounds/chart.jpg" data-background-fit="stretch" data-background-color="#000" data-background-opacity="0.1">
+						<h3>The problem</h3>
+						<div class="fragment" data-eval-show="toggleIndicators()" data-eval-hide="toggleIndicators()" style="font-family: monospace; font-size: 90%">clicked!</div>
+						<div>
+							<span id="indicator-1" class="indicator">instant</span>
+							<span id="indicator-2" class="indicator">500ms delay</span>
+						</div>
+						<script>
+							toggleIndicators = (delayMs=500) => {
+								document.getElementById('indicator-1').classList.toggle('activated');
+								window.setTimeout(()=>{
+									document.getElementById('indicator-2').classList.toggle('activated');
+								},delayMs)
+							}
+						</script>
+						<aside class="notes">
+						</aside>
+					</section>
+					<section data-background-image="../backgrounds/chart.jpg" data-background-fit="stretch" data-background-color="#000" data-background-opacity="0.1">
+						<h3>The discovery</h3>
+						<img class="plain stretch" data-src="media/onunload.png">
+						<aside class="notes">
+						</aside>
+					</section>
+					<section data-background-image="../backgrounds/chart.jpg" data-background-fit="stretch" data-background-color="#000" data-background-opacity="0.1">
+						<h3>The discovery</h3>
+						<img class="plain stretch" data-src="media/unload_mpulse.png">
+						<p class="smallest bottom-right"><a href="https://community.akamai.com/customers/s/article/mPulse-Custom-and-Navigation-Timers?language=en_US">mPulse Custom Timers</a></p>
+						<aside class="notes">
+						</aside>
+					</section>
+					<section data-background-image="../backgrounds/chart.jpg" data-background-fit="stretch" data-background-color="#000" data-background-opacity="0.1">
+						<h3>The discovery</h3>
+						<img class="plain stretch" data-src="media/mpulse_unload.png">
+						<aside class="notes">
+						</aside>
+					</section>
+					<section data-background-image="../backgrounds/chart.jpg" data-background-fit="stretch" data-background-color="#000" data-background-opacity="0.1">
+						<h3>The defense</h3>
+						<ul>
+							<li>Don't rely on scripted tests</li>
+							<li>Track unload duration!</li>
+						</ul>
+						<aside class="notes">
+						</aside>
+					</section>
+				</section>
+				
+				<section>
+					<section data-background-image="../backgrounds/phone.jpg" data-background-fit="stretch">
+						<h2 class="dark-bg">Incident 4: the comment platform</h2>
+						<aside class="notes">
+						</aside>
+					</section>
+					<section data-background-image="../backgrounds/phone.jpg" data-background-fit="stretch" data-background-color="#000" data-background-opacity="0.1">
+						<h3>The problem</h3>
+						<img class="plain stretch" data-src="media/missguided1.png">
+						<p class="smallest bottom-right"><a href="https://www.slideshare.net/AndyDavies/fast-fashion-how-missguided-revolutionised-their-approach-to-site-performance-deltav-conference-may-2018?from_action=save">How Missguided revolutionised thier approach to site speed</a></p>
+						<aside class="notes">
+						</aside>
+					</section>
+					<section data-background-image="../backgrounds/phone.jpg" data-background-fit="stretch" data-background-color="#000" data-background-opacity="0.1">
+						<h3>The discovery</h3>
+						<img class="plain stretch" data-src="media/bv1.png">
+						<aside class="notes">
+						</aside>
+					</section>
+					<section data-background-image="../backgrounds/phone.jpg" data-background-fit="stretch" data-background-color="#000" data-background-opacity="0.1">
+						<h3>The defense</h3>
+						<img class="plain stretch" data-src="media/missguided2_trans.png">
+						<aside class="notes">
+						</aside>
+					</section>
+					<section data-background-image="../backgrounds/phone.jpg" data-background-fit="stretch" data-background-color="#000" data-background-opacity="0.1">
+						<h3>The defense</h3>
+						<ul>
+							<li>Adaptive tag loading?</li>
+						</ul>
+						<aside class="notes">
+						</aside>
+					</section>
+				</section>
+				
+				<section>
+					<section data-background-image="../backgrounds/ads.jpg" data-background-fit="stretch">
+						<h2 class="dark-bg">Incident 6: the malicious ads</h2>
+						<p class="todo">Combine into crypto section?</p>
+						<aside class="notes">
+						</aside>
+					</section>
+					<section data-background-image="../backgrounds/ads.jpg" data-background-fit="stretch" data-background-color="#000" data-background-opacity="0.1">
+						<h3>The problem</h3>
+						<img class="plain" data-src="media/malvertising.svg">
+						<aside class="notes">
+						</aside>
+					</section>
+					<section data-background-image="../backgrounds/ads.jpg" data-background-fit="stretch" data-background-color="#000" data-background-opacity="0.1">
+						<h3>The discovery</h3>
+						<img class="plain stretch" data-src="media/csp_mpulse.png">
+						<aside class="notes">
+						</aside>
+					</section>
+					<section data-background-image="../backgrounds/ads.jpg" data-background-fit="stretch" data-background-color="#000" data-background-opacity="0.1">
+						<h3>The defense</h3>
+						<ul>
+							<li>Content Security Policy</li>
+						</ul>
+						<aside class="notes">
+						</aside>
+					</section>
+					<section data-background-image="../backgrounds/ads.jpg" data-background-fit="stretch" data-background-color="#000" data-background-opacity="0.1">
+						<h3>Content Security Policy</h3>
+						<pre><code data-trim class="csp wrap">
+							content-security-policy: default-src *;
+							script-src 'self' 'unsafe-inline' 'unsafe-eval' *.go-mpulse.net maps.googleapis.com;
+							object-src *;
+							style-src 'self' 'unsafe-inline' fonts.googleapis.com;
+							img-src 'self' data: img.youtube.com *.akstat.io *.gstatic.com *.googleapis.com *.google-analytics.com *.ytimg.com;
+							media-src 'self';
+							frame-src 'self' *.youtube-nocookie.com;
+							font-src 'self' *.gstatic.com data:;
+							connect-src 'self' *.akstat.io *.go-mpulse.net *.google-analytics.com;
+							report-uri https://akstat.io/report/&lt;api-key&gt;</code>
+						</pre>
+					</section>
+					<section data-background-image="../backgrounds/ads.jpg" data-background-fit="stretch" data-background-color="#000" data-background-opacity="0.1">
+						<h3>Content Security Policy</h3>
+						<table class="table">
+							<tr><th>CSP Directive</th><th>HTML / JS Features</th></tr>
+							<tr><td>default-src</td><td>*</td></tr>
+							<tr><td>connect-src</td><td>XMLHttpRequest(), WebSocket(),<br>EventSource(), sendBeacon(), fetch()</td></tr>
+							<tr><td>style-src</td><td>&lt;link rel="stylesheet"&gt;</td></tr>
+							<tr><td>script-src</td><td>&lt;script&gt;</td></tr>
+							<tr><td>form-action</td><td>&lt;form&gt;</td></tr>
+							<tr><td>font-src</td><td>@font-face</td></tr>
+							<tr><td>child-src</td><td>&lt;iframe&gt;, Worker()</td></tr>
+							<tr><td>object-src</td><td>&lt;object&gt;, &lt;embed&gt;</td></tr>
+							<tr><td>media-src</td><td>&lt;video&gt;, &lt;audio&gt;</td></tr>
+							<tr><td>img-src</td><td>&lt;img&gt;</td></tr>
+							<tr><td>manifest-src</td><td>&lt;link rel="manifest"&gt;</td></tr>
+						</table>
+						<aside class="notes">
+						</aside>
+					</section>
+				</section>
+				
+				
+				<section>
+					<section data-background-image="../backgrounds/monero.jpg" data-background-fit="stretch">
+						<h2 class="dark-bg">Incident 5: the crypto miner</h2>
+						<aside class="notes">
+						</aside>
+					</section>
+					<section data-background-image="../backgrounds/monero.jpg" data-background-fit="stretch" data-background-color="#000" data-background-opacity="0.1">
+						<h3>The problem</h3>
+						<img class="plain stretch" data-src="media/coinhive1.png"/>
+						<aside class="notes">
+						</aside>
+					</section>
+					<section data-background-image="../backgrounds/monero.jpg" data-background-fit="stretch" data-background-color="#000" data-background-opacity="0.1">
+						<h3>The discovery</h3>
+						<div class="tweet" data-src="https://twitter.com/Scott_Helme/status/962684239975272450"></div>
+						<aside class="notes">
+						</aside>
+					</section>
+					<section data-background-image="../backgrounds/monero.jpg" data-background-fit="stretch" data-background-color="#000" data-background-opacity="0.1">
+						<h3>The discovery</h3>
+						<div style="zoom:0.75" class="vega-chart" id="vis2" data-spec="data/crypto.json"></div>
+						<p class="smallest bottom-right">Source: HTTP Archive. 2017-09-15 to 2019-10-01</p>
+						<aside class="notes">
+						</aside>
+					</section>
+					<section data-background-image="../backgrounds/monero.jpg" data-background-fit="stretch" data-background-color="#000" data-background-opacity="0.1">
+						<h3>The problem</h3>
+						<img class="plain stretch" data-src="media/cryptoloot1.png"/>
+						<aside class="notes">
+						</aside>
+					</section>
+					<section data-background-image="../backgrounds/monero.jpg" data-background-fit="stretch" data-background-color="#000" data-background-opacity="0.1">
+						<h3>The problem</h3>
+						<img class="tweet" data-src="https://twitter.com/gwillem/status/1187667658642206720?s=19"/>
+						<p>Standard analysis may not catch it.</p>
+						<aside class="notes">
+						</aside>
+					</section>
+					<section data-background-image="../backgrounds/monero.jpg" data-background-fit="stretch" data-background-color="#000" data-background-opacity="0.1">
+						<h3>The defense</h3>
+						<ul>
+							<li>Subresource Integrity</li>
+							<li>Content-Security-Policy (connect-src)</li>
+							<li>Track CPU metrics (TTI / CPU Idle)</li>
+						</ul>
+						<aside class="notes">
+						</aside>
+					</section>
+				</section>
+				
+				
+				<!--
 					<section>
 						<section data-background-image="../backgrounds/code.jpg" data-background-fit="stretch">
 							<h2 class="dark-bg">Incident 7: the plaintext passwords</h2>
@@ -627,66 +609,67 @@
 							</aside>
 						</section>
 					</section>
-					
-					<section>
-						<h2>What can we learn?</h2>
+				-->
+				
+				<section data-background-image="../backgrounds/book.jpg" data-background-fit="stretch">
+					<br>
+					<h2>What can we learn?</h2>
+				</section>
+				
+				
+				
+				<section>
+					<section class="center" data-background-color="#000">
+						<blockquote>Everything should have a value<br>because everything has a cost</blockquote>
+						<p class="smallest bottom-right">Tim Kadlec</p>
 					</section>
 					
+					<section class="center" data-background-image="media/requestmap.png" data-background-fit="stretch" data-background-color="#000" data-background-opacity="0.5">
+						<h3>Visibility is Key</h3>
+						<ul>
+							<li>WebPageTest & RequestMap</li>
+							<li>Content-Security-Policy</li>
+							<li>Resource Timing API</li>
+						</ul>
+					</section>
 					
+					<section class="center" data-background-color="#000">
+						<h3>Determine the risk &amp; value</h3>
+						<ul>
+							<li>WebPageTest Block & SPoF</li>
+							<li>RUM Correlations</li>
+							<li>Webbkoll</li>
+						</ul>
+					</section>
 					
-					<section>
-						<section data-background-image="media/requestmap.png" data-background-fit="stretch">
-							<blockquote>Everything should have a value<br>because everything has a cost</blockquote>
-							<p class="smallest bottom-right">Tim Kadlec</p>
-						</section>
+					<section class="center" data-background-color="#000">
+						<h3>Remove the unnecessary</h3>
+						<ul>
+							<li>Ownership & ROI</li>
+							<li>Adaptive Loading</li>
+							<li>Server-side equivalents</li>
+						</ul>
+					</section>
 					
-						<section data-background-image="media/requestmap.png" data-background-fit="stretch">
-							<h3>Visibility is Key</h3>
-							<ul>
-								<li>WebPageTest & RequestMap</li>
-								<li>Content-Security-Policy</li>
-								<li>Resource Timing API</li>
-							</ul>
-						</section>
-						
-						<section data-background-image="media/requestmap.png" data-background-fit="stretch">
-							<h3>Determine the risk &amp; value</h3>
-							<ul>
-								<li>WebPageTest Block & SPoF</li>
-								<li>RUM Correlations</li>
-								<li>Webbkoll</li>
-							</ul>
-						</section>
-						
-						<section data-background-image="media/requestmap.png" data-background-fit="stretch">
-							<h3>Remove the unnecessary</h3>
-							<ul>
-								<li>Ownership & ROI</li>
-								<li>Adaptive Loading</li>
-								<li>Server-side equivalents</li>
-							</ul>
-						</section>
-
-
-						<section data-background-image="media/requestmap.png" data-background-fit="stretch">
-							<h3>Immunise against the necessary</h3>
-							<ul>
-								<li>Proxy through your CDN</li>
-								<li>Content-Security-Policy</li>
-								<li>Subresource Integrity</li>
-							</ul>
-						</section>
-						
-						<section data-background-image="media/requestmap.png" data-background-fit="stretch">
-							<h3>Lock it down!</h3>
-							<ul>
-								<li>Lock down tag manager</li>
-								<li>Business process for tags</li>
-							</ul>
-						</section>
+					<section class="center" data-background-color="#000">
+						<h3>Immunise against the necessary</h3>
+						<ul>
+							<li>Proxy through your CDN</li>
+							<li>Content-Security-Policy</li>
+							<li>Subresource Integrity</li>
+						</ul>
+					</section>
+					
+					<section class="center" data-background-color="#000">
+						<h3>Lock it down!</h3>
+						<ul>
+							<li>Lock down tag manager</li>
+							<li>Business process for tags</li>
+						</ul>
+					</section>
 					<!--
-					<section class="center">
-						<table class="matrix">
+						<section class="center">
+							<table class="matrix">
 								<tr><th></th><th>Discovery</th><th>Impact</th><th>Reporting</th><th>Code Quality</th><th>Availability</th><th>Data Leakage</th><th>Performance</th></tr>
 								<tr class="fragment"><td class="cell-challenge">Removal</td><td class="cell-lo"><td class="cell-lo"></td><td class="cell-lo"></td><td class="cell-hi"></td><td class="cell-hi"></td><td class="cell-hi"></td><td class="cell-hi"></td></tr>
 								<tr class="fragment"><td class="cell-challenge">Synthetic</td>		<td class="cell-md"><td class="cell-hi"></td><td class="cell-md"></td><td class="cell-lo"></td><td class="cell-hi"></td><td class="cell-md"></td><td class="cell-md"></td></tr>
@@ -697,194 +680,194 @@
 								<tr class="fragment"><td class="cell-challenge">ServiceWorker</td>	<td class="cell-lo"><td class="cell-lo"></td><td class="cell-lo"></td><td class="cell-lo"></td><td class="cell-hi"></td><td class="cell-lo"></td><td class="cell-md"></td></tr>
 								<tr class="fragment"><td class="cell-challenge">Self Hosting</td>	<td class="cell-lo"><td class="cell-lo"></td><td class="cell-lo"></td><td class="cell-md"></td><td class="cell-hi"></td><td class="cell-lo"></td><td class="cell-md"></td></tr>
 							</table>
-					</section>
-					-->
-					</section>
-					
-					<section>
-						<section class="center left" data-background-image="../backgrounds/polarbear.jpg" data-background-fit="stretch" data-background-opacity="">
-							<h2>Thank you</h2>
-							<p><a href="https://twitter.com/SimonHearne">@SimonHearne</a></p>
-							<p><a href="mailto:simon@hearne.me">simon@hearne.me</a></p>
-							<p class="smallest"><a href="https://simonhearne.com/talks/">simonhearne.com/talks/</a></p>
 						</section>
+					-->
+				</section>
+				
+				<section>
+					<section class="center left" data-background-image="../backgrounds/polarbear.jpg" data-background-fit="stretch" data-background-opacity="">
+						<h2>Thank you</h2>
+						<p><a href="https://twitter.com/SimonHearne">@SimonHearne</a></p>
+						<p><a href="mailto:simon@hearne.me">simon@hearne.me</a></p>
+						<p class="smallest"><a href="https://simonhearne.com/talks/">simonhearne.com/talks/</a></p>
 					</section>
-					
-				</div>
-				<div id="chart-controls" class="hide"></div>
+				</section>
 				
 			</div>
+			<div id="chart-controls" class="hide"></div>
 			
-			<script>
-				!function init() {
-					/* do something straight away */
-				}()
-				function getQueryVariable(variable)
+		</div>
+		
+		<script>
+			!function init() {
+				/* do something straight away */
+			}()
+			function getQueryVariable(variable)
+			{
+				var query = window.location.search.substring(1);
+				var vars = query.split("&");
+				for (var i=0;i<vars.length;i++) {
+					var pair = vars[i].split("=");
+					if(pair[0] == variable){return pair[1];}
+				}
+				return(false);
+			}
+			var presenting = window.location.search.includes('present');
+			var duration = getQueryVariable('duration') || 30;
+			var hasCode = !!document.querySelector('code');
+			var hasAnims = !!document.querySelector('[data-animate]');
+			var keyboard = {
+				// pause/resume time when Enter is pressed
+				13: () => {
+					ElapsedTimeBar.isPaused ? ElapsedTimeBar.resume() : ElapsedTimeBar.pause();
+				},
+				// reset timer when 'r' is pressed
+				82: () => {
+					ElapsedTimeBar.reset();
+				}
+			}
+			if (presenting) {
+				keyboard = Object.assign(keyboard,
 				{
-					var query = window.location.search.substring(1);
-					var vars = query.split("&");
-					for (var i=0;i<vars.length;i++) {
-						var pair = vars[i].split("=");
-						if(pair[0] == variable){return pair[1];}
+					39: 'next',
+					37: 'prev'
+				});
+			}
+			function getFragment(event) {
+				return (event.currentSlide.id !== "" ? event.currentSlide.id : null);
+			}
+			// More info https://github.com/hakimel/reveal.js#configuration
+			Reveal.initialize({
+				controls: !presenting,
+				showNotes: !presenting,
+				progress: true,
+				history: true,
+				center: false,
+				transitionSpeed: 'default', // default/fast/slow
+				
+				transition: 'none', // none/fade/slide/convex/concave/zoom
+				
+				allottedTime: duration * 60 * 1000, // 30 minutes
+				barColor: 'hsl(220,99%,54%)',
+				
+				// More info https://github.com/hakimel/reveal.js#dependencies
+				dependencies: [
+				{ src: '../lib/js/classList.js', 				async: true, condition: function() { return !document.body.classList; } },
+				{ src: '../plugin/markdown/marked.js', 			async: true, condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+				{ src: '../plugin/markdown/markdown.js', 		async: true, condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+				{ src: '../plugin/embed-tweet/embed-tweet.js', 	async: true, condition: function() { return !!document.querySelector( 'div.tweet[data-src]' ); } },
+				{ src: '../lib/js/vega.min.js', 				condition: function() { return !!document.querySelector( 'div.vega-chart' ); } },
+				{ src: '../lib/js/vega-embed.min.js', 			condition: function() { return !!document.querySelector( 'div.vega-chart' ); } },
+				{ src: '../plugin/elapsed-time-bar/elapsed-time-bar.js', async: true, condition: function() { return presenting}},
+				{ src: '../plugin/highlight/highlight.js', 		async: true, condition: function() {return hasCode},async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+				{ src: '../plugin/search/search.js', 			async: true },
+				{ src: '../plugin/zoom-js/zoom.js', 			async: true },
+				{ src: '../plugin/notes/notes.js', 				async: true }
+				],
+				
+				keyboard: keyboard
+			});
+			Reveal.addEventListener( 'slidechanged', function( event ) {
+				let state = {h: event.indexh, v: event.indexv, name: getFragment(event)};
+			} );
+			
+			/* animate.css */
+			// Set animation delay if data-delay is specified
+			Reveal.addEventListener('ready', function ( event ) {
+				$('*[data-delay]').each( function () { 
+					var delay = $(this).attr("data-delay");
+					$(this).css("-webkit-animation-delay", delay+"s"); 
+					$(this).css("animation-delay", delay+"s"); 
+				});
+			});
+			
+			// Set animation duration if data-duration is specified
+			Reveal.addEventListener('ready', function ( event ) {
+				$('*[data-duration]').each( function () { 
+					var duration = $(this).attr("data-duration");
+					$(this).css("-webkit-animation-duration", duration+"s"); 
+					$(this).css("animation-duration", duration+"s"); 
+				});
+				let width = window.innerWidth / 2;
+				$(".vega-chart").each(function() {
+					let spec = this.attributes.getNamedItem("data-spec").value;
+					//spec = "https://raw.githubusercontent.com/vega/vega/master/docs/examples/bar-chart.vg.json";
+					vegaEmbed('#'+this.id, spec, {"actions": false, "theme": "dark", "width": width, "renderer": "svg", "config": "data/config.json"}).then(function(result) {
+						// Access the Vega view instance (https://vega.github.io/vega/docs/api/view/) as result.view
+					}).catch(console.error);
+				});
+			});
+			
+			// Animate items that are not in a fragment
+			Reveal.addEventListener('slidechanged', function( event ) {
+				// Animate elements that are not a fragment (or in a fragment)
+				var filter = '*[data-animate]:not(.fragment):not(.fragment *)';
+				
+				$(event.currentSlide).find(filter).each( function () {
+					$(this).addClass('animated');
+					$(this).addClass($(this).attr('data-animate'));
+				});		
+				$(event.previousSlide).find(filter).each( function () {
+					$(this).removeClass('animated');
+					$(this).removeClass($(this).attr('data-animate'));
+				});		
+			});
+			
+			// Animate fragments
+			Reveal.addEventListener('fragmentshown', function( event ) {
+				function loop(i, el) { 
+					if ($(el).attr('data-animate')) {
+						$(el).addClass('animated');
+						$(el).addClass($(el).attr('data-animate'));
 					}
-					return(false);
-				}
-				var presenting = window.location.search.includes('present');
-				var duration = getQueryVariable('duration') || 30;
-				var hasCode = !!document.querySelector('code');
-				var hasAnims = !!document.querySelector('[data-animate]');
-				var keyboard = {
-					// pause/resume time when Enter is pressed
-					13: () => {
-						ElapsedTimeBar.isPaused ? ElapsedTimeBar.resume() : ElapsedTimeBar.pause();
-					},
-					// reset timer when 'r' is pressed
-					82: () => {
-						ElapsedTimeBar.reset();
+					$.each($(el).children().not('.fragment'), loop);
+					if ($(el).attr('data-eval-show')) {
+						eval($(el).attr('data-eval-show'))
 					}
-				}
-				if (presenting) {
-					keyboard = Object.assign(keyboard,
-					{
-						39: 'next',
-						37: 'prev'
-					});
-				}
-				function getFragment(event) {
-					return (event.currentSlide.id !== "" ? event.currentSlide.id : null);
-				}
-				// More info https://github.com/hakimel/reveal.js#configuration
-				Reveal.initialize({
-					controls: !presenting,
-					showNotes: !presenting,
-					progress: true,
-					history: true,
-					center: false,
-					transitionSpeed: 'default', // default/fast/slow
-					
-					transition: 'none', // none/fade/slide/convex/concave/zoom
-					
-					allottedTime: duration * 60 * 1000, // 30 minutes
-					barColor: 'hsl(220,99%,54%)',
-					
-					// More info https://github.com/hakimel/reveal.js#dependencies
-					dependencies: [
-					{ src: '../lib/js/classList.js', 				async: true, condition: function() { return !document.body.classList; } },
-					{ src: '../plugin/markdown/marked.js', 			async: true, condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
-					{ src: '../plugin/markdown/markdown.js', 		async: true, condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
-					{ src: '../plugin/embed-tweet/embed-tweet.js', 	async: true, condition: function() { return !!document.querySelector( 'div.tweet[data-src]' ); } },
-					{ src: '../lib/js/vega.min.js', 				condition: function() { return !!document.querySelector( 'div.vega-chart' ); } },
-					{ src: '../lib/js/vega-embed.min.js', 			condition: function() { return !!document.querySelector( 'div.vega-chart' ); } },
-					{ src: '../plugin/elapsed-time-bar/elapsed-time-bar.js', async: true, condition: function() { return presenting}},
-					{ src: '../plugin/highlight/highlight.js', 		async: true, condition: function() {return hasCode},async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
-					{ src: '../plugin/search/search.js', 			async: true },
-					{ src: '../plugin/zoom-js/zoom.js', 			async: true },
-					{ src: '../plugin/notes/notes.js', 				async: true }
-					],
-					
-					keyboard: keyboard
-				});
-				Reveal.addEventListener( 'slidechanged', function( event ) {
-					let state = {h: event.indexh, v: event.indexv, name: getFragment(event)};
-				} );
+				};
+				$.each(event.fragments, loop);
+			});
+			
+			// Make the animation runnable again if fragment is hidden
+			Reveal.addEventListener('fragmenthidden', function( event ) {	  
+				function loop(i, el) { 
+					if ($(el).attr('data-animate')) {
+						$(el).removeClass('animated');
+						$(el).removeClass($(el).attr('data-animate'));
+					}
+					$.each($(el).children().not('.fragment'), loop);
+					if ($(el).attr('data-eval-hide')) {
+						eval($(el).attr('data-eval-hide'))
+					}
+				};
+				$.each(event.fragments, loop);
+			});
+			if (hasCode) {
+				var l = document.createElement('link');
+				l.rel="stylesheet";
+				l.href = "../lib/css/zenburn.css"
+				document.head.appendChild(l);
+			}
+			if (hasAnims) {
+				var l = document.createElement('link');
+				l.rel="stylesheet";
+				l.href = "../lib/css/animate.min.css"
+				document.head.appendChild(l);
+			}
+		</script>
+		
+		<script nonce="googleAnalytics">
+			(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+				(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();
+				i.initAnalytics=function(){a=s.createElement(o),m=s.getElementsByTagName(o)[0];
+					a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+				}})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 				
-				/* animate.css */
-				// Set animation delay if data-delay is specified
-				Reveal.addEventListener('ready', function ( event ) {
-					$('*[data-delay]').each( function () { 
-						var delay = $(this).attr("data-delay");
-						$(this).css("-webkit-animation-delay", delay+"s"); 
-						$(this).css("animation-delay", delay+"s"); 
-					});
-				});
+				ga('create', 'UA-6512525-16', 'auto', {'siteSpeedSampleRate': 100});
+				ga('send', 'pageview');
 				
-				// Set animation duration if data-duration is specified
-				Reveal.addEventListener('ready', function ( event ) {
-					$('*[data-duration]').each( function () { 
-						var duration = $(this).attr("data-duration");
-						$(this).css("-webkit-animation-duration", duration+"s"); 
-						$(this).css("animation-duration", duration+"s"); 
-					});
-					let width = window.innerWidth / 2;
-					$(".vega-chart").each(function() {
-						let spec = this.attributes.getNamedItem("data-spec").value;
-						//spec = "https://raw.githubusercontent.com/vega/vega/master/docs/examples/bar-chart.vg.json";
-						vegaEmbed('#'+this.id, spec, {"actions": false, "theme": "dark", "width": width, "renderer": "svg", "config": "data/config.json"}).then(function(result) {
-							// Access the Vega view instance (https://vega.github.io/vega/docs/api/view/) as result.view
-						}).catch(console.error);
-					});
-				});
-				
-				// Animate items that are not in a fragment
-				Reveal.addEventListener('slidechanged', function( event ) {
-					// Animate elements that are not a fragment (or in a fragment)
-					var filter = '*[data-animate]:not(.fragment):not(.fragment *)';
-					
-					$(event.currentSlide).find(filter).each( function () {
-						$(this).addClass('animated');
-						$(this).addClass($(this).attr('data-animate'));
-					});		
-					$(event.previousSlide).find(filter).each( function () {
-						$(this).removeClass('animated');
-						$(this).removeClass($(this).attr('data-animate'));
-					});		
-				});
-				
-				// Animate fragments
-				Reveal.addEventListener('fragmentshown', function( event ) {
-					function loop(i, el) { 
-						if ($(el).attr('data-animate')) {
-							$(el).addClass('animated');
-							$(el).addClass($(el).attr('data-animate'));
-						}
-						$.each($(el).children().not('.fragment'), loop);
-						if ($(el).attr('data-eval-show')) {
-							eval($(el).attr('data-eval-show'))
-						}
-					};
-					$.each(event.fragments, loop);
-				});
-				
-				// Make the animation runnable again if fragment is hidden
-				Reveal.addEventListener('fragmenthidden', function( event ) {	  
-					function loop(i, el) { 
-						if ($(el).attr('data-animate')) {
-							$(el).removeClass('animated');
-							$(el).removeClass($(el).attr('data-animate'));
-						}
-						$.each($(el).children().not('.fragment'), loop);
-						if ($(el).attr('data-eval-hide')) {
-							eval($(el).attr('data-eval-hide'))
-						}
-					};
-					$.each(event.fragments, loop);
-				});
-				if (hasCode) {
-					var l = document.createElement('link');
-					l.rel="stylesheet";
-					l.href = "../lib/css/zenburn.css"
-					document.head.appendChild(l);
-				}
-				if (hasAnims) {
-					var l = document.createElement('link');
-					l.rel="stylesheet";
-					l.href = "../lib/css/animate.min.css"
-					document.head.appendChild(l);
-				}
+				window.addEventListener('load',function(){initAnalytics()});
 			</script>
-			
-			<script nonce="googleAnalytics">
-				(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-					(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();
-					i.initAnalytics=function(){a=s.createElement(o),m=s.getElementsByTagName(o)[0];
-						a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-					}})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-					
-					ga('create', 'UA-6512525-16', 'auto', {'siteSpeedSampleRate': 100});
-					ga('send', 'pageview');
-					
-					window.addEventListener('load',function(){initAnalytics()});
-				</script>
-			</body>
-			</html>
-			
+		</body>
+		</html>
+		

@@ -113,7 +113,7 @@ html.tertiary-slide body {
   font-size: 2em; }
 
 .reveal h4 {
-  font-size: 1em; 
+  font-size: 1.4em; 
   margin-bottom:-10px !IMPORTANT;
   margin-top:-20px !IMPORTANT;
   color: white !IMPORTANT;
@@ -685,7 +685,6 @@ div.vega-bind {
   color: #222 !important;
 }
 
-
 .help-text {
   font-size: 50% !important;
   font-family: monospace !important;
@@ -696,6 +695,11 @@ div.vega-bind {
   font-family: monospace !important;
 }
 
+p.todo {
+  background-color: yellow;
+  color: #000;
+}
+/*
 @media screen and (min-width: 1025px) {
   .reveal.show-notes {
     max-width: 100vw;
@@ -716,6 +720,10 @@ div.vega-bind {
     margin: 0;
   }
 }
+*/
+
+.reveal .speaker-notes:before {
+  content: 'Slide notes'; }
 
 .reveal section.left {
   text-align: left;
