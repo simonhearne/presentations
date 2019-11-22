@@ -80,6 +80,13 @@
 						They're offten added after release, by teams not in the development side of the house.
 					</aside>
 				</section>
+
+				<section class="center" data-background-image="media/requestmap.png" data-background-fit="stretch" data-background-color="#000" data-background-opacity="0.25">
+					<p style="margin: 0">The median website is</p>
+					<p style="font-size: 400%; font-weight: bolder; margin:0;">37%</p>
+					<p style="margin: 0">third-party requests</p>
+					<p class="smallest bottom-right">Source: HTTP Archive 2019-10-01</p>
+				</section>
 				
 				<section class="bottom" data-background-image="../backgrounds/shout.jpg" data-background-fit="stretch">
 					<h3 class="dark-bg">Sometimes it feels like we're getting nowhere</h3>
@@ -123,12 +130,18 @@
 				<section class="bottom" data-background-image="../backgrounds/bigdata.jpg" data-background-fit="stretch">
 					<h3 class="dark-bg">Regulations are increasing visibility</h3>
 					<aside class="notes">
-						While regulations such as GDPR and cookie consent laws have caused a lot of frustration, they have the positive effect of bringing third-party accountability to the foreground.
+						While regulations such as GDPR and cookie consent laws have caused a lot of frustration, they have the positive effect of bringing third-party accountability to the foreground.<br>
+						Plus the unfortunate acronym for China's Personal Information Security Specification.
 					</aside>
 				</section>
 				
-				
-				<section class="" data-background-image="../backgrounds/super.jpg" data-background-fit="stretch">
+				<section class="center" data-background-image="media/requestmap.png" data-background-fit="stretch" data-background-color="#000" data-background-opacity="0.5">
+					<h3 class="dark-bg">Tag managers are enablers</h3>
+					<aside class="notes">
+					</aside>
+				</section>
+
+				<section data-background-image="../backgrounds/super.jpg" data-background-fit="stretch">
 					<h2>Fancy a super power?</h2>
 					<aside class="notes">
 						It's unlikely that anyone will become a full-time third-party regulator. What you can become is the subject matter expert.<br>
@@ -136,7 +149,19 @@
 						In the next half hour I will try to arm you with the stories, tools and techniques to manage third-party content. I'll do this through post-mortems of some recent incidents.
 					</aside>
 				</section>
-				
+
+				<!--
+				<section class="center" data-background-color="#000">
+					<h2>Some definitions</h2>
+					<ul>
+						<li class="fragment">RUM</li>
+						<li class="fragment">HTTP Archive</li>
+						<li class="fragment">RUM</li>
+						<li class="fragment">RUM</li>
+					</ul>
+				</section>
+				-->
+
 				<section>
 					<section class="bottom" data-background-image="../backgrounds/bored.jpg" data-background-fit="stretch">
 						<h2 class="dark-bg">Incident 1: the 30s wait</h2>
@@ -263,6 +288,9 @@
 							The application design had critical event management logic on document.ready so the application was unavailable until it fired!
 						</aside>
 					</section>
+					<section class="center" data-background-image="../backgrounds/bored.jpg" data-background-fit="stretch" data-background-color="#000" data-background-opacity="0.1">
+						<h3>Don't worry, it's async!</h3>
+					</section>
 					<section data-background-image="../backgrounds/bored.jpg" data-background-fit="stretch" data-background-color="#000" data-background-opacity="0.1">
 						<h3>sync is still king(!)</h3>
 						<div style="zoom:0.8" class="vega-chart" id="vis1" data-spec="data/sync_vs_async.json"></div>
@@ -279,7 +307,7 @@
 							dominteractive = "when the parser finished its work on the main document"
 						</aside>
 					</section>
-					<section data-background-image="../backgrounds/bored.jpg" data-background-fit="stretch" data-background-color="#000" data-background-opacity="0.1">
+					<section class="center" data-background-image="../backgrounds/bored.jpg" data-background-fit="stretch" data-background-color="#000" data-background-opacity="0.1">
 						<h3>Beware your script loading strategy</h3>
 						<embed class="plain stretch" id="nav-timing-svg" src="media/performance_api_blocking.svg" />
 						<script>
@@ -392,8 +420,8 @@
 						<aside class="notes">
 						</aside>
 					</section>
-					<section data-background-image="../backgrounds/burnmoney.jpg" data-background-fit="stretch" data-background-color="#000" data-background-opacity="0.1">
-						<h3>Back to pixels?</h3>
+					<section class="center" data-background-image="../backgrounds/burnmoney.jpg" data-background-fit="stretch" data-background-color="#000" data-background-opacity="0.1">
+						<h3>Back to &lt;img&gt; pixels?</h3>
 						<pre><code class="html" data-trim>
 							<!-- Facebook Pixel Code -->
 							&lt;script&gt;!function(f,b,e,v,n,t,s){...}();&lt;/script&gt;
@@ -419,7 +447,7 @@
 				<aside class="notes">
 				</aside>
 			</section>
-			<section data-background-image="../backgrounds/chart.jpg" data-background-fit="stretch" data-background-color="#000" data-background-opacity="0.1">
+			<section class="center" data-background-image="../backgrounds/chart.jpg" data-background-fit="stretch" data-background-color="#000" data-background-opacity="0.1">
 				<h3>The problem</h3>
 				<br>
 				<blockquote>The site feels "laggy"</blockquote>
@@ -485,9 +513,6 @@
 				<aside class="notes">
 				</aside>
 			</section>
-
-
-				
 		</section>
 		
 		<section>
@@ -530,8 +555,7 @@
 		
 		<section>
 			<section data-background-image="../backgrounds/ads.jpg" data-background-fit="stretch">
-				<h2 class="dark-bg">Incident 6: the malicious ads</h2>
-				<p class="todo">Combine into crypto section?</p>
+				<h2 class="dark-bg">Incident 5: the malicious ads</h2>
 				<aside class="notes">
 				</aside>
 			</section>
@@ -587,7 +611,7 @@
 		
 		<section>
 			<section data-background-image="../backgrounds/monero.jpg" data-background-fit="stretch">
-				<h2 class="dark-bg">Incident 5: the crypto miner</h2>
+				<h2 class="dark-bg">Incident 6: the crypto miner</h2>
 				<aside class="notes">
 				</aside>
 			</section>
@@ -617,7 +641,7 @@
 				</aside>
 			</section>
 			<section class="center"data-background-image="../backgrounds/monero.jpg" data-background-fit="stretch" data-background-color="#000" data-background-opacity="0.1">
-				<h3>Static analysis may not catch CryptoMiners</h3>
+				<h3>Static analysis is not enough</h3>
 				<div class="tweet" data-src="https://twitter.com/gwillem/status/1187667658642206720?s=19"></div>
 				<aside class="notes">
 				</aside>
@@ -634,6 +658,54 @@
 			</section>
 		</section>
 		
+		<section>
+			<section data-background-image="../backgrounds/experimentation.jpg" data-background-fit="stretch">
+				<h2 class="dark-bg">Incident 7: the "optimisation"</h2>
+				<aside class="notes">
+				</aside>
+			</section>
+			<section class="center" data-background-image="../backgrounds/experimentation.jpg" data-background-fit="stretch" data-background-color="#000" data-background-opacity="0.1">
+				<blockquote>
+					Our goal is not to make a fast website,<br>it is to maximise business success.
+				</blockquote>
+				<p class="smallest bottom-right"><a href="https://www.youtube.com/watch?v=oBD_kClamck">3rd parties: A hate / love - Kristian Sköld</a></p>
+			</section>
+			<section class="center" data-background-image="../backgrounds/experimentation.jpg" data-background-fit="stretch" data-background-color="#000" data-background-opacity="0.1">
+				<h3></h3>
+				<img class="plain stretch" data-src="media/optimizely_speedcurve.png"/>
+				<p class="smallest bottom-right"><a href="https://orangevalley.nl/en/9-ab-testing-tools-compared-on-site-speed-impact/">How A/B testing tools worsen your site speed - orangevalley</a></p>
+				<aside class="notes">
+				</aside>
+			</section>
+			<section class="center" data-background-image="../backgrounds/experimentation.jpg" data-background-fit="stretch" data-background-color="#000" data-background-opacity="0.1">
+				<h3>What's 500ms worth?</h3>
+				<img class="plain stretch" data-src="media/optimizely_sla.png"/>
+				<p class="smallest bottom-right"><a href="https://status.optimizely.com">status.optimizely.com</a></p>
+				<aside class="notes">
+				</aside>
+			</section>
+			<section class="center" data-background-image="../backgrounds/experimentation.jpg" data-background-fit="stretch" data-background-color="#000" data-background-opacity="0.1">
+				<h3>Proxy through your domain</h3>
+				<img class="plain stretch" data-src="media/optimizely_proxy.png"/>
+				<p class="smallest bottom-right"><a href="https://help.optimizely.com/Set_Up_Optimizely/Optimizely_self-hosting_for_Akamai_users">Optimizely self-hosting for Akamai users</a></p>
+				<aside class="notes">
+				</aside>
+			</section>
+			<section class="center" data-background-image="../backgrounds/experimentation.jpg" data-background-fit="stretch" data-background-color="#000" data-background-opacity="0.1">
+				<h3>Evaluate performance</h3>
+				<img class="plain stretch" data-src="media/ab_tools.png"/>
+				<p class="smallest bottom-right"><a href="https://orangevalley.nl/en/9-ab-testing-tools-compared-on-site-speed-impact/">How A/B testing tools worsen your site speed - orangevalley</a></p>
+				<aside class="notes">
+				</aside>
+			</section>
+			<section class="center" data-background-image="../backgrounds/experimentation.jpg" data-background-fit="stretch" data-background-color="#000" data-background-opacity="0.1">
+				<h3>Use the platform</h3>
+				<img class="plain stretch" data-src="media/optimizely_edge.png"/>
+				<p class="smallest bottom-right"><a href="https://blog.optimizely.com/2019/09/12/performance-edge/">Introducing Performance Edge: Making Web Experiments Run Blazingly Fast</a></p>
+				<aside class="notes">
+				</aside>
+			</section>
+		</section>
 		
 		<!--
 			<section>
@@ -674,17 +746,17 @@
 				<p class="smallest bottom-right">Tim Kadlec</p>
 			</section>
 			
-			<section class="center" data-background-image="media/requestmap.png" data-background-fit="stretch" data-background-color="#000" data-background-opacity="0.5">
+			<section class="center" data-background-image="media/requestmap.png" data-background-fit="stretch" data-background-color="#000" data-background-opacity="0.25">
 				<h3>Visibility is Key</h3>
 				<ul>
 					<li>WebPageTest & RequestMap</li>
-					<li>Content-Security-Policy</li>
-					<li>Resource Timing API</li>
+					<li>CSP Reports</li>
+					<li>Resource Timing in RUM</li>
 				</ul>
 				<p class="smallest bottom-right"><a href="https://csswizardry.com/2018/05/identifying-auditing-discussing-third-parties/">Identifying, Auditing, and Discussing Third Parties</a></p>
 			</section>
 			
-			<section class="center" data-background-color="#000">
+			<section class="center" data-background-image="media/requestmap.png" data-background-fit="stretch" data-background-color="#000" data-background-opacity="0.25">
 				<h3>Determine the risk &amp; value</h3>
 				<ul>
 					<li>WebPageTest Block & SPoF</li>
@@ -693,7 +765,7 @@
 				</ul>
 			</section>
 			
-			<section class="center" data-background-color="#000">
+			<section class="center" data-background-image="media/requestmap.png" data-background-fit="stretch" data-background-color="#000" data-background-opacity="0.25">
 				<h3>Remove the unnecessary</h3>
 				<ul>
 					<li>Ownership & ROI</li>
@@ -702,7 +774,7 @@
 				</ul>
 			</section>
 			
-			<section class="center" data-background-color="#000">
+			<section class="center" data-background-image="media/requestmap.png" data-background-fit="stretch" data-background-color="#000" data-background-opacity="0.25">
 				<h3>Immunise against the necessary</h3>
 				<ul>
 					<li>Proxy through your CDN</li>
@@ -711,7 +783,7 @@
 				</ul>
 			</section>
 			
-			<section class="center" data-background-color="#000">
+			<section class="center" data-background-image="media/requestmap.png" data-background-fit="stretch" data-background-color="#000" data-background-opacity="0.25">
 				<h3>Lock it down!</h3>
 				<ul>
 					<li>Lock down tag manager</li>
@@ -742,6 +814,7 @@
 				<p><a href="https://twitter.com/SimonHearne">@SimonHearne</a></p>
 				<p><a href="mailto:simon@hearne.me">simon@hearne.me</a></p>
 				<p class="smallest"><a href="https://simonhearne.com/talks/">simonhearne.com/talks/</a></p>
+				<p class="smallest"><a href="https://noti.st/simonhearne">noti.st/simonhearne</a></p>
 			</section>
 		</section>
 		
