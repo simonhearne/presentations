@@ -58,7 +58,7 @@
 					<aside class="notes">
 						Welcome to this talk on third-party content.<br>
 						If you are viewing this live, use keys 'n' and 'p' to navigate the slides.
-						Use key 'o' to view an overview.
+						Use key 'o' to view an overview. <a style="cursor: pointer" onclick="javascript:Reveal.configure({showNotes: false})">Click here to hide these notes</a>.
 					</aside>
 				</section>
 				
@@ -80,12 +80,16 @@
 						They're offten added after release, by teams not in the development side of the house.
 					</aside>
 				</section>
-
+				
 				<section class="center" data-background-image="media/requestmap.png" data-background-fit="stretch" data-background-color="#000" data-background-opacity="0.25">
 					<p style="margin: 0">The median website is</p>
 					<p style="font-size: 400%; font-weight: bolder; margin:0;">37%</p>
 					<p style="margin: 0">third-party requests</p>
 					<p class="smallest bottom-right">Source: HTTP Archive 2019-10-01</p>
+					<aside class="notes">
+						Third-parties add value to websites, improve customer insight and allow monetisation.<br>
+						So it's no surprise that there are a lot of them!
+					</aside>
 				</section>
 				
 				<section class="bottom" data-background-image="../backgrounds/shout.jpg" data-background-fit="stretch">
@@ -93,7 +97,7 @@
 					<aside class="notes">
 						We've been talking about third-party performance for years! In my case it's been five years, to the day!<br>
 						I've given a few talks about third-parties, I've given workshops, audits and reports.<br>
-						Unfortunately not a huge amount has changed, we're using more third-parties than ever
+						Unfortunately not a huge amount has changed, we're using more third-parties than ever.
 					</aside>
 				</section>
 				
@@ -138,9 +142,11 @@
 				<section class="center" data-background-image="media/requestmap.png" data-background-fit="stretch" data-background-color="#000" data-background-opacity="0.5">
 					<h3 class="dark-bg">Tag managers are enablers</h3>
 					<aside class="notes">
+						We have developed tools to move ownership of third-parties away from technical teams.<br>
+						While this is a good thing for velocity, it has diluted ownership of the front-end.
 					</aside>
 				</section>
-
+				
 				<section data-background-image="../backgrounds/super.jpg" data-background-fit="stretch">
 					<h2>Fancy a super power?</h2>
 					<aside class="notes">
@@ -149,19 +155,19 @@
 						In the next half hour I will try to arm you with the stories, tools and techniques to manage third-party content. I'll do this through post-mortems of some recent incidents.
 					</aside>
 				</section>
-
+				
 				<!--
-				<section class="center" data-background-color="#000">
-					<h2>Some definitions</h2>
-					<ul>
-						<li class="fragment">RUM</li>
-						<li class="fragment">HTTP Archive</li>
-						<li class="fragment">RUM</li>
-						<li class="fragment">RUM</li>
-					</ul>
-				</section>
+					<section class="center" data-background-color="#000">
+						<h2>Some definitions</h2>
+						<ul>
+							<li class="fragment">RUM</li>
+							<li class="fragment">HTTP Archive</li>
+							<li class="fragment">RUM</li>
+							<li class="fragment">RUM</li>
+						</ul>
+					</section>
 				-->
-
+				
 				<section>
 					<section class="bottom" data-background-image="../backgrounds/bored.jpg" data-background-fit="stretch">
 						<h2 class="dark-bg">Incident 1: the 30s wait</h2>
@@ -303,9 +309,6 @@
 							<li class="fragment">don't block on onload</li>
 							<li class="fragment"><code>&lt;script defer &gt;</code></li>
 						</ul>
-						<aside class="notes">
-							dominteractive = "when the parser finished its work on the main document"
-						</aside>
 					</section>
 					<section class="center" data-background-image="../backgrounds/bored.jpg" data-background-fit="stretch" data-background-color="#000" data-background-opacity="0.1">
 						<h3>Beware your script loading strategy</h3>
@@ -329,6 +332,9 @@
 							}
 						</script>
 						<div class="fragment" data-eval-show="toggleSVGVis('nav-timing-svg','g4382')" data-eval-hide="toggleSVGVis('nav-timing-svg','g4382',false)"></div>
+						<aside class="notes">
+							Deferred scripts run immediately after dominteractive: "when the parser finished its work on the main document"
+						</aside>
 					</section>
 					<section data-background-image="../backgrounds/bored.jpg" data-background-fit="stretch" data-background-color="#000" data-background-opacity="0.1">
 						<h3>Tag managers allow for this</h3>
@@ -337,7 +343,7 @@
 						<aside class="notes">
 							Tag managers offer flexibility to define when scripts are loaded.<br>
 							By default, you'll probably find them loading too early (marketers always want their scripts to execute as soon as possible).<br>
-							It is simple to evaluate when a script needs to evaluate, so make it a point to load scripts only when necessary
+							It is simple to evaluate when a script needs to evaluate, so make it a point to load scripts only when necessary.
 						</aside>
 					</section>
 					<section class="center" data-background-image="../backgrounds/bored.jpg" data-background-fit="stretch" data-background-color="#000" data-background-opacity="0.1">
@@ -366,6 +372,9 @@
 								</ul>
 							</div>
 						</div>
+						<aside class="notes">
+							Don't treat your tags the same, some have to load early but most can be loaded late.
+						</aside>
 					</section>
 				</section>
 				
@@ -381,8 +390,6 @@
 					<section class="center" data-background-image="../backgrounds/burnmoney.jpg" data-background-fit="stretch" data-background-color="#000" data-background-opacity="0.1">
 						<h3>The problem</h3>
 						<h4>Conversion rate down 30% overnight 📉</h4>
-						<aside class="notes">
-						</aside>
 					</section>
 					<section data-background-image="../backgrounds/burnmoney.jpg" data-background-fit="stretch" data-background-color="#000" data-background-opacity="0.1">
 						<h3>The discovery</h3><br>
@@ -396,12 +403,17 @@
 						</code></pre>
 						<p class="smaller monospace">&lt;script async src="//thirdparty.com/embed.js"&gt;</p>
 						<aside class="notes">
+							The issue was a change in a third-party script. This was not announced publicly, and as the URL was absolute the change was pushed immediately.<br>
+							The update conflicted with an event listener (poorly implemented by the client) which broke the quick checkout button.
 						</aside>
 					</section>
 					<section data-background-image="../backgrounds/burnmoney.jpg" data-background-fit="stretch" data-background-color="#000" data-background-opacity="0.1">
 						<h3>The discovery</h3>
 						<img class="plain stretch" data-src="media/mpulse_errors.png">
 						<aside class="notes">
+							The issue went unnoticed by operations until questions were raised by ecommerce.<br>
+							All testing was reporting 100% success, but there were some errors being logged to the console.<br>
+							Due to alert fatigue, no-one was informed of the increase in errors. In this example we can see a massive spike before a huge drop in traffic, caused by a misconfigured third-party script.
 						</aside>
 					</section>
 					<section data-background-image="../backgrounds/burnmoney.jpg" data-background-fit="stretch" data-background-color="#000" data-background-opacity="0.1">
@@ -418,6 +430,8 @@
 						<p class="fragment">Currently used on <em>5.15%</em> of pages<br><span class="smaller">(HTTP Archive - 2019/10/01)</span></p>
 						<p class="smallest bottom-right"><a href="https://developer.mozilla.org/en-US/docs/Web/Security/Subresource_Integrity">SRI on MDN</a></p></div>
 						<aside class="notes">
+							SRI enforces a version of a third-party asset. If the asset is changed without your knowledge it will not execute in the browser.<br>
+							This is best used for non-critical assets, such as analytics. The failures will be silent, but can be reported with Content-Security-Policy.
 						</aside>
 					</section>
 					<section class="center" data-background-image="../backgrounds/burnmoney.jpg" data-background-fit="stretch" data-background-color="#000" data-background-opacity="0.1">
@@ -426,14 +440,16 @@
 							<!-- Facebook Pixel Code -->
 							&lt;script&gt;!function(f,b,e,v,n,t,s){...}();&lt;/script&gt;
 							&lt;noscript&gt;
-								&lt;img height="1" width="1" style="display:none"
-								src="https://www.facebook.com/tr?id=...&noscript=1"
-								/&gt;
+							&lt;img height="1" width="1" style="display:none"
+							src="https://www.facebook.com/tr?id=...&noscript=1"
+							/&gt;
 							&lt;/noscript&gt;
 						</code>
 					</pre>
 					<p class="smallest bottom-right"><a href="https://www.tunetheweb.com/blog/adding-controls-to-google-tag-manager/">Adding Controls to Google Tag Manager - Barry Pollard</a></p>
 					<aside class="notes">
+						Reduce the impact of third-party scripts, by swapping them for the fallback image pixel!<br>
+						This will reduce the amount of data that can be collected, but that's not necessarily a bad thing.
 					</aside>
 				</section>
 			</section>
@@ -445,6 +461,8 @@
 			<section data-background-image="../backgrounds/chart.jpg" data-background-fit="stretch">
 				<h2 class="dark-bg">Incident 3: the "performance" tool</h2>
 				<aside class="notes">
+					This was a performance monitoring tool that runs in the client, like mPulse RUM!<br>
+					After implementatin there were a number of complaints from customers...
 				</aside>
 			</section>
 			<section class="center" data-background-image="../backgrounds/chart.jpg" data-background-fit="stretch" data-background-color="#000" data-background-opacity="0.1">
@@ -453,6 +471,7 @@
 				<blockquote>The site feels "laggy"</blockquote>
 				<p>🧐</p>
 				<aside class="notes">
+					The feedback was very subjective, and nothing in the data showed a performance problem.
 				</aside>
 			</section>
 			<style>
@@ -482,19 +501,20 @@
 						},delayMs)
 					}
 				</script>
-				<aside class="notes">
-				</aside>
 			</section>
 			<section data-background-image="../backgrounds/chart.jpg" data-background-fit="stretch" data-background-color="#000" data-background-opacity="0.1">
 				<h3>The discovery</h3>
 				<img class="plain stretch" data-src="media/onunload.png">
 				<aside class="notes">
+					The issue was caused by a combination of third-party event listeners.<br>
+					In this example we can see ClickTale adding around a second to the unload event - this blocks the next navigation and is perceived as latency.
 				</aside>
 			</section>
 			<section data-background-image="../backgrounds/chart.jpg" data-background-fit="stretch" data-background-color="#000" data-background-opacity="0.1">
 				<h3>The discovery</h3>
 				<img class="plain stretch" data-src="media/mpulse_unload.png">
 				<aside class="notes">
+					This can be tracked in tools like mPulse, and correlated with things like bounce and conversion rate.
 				</aside>
 			</section>
 			<section class="center" data-background-image="../backgrounds/chart.jpg" data-background-fit="stretch" data-background-color="#000" data-background-opacity="0.1">
@@ -504,21 +524,18 @@
 					<li>Track unload duration</li>
 					<li class="fragment">Track everything!</li>
 				</ul>
-				<aside class="notes">
-				</aside>
 			</section>
 			<section class="center" data-background-image="../backgrounds/chart.jpg" data-background-fit="stretch" data-background-color="#000" data-background-opacity="0.1">
 				<blockquote>If it moves, we track it. Sometimes we’ll draw a graph of something that isn’t moving yet, just in case it decides to make a run for it. </blockquote>
 				<p class="smallest bottom-right"><a href="https://codeascraft.com/2011/02/15/measure-anything-measure-everything/">Measure Anything, Measure Everything - Ian Malpass</a></p>
-				<aside class="notes">
-				</aside>
 			</section>
 		</section>
 		
 		<section>
 			<section data-background-image="../backgrounds/phone.jpg" data-background-fit="stretch">
-				<h2 class="dark-bg">Incident 4: the comment platform</h2>
+				<h2 class="dark-bg">Incident 4: the review provider</h2>
 				<aside class="notes">
+					Customers love ratings and reviews, and prefer independent sources.
 				</aside>
 			</section>
 			<section data-background-image="../backgrounds/phone.jpg" data-background-fit="stretch" data-background-color="#000" data-background-opacity="0.1">
@@ -526,26 +543,37 @@
 				<img class="plain stretch" data-src="media/missguided1.png">
 				<p class="smallest bottom-right"><a href="https://www.slideshare.net/AndyDavies/fast-fashion-how-missguided-revolutionised-their-approach-to-site-performance-deltav-conference-may-2018?from_action=save">How Missguided revolutionised thier approach to site speed</a></p>
 				<aside class="notes">
+					The problem in this case was that Android users had a significantly poorer experience.<br>
+					As a result, the conversion rate for Android users was much lower than iPhones.
 				</aside>
 			</section>
 			<section data-background-image="../backgrounds/phone.jpg" data-background-fit="stretch" data-background-color="#000" data-background-opacity="0.1">
 				<h3>The discovery</h3>
 				<img class="plain stretch" data-src="media/bv1.png">
 				<aside class="notes">
+					A little bit of digging showed that the review provider was adding significant time to JS execution.
 				</aside>
 			</section>
 			<section data-background-image="../backgrounds/phone.jpg" data-background-fit="stretch" data-background-color="#000" data-background-opacity="0.1">
 				<h3>The defense</h3>
 				<img class="plain stretch" data-src="media/missguided2_trans.png">
 				<aside class="notes">
+					To evaluate the impact further, the reviews were removed from the website for Android visitors.
+				</aside>
+			</section>
+			<section data-background-image="../backgrounds/phone.jpg" data-background-fit="stretch" data-background-color="#000" data-background-opacity="0.1">
+				<p style="font-size:200%">26%</p>
+				<p>more revenue</p>
+				<aside class="notes">
+					The result was an increase in revenue of 26% from Android visitors.
 				</aside>
 			</section>
 			<section class="center" data-background-image="../backgrounds/phone.jpg" data-background-fit="stretch" data-background-color="#000" data-background-opacity="0.1">
 				<h3>The defense</h3>
 				<ul>
-						<li>Adaptive tag loading</li>
-						<li>Understand the impact</li>
-						<li>Communicate with 3rd parties</li>
+					<li>Adaptive tag loading</li>
+					<li>Understand the impact</li>
+					<li>Communicate with 3rd parties</li>
 				</ul>
 				<aside class="notes">
 					This bit is really tricky - attribution is not something that is made available through any APIs so it can take manual measurements and intervention.
@@ -557,18 +585,18 @@
 			<section data-background-image="../backgrounds/ads.jpg" data-background-fit="stretch">
 				<h2 class="dark-bg">Incident 5: the malicious ads</h2>
 				<aside class="notes">
+					Malvertising is a surprisingly common problem. While not necessarily a performance challenge, it's still a major concern.
 				</aside>
 			</section>
 			<section data-background-image="../backgrounds/ads.jpg" data-background-fit="stretch" data-background-color="#000" data-background-opacity="0.1">
 				<h3>The problem</h3>
 				<img class="plain" data-src="media/malvertising.svg">
-				<aside class="notes">
-				</aside>
 			</section>
 			<section data-background-image="../backgrounds/ads.jpg" data-background-fit="stretch" data-background-color="#000" data-background-opacity="0.1">
 				<h3>The discovery</h3>
 				<img class="plain stretch" data-src="media/csp_mpulse.png">
 				<aside class="notes">
+					This issue was captured in mPulse.
 				</aside>
 			</section>
 			<section data-background-image="../backgrounds/ads.jpg" data-background-fit="stretch" data-background-color="#000" data-background-opacity="0.1">
@@ -603,8 +631,6 @@
 					<tr><td>img-src</td><td>&lt;img&gt;</td></tr>
 					<tr><td>manifest-src</td><td>&lt;link rel="manifest"&gt;</td></tr>
 				</table>
-				<aside class="notes">
-				</aside>
 			</section>
 		</section>
 		
@@ -613,25 +639,22 @@
 			<section data-background-image="../backgrounds/monero.jpg" data-background-fit="stretch">
 				<h2 class="dark-bg">Incident 6: the crypto miner</h2>
 				<aside class="notes">
+					This was reasonably well covered in the press.
 				</aside>
 			</section>
 			<section data-background-image="../backgrounds/monero.jpg" data-background-fit="stretch" data-background-color="#000" data-background-opacity="0.1">
 				<h3>The problem</h3>
 				<img class="plain stretch" data-src="media/coinhive1.png"/>
 				<aside class="notes">
+					The issue was caused by crypto miners, written in JS, snuck into third-pary libaries.<br>
+					The miners pegged the CPU and made the user experience awful.
 				</aside>
 			</section>
 			<section class="center" data-background-image="../backgrounds/monero.jpg" data-background-fit="stretch" data-background-color="#000" data-background-opacity="0.1">
 				<h3>The discovery</h3>
 				<div class="tweet" data-src="https://twitter.com/Scott_Helme/status/962684239975272450"></div>
 				<aside class="notes">
-				</aside>
-			</section>
-			<section data-background-image="../backgrounds/monero.jpg" data-background-fit="stretch" data-background-color="#000" data-background-opacity="0.1">
-				<h3>CryptoMiner Use</h3>
-				<div style="zoom:0.75" class="vega-chart" id="vis2" data-spec="data/crypto.json"></div>
-				<p class="smallest bottom-right">Source: HTTP Archive. 2017-09-15 to 2019-10-01</p>
-				<aside class="notes">
+					Unfortunately for most site, the discovery was through twitter.
 				</aside>
 			</section>
 			<section data-background-image="../backgrounds/monero.jpg" data-background-fit="stretch" data-background-color="#000" data-background-opacity="0.1">
@@ -640,10 +663,19 @@
 				<aside class="notes">
 				</aside>
 			</section>
+			<section data-background-image="../backgrounds/monero.jpg" data-background-fit="stretch" data-background-color="#000" data-background-opacity="0.1">
+				<h3>CryptoMiner Use</h3>
+				<div style="zoom:0.75" class="vega-chart" id="vis2" data-spec="data/crypto.json"></div>
+				<p class="smallest bottom-right">Source: HTTP Archive. 2017-09-15 to 2019-10-01</p>
+				<aside class="notes">
+					While the presence of crypto miners is apparently reducing...
+				</aside>
+			</section>
 			<section class="center"data-background-image="../backgrounds/monero.jpg" data-background-fit="stretch" data-background-color="#000" data-background-opacity="0.1">
 				<h3>Static analysis is not enough</h3>
 				<div class="tweet" data-src="https://twitter.com/gwillem/status/1187667658642206720?s=19"></div>
 				<aside class="notes">
+					They could just be getting better at hiding.
 				</aside>
 			</section>
 			<section class="center" data-background-image="../backgrounds/monero.jpg" data-background-fit="stretch" data-background-color="#000" data-background-opacity="0.1">
@@ -653,8 +685,6 @@
 					<li>Content-Security-Policy (connect-src)</li>
 					<li>Track CPU metrics (TTI / CPU Idle)</li>
 				</ul>
-				<aside class="notes">
-				</aside>
 			</section>
 		</section>
 		
@@ -675,6 +705,7 @@
 				<img class="plain stretch" data-src="media/optimizely_speedcurve.png"/>
 				<p class="smallest bottom-right"><a href="https://orangevalley.nl/en/9-ab-testing-tools-compared-on-site-speed-impact/">How A/B testing tools worsen your site speed - orangevalley</a></p>
 				<aside class="notes">
+					The customer implemented the performance optimisation tool and performance metrics tanked.
 				</aside>
 			</section>
 			<section class="center" data-background-image="../backgrounds/experimentation.jpg" data-background-fit="stretch" data-background-color="#000" data-background-opacity="0.1">
@@ -682,6 +713,8 @@
 				<img class="plain stretch" data-src="media/optimizely_sla.png"/>
 				<p class="smallest bottom-right"><a href="https://status.optimizely.com">status.optimizely.com</a></p>
 				<aside class="notes">
+					Optimizely's default implementation is a render-blocking script. Their SLA for performance is 500ms.<br>
+					Half a second is a long time to block the user experience.
 				</aside>
 			</section>
 			<section class="center" data-background-image="../backgrounds/experimentation.jpg" data-background-fit="stretch" data-background-color="#000" data-background-opacity="0.1">
@@ -689,6 +722,7 @@
 				<img class="plain stretch" data-src="media/optimizely_proxy.png"/>
 				<p class="smallest bottom-right"><a href="https://help.optimizely.com/Set_Up_Optimizely/Optimizely_self-hosting_for_Akamai_users">Optimizely self-hosting for Akamai users</a></p>
 				<aside class="notes">
+					The biggest win here is to serve the snippet over your connection. This removes at least three round-trips from the critical path.
 				</aside>
 			</section>
 			<section class="center" data-background-image="../backgrounds/experimentation.jpg" data-background-fit="stretch" data-background-color="#000" data-background-opacity="0.1">
@@ -696,6 +730,7 @@
 				<img class="plain stretch" data-src="media/ab_tools.png"/>
 				<p class="smallest bottom-right"><a href="https://orangevalley.nl/en/9-ab-testing-tools-compared-on-site-speed-impact/">How A/B testing tools worsen your site speed - orangevalley</a></p>
 				<aside class="notes">
+					Not all tools are created equally, so make sure you evaluate based on performance.
 				</aside>
 			</section>
 			<section class="center" data-background-image="../backgrounds/experimentation.jpg" data-background-fit="stretch" data-background-color="#000" data-background-opacity="0.1">
@@ -703,42 +738,15 @@
 				<img class="plain stretch" data-src="media/optimizely_edge.png"/>
 				<p class="smallest bottom-right"><a href="https://blog.optimizely.com/2019/09/12/performance-edge/">Introducing Performance Edge: Making Web Experiments Run Blazingly Fast</a></p>
 				<aside class="notes">
+					Optimizely knows the issue, and have released a product which dynamically generates the script at the edge to reduce bundle size.
 				</aside>
 			</section>
 		</section>
-		
-		<!--
-			<section>
-				<section data-background-image="../backgrounds/code.jpg" data-background-fit="stretch">
-					<h2 class="dark-bg">Incident 7: the plaintext passwords</h2>
-					<aside class="notes">
-					</aside>
-				</section>
-				<section data-background-image="../backgrounds/code.jpg" data-background-fit="stretch" data-background-color="#000" data-background-opacity="0.1">
-					<h3>The problem</h3>
-					<aside class="notes">
-					</aside>
-				</section>
-				<section data-background-image="../backgrounds/code.jpg" data-background-fit="stretch" data-background-color="#000" data-background-opacity="0.1">
-					<h3>The discovery</h3>
-					<aside class="notes">
-					</aside>
-				</section>
-				<section data-background-image="../backgrounds/code.jpg" data-background-fit="stretch" data-background-color="#000" data-background-opacity="0.1">
-					<h3>The defense</h3>
-					???
-					<aside class="notes">
-					</aside>
-				</section>
-			</section>
-		-->
 		
 		<section data-background-image="../backgrounds/book.jpg" data-background-fit="stretch">
 			<br>
 			<h2>What can we learn?</h2>
 		</section>
-		
-		
 		
 		<section>
 			<section class="center" data-background-color="#000">
@@ -780,6 +788,7 @@
 					<li>Proxy through your CDN</li>
 					<li>Content-Security-Policy</li>
 					<li>Subresource Integrity</li>
+					<li>Minimise Customisation</li>
 				</ul>
 			</section>
 			
