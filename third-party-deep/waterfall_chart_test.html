@@ -1,0 +1,198 @@
+<html>
+<head>
+    <style>* {
+        box-sizing: border-box; 
+    }
+    .wf-container {
+        width: 100%;
+        height: 100%;
+        background-color: #f6f6f6;
+        padding: 1em;
+        font-family: monospace;
+    }
+    .wf-row {
+        display: flex;
+        flex-direction: row;
+        width: 100%;
+        padding: 0.2em;
+        margin: 0;
+    }
+    .wf-row:nth-child(odd) {
+        background-color: #ddd
+    }
+    .wf-elem {
+        flex-basis: 1em;
+        height: 1.5em;
+        transition: all 1000ms ease-in-out;
+    }
+    .wf-elem.wf-width-1 {
+        flex-basis: 1em;
+    }
+    .wf-elem.wf-width-2 {
+        flex-basis: 2em;
+    }
+    .wf-elem.wf-width-3 {
+        flex-basis: 3em;
+    }
+    .wf-elem.wf-width-4 {
+        flex-basis: 4em;
+    }
+    .wf-elem.wf-width-5 {
+        flex-basis: 5em;
+    }
+    .wf-elem.wf-width-6 {
+        flex-basis: 6em;
+    }
+    .wf-elem.wf-label {
+        width: 8em;
+        flex-basis: 8em;
+        flex-shrink: 0;
+        padding-right: 1em;
+        line-height: 1.5em;
+        text-align: right;
+        display:inline-block;
+    }
+    .wf-elem.wf-blk {
+        background-color: transparent;
+    }
+    .wf-dns, .wf-tcp, .wf-tls, .wf-tfb {
+        opacity: 0.95;
+        margin-top: 0.5em;
+        height: 0.6em;
+    }
+    .wf-elem.wf-dns {
+        background-color: rgb(48,150,158);
+    }
+    .wf-elem.wf-tcp {
+        background-color: rgb(255, 157, 66);
+    }
+    .wf-elem.wf-tls {
+        background-color: rgb(213,102, 223);
+    }
+    .wf-elem.wf-tfb {
+        background-color: rgb(64, 255, 64);
+    }
+    .wf-elem.wf-dld {
+        background-color: rgb(52,150,255);
+    }
+    .wf-elem.wf-htm {
+        background-color: rgb(130,181,252);
+    }
+    .wf-elem.wf-jss {
+        background-color: rgb(254,197,132);
+    }
+    .wf-elem.wf-css {
+        background-color: rgb(178,234,148);
+    }
+    .wf-elem.wf-img {
+        background-color: rgb(196,154,232);
+    }
+    .wf-elem.wf-fnt {
+        background-color: rgb(255,82,62);
+    }
+    .wf-container .wf-loadtime {
+        line-height: 1.5em;
+        flex-grow: 1;
+        padding-left: 0;
+    }
+    .wf-container .wf-loadtime::before {
+        content: ' |< ';
+        color: red;
+    }
+</style>
+</head>
+<body>
+    <div class="wf-container stretch" id="wf1">
+        <div class="wf-row">
+            <div class="wf-elem wf-label">index.html</div>
+            <div class="wf-elem wf-dns"></div>
+            <div class="wf-elem wf-tcp"></div>
+            <div class="wf-elem wf-tls"></div>
+            <div id="dld1" class="wf-elem wf-htm wf-width-2"></div>
+        </div>
+        <div class="wf-row">
+            <div class="wf-elem wf-label">style.css</div>
+            <div id="css1" class="wf-elem wf-blk wf-dep-1" data-offset="3" style="flex-basis: 5em"></div>
+            <div class="wf-elem wf-css wf-width-3"></div>
+        </div>
+        <div class="wf-row">
+            <div class="wf-elem wf-label">image1.jpg</div>
+            <div id="css1" class="wf-elem wf-blk wf-dep-1" data-offset="3" style="flex-basis: 5em"></div>
+            <div class="wf-elem wf-img wf-width-5"></div>
+        </div>
+        <div class="wf-row">
+            <div class="wf-elem wf-label">image2.jpg</div>
+            <div id="css1" class="wf-elem wf-blk wf-dep-1" data-offset="3" style="flex-basis: 5em"></div>
+            <div class="wf-elem wf-img wf-width-6"></div>
+        </div>
+        <div class="wf-row">
+            <div class="wf-elem wf-label">font.woff2</div>
+            <div id="css1" class="wf-elem wf-blk wf-dep-1" data-offset="3" style="flex-basis: 5em"></div>
+            <div class="wf-elem wf-dns"></div>
+            <div class="wf-elem wf-tcp"></div>
+            <div class="wf-elem wf-tls"></div>
+            <div class="wf-elem wf-fnt wf-width-4"></div>
+        </div>
+        <div class="wf-row">
+            <div class="wf-elem wf-label">script.js</div>
+            <div id="js1" class="wf-elem wf-blk wf-dep-1" data-offset="3" style="flex-basis: 5em"></div>
+            <div class="wf-elem wf-jss wf-width-5"></div>
+        </div>
+        <div class="wf-row">
+            <div class="wf-elem wf-label">track.js</div>
+            <div class="wf-elem wf-blk wf-dep-1" data-offset="3" style="flex-basis: 5em"></div>
+            <div class="wf-elem wf-dns"></div>
+            <div class="wf-elem wf-tcp"></div>
+            <div class="wf-elem wf-tls"></div>
+            <div id="wf-js-dur-1" class="wf-elem wf-jss wf-width-5"></div>
+            <div class="wf-elem wf-loadtime" id="wf-plt-2" style="opacity:0">page load</div>
+        </div>
+        <div class="wf-row">
+            <div class="wf-elem wf-label">image3.jpg</div>
+            <div id="css1" class="wf-elem wf-blk wf-dep-1" data-offset="6" style="flex-basis: 11em"></div>
+            <div class="wf-elem wf-img wf-width-6"></div>
+        </div>
+        <div class="wf-row">
+            <div class="wf-elem wf-label">image4.jpg</div>
+            <div id="css1" class="wf-elem wf-blk wf-dep-1" data-offset="6" style="flex-basis: 11.2em"></div>
+            <div class="wf-elem wf-img wf-width-6"></div>
+            <div class="wf-elem wf-loadtime" id="wf-plt-1" style="opacity:1">page load</div>
+        </div>
+    </div>
+    <script>
+        let randomize = () => {
+            let els = document.querySelectorAll('.wf-dns, .wf-tls, .wf-tcp');
+            [].forEach.call(els,(el)=>{
+                let w = Math.random() + 0.5;
+                el.setAttribute('style','flex-basis:'+w+'em');
+            })
+        }
+        var dld = document.getElementById("dld1")
+        var dep1 = document.getElementsByClassName("wf-dep-1")
+        randomize();
+        window.setTimeout(()=>{
+            let r = 10 + Math.random()*5;
+            document.getElementById('wf-js-dur-1').setAttribute('style',`flex-basis:${r}em`);
+            document.getElementById('wf-plt-1').setAttribute('style',`opacity:0`);
+            document.getElementById('wf-plt-2').setAttribute('style',`opacity:1`);
+            window.setTimeout(()=>{
+                let r = 20 + Math.random()*5;
+                document.getElementById('wf-js-dur-1').setAttribute('style',`flex-basis:${r}em`);
+            },2000)
+        },2000)
+        /*
+        window.setInterval(() => {
+            randomize();
+            let w = Math.round((Math.random() + 1) * 10)
+            dld.setAttribute('style',`flex-basis: ${w}em`)
+            let rnd = 0.1;
+            Array.prototype.forEach.call(dep1,(dep) => {
+                let offset = parseInt(dep.getAttribute('data-offset') || 4) + rnd;
+                dep.setAttribute('style',`flex-basis: ${w+offset}em`);
+                rnd += Math.random() * 0.2;
+            })
+        },1000)
+        */
+    </script>
+</body>
+</html>

@@ -1,0 +1,188 @@
+{
+    "$schema": "https://vega.github.io/schema/vega/v5.json",
+    "width": 800,
+    "height": 500,
+    "padding": 5,
+    "autosize": {
+        "type": "fit",
+        "contains": "padding"
+    },
+    "signals": [
+      {
+        "name": "platform",
+        "value": "Desktop",
+        "bind": {
+          "input": "select",
+          "name": "Platform",
+          "options": ["Desktop","Mobile"]
+        }
+      },
+      {
+        "name": "stat",
+        "value": "mean",
+        "bind": {
+          "input": "select",
+          "name": "Statistic",
+          "options": ["mean","p50","p75","p90","p95"]
+        }
+      }
+    ],
+    "data": [
+      {
+        "name": "table",
+        "url": "data/sync_vs_async.csv",
+        "format": {"type": "csv", "parse": {"date": "date"}, "delimiter": ","},
+        "transform": [
+          {
+            "type": "filter",
+            "expr": "datum.platform == platform"
+          },
+          {
+            "type": "fold",
+            "fields": [{"signal": "stat+'_sync'"},{"signal": "stat+'_async'"}],
+            "as": ["method","value"]
+          }
+        ]
+      }
+    ],
+    "marks": [
+      {
+        "name": "pages",
+        "type": "area",
+        "from": {"data": "table"},
+        "encode": {
+          "update": {
+            "fill": {"value": "steelblue"},
+            "fillOpacity": {"value": 0.2},
+            "x": {"scale": "x", "field": "date"},
+            "y": {"scale": "y2", "field": "num_pages"},
+            "y2": {"scale": "y2", "value": 0}
+          }
+        }
+      },
+      {
+        "name": "group",
+        "type": "group",
+        "from": {
+          "facet": {
+            "data": "table",
+            "name": "group",
+            "groupby": "method"
+          }
+        },
+        "marks": [
+          {
+            "name": "lines",
+            "type": "line",
+            "style": ["line"],
+            "sort": {"field": "datum[\"date\"]"},
+            "from": {"data": "group"},
+            "encode": {
+              "update": {
+                "stroke": {"scale": "color", "field": "method"},
+                "x": {"scale": "x", "field": "date"},
+                "y": {"scale": "y", "field": "value"}
+              }
+            }
+          }
+        ]
+      }
+    ],
+    "scales": [
+      {
+        "name": "x",
+        "type": "time",
+        "domain": {"data": "table", "field": "date"},
+        "range": [0, {"signal": "width"}]
+      },
+      {
+        "name": "y",
+        "type": "linear",
+        "domain": {"data": "table", "field": "value"},
+        "range": [{"signal": "height"}, 0],
+        "nice": true,
+        "zero": true
+      },
+      {
+        "name": "y2",
+        "type": "linear",
+        "domain": {"data": "table", "field": "num_pages"},
+        "range": [{"signal": "height"}, 0],
+        "nice": true,
+        "zero": true
+      },
+      {
+        "name": "color",
+        "type": "ordinal",
+        "domain": {"data": "table", "field": "method", "sort": true},
+        "range": "category"
+      }
+    ],
+    "axes": [
+      {
+        "scale": "x",
+        "orient": "bottom",
+        "gridScale": "y",
+        "grid": false,
+        "gridColor": "#eee9",
+        "tickCount": {"signal": "ceil(width/40)"},
+        "domain": false,
+        "labels": false,
+        "maxExtent": 0,
+        "minExtent": 0,
+        "ticks": false,
+        "zindex": 0
+      },
+      {
+        "scale": "y",
+        "orient": "left",
+        "gridScale": "x",
+        "grid": true,
+        "gridColor": "rgba(255,255,255,0.25)",
+        "tickCount": {"signal": "ceil(height/40)"},
+        "domain": false,
+        "labels": false,
+        "maxExtent": 0,
+        "minExtent": 0,
+        "ticks": false,
+        "zindex": 0
+      },
+      {
+        "scale": "y2",
+        "orient": "right",
+        "grid": false,
+        "title": "Page Count",
+        "labelOverlap": true,
+        "format": "s",
+        "tickCount": {"signal": "ceil(height/40)"},
+        "zindex": 0
+      },
+      {
+        "scale": "x",
+        "orient": "bottom",
+        "grid": false,
+        "title": "date",
+        "labelFlush": true,
+        "labelOverlap": true,
+        "tickCount": {"signal": "ceil(width/40)"},
+        "zindex": 0
+      },
+      {
+        "scale": "y",
+        "orient": "left",
+        "grid": false,
+        "title": "Script Count",
+        "labelOverlap": true,
+        "tickCount": {"signal": "ceil(height/40)"},
+        "zindex": 0
+      }
+    ],
+    "legends": [
+      {
+        "stroke": "color",
+        "gradientLength": {"signal": "clamp(height, 64, 200)"},
+        "symbolType": "stroke",
+        "title": "Method"
+      }
+    ]
+  }
