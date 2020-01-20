@@ -55,7 +55,7 @@ html.tertiary-slide body {
 }
 
 .reveal table.list td:first-of-type::after {
-  content: '⇨';
+  content: ' - ';
   margin-left: 1em;
 }
 
@@ -138,7 +138,8 @@ html.tertiary-slide body {
 
 .reveal sup {
   vertical-align: super;
-  font-size: 50%;
+  font-size: 0.75em;
+  line-height: normal;
 }
 /* Ensure certain elements are never larger than the slide itself */
 .reveal img,
