@@ -1,0 +1,317 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8">
+	
+	<title>Six Web Performance Technologies to Watch in 2020 - @SimonHearne</title>
+	
+	<meta name="description" content="Presentation: Six Web Performance Technologies to Watch in 2020">
+	<meta name="author" content="Simon Hearne">
+	
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+	
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	
+	<link rel="stylesheet" href="../css/reveal.css">
+	<link rel="stylesheet" href="../css/theme/simon.css" id="theme">
+	
+	<!--<meta property=“og:image” content="https://simonhearne.com/presentations/third-party-deep/social_third-party-deep.jpg" />-->
+	<meta property=”og:image:width” content=1200" />
+	<meta property=”og:image:height” content=699 />
+	<meta name="twitter:card" content="summary_large_image" />
+	<meta name="twitter:creator" content="@SimonHearne" />
+	<meta name="twitter:title" content="Third-party content: a deep dive">
+	<meta name="twitter:description" content="An interactive presentation exploring six web performance technologies to watch in the 2020s." />
+	<!--<meta name="twitter:image" content="https://simonhearne.com/presentations/third-party-deep/social_third-party-deep.jpg" />-->
+	<!-- Printing and PDF exports -->
+	<script>
+		var link = document.createElement( 'link' );
+		link.rel = 'stylesheet';
+		link.type = 'text/css';
+		link.href = window.location.search.match( /print-pdf/gi ) ? '../css/print/pdf.css' : '../css/print/paper.css';
+		document.getElementsByTagName( 'head' )[0].appendChild( link );
+	</script>
+	
+	<script src="../lib/js/head.min.js"></script>
+	<script src="../js/reveal-3.8.0.js"></script>
+	<script src="../lib/js/jquery-3.3.1.min.js"></script>
+	
+	<!--[if lt IE 9]>
+		<script src="lib/js/html5shiv.js"></script>
+		<![endif]-->
+	</head>
+	
+	<body>
+		<div class="reveal">
+			<div class="smaller tagline">@SimonHearne</div>
+			<!-- Any section element inside of this container is displayed as a slide -->
+			<div class="slides">
+				<section class="center" data-background-image="../backgrounds/crystalball.jpg" data-background-fit="stretch">
+					<h1 style="font-size: 2.5em;">Six Web Performance Technologies to Watch in 2020</h1>
+					<div class="bottom" style="position: fixed;bottom: 0;width: 100%;text-align: center;">
+						<p style="margin-bottom:0;">Simon Hearne</p>
+						<p class="smaller">Web Performance Solutions Engineer @ Akamai</p>		
+						<p id="help-text" class="help-text"></p>
+					</div>
+					<aside class="notes">
+						Welcome to this talk on web performance technologies.<br>
+						If you are viewing this live, use keys 'n' and 'p' to navigate the slides.
+						Use key 'o' to view an overview. <a style="cursor: pointer" onclick="javascript:Reveal.configure({showNotes: false})">Click here to hide these notes</a>.
+					</aside>
+				</section>
+				
+				<section>
+					<h2>⚡️ Web Performance?</h2>
+					<p class="fragment">How fast users perceive the speed of your web and mobile apps</p>
+					<aside class="notes">
+						Third-party content is stuff that's on your apps but outside of your control.<br>
+						They're offten added after release, by teams not in the development side of the house.
+					</aside>
+				</section>
+
+				<section>
+					<section>
+						<h2>1. Networks</h2>
+					</section>
+					<section>
+						
+					</section>
+				</section>
+				
+				<section>
+					<section>
+						<h2>2. The Edge</h2>
+					</section>
+					<section>
+					</section>
+				</section>
+				
+				<section>
+					<section>
+						<h2>3. Languages</h2>
+					</section>
+					<section>
+					</section>
+				</section>
+				
+				<section>
+					<section>
+						<h2>4. Regulation</h2>
+					</section>
+					<section>
+						<div class="tweet" data-src="https://twitter.com/DanielMiessler/status/1222148613532307457?s=20"></div>
+					</section>
+				</section>
+				
+				<section>
+					<section>
+						<h2>5. Monetisation</h2>
+					</section>
+					<section>
+						<img class="stretch" data-src="media/bloomberg.png">
+					</section>
+				</section>
+				
+				<section>
+					<section>
+						<h2>6. Observability</h2>
+					</section>
+					<section data-background-image="../backgrounds/landscape.jpg" data-background-fit="stretch">
+						<p style="font-family: 'Shadows Into Light';font-size:2em;">You can't manage<br>what you don't measure</p>
+					</section>
+				</section>
+				
+				<section class="center" data-background-image="media/requestmap.png" data-background-fit="stretch" data-background-color="#000" data-background-opacity="0.25">
+					<aside class="notes">
+						Third-parties add value to websites, improve customer insight and allow monetisation.<br>
+						So it's no surprise that there are a lot of them!
+					</aside>
+				</section>
+				<section class="center left" data-background-image="../backgrounds/polarbear.jpg" data-background-fit="stretch" data-background-opacity="">
+					<h2>Thank you</h2>
+					<p><a href="https://twitter.com/SimonHearne">@SimonHearne</a></p>
+					<p><a href="mailto:simon@hearne.me">simon@hearne.me</a></p>
+					<p class="smallest"><a href="https://simonhearne.com/talks/">simonhearne.com/talks/</a></p>
+					<p class="smallest"><a href="https://noti.st/simonhearne">noti.st/simonhearne</a></p>
+				</section>
+				
+			</div>
+			<div id="chart-controls" class="hide"></div>
+			
+		</div>
+		
+		<script>
+			!function init() {
+				/* do something straight away */
+			}()
+			function getQueryVariable(variable)
+			{
+				var query = window.location.search.substring(1);
+				var vars = query.split("&");
+				for (var i=0;i<vars.length;i++) {
+					var pair = vars[i].split("=");
+					if(pair[0] == variable){return pair[1];}
+				}
+				return(false);
+			}
+			var presenting = window.location.search.includes('present');
+			var duration = getQueryVariable('duration') || 30;
+			var hasCode = !!document.querySelector('code');
+			var hasAnims = !!document.querySelector('[data-animate]');
+			var keyboard = {
+				// pause/resume time when Enter is pressed
+				13: () => {
+					ElapsedTimeBar.isPaused ? ElapsedTimeBar.resume() : ElapsedTimeBar.pause();
+				},
+				// reset timer when 'r' is pressed
+				82: () => {
+					ElapsedTimeBar.reset();
+				}
+			}
+			if (presenting) {
+				keyboard = Object.assign(keyboard,
+				{
+					39: 'next',
+					37: 'prev'
+				});
+			}
+			function getFragment(event) {
+				return (event.currentSlide.id !== "" ? event.currentSlide.id : null);
+			}
+			// More info https://github.com/hakimel/reveal.js#configuration
+			Reveal.initialize({
+				controls: !presenting,
+				showNotes: !presenting,
+				progress: true,
+				history: true,
+				center: false,
+				transitionSpeed: 'default', // default/fast/slow
+				
+				transition: 'none', // none/fade/slide/convex/concave/zoom
+				
+				allottedTime: duration * 60 * 1000, // 30 minutes
+				barColor: 'hsl(220,99%,54%)',
+				
+				// More info https://github.com/hakimel/reveal.js#dependencies
+				dependencies: [
+				{ src: '../lib/js/classList.js', 				async: true, condition: function() { return !document.body.classList; } },
+				{ src: '../plugin/markdown/marked.js', 			async: true, condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+				{ src: '../plugin/markdown/markdown.js', 		async: true, condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+				{ src: '../plugin/embed-tweet/embed-tweet.js', 	async: false, condition: function() { return !!document.querySelector( 'div.tweet[data-src]' ); } },
+				{ src: '../lib/js/vega.min.js', 				condition: function() { return !!document.querySelector( 'div.vega-chart' ); } },
+				{ src: '../lib/js/vega-embed.min.js', 			condition: function() { return !!document.querySelector( 'div.vega-chart' ); } },
+				{ src: '../plugin/elapsed-time-bar/elapsed-time-bar.js', async: true, condition: function() { return presenting}},
+				{ src: '../plugin/highlight/highlight.js', 		async: true, condition: function() {return hasCode},async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+				{ src: '../plugin/search/search.js', 			async: true },
+				{ src: '../plugin/zoom-js/zoom.js', 			async: true },
+				{ src: '../plugin/notes/notes.js', 				async: true }
+				],
+				
+				keyboard: keyboard
+			});
+			Reveal.addEventListener( 'slidechanged', function( event ) {
+				let state = {h: event.indexh, v: event.indexv, name: getFragment(event)};
+			} );
+			
+			/* animate.css */
+			// Set animation delay if data-delay is specified
+			Reveal.addEventListener('ready', function ( event ) {
+				$('*[data-delay]').each( function () { 
+					var delay = $(this).attr("data-delay");
+					$(this).css("-webkit-animation-delay", delay+"s"); 
+					$(this).css("animation-delay", delay+"s"); 
+				});
+			});
+			
+			// Set animation duration if data-duration is specified
+			Reveal.addEventListener('ready', function ( event ) {
+				$('*[data-duration]').each( function () { 
+					var duration = $(this).attr("data-duration");
+					$(this).css("-webkit-animation-duration", duration+"s"); 
+					$(this).css("animation-duration", duration+"s"); 
+				});
+				let width = window.innerWidth / 2;
+				$(".vega-chart").each(function() {
+					let spec = this.attributes.getNamedItem("data-spec").value;
+					//spec = "https://raw.githubusercontent.com/vega/vega/master/docs/examples/bar-chart.vg.json";
+					vegaEmbed('#'+this.id, spec, {"actions": false, "theme": "dark", "width": width, "renderer": "svg", "config": "data/config.json"}).then(function(result) {
+						// Access the Vega view instance (https://vega.github.io/vega/docs/api/view/) as result.view
+					}).catch(console.error);
+				});
+			});
+			
+			// Animate items that are not in a fragment
+			Reveal.addEventListener('slidechanged', function( event ) {
+				// Animate elements that are not a fragment (or in a fragment)
+				var filter = '*[data-animate]:not(.fragment):not(.fragment *)';
+				
+				$(event.currentSlide).find(filter).each( function () {
+					$(this).addClass('animated');
+					$(this).addClass($(this).attr('data-animate'));
+				});		
+				$(event.previousSlide).find(filter).each( function () {
+					$(this).removeClass('animated');
+					$(this).removeClass($(this).attr('data-animate'));
+				});		
+			});
+			
+			// Animate fragments
+			Reveal.addEventListener('fragmentshown', function( event ) {
+				function loop(i, el) { 
+					if ($(el).attr('data-animate')) {
+						$(el).addClass('animated');
+						$(el).addClass($(el).attr('data-animate'));
+					}
+					$.each($(el).children().not('.fragment'), loop);
+					if ($(el).attr('data-eval-show')) {
+						eval($(el).attr('data-eval-show'))
+					}
+				};
+				$.each(event.fragments, loop);
+			});
+			
+			// Make the animation runnable again if fragment is hidden
+			Reveal.addEventListener('fragmenthidden', function( event ) {	  
+				function loop(i, el) { 
+					if ($(el).attr('data-animate')) {
+						$(el).removeClass('animated');
+						$(el).removeClass($(el).attr('data-animate'));
+					}
+					$.each($(el).children().not('.fragment'), loop);
+					if ($(el).attr('data-eval-hide')) {
+						eval($(el).attr('data-eval-hide'))
+					}
+				};
+				$.each(event.fragments, loop);
+			});
+			if (hasCode) {
+				var l = document.createElement('link');
+				l.rel="stylesheet";
+				l.href = "../lib/css/zenburn.css"
+				document.head.appendChild(l);
+			}
+			if (hasAnims) {
+				var l = document.createElement('link');
+				l.rel="stylesheet";
+				l.href = "../lib/css/animate.min.css"
+				document.head.appendChild(l);
+			}
+		</script>
+		
+		<script nonce="googleAnalytics">
+			(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+				(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();
+				i.initAnalytics=function(){a=s.createElement(o),m=s.getElementsByTagName(o)[0];
+					a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+				}})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+				
+				ga('create', 'UA-6512525-16', 'auto', {'siteSpeedSampleRate': 100});
+				ga('send', 'pageview');
+				
+				window.addEventListener('load',function(){initAnalytics()});
+			</script>
+		</body>
+		</html>
+		
