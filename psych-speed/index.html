@@ -37,12 +37,12 @@
 	<body>
 		<div class="reveal">
 			<div class="smaller tagline">@SimonHearne</div>
-			<!-- Any section element inside of this container is displayed as a slide -->
+			<!-- Entertain, inform, educate -->
 			<div class="slides">
 				<section data-state="title-slide">
-					<h1>The Psychology of <span style="display:block; font-style:oblique;">Speed</span></h1>
+					<h1>The Psychology of <span style="font-style:oblique;">Speed</span></h1>
 					<p style="text-align: center;">Simon Hearne</p>
-					<p class="smaller" style="text-align: center;">Web Performance Solutions Engineer @ Akamai</p>
+					<p class="smaller" style="text-align: center;">Web Performance Architect</p>
 
 					<aside class="notes">
 						We intuitively know that slow websites cause frustration, but intuition doesn’t pay for developers! In this talk I want to explore the latest research and analysis on the psychology of web performance. I’ll also dig into some of the trillions of user experience beacons we’ve collected through mPulse to try to identify the best timers to represent user experience, and how they impact key performance indicators like time on page and session length.
@@ -91,6 +91,205 @@
 					<aside class="notes">
 						There are also studies which show how engagement increases when speed is improved, but what is engagement, and what is speed? Unfortunately it is extremely rare for these case studies to include the things we really care about - what metric did they use to measure speed? How did they collect it, or aggregate it? The BBC loses an additional 10% of users for every second their site gets slower - what is a lost user? A bounce or a session that never happens? These are all important questions and caveats to bear in mind when viewing case studies, they are useful tools to generate interest in speed but the critical task is to perform this analysis on _your own data_.
 					</aside>
+				</section>
+
+				<section>
+					<section>
+						<h3>Why?</h3>
+					</section>
+					<section data-background-image="../backgrounds/waiting.jpg">
+						<h3 class="dark-bg">It's all about the wait</h3>
+						<p class="dark-bg fragment">... and we know a lot about waiting ...</p>
+					</section>
+					<section>
+						<img class="stretch" data-src="media/psych-lines.png"/>
+						<p class="subtitle smallest bottom-right"><a href="http://www.columbia.edu/~ww2040/4615S13/Psychology_of_Waiting_Lines.pdf">The Psychology of Waiting Lines [PDF]</a></p>
+					</section>
+					<section>
+						<h3>Six rules for waiting times</h3>
+						<ol>
+						<li class="fragment">Unoccupied time feels longer than occupied time</li>
+						<li class="fragment">People want to get started</li>
+						<li class="fragment">Anxiety makes waits seem longer</li>
+						<li class="fragment">Uncertain waits feel longer than known waits</li>
+						<li class="fragment">Unexplained waits feel longer than explained waits</li>
+						<li class="fragment">The more valuable the service, the longer people will wait</li>
+					</section>
+				</section>
+				
+
+				<section>
+					<section class="pull-up" data-background-image="media/elevator1.jpg">
+						<h3 class="dark-bg">1 - Occupying Time</h3>
+						<p class="bottom-right smallest"><a href="https://signalvnoise.com/posts/1244-defining-the-problem-of-elevator-waiting-times">Defining the Problem of Elevator Waiting Times</a></p>
+					</section>
+					<section>
+						<h3>Occupying time on the web</h3>
+						<ul>
+							<li class="fragment">Show something, fast</li>
+							<li class="fragment">Make it fun!</li>
+						</ul>
+					</section>
+					<section>
+						<h3>Measuring time to occupied</h3>
+						<ul>
+							<li class="fragment">First Paint</li>
+							<li class="fragment">First Paint</li>
+						</ul>
+					</section>
+					<section>
+						<h3>Optimising time to occupied</h3>
+						<p>...</p>
+					</section>
+				</section>
+
+				<section>
+					<section class="pull-up" data-background-image="media/restaurant.jpg">
+						<h3 class="dark-bg">2 - Getting Started</h3>
+					</section>
+					<section>
+						<h3>Getting started on the web</h3>
+						<ul>
+							<li class="fragment">Show something, fast</li>
+							<li class="fragment">Make it fun!</li>
+						</ul>
+					</section>
+					<section>
+						<h3>Measuring time to start</h3>
+						<ul>
+							<li class="fragment">First Paint</li>
+							<li class="fragment">First Paint</li>
+						</ul>
+					</section>
+					<section>
+						<h3>Optimising time to start</h3>
+						<p>...</p>
+					</section>
+				</section>
+
+
+				<section>
+					<section class="pull-up" data-background-image="media/crosswalk1.jpg"/>
+						<h3 class="dark-bg">3 - Wait Anxiety</h3>
+					</section>
+					<section>
+						<h3>Anxiety on the Web</h3>
+						<ul>
+							<li class="fragment">Show something, fast</li>
+							<li class="fragment">Make it fun!</li>
+						</ul>
+					</section>
+					<section>
+						<h3>Measuring anxiety</h3>
+						<ul>
+							<li class="fragment">First Paint</li>
+							<li class="fragment">First Paint</li>
+						</ul>
+					</section>
+					<section>
+						<h3>Reducing anxiety</h3>
+						<p>...</p>
+					</section>
+				</section>
+
+
+				<section>
+					<section class="pull-up" data-background-image="media/park_queue.jpg"/>
+						<h3 class="dark-bg">4 - Uncertain Waits</h3>
+					</section>
+					<section>
+						<h3>Uncertainty on the web</h3>
+						<aside>Show something recognisable like a site logo, give progress indication.</aside>
+						<ul>
+							<li class="fragment">Show something, fast</li>
+							<li class="fragment">Make it fun!</li>
+						</ul>
+					</section>
+					<section>
+						<h3>Measuring time to start</h3>
+						<ul>
+							<li class="fragment">First Paint</li>
+							<li class="fragment">First Paint</li>
+						</ul>
+					</section>
+				</section>
+
+
+				<section>
+					<section class="pull-up" data-background-image="media/delayed.jpg"/>
+						<h3 class="dark-bg">5 - Unexplained Waits</h3>
+					</section>
+					<section>
+						<h3>Explaining waits on the web</h3>
+						<aside>Describe why the user is waiting, what the back-end is doing etc.</aside>
+						<ul>
+							<li class="fragment">Show something, fast</li>
+							<li class="fragment">Make it fun!</li>
+						</ul>
+					</section>
+					<section>
+						<h3>Measuring time to start</h3>
+						<ul>
+							<li class="fragment">First Paint</li>
+							<li class="fragment">First Paint</li>
+						</ul>
+					</section>
+				</section>
+
+
+				<section>
+					<section class="pull-down" data-background-image="media/ctm.jpg"/>
+						<h3 class="dark-bg">6 - Valuable Waits</h3>
+					</section>
+					<section>
+						<h3>The value of waits on the web</h3>
+						<ul>
+							<li class="fragment">Show something, fast</li>
+							<li class="fragment">Make it fun!</li>
+						</ul>
+					</section>
+					<section>
+						<h3>Measuring time to start</h3>
+						<ul>
+							<li class="fragment">First Paint</li>
+							<li class="fragment">First Paint</li>
+						</ul>
+					</section>
+				</section>
+
+				<section>
+					<section data-background-image="../backgrounds/string.jpeg">
+						<h3 class="dark-bg">How do we measure waits?</h3>
+					</section>
+					<section>
+						<h3>Web wait types</h3>
+						<ol>
+							<li class="fragment">Page loads</li>
+							<li class="fragment">In-app Navigations</li>
+							<li class="fragment">User Actions</li>
+						</ol>
+					</section>
+					<section>
+						<h3>1 - page load wait</h3>
+					</section>
+					<section>
+						<h3>2 - in-app navigation wait</h3>
+					</section>
+					<section>
+						<h3>3 - user action wait</h3>
+					</section>
+				</section>
+
+				<section>
+					<section>
+						<h3>Hacking perceived waits</h3>
+						<p class="fragment">AKA: making waits feel less waity</p>
+					</section>
+				</section>
+
+
+				<section class="pull-up" data-background-image="../backgrounds/passion.jpg">
+					<h3 class="dark-bg">Thank you!</h3>
 				</section>
 
 				<section>
@@ -156,19 +355,6 @@
 						</ul>
 						<p class="smallest bottom-right"><sup>*</sup>mPulse only</p>
 					</section>
-					<!--
-					<section id="poll-1" data-state="secondary-slide">
-						<h2>POLL 1</h2>
-						<p>What do you measure?</p>
-						<ul>
-							<li>Page Load Time</li>
-							<li>DOM Timings</li>
-							<li>Paint Timings</li>
-							<li>Time to Interactive</li>
-							<li>Custom Timers?</li>
-						</ul>
-					</section>
-					-->
 					<section>
 						<h3>User Timing API 🦄</h3>
 						<!--
@@ -249,12 +435,12 @@ window.addEventListener(
 					</section>
 					<section>
 						<h3>But we can optimise perception...</h3>
-						<p class="bottom-right smallest"><a href="https://signalvnoise.com/posts/1244-defining-the-problem-of-elevator-waiting-times">Defining the Problem of Elevetaor Waiting Times</a></p>
+						<p class="bottom-right smallest"><a href="https://signalvnoise.com/posts/1244-defining-the-problem-of-elevator-waiting-times">Defining the Problem of Elevator Waiting Times</a></p>
 					</section>
 					<section>
 						<h3>Slow elevators...</h3>
 						<img class="plain stretch" data-src="media/elevator1.jpg"/>
-						<p class="bottom-right smallest"><a href="https://signalvnoise.com/posts/1244-defining-the-problem-of-elevator-waiting-times">Defining the Problem of Elevetaor Waiting Times</a></p>
+						<p class="bottom-right smallest"><a href="https://signalvnoise.com/posts/1244-defining-the-problem-of-elevator-waiting-times">Defining the Problem of Elevator Waiting Times</a></p>
 					</section>
 					<section>
 						<h3>Waiting for baggage...</h3>
@@ -281,7 +467,7 @@ window.addEventListener(
 					</section>
 					<section>
 						<h3>Progress Indicators</h3>
-						<video class="stretch"" autoplay muted loop data-src="media/all-birds-mobile1.mov"/>
+						<video class="stretch" autoplay muted loop data-src="media/all-birds-mobile1.mov"/>
 					</section>
 				</section>
 

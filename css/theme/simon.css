@@ -64,7 +64,7 @@ html.tertiary-slide body {
 }
 
 .reveal {
-  font-family: "Lato", sans-serif;
+  font-family: "Josefin Sans", sans-serif;
   font-size: 40px;
   font-weight: 300;
   color: #eee; }
@@ -78,6 +78,10 @@ html.tertiary-slide body {
   color: #fff;
   background: #FF5E99;
   text-shadow: none; }
+
+::marker {
+  font-size: 75%;
+}
 
 .reveal .slides > section,
 .reveal .slides > section > section {
@@ -737,6 +741,13 @@ p.todo {
 
 .reveal section.left {
   text-align: left;
+}
+
+.reveal section.pull-up {
+  top: 1em !important;
+}
+.reveal section.pull-down {
+  top: 50vh !important;
 }
 
 /* --- WATERFALL */
