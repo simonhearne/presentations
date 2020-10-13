@@ -168,7 +168,7 @@ html.tertiary-slide body {
 
 .reveal ol {
   list-style-type: decimal;
-  font-size: 115%;
+  font-size: 105%;
 }
 
 .reveal ul {
@@ -203,6 +203,7 @@ html.tertiary-slide body {
   display: block;
   position: relative;
   width: 70%;
+  font-size: 120%;
   margin: 0 auto;
   padding: 5px;
   font-style: italic;
@@ -283,7 +284,9 @@ html.tertiary-slide body {
   text-decoration: none;
   -webkit-transition: color .15s ease;
   -moz-transition: color .15s ease;
-  transition: color .15s ease; }
+  transition: color .15s ease;
+  cursor: pointer;
+ }
 
 .reveal a:hover {
   color: #71e9f4;
@@ -527,6 +530,8 @@ span { display: inline-block; }
   right: 0;
 }
 
+
+.presenting .hide-when-presenting,
 .hide {
   visibility: hidden;
   opacity: 0;
