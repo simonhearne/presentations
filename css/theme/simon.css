@@ -64,7 +64,7 @@ html.tertiary-slide body {
 }
 
 .reveal {
-  font-family: "Lato", sans-serif;
+  font-family: "Josefin Sans", sans-serif;
   font-size: 40px;
   font-weight: 300;
   color: #eee; }
@@ -78,6 +78,11 @@ html.tertiary-slide body {
   color: #fff;
   background: #FF5E99;
   text-shadow: none; }
+
+::marker {
+  font-size: 75%;
+  font-weight: 100;
+}
 
 .reveal .slides > section,
 .reveal .slides > section > section {
@@ -162,10 +167,14 @@ html.tertiary-slide body {
   margin: 0 0 0 1em; }
 
 .reveal ol {
-  list-style-type: decimal; }
+  list-style-type: decimal;
+  font-size: 105%;
+}
 
 .reveal ul {
-  list-style-type: disc; }
+  list-style-type: disc;
+  font-size: 115%;
+ }
 
 .reveal ul.no-bullets {
     list-style-type: none;
@@ -194,6 +203,7 @@ html.tertiary-slide body {
   display: block;
   position: relative;
   width: 70%;
+  font-size: 120%;
   margin: 0 auto;
   padding: 5px;
   font-style: italic;
@@ -274,7 +284,9 @@ html.tertiary-slide body {
   text-decoration: none;
   -webkit-transition: color .15s ease;
   -moz-transition: color .15s ease;
-  transition: color .15s ease; }
+  transition: color .15s ease;
+  cursor: pointer;
+ }
 
 .reveal a:hover {
   color: #71e9f4;
@@ -518,6 +530,8 @@ span { display: inline-block; }
   right: 0;
 }
 
+
+.presenting .hide-when-presenting,
 .hide {
   visibility: hidden;
   opacity: 0;
@@ -737,6 +751,13 @@ p.todo {
 
 .reveal section.left {
   text-align: left;
+}
+
+.reveal section.pull-up {
+  top: 1em !important;
+}
+.reveal section.pull-down {
+  top: 50vh !important;
 }
 
 /* --- WATERFALL */
