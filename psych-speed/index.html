@@ -74,7 +74,7 @@
 				</section>
 
 				<section>
-					<section>
+					<section data-state="secondary-slide">
 						<h3>Why does speed matter?</h3>
 					</section>
 					<section data-background-image="../backgrounds/waiting.jpg">
@@ -88,13 +88,23 @@
 						<blockquote>Waiting is frustrating, demoralizing, agonizing, aggravating, annoying, time consuming and incredibly expensive.</blockquote>
 					</section>
 					<section>
-						<h3>Six rules for waiting times</h3>
+						<h3>Three rules for waiting times</h3>
 						<ol>
 							<li data-autoslide="500" class="fragment">Unoccupied time feels longer than occupied time</li>
 							<li data-autoslide="500" class="fragment">Anxiety makes waits seem longer</li>
-							<li class="fragment">Uncertain waits feel longer than known waits</li>
+							<li class="fragment">Unknown waits feel longer than known waits</li>
 						</ol>
 					</section>
+					<section>
+						<h3>Humans hate wasted time</h3>
+						<ul>
+							<li data-autoslide="750" class="fragment">Give feedback within <b>100ms</b></li>
+							<li data-autoslide="750" class="fragment">Update every <b>1,000ms</b></li>
+							<li data-autoslide="1500" class="fragment">Complete actions within <b>3,000ms</b></li>
+						</ul>
+						<p class="fragment smaller bottom-right">Miller, R. B. (1968). Response time in man-computer conversational transactions.</p>
+					</section>
+
 				</section>
 				
 				<section>
@@ -106,7 +116,24 @@
 						<h3>Occupying time on the web</h3>
 						<ul>
 							<li class="fragment">Show something, fast</li>
-							<li class="fragment">Make it fun!</li>
+							<li class="fragment">Fill UX gaps</li>
+							<li class="fragment">Prioritise what matters</li>
+						</ul>
+					</section>
+					<section>
+						<h3>Show what you've got!</h3>
+						<img class="stretch" data-src="media/cnn1.png"/>
+					</section>
+					<section>
+						<h3>Show what you've got!</h3>
+						<img class="stretch" data-src="media/cnn2.png"/>
+					</section>
+					<section>
+						<h3>Show what you've got!</h3>
+						<ul>
+							<li class="fragment">No blocking scripts</li>
+							<li class="fragment">No external CSS</li>
+							<li class="fragment">HTML doc &lt; 50kB</li>
 						</ul>
 					</section>
 					<section>
@@ -126,14 +153,6 @@
 						<p class='smallest hide-when-presenting'>press 'q' to jump!<p><div id="offline-resources" style="display:none;visibility:hidden;"><img id="offline-resources-1x" data-src="media/100-offline-sprite.png"><img id="offline-resources-2x" data-src="media/200-offline-sprite.png"><div id="audio-resources"><audio id="offline-sound-press" data-src="media/offline-sound-press.mp3"></audio><audio id="offline-sound-hit" data-src="media/offline-sound-hit.mp3"></audio><audio id="offline-sound-reached" data-src="media/offline-sound-reached.mp3"></audio></div></div>
 					</section>
 					<section>
-						<h3>Show what you've got!</h3>
-						<img class="stretch" data-src="media/cnn1.png"/>
-					</section>
-					<section>
-						<h3>Show what you've got!</h3>
-						<img class="stretch" data-src="media/cnn2.png"/>
-					</section>
-					<section>
 						<h3>Prioritise what matters</h3>
 						<img class="stretch" data-src="media/news_1000ms.jpg"/>
 						<p class="bottom-right smallest"><a href="https://ldnwebperf.org/sessions/breaking-news-at-1000ms/">Breaking News at 1000ms</a></p>
@@ -143,11 +162,10 @@
 						<ul>
 							<li class="fragment">Time to Title</li>
 							<li class="fragment">First Contentful Paint</li>
-							<li class="fragment">User perceived times</li>
+							<li class="fragment">Hero Element timers</li>
 						</ul>
 					</section>
 				</section>
-
 
 				<section>
 					<section class="pull-down" data-background-image="media/crosswalk1.jpg"/>
@@ -157,8 +175,17 @@
 					<section>
 						<h3>Anxiety on the Web</h3>
 						<ul>
-							<li class="fragment">Maintain visual stability</li>
-							<li class="fragment">Be optimistic!</li>
+							<li class="fragment">Did that work?</li>
+							<li class="fragment">Can I click on it yet?</li>
+							<li class="fragment">Is it broken?</li>
+						</ul>
+					</section>
+					<section>
+						<h3>Reducing Anxiety</h3>
+						<ul>
+							<li class="fragment">Maintain Visual Stability</li>
+							<li class="fragment">Use optimistic UI patterns</li>
+							<li class="fragment">Give user feedback</li>
 						</ul>
 					</section>
 					<section>
@@ -169,6 +196,16 @@
 							<source data-src="media/cnn.mp4" type="video/mp4">
 							<source data-src="media/cnn.ogv" type="video/ogg">
 						</video>
+					</section>
+					<section>
+						<h3>Reducing layout shifts</h3>
+						<ul>
+							<li class="fragment">font-display: [ optional | block ] 😕</li>
+							<li class="fragment">pre-allocate ad slots</li>
+							<li class="fragment">size attributes on images</li>
+							<li class="fragment">box-sizing: border-box</li>
+							<li class="fragment">overflow-y: scroll</li>
+						</ul>
 					</section>
 					<section class="pull-up">
 						<h3>Optimistic UI (1)</h3>
@@ -199,10 +236,30 @@
 						</video>
 					</section>
 					<section>
-						<h3>Reducing wait anxiety</h3>
+						<h3>Give user feedback</h3>
+						<style>@-webkit-keyframes short-press{0%{-webkit-transform:scale(1);transform:scale(1)}50%{-webkit-transform:scale(.9);transform:scale(.9)}100%{-webkit-transform:scale(1);transform:scale(1)}}@keyframes short-press{0%{-webkit-transform:scale(1);transform:scale(1)}50%{-webkit-transform:scale(.9);transform:scale(.9)}100%{-webkit-transform:scale(1);transform:scale(1)}}.submit-button{display:block;margin:2em auto;zoom:2;font-family:inherit;font-weight:300;font-size:.75em;height:39px;line-height:39px;overflow:hidden;background:#4dbecf;border-radius:3px;box-shadow: 1px 2px 8px 0px rgb(60 54 68);border:0;cursor:pointer;-webkit-transition:all .3s ease;transition:all .3s ease}.submit-button:focus,.submit-button:hover{outline:0}.submit-button.animated{-webkit-animation:.75s short-press cubic-bezier(.77,0,.175,1) forwards;animation:.75s short-press cubic-bezier(.77,0,.175,1) forwards}.submit-button>span{display:block;color:#fff;text-align:center}.submit-button>span.pre-state-msg{-webkit-transition:all .7s cubic-bezier(.77,0,.175,1);transition:all .7s cubic-bezier(.77,0,.175,1);-webkit-transition-delay:.75s;transition-delay:.75s}.submit-button.state-1 .pre-state-msg{margin-top:-38px}.submit-button.state-2 .pre-state-msg{margin-top:-76px}</style>
+						<button class="submit-button state-0"><span class="pre-state-msg">Add to bag</span><span class="current-state-msg">Adding...</span><span class="done-state-msg">Done!</span></button>
+						<script>const button=document.querySelector(".submit-button"),stateMsg=document.querySelector(".pre-state-msg"),updateButtonMsg=function(){button.classList.add("state-1","animated"),setTimeout(finalButtonMsg,2e3)},finalButtonMsg=function(){button.classList.add("state-2"),setTimeout(setInitialButtonState,2e3)},setInitialButtonState=function(){button.classList.remove("state-1","state-2","animated")};button.addEventListener("click",updateButtonMsg);</script>
+					</section>
+					<section>
+						<h3>Give user feedback</h3>
 						<ul>
-							<li>Avoid layout shifts</li>
-							<li>Use optimistic UI patterns</li>
+							<li class="fragment">Keep it in context</li>
+							<li class="fragment">Animation buys you 250 - 500ms</li>
+							<li class="fragment">:active is a quick fix</li>
+						</ul>
+						<div class="fragment" style="margin-top:1em;">
+							<style>.btn {display: inline-block; zoom: 2; padding: 1em;} .btn.active-btn:active {outline: 2px solid purple;}</style>
+							<button type="button" class="btn plain-btn">Click me!</button>
+							<button type="button" class="btn active-btn">Click me!</button>
+						</div>
+					</section>
+					<section>
+						<h3>Reducing Anxiety</h3>
+						<ul>
+							<li class="fragment">Maintain Visual Stability</li>
+							<li class="fragment">Use optimistic UI patterns</li>
+							<li class="fragment">Give user feedback</li>
 						</ul>
 					</section>
 				</section>
@@ -216,21 +273,23 @@
 						<h3>Uncertainty on the web</h3>
 						<aside class="notes">Show something recognisable like a site logo, give progress indication.</aside>
 						<ul>
+							<li class="fragment">Am I in the right place?</li>
+							<li class="fragment">How long is this going to take?</li>
+							<li class="fragment">Is it broken?</li>
+						</ul>
+					</section>
+					<section>
+						<h3>Creating certainty</h3>
+						<ul>
 							<li class="fragment">Anchor your user</li>
-							<li class="fragment">Give a timeline</li>
-							<li class="fragment">Update every 1,000ms</li>
+							<li class="fragment">Give timelines</li>
+							<li class="fragment">Active listening / feedback</li>
 						</ul>
 					</section>
 					<section>
 						<h3>Site logos are user anchors</h3>
 						<img class="stretch" data-src="media/forbes.jpg"/>
 						<p class="smallest bottom-right"><a href="https://www.webpagetest.org/video/compare.php?tests=201013_Di94_3573a8bf92b4e9f548eafe525543bb2b-r%3A1-c%3A0&thumbSize=200&ival=50&end=visual">Forbes Article WPT Result</a></p>
-					</section>
-					<section>
-						<h3>Creating certainty on buttons</h3>
-						<style>@-webkit-keyframes short-press{0%{-webkit-transform:scale(1);transform:scale(1)}50%{-webkit-transform:scale(.9);transform:scale(.9)}100%{-webkit-transform:scale(1);transform:scale(1)}}@keyframes short-press{0%{-webkit-transform:scale(1);transform:scale(1)}50%{-webkit-transform:scale(.9);transform:scale(.9)}100%{-webkit-transform:scale(1);transform:scale(1)}}.submit-button{display:block;margin:2em auto;zoom:2;font-family:inherit;font-weight:300;font-size:.75em;height:39px;line-height:39px;overflow:hidden;background:#4dbecf;border-radius:3px;box-shadow: 1px 2px 8px 0px rgb(60 54 68);border:0;cursor:pointer;-webkit-transition:all .3s ease;transition:all .3s ease}.submit-button:focus,.submit-button:hover{outline:0}.submit-button.animated{-webkit-animation:.75s short-press cubic-bezier(.77,0,.175,1) forwards;animation:.75s short-press cubic-bezier(.77,0,.175,1) forwards}.submit-button>span{display:block;color:#fff;text-align:center}.submit-button>span.pre-state-msg{-webkit-transition:all .7s cubic-bezier(.77,0,.175,1);transition:all .7s cubic-bezier(.77,0,.175,1);-webkit-transition-delay:.75s;transition-delay:.75s}.submit-button.state-1 .pre-state-msg{margin-top:-38px}.submit-button.state-2 .pre-state-msg{margin-top:-76px}</style>
-						<button class="submit-button state-0"><span class="pre-state-msg">Add to bag</span><span class="current-state-msg">Adding...</span><span class="done-state-msg">Done!</span></button>
-						<script>const button=document.querySelector(".submit-button"),stateMsg=document.querySelector(".pre-state-msg"),updateButtonMsg=function(){button.classList.add("state-1","animated"),setTimeout(finalButtonMsg,2e3)},finalButtonMsg=function(){button.classList.add("state-2"),setTimeout(setInitialButtonState,2e3)},setInitialButtonState=function(){button.classList.remove("state-1","state-2","animated")};button.addEventListener("click",updateButtonMsg);</script>
 					</section>
 					<section>
 						<h3>Provide visual feedback</h3>
@@ -250,7 +309,7 @@
 						<img class="stretch" data-src="media/ctm.jpg"/>
 					</section>
 					<section>
-						<h3>Anticipating waits</h3>
+						<h3>Explain the value of the wait</h3>
 						<img class="stretch" data-src="media/autotrader.png"/>
 						<p class="smallest bottom-right"><a href="https://www.autotrader.co.uk/">autotrader.co.uk</a></p>
 					</section>
@@ -260,23 +319,64 @@
 						<p class="smallest bottom-right"><a href="https://www.skyscanner.net/">skyscanner.net</a></p>
 					</section>
 					<section>
+						<h3>What about when things go wrong?</h3>
+						<img class="" data-src="media/something-went-wrong.jpg"/>
+					</section>
+					<section>
+						<blockquote>Sometimes, simply naming what the person is probably feeling is a way of communicating the validity of that feeling.</blockquote>
+						<p class="smallest bottom-right"><a href="https://amzn.to/330BI07">Parent Effectiveness Training: The Tested New Way to Raise Responsible Children</a></p>
+					</section>
+					<section>
+						<blockquote>appreciate that offering no support for the user's emotional state during or after a system failure is tantamount to ignoring emotion, which can lead to a loss of opportunity for continued interaction</blockquote>
+						<p class="smallest bottom-right"><a href="https://affect.media.mit.edu/pdfs/02.klein-moon-picard.pdf">This computer responds to user frustration: Theory, design and results</a></p>
+					</section>
+					<section>
+						<h4>Simply recognising a poor experience<br>resulted in 50% longer game play</h4>
+					</section>
+					<section>
+						<h3>Active feedback strategy</h3>
+						<ul>
+							<li class="fragment">Measure how long it normally takes</li>
+							<li class="fragment">Set a budget based on 90th - 95th percentile</li>
+							<li class="fragment">Show an apologetic message after this time</li>
+						</ul>
+					</section>
+					<section>
+						<h3>Active feedback in the wild</h3>
+						<img class="stretch" data-src="media/gmail_wait.jpg"/>
+					</section>
+					<section data-state="tertiary-slide">
+						<h3>Measuring how long it takes</h3>
+						<video class="stretch" muted playsinline controls="true"  data-autoplay muted autoplay loop>
+							<source data-src="media/tfl.webm" type="video/webm">
+							<source data-src="media/tfl.mp4" type="video/mp4">
+							<source data-src="media/tfl.mov" type="video/mov">
+						</video>
+						<p class="fragment">4.7s?</p>
+					</section>
+					<section data-state="tertiary-slide">
+						<h3>Measuring how long it takes</h3>
+						<img class="stretch" data-src="media/tfl.jpg"/>
+						<p class="fragment">2.4s?</p>
+					</section>
+					<section>
 						<h3>Reducing unexplained waits</h3>
 						<ul>
 							<li>Show your logo early</li>
-							<li>Give instant feedback</li>
 							<li>Humanise the wait</li>
 							<li>Use progress indicators</li>
+							<li>Acknowledge when <strong>UX</strong> is slow</li>
 						</ul>
 					</section>
 				</section>
 
-				<section>
-					<h3>Five rules for waiting times</h3>
+				<section data-state="main-slide">
+					<h3>Top tips for happy users 🙂</h3>
 					<ol>
 						<li class="fragment">Show something, fast</li>
-						<li class="fragment">Use progress indication</li>
 						<li class="fragment">Give instant feedback</li>
 						<li class="fragment">Use optimistic UI patterns</li>
+						<li class="fragment">Use progress indication</li>
 						<li class="fragment">Explain long waits</li>
 					</ol>
 				</section>
@@ -293,37 +393,12 @@
 						</ol>
 					</section>
 
-					<section>
-						<h3>HCI Principles</h3>
-						<ul>
-							<li data-autoslide="750" class="fragment">Give feedback within <b>100ms</b></li>
-							<li data-autoslide="750" class="fragment">Update every <b>1,000ms</b></li>
-							<li data-autoslide="1500" class="fragment">Complete actions within <b>3,000ms</b></li>
-						</ul>
-						<p class="fragment smaller bottom-right">Miller, R. B. (1968). Response time in man-computer conversational transactions.</p>
-					</section>
-
-					<section>
-						<h3>Layout Shift Impacts Bounce</h3>
-						<img class="stretch" data-src="media/cls-query-customer3-landing-page-cls-vs-bounce.svg"/>
-						<p class="smallest bottom-right"><a href="https://nicj.net/cumulative-layout-shift-in-the-real-world/">Cumulative Layout Shift in the Real World</a></p>
-					</section>
-					<section>
-						<h3>Layout Shift Impacts Session Length</h3>
-						<img class="stretch" data-src="media/cls-query-customer2-landing-page-cls-vs-session-length.svg"/>
-						<p class="smallest bottom-right"><a href="https://nicj.net/cumulative-layout-shift-in-the-real-world/">Cumulative Layout Shift in the Real World</a></p>
-					</section>
-					<section>
-						<h3>Layout Shifts Cause Rage</h3>
-						<img class="stretch" data-src="media/cls-query-all-vs-rage-clicks.svg"/>
-						<p class="smallest bottom-right"><a href="https://nicj.net/cumulative-layout-shift-in-the-real-world/">Cumulative Layout Shift in the Real World</a></p>
-					</section>
-
+					
 					<section>
 						<h3>Goals for maximum engagement</h3>
 						<table class="compact">
 							<tr><th>Metric</th><th>Goal</th></tr>
-							<tr><td>Cumulative Layout Shift</td><td>0.05</td></tr>
+							<tr><td>Cumulative Layout Shift</td><td>0</td></tr>
 							<tr><td>First Input Delay</td><td>100ms</td></tr>
 							<tr><td>First Contentful Paint</td><td>1,000ms</td></tr>
 							<tr><td>Largest Contentful Paint</td><td>3,000ms</td></tr>
@@ -331,46 +406,68 @@
 						</table>
 						<p class="smallest bottom-right">Based on aggregate data - what are yours?</p>
 					</section>
-				</section>
-
-				<section>
 					<section>
-						<h3>Top tips for happy users</h3>
-						<ul>
-							<li class="fragment">Prioritise critical content</li>
-							<li class="fragment">Avoid unexpected layout shifts</li>
-							<li class="fragment">Respond ~immediately to input</li>
-						</ul>
+						<h3>Layout Shift Impacts Bounce</h3>
+						<img class="stretch" data-src="media/cls-query-customer3-landing-page-cls-vs-bounce.svg"/>
+						<p class="smallest bottom-right"><a href="https://nicj.net/cumulative-layout-shift-in-the-real-world/">Cumulative Layout Shift in the Real World</a></p>
 					</section>
-					<section data-background-image="../backgrounds/thinking.jpg">
-						<p class="dark-bg">this sounds familiar...</p>
+					<section>
+						<h3>Goals for maximum engagement</h3>
+						<table class="compact">
+							<tr><th>Metric</th><th>Goal</th></tr>
+							<tr><td>Cumulative Layout Shift</td><td>0</td></tr>
+							<tr><td>First Input Delay</td><td>50ms</td></tr>
+							<tr><td>First Contentful Paint</td><td>1,000ms</td></tr>
+							<tr><td>Largest Contentful Paint</td><td>3,000ms</td></tr>
+							<tr><td>Time To Interactive</td><td>3,500ms</td></tr>
+						</table>
+						<p class="smallest bottom-right">Based on aggregate data - what are yours?</p>
+					</section>
+					<section>
+						<h3 class="dark-bg">🤔 this sounds familiar...</h3>
 					</section>
 					<section>
 						<h3>Google is measuring these for SEO</h3>
 						<img class="stretch" data-src="media/vitals.png"/>
 						<p class="smallest bottom-right"><a href="https://web.dev/vitals/">web.dev/vitals</a></p>
 					</section>
+					<section data-background-image="media/holy_grail.jpg">
+						<h3>Are Core Web Vitals the holy grail?</h3>
+					</section>
 					<section>
-						<h3>Top tips for happy users</h3>
+						<h3>Core Web Vitals are proxies for UX</h3>
 						<ul>
-							<li>Prioritise critical content</li>
-							<li>Avoid layout shifts</li>
-							<li>Respond ~immediately to input</li>
-							<li class="fragment">Provide contextual feedback</li>
-							<li class="fragment">Use optimistic patterns</li>
-							<li class="fragment">Explain long waits (>3s)</li>
+							<li class="fragment">Only on Chromium-based browsers</li>
+							<li class="fragment">Designed to be universal</li>
+							<li class="fragment">FID might not be actionable</li>
+							<li class="fragment">SPA soft navigations not supported in CRUX</li>
 						</ul>
 					</section>
 					<section>
-						<h3>Top tips for happy developers</h3>
-						<ul>
-							<li class="fragment">Measure where your customers are</li>
-							<li class="fragment">Measure what matters</li>
-							<li class="fragment">Socialise performance stats</li>
-						</ul>
+						<p>Core Web Vitals provide a bridge between business and technology, but may not be the best metrics for <i>your</i> application.</p>
+					</section>
+					<section>
+						<h3>What about user interactions?</h3>
+						<pre><code class="js">
+performance.mark('spinner-start');
+//... waiting ...
+performance.mark('spinner-end');
+performance.measure('wait-duration','spinner-start','spinner-end');
+						</code></pre>
+						<p class="subtitle smallest bottom-right"><a href="https://developer.mozilla.org/en-US/docs/Web/API/Performance/mark">performance.mark() | MDN</a></p>
 					</section>
 					<section>
 						<h3>RUM is critical</h3>
+						<ul>
+							<li class="fragment">Capture data in the client</li>
+							<li class="fragment">Support 100% data capture</li>
+							<li class="fragment">Custom percentiles</li>
+							<li class="fragment">User Timing support</li>
+							<li class="fragment">XHR / Fetch capture</li>
+						</ul>
+					</section>
+					<section>
+						<h3>Akamai mPulse</h3>
 						<img class="stretch" data-src="media/mpulse1.jpg"/>
 						<p class="subtitle smallest bottom-right"><a href="https://blogs.akamai.com/2020/10/measuring-improving-core-web-vitals.html">Measuring &amp; Improving Core Web Vitals</a></p>
 					</section>
@@ -458,24 +555,26 @@
 								})
 							})
 						</script>
-						<p class="subtitle smallest bottom-right"><a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2910434/">The impact of progress indicators on task completion</a></p>
+						<p class="subtitle smaller bottom-right"><a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2910434/">The impact of progress indicators on task completion</a></p>
 					</section>
 					<section>
 						<h3>Use the platform</h3>
 						<ul>
 							<li class="fragment">Native lazy-loading</li>
-							<li class="fragment">HTML5(!)</li>
-							<li class="fragment">Service Worker</li>
+							<li class="fragment">Responsive images (with size)</li>
+							<li class="fragment">Pure HTML render</li>
+							<li class="fragment">CSS animation &amp; active states</li>
+							<li class="fragment">Preload (sparingly)</li>
 						</ul>
 					</section>
-					<section data-background-image="media/shoot_door.jpg" class="pull-up">
-						<h3 class="dark-bg">If in doubt, play games!</h3>
-							<p class="subtitle smallest bottom-right"><a href="https://www.wired.com/2016/04/average-webpage-now-size-original-doom">The Average Webpage Is Now the Size of the Original Doom (2016)</a></p>			
+					<section data-background-image="../backgrounds/experiment.jpg" class="pull-up">
+						<h3 class="dark-bg">If in doubt, experiment!<span class="subtitle">(but not in-client	)</span></h3>
 					</section>
 				</section>
 
 				<section class="pull-up" data-background-image="../backgrounds/passion.jpg">
 					<h2 class="dark-bg">Thank you 🙏</h2>
+					<p class="dark-bg" style="margin-top: 9em !important;">@SimonHearne<br>simonhearne.com</p>
 				</section>
 			</div>
 			<div id="chart-controls" class="hide"></div>
@@ -487,6 +586,9 @@
 		<script  src="../lib/js/jquery-3.3.1.min.js"></script>
 
 		<script>
+			function sleep(ms) {
+				return new Promise(resolve => setTimeout(resolve, ms));
+			}
 			function getQueryVariable(variable)
 			{
 				var query = window.location.search.substring(1);
