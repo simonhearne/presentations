@@ -15,7 +15,7 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
 		<link rel="stylesheet" href="../css/reveal.css">
-		<link rel="stylesheet" href="../css/theme/simon.css" id="theme">
+		<link rel="stylesheet" href="../css/theme/simon2.css" id="theme">
 
 		<meta property="og:image" content="https://simonhearne.com/presentations/psych-speed/social.png" />
 		<meta property="og:image:width" content=1200 />
@@ -62,7 +62,7 @@
 							<p>Take a few seconds to think back to the last time you had poor wifi or cellular connection.<p>
 						</aside>
 					</section>
-					<section data-state="plain-slide" data-background="../backgrounds/no-wifi-zone.jpg">
+					<section data-background="../backgrounds/no-wifi-zone.jpg">
 						<h2></h2>
 						<aside class="notes">
 							<p>For me, it was when I was working from home and my cable internet went out, it happens a few times a year. My home has poor mobile coverage, so I normally use wifi calling. When my cable internet goes out, I get about 20 - 50kbps of downlink over 3G. This is enough for... well not much actually.</p>
@@ -70,8 +70,8 @@
 							<p>I could not complete work tasks, browse the web, check my emails. Even though my phone reported *some* signal, most of the web became totally inaccessible.</p>
 						</aside>
 					</section>
-					<section>
-						<h2></h2>
+					<section data-background="../backgrounds/tap.jpg">
+						<h2 class="dark-bg">We treat connectivity as a utility</h2>
 						<aside class="notes">
 							<p>I am in a privileged position: my internet connectivity was restored after about 20 minutes. Just as quickly as I had been excluded from the internet I was back in full flow - messages poured in, web pages loaded near-instantly and I soon forgot about the temporary blip in my connection to the matrix.</p>
 							<p>The chances are that you are in a similar position to me. A reasonably good home connection, perhaps access to an office with very good connection. A modern smartphone with a 4G chipset, big screen and fast processor, perhaps even 5G!<p>
@@ -79,18 +79,17 @@
 						</aside>
 					</section>
 					
-					<section>
-						<p>20% of the developed world do not have access to fast internet</p>
-						<p class="fragment">65% of the developing world</p>
-						
+					<section data-state="tertiary-slide">
+						<p>65% of people in the developing world do not have access to fast internet</p>
+						<p class="fragment">it's 20% in the developed world</p>
 						<p class="subtitle bottom-left smallest"><a href="https://www.worldbank.org/en/topic/digitaldevelopment/brief/connecting-for-inclusion-broadband-access-for-all">Connecting for Inclusion: Broadband Access for All. The World Bank.</a>
 						<aside class="notes">
 							<p>20% of the developed world don't see it like this. 20% of the developed world do not have consistently fast internet connections (65% of the developing world). For them, connectivity is less utility and more luxury. For them, slow devices, slow connections and slow experiences are the norm.</p>
 						</aside>
 					</section>
 					
-					<section>
-						<h2></h2>
+					<section data-background="../backgrounds/rainbow.jpg">
+						<h2>Performance is key to inclusion</h2>
 						<aside class="notes">
 							<p>Today we are talking about inclusive design, and I would like you to consider how performance - the speed of our apps and websites - is an important factor in inclusivity and accessibility.</p>
 						</aside>
@@ -99,42 +98,61 @@
 				</section>
 
 				<section>
-					<section>
+					<section data-background="../backgrounds/youtube.jpg">
 						<h2></h2>
 						<aside class="notes">
 							<p>Consider YouTube. For me, it is generally an entertainment service. For some folks, it is a source of education, information, news and health advice (for better or for worse). YouTube seems so ubiquitous that, like our connectivity, we might consider it a utility. But what if your connection was too slow to load the video player? Or your device so limited on storage that you had to choose between family photos or the YouTube app?</p>
 						</aside>
 					</section>
 					<section>
-						<h2></h2>
+						<h2>1,200kB</h2>
+						<p class="fragment">Feather was under 100kB</p>
 						<aside class="notes">
 							<p>Back in 2009 YouTube was a hefty web app. The video player page came in at 1.2MB - before the video had even started to load! Chris Zacharias was a developer on the team and started a project to fix the performance problems - codenamed Project Feather. The engineering work was intense: hand-writing the CSS and JavaScript, manually optimising image sprites and implementing the just-written HTML5 video player to replace the Flash player. The result of this work was a page load in under 100kB with only 14 requests, quite the improvement!</p>
 							<p>Project Feather was pushed live with as a small opt-in experiment in order to collect metrics on the success of the project. After a week of data collection - the results were in! The key metric tracked was the page onload event - a standard performance measure in 2009. Take a second to think how much improvement you might expect - reducing page weight by over 90%, swapping Flash for native video, hand-crafting the code for optimal performance. 50% improvement? 100% improvement?</p>
 						</aside>
 					</section>
-					<section>
-						<h2></h2>
+					<section class="pull-up" data-background="../backgrounds/turtle.jpg">
+						<h2>Feather was slower...</h2>
 						<aside class="notes">
 							<p>The results were... less than impressive. Project Feather was slower than the legacy player page. Significantly slower.</p>
 						</aside>
 					</section>
 					
+					
 					<section>
 						<h2></h2>
+						<img class="plain" loading="lazy" src="media/treo-youtube.svg"/>
+						<p class="subtitle smallest bottom-left"><a href="https://treo.sh/sitespeed/m.youtube.com">LCP data from CRUX for m.youtube.com, July 2021</a></p>
 						<aside class="notes">
 							<p>An investigation ensued to work out what had happened. Performance is a tricky subject because there are so many variables to control for - device, connection, geography, cache state. This hasn't changed in the past 12 years! What the team at YouTube discovered is that the geographic distribution of users who had opted-in to Feather was disproportionately skewed towards Southeast Asia, South America, Africa and other regions with typically slow internet connections. These users had previously been totally locked out of YouTube due to the page weight (some would have to wait twenty minutes just to load the HTML, CSS and JavaScript).</p>
 						</aside>
 					</section>
-					
+
 					<section>
 						<h2></h2>
+						<img class="plain" loading="lazy"  src="media/treo-youtube-conns.svg"/>
+						<p class="subtitle smallest bottom-left"><a href="https://treo.sh/sitespeed/m.youtube.com">Connection data from CRUX for m.youtube.com, July 2021</a></p>
+						<aside class="notes">
+							<p>An investigation ensued to work out what had happened. Performance is a tricky subject because there are so many variables to control for - device, connection, geography, cache state. This hasn't changed in the past 12 years! What the team at YouTube discovered is that the geographic distribution of users who had opted-in to Feather was disproportionately skewed towards Southeast Asia, South America, Africa and other regions with typically slow internet connections. These users had previously been totally locked out of YouTube due to the page weight (some would have to wait twenty minutes just to load the HTML, CSS and JavaScript).</p>
+						</aside>
+					</section>
+					<section>
+						<h2>Performance is a distribution</h2>
+						<img class="plain" loading="lazy" width="50%" src="media/treo-youtube-dist.png" />
+						<p class="subtitle smallest bottom-left"><a href="https://treo.sh/sitespeed/m.youtube.com">LCP data from CRUX for m.youtube.com, July 2021</a></p>
+					</section>
+					<section>
+						<h2>So was Feather a success?</h2>
 						<aside class="notes">
 							<p>Project Feather was in fact a success, it had opened up YouTube and the educational, entertaining and informative content within to millions of new users.</p>
 						</aside>
 					</section>
 					
-					<section>
-						<h2></h2>
+					<section class="tertiary-slide">
+						<h2>What we can learn from Feather</h2>
+						<p class="fragment">Being faster by default is more inclusive...</p>
+						<p class="fragment">... and that data can be misleading</p>
 						<aside class="notes">
 							<p>The moral of this story is two-fold:</p>
 							<ol>
@@ -146,22 +164,22 @@
 					
 					<section>
 						<h2>Reasons for low quality internet</h2>
-						<ul class="small">
-							<li>1 in 2 US households have no broadband</li>
-							<li>15% of the UK has no 4G coverage</li>
-							<li>Natural disasters</li>
-							<li>Travel (connection &amp; roaming charges)</li>
-							<li>Low power / battery saver mode</li>
+						<ul style="font-size: 85%">
+							<li class="fragment">1 in 2 US households have no broadband</li>
+							<li class="fragment">15% of the UK has no 4G coverage</li>
+							<li class="fragment">Natural disasters</li>
+							<li class="fragment">Travel (connection &amp; roaming charges)</li>
+							<li class="fragment">Low power / battery saver mode</li>
 						</ul>
-						<p>How many of these do you experience while designing / developing an app?</p>
+						<p class="fragment">How many of these do you experience while designing / developing an app?</p>
 					</section>
 					<section>
 						<h2>But our data shows...</h2>
-						<ul class="small">
+						<ul style="font-size: 85%">
 							<li class="fragment">What about 'ghost bounces'?</li>
 							<li class="fragment">88% of Firefox users block GA</li>
 							<li class="fragment">40% of Safari users block GA</li>
-							<li class="fragment">CRUX only has data for Google Chromem browsers</li>
+							<li class="fragment">CRUX only has data for Chrome</li>
 						</ul>
 						<aside class="notes">
 							<p>Analytics data is good for general analysis, but beware survivorship bias. Users who never successfully access your application will not appear in your analytics. See <a href="https://simonhearne.com/2017/analytics-lie/">my blog post on this</a>.
@@ -180,6 +198,17 @@
 				
 				<section id="the-solution">
 
+					<section data-background="media/goojf.jpg">
+
+						<aside class="notes">
+							<p>There is a solution which is a bit of a "get out of jail free" card - lite sites</p>
+						</aside>
+					</section>
+					<section>
+
+						<img loading="lazy" width="80%" src="media/lite-sites.png">
+						<p class="subtitle smallest bottom-left"><a href="https://github.com/mdibaiee/awesome-lite-websites">awesome-lite-sites</a></p>
+					</section>
 				</section>
 				
 				<section id="convince-bosses">
