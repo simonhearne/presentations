@@ -16,8 +16,8 @@
   --dark-highlight:     hsl(272,14%,33%);
   --bright-highlight-1: hsl(290,100%,40%);
   --bright-highlight-2: hsl(314,79%,30%);
-  --bright-highlight-3: hsl(113,92%,26%);
-  --bright-highlight-4: hsl(251,100%,18%);
+  --bright-highlight-3: hsl(251,100%,18%);
+  --bright-highlight-4: hsl(113,92%,26%);
 }
 
 /*********************************************
@@ -697,13 +697,14 @@ div.vega-bind {
 .dark-bg {
   width: 200% !important;
   margin-left: -50% !important;
-  background-color: #000a;
+  background-color: rgba(0, 0, 0, 0.5);
   border-radius: 0.5em;
+  padding-top: 5px !important;
 }
 .light-bg {
   width: 200% !important;
   margin-left: -50% !important;
-  background-color: #fff9;
+  background-color: rgb(255,255,255,0.5);
   border-radius: 0.5em;
   color: #222 !important;
 }
