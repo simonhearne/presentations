@@ -317,8 +317,7 @@ body.tertiary-slide {
 
 .reveal section img.plain {
   background: none;
-  border: 0;
-  box-shadow: none; }
+  border: 0; }
 
 .reveal a img {
   -webkit-transition: all .15s linear;
@@ -485,6 +484,10 @@ p.bottom-left {
 .reveal img.stretch {
   width: 70%;
   max-height: 70%;
+}
+.reveal img.roundy {
+  border-radius: 5px;
+  box-shadow: 0 0 5px 0 black;
 }
 
 span { display: inline-block; }
