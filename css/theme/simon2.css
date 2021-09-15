@@ -727,6 +727,10 @@ p.todo {
   background-color: yellow;
   color: #000;
 }
+.columns {
+  display: grid;
+  grid-auto-flow: column;
+}
 
 .columns-three {
   display: grid;
