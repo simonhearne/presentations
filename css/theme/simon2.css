@@ -317,7 +317,8 @@ body.tertiary-slide {
 
 .reveal section img.plain {
   background: none;
-  border: 0; }
+  border: 0;
+  box-shadow: none; }
 
 .reveal a img {
   -webkit-transition: all .15s linear;
