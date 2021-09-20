@@ -209,6 +209,57 @@
 						<img loading="lazy" class="roundy plain" style="width: 30%" src="media/ryan_tweet.png"></img>
 						<p class="subtitle smallest bottom-left"><a href="https://twitter.com/RyanTownsend/status/1435612305010593801">@RyanTownsend on Twitter</a></p>
 					</section>
+					<section class="pull-up">
+						<h2>Modern Metrics Help!</h2>
+						<div class="columns">
+							<div class="column">
+								<img loading="lazy" width="100%" src="media/psi-yt.png" />
+							</div>
+							<div class="column" style="font-size:80%">
+								<ul>
+									<li class="fragment">CWV* proxy UX</li>
+									<li class="fragment">Score from Lab data</li>
+									<li class="fragment">Field data from real users</li>
+									<li class="fragment">Lab is emulated MotoG4</li>
+								</ul>
+							</div>
+						</div>
+						<p class="subtitle bottom-left smallest"><a href="https://developers.google.com/speed/pagespeed/insights/?url=m.youtube.com">PSI - m.youtube.com</a><br>* Core Web Vitals</p>
+						<aside class="notes">Pagespeed Insights gives data both from Lab (a synthetic test) and Field (data gathered from real visits in Chrome)</aside>
+					</section>
+					<section class="pull-up">
+						<h2>Estimated Cost in WPT</h2>
+						<img loading="lazy" width="80%" src="media/wpt-yt1.png" />
+						<p class="subtitle bottom-left smallest"><a href="https://webpagetest.org">WebPageTest.org</a></p>
+						<aside class="notes">Use WPT settings to configure a mobile test at 3G speed, mobile emulation throttles the CPU and sets the viewport.</aside>
+					</section>
+					
+					<section class="pull-up">
+						<h2>Estimated Cost in WPT</h2>
+						<img loading="lazy" src="media/wpt-yt2.png" />
+						<p class="subtitle bottom-left smallest"><a href="https://www.webpagetest.org/result/210920_AiDcKH_b1624bcaadf98f8d2c016a3533aa952b/">Test Result</a></p>
+						<aside class="notes">WPT results show how this test run compares to the Field data collected by Google, and shows an estimated cost in mobile data.</aside>
+					</section>
+					
+					<section class="pull-up">
+						<h2>Estimated Cost in WPT</h2>
+						<img loading="lazy" width="50%" src="media/wdmsc-yt.png" />
+						<p class="subtitle bottom-left smallest"><a href="https://whatdoesmysitecost.com/test/210920_AiDcKH_b1624bcaadf98f8d2c016a3533aa952b">What Does My Site Cost? m.youtube.com</a></p>
+						<aside class="notes">What Does My Site Cost? provides an estimate for the actual cost of the data required to load your web page using global data costs.</aside>
+					</section>
+
+					<section class="pull-up">
+						<h2>Compare Speed with Treo</h2>
+						<img loading="lazy" width="80%" src="media/treo.png" />
+						<p class="subtitle bottom-left smallest"><a href="https://treo.sh/sitespeed/m.youtube.com/vs/player.vimeo.com/vs/www.dailymotion.com">Treo Comparison</a></p>
+						<aside class="notes">Treo uses public Core Web Vitals data to present a comparison of real-world site speed</aside>
+					</section>
+
+					<section>
+						<h2>Use the Tools!</h2>
+						<p>Understand the benefits and drawbacks, then use regularly to track speed</p>
+					</section>
+					
 				</section>
 				
 				<section id="the-solution">
@@ -236,11 +287,18 @@
 					</section>
 					<section>
 						<h2>Project Timeline</h2>
+						<img class="plain" loading="lazy" src="media/pathtoperf0.svg" />
+						<p class="smallest bottom-left subtitle"><a href="https://speakerdeck.com/katiekovalcin/the-path-to-performance">The Path to Performance - Katie Kovalcin</a></p>
+					</section>
+					<section>
+						<h2>Project Timeline</h2>
 						<img class="plain" loading="lazy" src="media/pathtoperf1.svg" />
+						<p class="smallest bottom-left subtitle"><a href="https://speakerdeck.com/katiekovalcin/the-path-to-performance">The Path to Performance - Katie Kovalcin</a></p>
 					</section>
 					<section>
 						<h2>Project Timeline</h2>
 						<img class="plain" loading="lazy" src="media/pathtoperf2.svg" />
+						<p class="smallest bottom-left subtitle"><a href="https://speakerdeck.com/katiekovalcin/the-path-to-performance">The Path to Performance - Katie Kovalcin</a></p>
 					</section>
 					<section data-background-color="#941f55" data-background-size="contain" data-background-image="media/mustard.jpg">
 						<h2 class="dark-bg">Progressive Enhancement FTW</h2>
@@ -248,21 +306,33 @@
 					</section>
 					<section>
 						<h2>Images</h2>
+						<ul>
+							<li>Use modern formats (WEBP / AVIF)</li>
+							<li>Send the right image</li>
+						</ul>
 					</section>
 					<section>
 						<h2>JavaScript</h2>
-					</section>
-					<section>
-						<h2>Rich Media</h2>
+						<ul>
+							<li>Minimal client-side JS</li>
+							<li>Measure impact on real devices</li>
+						</ul>
 					</section>
 					<section>
 						<h2>Painting Fast</h2>
+						<ul>
+							<li>Don't depend on video</li>
+							<li>Identify Critical CSS</li>
+							<li>No blocking assets (JS / CSS)</li>
+							<li>Prioritize key assets</li>
+						</ul>
 					</section>
 					<section>
 						<h2>Prioritising Assets</h2>
-					</section>
-					<section>
-						<h2>Removing Jank</h2>
+						<ul>
+							<li>Use <code>loading</code> attribute</li>
+							<li><code>preload</code> known critical assets</li>
+						</ul>
 					</section>
 				</section>
 
@@ -321,6 +391,39 @@ device-memory: 8
 						<aside class="notes">
 							<p>Client hints provide access to a number of device parameters </p>
 						</aside>
+					</section>
+					<section>
+						<h2>Responsive Images</h2>
+						<ul>
+						<li>Use a service to resize &amp; for modern formats</li>
+						<li>Use markup to deliver the right image</li>
+						<li>Limit resolution to 2x DPI</li>
+					</section>
+					<section>
+						<h2>Responsive Images</h2>
+						<pre><code>
+<img
+src="/images/image.jpg" alt=".."
+loading="eager" decoding="async"
+width="1920" height="1080" srcset="
+    /images/image.jpg?w=600 600w,
+	...
+    /images/image.jpg 1920w"
+sizes="
+    (min-width: 1920px) 500px,
+    (min-width: 1280px) 33.333vw,
+    (max-width: 895px) 83.333vw,
+    500px">
+						</code></pre>
+
+					</section>
+					<section>
+						<h2>Performance Budgets</h2>
+						<img loading="lazy" width="75%" src="media/budgets.jpg" />
+						<p class="smallest bottom-left subtitle"><a href="https://speakerdeck.com/katiekovalcin/the-path-to-performance">The Path to Performance - Katie Kovalcin</a></p>
+					</section>
+					<section>
+						<h2>Understand Speed @ Design</h2>
 					</section>
 						
 				</section>
