@@ -173,14 +173,17 @@
 					<section>
 						<h2>But our data shows...</h2>
 						<ul style="font-size: 85%">
-							<li class="fragment">What about 'ghost bounces'?</li>
-							<li class="fragment">88% of Firefox users block GA (1)</li>
-							<li class="fragment">40% of Safari users block GA (1)</li>
-							<li class="fragment">40% more blocking in developing world (2)</li>
-							<li class="fragment">CRUX only has data for Chrome</li>
+							<li class="fragment" data-fragment-index="1">What about 'ghost bounces'?</li>
+							<li class="fragment" data-fragment-index="2">88% of Firefox users block GA<sup>(1)</sup></li>
+							<li class="fragment" data-fragment-index="3">40% of Safari users block GA<sup>(1)</sup></li>
+							<li class="fragment" data-fragment-index="4">40% more blocking in developing world<sup>(2)</sup></li>
+							<li class="fragment" data-fragment-index="5">CRUX only has data for Chrome</li>
 						</ul>
 						<p class="fragment">There are many reasons why not all users are represented in your data.</p>
-						<p class="subtitle smallest bottom-left">1. <a href="https://plausible.io/blog/google-analytics-adblockers-missing-data#88-of-firefox-users-block-google-analytics">58% of Hacker News, Reddit and tech-savvy audiences block Google Analytics</a><br>2. <a href="https://backlinko.com/ad-blockers-users">Ad Blocker Usage and Demographic Statistics in 2021</a></p>
+						<p class="subtitle smallest bottom-left">
+							<span class="fragment" data-fragment-index="2">1. <a href="https://plausible.io/blog/google-analytics-adblockers-missing-data#88-of-firefox-users-block-google-analytics">58% of Hacker News, Reddit and tech-savvy audiences block Google Analytics</a></span>
+							<span class="fragment" data-fragment-index="4">2. <a href="https://backlinko.com/ad-blockers-users">Ad Blocker Usage and Demographic Statistics in 2021</a></span>
+						</p>
 						<aside class="notes">
 							<p>Analytics data is good for general analysis, but beware survivorship bias. Users who never successfully access your application will not appear in your analytics. See <a href="https://simonhearne.com/2017/analytics-lie/">my blog post on this</a>.
 							<p><a href="https://plausible.io/blog/google-analytics-adblockers-missing-data#88-of-firefox-users-block-google-analytics">88% of Firefox users block GA</a>.</p>
@@ -217,14 +220,18 @@
 							</div>
 							<div class="column" style="font-size:80%">
 								<ul>
-									<li class="fragment">CWV* proxy UX</li>
+									<li class="fragment" data-fragment-index="1">CWV* proxy UX</li>
 									<li class="fragment">Score from Lab data</li>
 									<li class="fragment">Field data from real users</li>
+									<li class="fragment">75th %ile for Field data</li>
 									<li class="fragment">Lab is emulated MotoG4</li>
 								</ul>
 							</div>
 						</div>
-						<p class="subtitle bottom-left smallest"><a href="https://developers.google.com/speed/pagespeed/insights/?url=m.youtube.com">PSI - m.youtube.com</a><br>* Core Web Vitals</p>
+						<p class="subtitle bottom-left smallest">
+							<span><a href="https://developers.google.com/speed/pagespeed/insights/?url=m.youtube.com">PSI - m.youtube.com</a></span>
+							<span class="fragment" data-fragment-index="1">* Core Web Vitals</span>
+						</p>
 						<aside class="notes">Pagespeed Insights gives data both from Lab (a synthetic test) and Field (data gathered from real visits in Chrome)</aside>
 					</section>
 					<section class="pull-up">
@@ -429,6 +436,7 @@ sizes="
 							<li>Separate production and pre-production tests</li>
 							<li>Remove 0% tests</li>
 						</ul>
+					</section>
 					<section>
 						<h2>Understand Speed @ Design</h2>
 					</section>
@@ -505,6 +513,23 @@ sizes="
 					<section>
 						<blockquote>The future is already here,<br>it's just not evenly distributed</blockquote>
 						<p class="smallest" style="text-align: right">William Gibson</p>
+					</section>
+					<section id="resources">
+						<h2>Resources</h2>
+						<div style="display:flex;font-size:75%;">
+							<div style="display:flex;flex-grow: 1;flex-basis: 0;">
+								<a href="https://www.oreilly.com/library/view/designing-for-performance/9781491903704/"><img class="plain" width="800" loading="lazy" src="media/books/design.jpg" /></a>
+							</div>
+							<div style="display:flex;flex-grow: 1;flex-basis: 0;">
+								<a href="https://www.smashingmagazine.com/printed-books/image-optimization/"><img class="plain" width="800" loading="lazy" src="media/books/imgopti.png" /></a>
+							</div>
+							<div style="display:flex;flex-grow: 1;flex-basis: 0;">
+								<a href="https://hpbn.co/"><img class="plain" width="800" loading="lazy" src="media/books/hpbn.jpg" /></a>
+							</div>
+							<div style="display:flex;flex-grow: 1;flex-basis: 0;">
+								<a href="https://www.oreilly.com/library/view/using-webpagetest/9781491902783/"><img class="plain" width="800" loading="lazy" src="media/books/usingWPT.jpg" /></a>
+							</div>
+						</div>
 					</section>
 				</section>
 

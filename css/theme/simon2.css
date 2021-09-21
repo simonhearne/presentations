@@ -361,6 +361,9 @@ p.subtitle {
   z-index: 10;
   text-align: left !IMPORTANT;
 }
+p.subtitle span {
+  display: block;
+}
 p.top-right {
   position: fixed;
   right: 40px;
