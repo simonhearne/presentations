@@ -661,6 +661,10 @@ sizes="<br>    (min-width: 1920px) 500px,<br>    (min-width: 1280px) 33.333vw,<b
 				},
 				77: () => {
 					Reveal.configure({showNotes: !!!Reveal.getConfig().showNotes});
+				},
+				// zero key to first slide
+				48: () => {
+					Reveal.slide( 0 );
 				}
 			}
 			if (presenting) {
