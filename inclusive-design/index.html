@@ -317,22 +317,35 @@
 						<h2>Performance must be baked in</h2>
 						<aside class="notes">
 							<p>Lite sites are an admission that the main application is too heavy. The main application must be light and fast in order to avoid a fragmented experience.</p>
+							<p>We often leave performance too late in the development process, by which point it becomes difficult to advocate for change.</p>
 						</aside>
 					</section>
 					<section>
 						<h2>Project Timeline</h2>
 						<img class="plain" loading="lazy" src="media/pathtoperf0.svg" />
 						<p class="smallest bottom-left subtitle"><a href="https://speakerdeck.com/katiekovalcin/the-path-to-performance">The Path to Performance - Katie Kovalcin</a></p>
+						<aside class="notes">
+							<p>If we consider a simplified project timeline...</p>
+						</aside>
 					</section>
 					<section>
 						<h2>Project Timeline</h2>
 						<img class="plain" loading="lazy" src="media/pathtoperf1.svg" />
 						<p class="smallest bottom-left subtitle"><a href="https://speakerdeck.com/katiekovalcin/the-path-to-performance">The Path to Performance - Katie Kovalcin</a></p>
+						<aside class="notes">
+							<p>If we consider a simplified project timeline...</p>
+							<p>We tend to think about performance at the latter stages - when we start to build UAT environments or even when folks start complaining.</p>
+						</aside>
 					</section>
 					<section>
 						<h2>Project Timeline</h2>
 						<img class="plain" loading="lazy" src="media/pathtoperf2.svg" />
 						<p class="smallest bottom-left subtitle"><a href="https://speakerdeck.com/katiekovalcin/the-path-to-performance">The Path to Performance - Katie Kovalcin</a></p>
+						<aside class="notes">
+							<p>If we consider a simplified project timeline...</p>
+							<p>We tend to think about performance at the latter stages - when we start to build UAT environments or even when folks start complaining.</p>
+							<p>Performance should actually be considered right from initial designs and scoping, this reduces the effort and cost of delivering fast and inclusive apps and websites.</p>
+						</aside>
 					</section>
 					<section>
 						<img loading="lazy" src="media/fix-cost.jpg">
@@ -389,7 +402,7 @@
 					</section>
 					<section>
 						<h2>Tools can Help</h2>
-						<img loading="lazy" width="50%" src="psi-recommendations.png">
+						<img loading="lazy" width="60%" src="media/psi-recommendations.png">
 						<p class="subtitle smallest bottom-left"><a href="https://developers.google.com/speed/pagespeed/insights/?url=m.youtube.com">PSI - m.youtube.com</a></p>
 						<aside class="notes">
 							<p>Tools such as Pagespeed Insights (and <a href="">Lighthouse</a> for development environments) provide useful information on opportunities to improve performance.</p>
@@ -537,26 +550,22 @@ sizes="
 						<img loading="lazy" src="media/throttling.jpg" />
 					</section>
 					<section>
-						<h3>2. Set aggressive budgets for JS</h3>
-						<p>0kB to render, 100kB total</p>
-					</section>
-					<section>
-						<h3>3. 2G Tuesdays</h3>
+						<h3>2. 2G Tuesdays</h3>
 						<img loading="lazy" class="plain" src="media/2g.svg" />
 						<p class="subtitle smallest bottom-left"><a href="https://engineering.fb.com/2015/10/27/networking-traffic/building-for-emerging-markets-the-story-behind-2g-tuesdays/">Building for emerging markets: The story behind 2G Tuesdays</a></p>
 					</section>
 					<section>
-						<h3>4. Use a low-spec device for testing</h3>
+						<h3>3. Use a low-spec device for testing</h3>
 						<img loading="lazy" class="" width="60%" src="media/amazon.jpg" />
 						<p class="subtitle smallest bottom-left"><a href="https://www.amazon.co.uk/gp/bestsellers/electronics/356496011">Amazon UK Best Sellers, updated hourly.</a></p>
 					</section>
 					<section>
-						<h3>5. Browse with JavaScript disabled</h3>
+						<h3>4. Browse with JavaScript disabled</h3>
 						<img loading="lazy" class="" width="60%" src="media/twitter.png" />
 					</section>
 					<section>
-						<h3>6. Consider third-parties</h3>
-						<ul>
+						<h3>5. Test with third-parties</h3>
+						<ul class="fragment">
 							<li><a href="https://www.simoahava.com/analytics/track-non-javascript-visits-google-analytics/">GTM &amp; Google Analytics without JavaScript</a></li>
 							<li>Remove third-parties with high JS cost</li>
 							<li>Defer third-parties until after page load</li>
