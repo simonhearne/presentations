@@ -371,8 +371,8 @@ p.top-right {
 }
 p.bottom-right {
   position: fixed;
-  right: 0px;
-  bottom: 0px;
+  right: 90px;
+  bottom: -10px;
   text-align: right;
 }
 p.bottom-left {
@@ -714,6 +714,9 @@ div.vega-bind {
   background-color: rgb(255,255,255,0.5);
   border-radius: 0.5em;
   color: #222 !important;
+}
+.align-right {
+  text-align: right;
 }
 
 .help-text {

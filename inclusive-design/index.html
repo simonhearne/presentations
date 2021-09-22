@@ -50,9 +50,10 @@
 					<p style="margin:0;">Simon Hearne</p>
 					<p class="smaller" style="margin:0;">Web Performance Architect</p>
 					<aside class="notes">
-						Welcome to this presentation on Web Performance and Inclusive Design.<br>
-						If you are viewing this live, use keys 'n' and 'p' to navigate the slides.
-						Use key 'o' to view an overview. <a style="cursor: pointer" onclick="javascript:Reveal.configure({showNotes: false})">Click here to hide these notes</a> or press 'm' to toggle.
+						<p>Welcome to this presentation on Web Performance and Inclusive Design.</p>
+						<p>Use keys '<code>n</code>' and '<code>p</code>' to navigate forwards and backwards through the slides.<br>
+						Use key '<code>o</code>' to view an overview, press '<code>m</code>' to toggle this notes window.</p>
+						<p>If you have any questions or feedback, please contact Simon on <a href="https://twitter.com/SimonHearne">Twitter</a> or by email - simon (at) hearne (dot) me.</p>
 					</aside>
 				</section>
 				<section id="intro">
@@ -65,9 +66,10 @@
 					<section data-background="../backgrounds/no-wifi-zone.jpg">
 						<h2></h2>
 						<aside class="notes">
-							<p>For me, it was when I was working from home and my cable internet went out, it happens a few times a year. My home has poor mobile coverage, so I normally use wifi calling. When my cable internet goes out, I get about 20 - 50kbps of downlink over 3G. This is enough for... well not much actually.</p>
+							<p>For me, it was when I was working from home and my cable internet went out, it happens a few times a year. My home has poor mobile coverage, so much so that I have to use wifi calling. When my cable internet goes out, I get about 20 - 50kbps of downlink over 3G. This is enough for... well not much actually.</p>
 							<p>I found myself instantly, temporarily excluded from the internet.</p>
 							<p>I could not complete work tasks, browse the web, check my emails. Even though my phone reported *some* signal, most of the web became totally inaccessible.</p>
+							<p>Stephanie Stimac has <a href="https://blog.stephaniestimac.com/posts/10-30-2019-performance/">written about</a> their experience of limited connectivity in an emergent situation.</p>
 						</aside>
 					</section>
 					<section data-background="../backgrounds/tap.jpg">
@@ -84,14 +86,14 @@
 						<p class="fragment">it's 20% in the developed world</p>
 						<p class="subtitle bottom-left smallest"><a href="https://www.worldbank.org/en/topic/digitaldevelopment/brief/connecting-for-inclusion-broadband-access-for-all">Connecting for Inclusion: Broadband Access for All. The World Bank.</a>
 						<aside class="notes">
-							<p>20% of the developed world don't see it like this. 20% of the developed world do not have consistently fast internet connections (65% of the developing world). For them, connectivity is less utility and more luxury. For them, slow devices, slow connections and slow experiences are the norm.</p>
+							<p>65% of the developing world don't see it like this as they do not have a consistently fast internet connections (20% of the developed world). For them, connectivity is less utility and more luxury. For them, slow devices, slow connections and slow experiences are the norm.</p>
 						</aside>
 					</section>
 					
 					<section data-background="../backgrounds/rainbow.jpg">
 						<h2>Performance is key to inclusion</h2>
 						<aside class="notes">
-							<p>Today we are talking about An Inclusive Web, and I would like you to consider how performance - the speed of our apps and websites - is an important factor in inclusivity and accessibility.</p>
+							<p>Today we are talking about Inclusive Design, and I would like you to consider how performance - the speed of our apps and websites - is a critical factor in inclusivity and accessibility.</p>
 						</aside>
 					</section>
 					
@@ -99,8 +101,8 @@
 
 				<section>
 					<section data-background="../backgrounds/youtube.jpg">
-						<h2 class="fragment dark-bg">1,200kB</h2>
-						<p class="fragment dark-bg">Feather was under 100kB</p>
+						<p class="fragment align-right">Player page was 1,200kB</p>
+						<p class="fragment align-right">Feather was under 100kB</p>
 						<p class="subtitle smallest bottom-right"><a href="https://blog.chriszacharias.com/page-weight-matters">Page Weight Matters - Chris Zacharias</a></p>
 						<aside class="notes">
 							<p>Consider YouTube. For me, it is generally an entertainment service. For some folks, it is a source of education, information, news and health advice (for better or for worse). YouTube seems so ubiquitous that, like our connectivity, we might consider it a utility. But what if your connection was too slow to load the video player? Or your device so limited on storage that you had to choose between family photos or the YouTube app?</p>
@@ -290,18 +292,25 @@
 						<h2>Designing for Speed</h2>
 					</section>
 
-					<section data-background="media/goojf.jpg">
+					<section>
+						<img loading="lazy" width="70%" src="media/tweet-npr.png" />
 						<aside class="notes">
-							<p>I'll tell you a secret - there is a solution which is a bit of a "get out of jail free" card for performance and inclusivity - lite sites</p>
+							<p>NPR does a great job of publishing all of their content in a text-only version for inclusivity.</p>
 						</aside>
+						<p class="subtitle smallest bottom-left"><a href="https://twitter.com/NPR/status/1432385761211559937">Tweet by NPR</a></p>
 					</section>
 					<section>
 						<h2>Lite sites for quick loading</h2>
-						<img loading="lazy" width="80%" src="media/lite-sites.png">
+						<img loading="lazy" width="80%" src="media/lite-sites.png" />
 						<p class="fragment">Fast by default?</p>
-						<p class="subtitle smallest bottom-left"><a href="https://github.com/mdibaiee/awesome-lite-websites">awesome-lite-sites</a></p>
+						<p class="subtitle smallest bottom-left"><a href="https://github.com/mdibaiee/awesome-lite-websites">awesome-lite-sites on GitHub</a></p>
 						<aside class="notes">
 							<p>Lite sites have multiple challenges like discoverability and maintenance. GMail is a good example - the 'load simple HTML view' option appears after the loading screen has been shown for a few seconds.</p>
+						</aside>
+					</section>
+					<section data-background="media/goojf.jpg">
+						<aside class="notes">
+							<p>I'll tell you a secret - there is a solution which is a bit of a "get out of jail free" card for performance and inclusivity - lite sites</p>
 						</aside>
 					</section>
 					<section>
@@ -544,6 +553,18 @@ sizes="
 					<section>
 						<blockquote>The future is already here,<br>it's just not evenly distributed</blockquote>
 						<p class="smallest" style="text-align: right">William Gibson</p>
+						<aside class="notes">
+							<p>I'd like to leave you with a quote - the future is already here, it's just not evenly distributed.</p>
+							<p>As folks who build online experiences, we can help to level the playing field and provide access to as many people as possible.</p>
+						</aside>
+					</section>
+					<section>
+						<h2>Speed = Opportunities</h2>
+						<img loading="lazy" width="80%" src="media/tweet-akhil.png">
+						<p class="subtitle smallest bottom-left"><a href="https://twitter.com/akhiljp_dev/status/1433088201460117513">Tweet by Akhil Jayaprakash</a></p>
+						<aside class="notes">
+							<p>Every large online business is (or should be) focussing on speed. Developing this specialty is a great way to improve your career!</p>
+						</aside>
 					</section>
 					<section id="resources">
 						<h2>Resources</h2>
@@ -560,7 +581,14 @@ sizes="
 							<div style="display:flex;flex-grow: 1;flex-basis: 0;">
 								<a href="https://www.oreilly.com/library/view/using-webpagetest/9781491902783/"><img class="plain" width="800" loading="lazy" src="media/books/usingWPT.jpg" /></a>
 							</div>
+							<div style="display:flex;flex-grow: 1;flex-basis: 0;">
+								<a href="https://amzn.to/3kvptC1"><img class="plain" width="800" loading="lazy" src="media/books/timeismoney.jpg" /></a>
+							</div>
 						</div>
+						<aside class="notes">
+							<p>There are a huge number of resources to help build fast apps and websites.</p>
+							<p>Sergey Chernyshev has a <a href="https://kit.co/SergeyChernyshev/web-performance-books">list of 18 books</a> if you are looking for more!</p>
+						</aside>
 					</section>
 				</section>
 
