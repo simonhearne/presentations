@@ -633,20 +633,6 @@ sizes="<br>    (min-width: 1920px) 500px,<br>    (min-width: 1280px) 33.333vw,<b
 		<script src="../lib/js/jquery-3.3.1.min.js"></script>
 
 		<script>
-			try {
-				const profiler = new Profiler({ sampleInterval: 10, maxBufferSize: 10000 });
-
-				window.addEventListener('load', async () => {
-				const trace = await profiler.stop();
-				const traceJson = JSON.stringify({
-					timing: performance.timing,
-					trace,
-				});
-				console.log(traceJson);
-				});
-			} catch (e) {
-				console.info(e);
-			}
 			function sleep(ms) {
 				return new Promise(resolve => setTimeout(resolve, ms));
 			}
