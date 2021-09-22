@@ -363,11 +363,11 @@
 					</section>
 					<section>
 						<h2>Images</h2>
-						<ul>
-							<li class="fragment">Lazy-load hidden images</li>
-							<li class="fragment">Low-quality placeholders</li>
-							<li class="fragment">Use modern formats (WEBP / AVIF)</li>
-							<li class="fragment">Send the right sized image</li>
+						<ul class="fragment">
+							<li>Lazy-load hidden images</li>
+							<li>Low-quality placeholders</li>
+							<li>Use modern formats (WEBP / AVIF)</li>
+							<li>Send the right sized image</li>
 						</ul>
 						<aside class="notes">
 							<p>Images make up the majority of bytes for most pages, totalling almost 1MB for the average page!</p>
@@ -376,10 +376,10 @@
 					</section>
 					<section>
 						<h2>JavaScript</h2>
-						<ul>
-							<li class="fragment">Minimal client-side JS</li>
-							<li class="fragment">Use native browser features</li>
-							<li class="fragment">Measure impact on real devices</li>
+						<ul class="fragment">
+							<li>Minimal client-side JS</li>
+							<li>Use native browser features</li>
+							<li>Measure impact on real devices</li>
 						</ul>
 						<aside class="notes">
 							<p>JavaScript bytes are the most expensive on the web - not only must they be downloaded, but the browser then must parse and execute them - this often takes as long as the download time, or longer on lower-powered devices!</p>
@@ -388,12 +388,12 @@
 					</section>
 					<section>
 						<h2>Painting Fast</h2>
-						<ul>
-							<li class="fragment">Don't depend on video</li>
-							<li class="fragment">Identify &amp; inline critical CSS</li>
-							<li class="fragment">No blocking assets (JS / CSS)</li>
-							<li class="fragment">Prioritize key assets</li>
-							<li class="fragment"><code>preload</code> known critical assets</li>
+						<ul class="fragment">
+							<li>Don't depend on video</li>
+							<li>Identify &amp; inline critical CSS</li>
+							<li>No blocking assets (JS / CSS)</li>
+							<li>Prioritize key assets</li>
+							<li><code>preload</code> known critical assets</li>
 						</ul>
 						<aside class="notes">
 							<p>Your goal should be to render a page with just the HTML document downloaded. This means moving the critical CSS inline to the document and removing blocking requests to JavaScript.</p>
@@ -449,7 +449,6 @@ NetworkInformation {
 GET /index.html
 
 accept-ch: Downlink,RTT,Device-Memory,Save-Data,DPR,Width
-
 ...
 
 GET /image.jpg
@@ -468,15 +467,16 @@ device-memory: 8
 					</section>
 					<section>
 						<h2>Responsive Images</h2>
-						<ul>
-						<li>Use a service to resize &amp; for modern formats</li>
-						<li>Use markup to deliver the right image</li>
-						<li>Limit resolution to 2x DPI</li>
+						<ul class="fragment">
+							<li>Use a service to resize &amp; for modern formats</li>
+							<li>Use markup to deliver the right image</li>
+							<li>Limit resolution to 2x DPI</li>
+						</ul>
 					</section>
 					<section>
 						<h2>Responsive Images</h2>
-						<pre><code>
-<img
+						<pre><code data-trim data-noescape>
+&lt;img
 src="/images/image.jpg" alt=".."
 loading="eager" decoding="async"
 width="1920" height="1080" srcset="
@@ -487,7 +487,7 @@ sizes="
     (min-width: 1920px) 500px,
     (min-width: 1280px) 33.333vw,
     (max-width: 895px) 83.333vw,
-    500px">
+    500px"&gt;
 						</code></pre>
 
 					</section>
@@ -498,7 +498,7 @@ sizes="
 					</section>
 					<section>
 						<h2>A/B Testing</h2>
-						<ul>
+						<ul class="fragment">
 							<li>Use server-side tooling if possible</li>
 							<li>Separate production and pre-production tests</li>
 							<li>Remove 0% tests</li>
