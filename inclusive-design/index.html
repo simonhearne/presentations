@@ -130,18 +130,25 @@
 						<img class="plain" loading="lazy"  src="media/treo-youtube-conns.svg"/>
 						<p class="subtitle smallest bottom-left"><a href="https://treo.sh/sitespeed/m.youtube.com">Connection data from CRUX for m.youtube.com, July 2021</a></p>
 						<aside class="notes">
-							<p>An investigation ensued to work out what had happened. Performance is a tricky subject because there are so many variables to control for - device, connection, geography, cache state. This hasn't changed in the past 12 years! What the team at YouTube discovered is that the geographic distribution of users who had opted-in to Feather was disproportionately skewed towards Southeast Asia, South America, Africa and other regions with typically slow internet connections. These users had previously been totally locked out of YouTube due to the page weight (some would have to wait twenty minutes just to load the HTML, CSS and JavaScript).</p>
+							<p>Switching to view connection quality explains the issue. High quality connections are represented in dark blue - as high proportions of connections at 4G speeds. The whiter countries have poorer connectivity, with the brightest countries having close to zero connections rated as effective 4G (this is defined as latency less than 270ms and downlink greater than 700kb/s!).</p>
+							<p>Note especially that countries such as Iran, Afghanistan and Turmenistan have poor connectivity, as do most African countries and Venezuela in South America.</p>
 						</aside>
 					</section>
 					<section>
 						<h2>Performance is a distribution</h2>
 						<img class="plain" loading="lazy" width="50%" src="media/treo-youtube-dist.png" />
 						<p class="subtitle smallest bottom-left"><a href="https://treo.sh/sitespeed/m.youtube.com">LCP data from CRUX for m.youtube.com, July 2021</a></p>
+						<aside class="notes">
+							<p>Google uses the 75th percentile to measure Core Web Vitals - percentiles are a good way to get a single metric but it can hide the underlying distribution. Note here the spike of experiences at the 15s mark!</p>
+						</aside>
 					</section>
 					<section>
 						<h2>Even within the US</h2>
 						<img loading="lazy" src="media/cf-usa.jpg"/>
 						<p class="subtitle smallest bottom-left"><a href="https://blog.cloudflare.com/understanding-where-the-internet-isnt-good-enough-yet/">Understanding Where the Internet Isn't Good Enough Yet - Cloudflare</a></p>
+						<aside class="notes">
+							<p>Cloudflare measured the performance of connections by city in the US. This shows the vast difference between California cities at over 50Mbps and central American cities at under 5Mbps</p>
+						</aside>
 					</section>
 					<section>
 						<h2>So was Feather a success?</h2>
@@ -152,15 +159,10 @@
 					
 					<section class="tertiary-slide">
 						<h2>What we can learn from Feather</h2>
-						<p class="fragment">Being faster by default is more inclusive...</p>
-						<p class="fragment">... and that data can be misleading</p>
-						<aside class="notes">
-							<p>The moral of this story is two-fold:</p>
-							<ol>
-								<li>Performance IS inclusivity</li>
-								<li>Data can be misleading</li>
-							</ol>
-						</aside>
+						<ul>
+							<li class="fragment">Being faster by default is more inclusive</li>
+							<li class="fragment">Performance data can be misleading</li>
+						</ul>
 					</section>
 					
 					<section>
@@ -205,6 +207,9 @@
 							<li class="fragment">Adapting to the user</li>
 							<li class="fragment">Convincing the boss</li>
 						</ol>
+						<aside class="notes">
+							<p>My goal for this talk is to help you understand the challenges of performance and inclusivity, and provide some tools and data to be successful in future projects.</p>
+						</aside>
 					</section>
 				</section>
 				
@@ -216,6 +221,9 @@
 						<h2>Users are not averages</h2>
 						<img loading="lazy" class="roundy plain" style="width: 30%" src="media/ryan_tweet.png"></img>
 						<p class="subtitle smallest bottom-left"><a href="https://twitter.com/RyanTownsend/status/1435612305010593801">@RyanTownsend on Twitter</a></p>
+						<aside class="notes">
+							<p>Ryan Townsend tweeted from an airport lounge where Twitter took thirty seconds to load. This highlights that performance can impact anyone, regardless of socioeconomic status.</p>
+						</aside>
 					</section>
 					<section class="pull-up">
 						<h2>Modern Metrics Help!</h2>
@@ -225,8 +233,8 @@
 							</div>
 							<div class="column" style="font-size:80%">
 								<ul>
-									<li class="fragment" data-fragment-index="1">CWV* proxy UX</li>
-									<li class="fragment">Score from Lab data</li>
+									<li class="fragment" data-fragment-index="1">Score from Lab data</li>
+									<li class="fragment" data-fragment-index="2">CWV* are UX proxies</li>
 									<li class="fragment">Field data from real users</li>
 									<li class="fragment">75th %ile for Field data</li>
 									<li class="fragment">Lab is emulated MotoG4</li>
@@ -235,15 +243,15 @@
 						</div>
 						<p class="subtitle bottom-left smallest">
 							<span><a href="https://developers.google.com/speed/pagespeed/insights/?url=m.youtube.com">PSI - m.youtube.com</a></span>
-							<span class="fragment" data-fragment-index="1">* Core Web Vitals</span>
+							<span class="fragment" data-fragment-index="2">* Core Web Vitals</span>
 						</p>
-						<aside class="notes">Pagespeed Insights gives data both from Lab (a synthetic test) and Field (data gathered from real visits in Chrome)</aside>
+						<aside class="notes">Pagespeed Insights gives data both from Lab (a synthetic test) and Field (data gathered from real visits in Chrome). It is important to understand the differences between the two, and how the data is collected.</aside>
 					</section>
 					<section class="pull-up">
 						<h2>Estimated Cost in WPT</h2>
 						<img loading="lazy" width="80%" src="media/wpt-yt1.png" />
 						<p class="subtitle bottom-left smallest"><a href="https://webpagetest.org">WebPageTest.org</a></p>
-						<aside class="notes">Use WPT settings to configure a mobile test at 3G speed, mobile emulation throttles the CPU and sets the viewport.</aside>
+						<aside class="notes">Use WPT settings to configure a mobile test at 3G speed - mobile emulation throttles the CPU and sets the viewport.</aside>
 					</section>
 					
 					<section class="pull-up">
@@ -269,7 +277,10 @@
 
 					<section>
 						<h2>Use the Tools!</h2>
-						<p>Understand the benefits and drawbacks, then use regularly to track speed</p>
+						<p>Understand the benefits and drawbacks,<br>then use regularly to track speed</p>
+						<aside class="notes">
+							<p>There are hundreds of tools that measure performance. Select a few which work well for you - lab tests are great for development, real-user monitoring (like <a href="https://www.akamai.com/products/mpulse-real-user-monitoring">Akamai mPulse</a>) is critical to measure user experience in the wild.</p>
+						</aside>
 					</section>
 					
 				</section>
@@ -280,9 +291,8 @@
 					</section>
 
 					<section data-background="media/goojf.jpg">
-						<h2>Get out of jail free</h2>
 						<aside class="notes">
-							<p>There is a solution which is a bit of a "get out of jail free" card - lite sites</p>
+							<p>I'll tell you a secret - there is a solution which is a bit of a "get out of jail free" card for performance and inclusivity - lite sites</p>
 						</aside>
 					</section>
 					<section>
@@ -290,6 +300,9 @@
 						<img loading="lazy" width="80%" src="media/lite-sites.png">
 						<p class="fragment">Fast by default?</p>
 						<p class="subtitle smallest bottom-left"><a href="https://github.com/mdibaiee/awesome-lite-websites">awesome-lite-sites</a></p>
+						<aside class="notes">
+							<p>Lite sites have multiple challenges like discoverability and maintenance. GMail is a good example - the 'load simple HTML view' option appears after the loading screen has been shown for a few seconds.</p>
+						</aside>
 					</section>
 					<section>
 						<h2>Performance must be baked in</h2>
@@ -315,36 +328,42 @@
 					<section data-background-color="#941f55" data-background-size="contain" data-background-image="media/mustard.jpg">
 						<h2 class="dark-bg">Progressive Enhancement FTW</h2>
 						<p class="subtitle smallest bottom-left"><a href="https://speakerdeck.com/patrickhamann/breaking-news-at-1000ms-tech-dot-insight-2014?slide=21">Breaking News at 1000ms - Patrick Hamann</a></p>
+						<aside class="notes">
+							<p>Progressive enhancement is the concept of shipping the important content (from a user's point-of-view) first, then adding more content later.</p>
+						</aside>
+
 					</section>
 					<section>
 						<h2>Images</h2>
 						<ul>
-							<li>Use modern formats (WEBP / AVIF)</li>
-							<li>Send the right image</li>
+							<li class="fragment">Lazy-load hidden images</li>
+							<li class="fragment">Low-quality placeholders</li>
+							<li class="fragment">Use modern formats (WEBP / AVIF)</li>
+							<li class="fragment">Send the right sized image</li>
 						</ul>
 					</section>
 					<section>
 						<h2>JavaScript</h2>
 						<ul>
-							<li>Minimal client-side JS</li>
-							<li>Measure impact on real devices</li>
+							<li class="fragment">Minimal client-side JS</li>
+							<li class="fragment">Use native browser features</li>
+							<li class="fragment">Measure impact on real devices</li>
 						</ul>
 					</section>
 					<section>
 						<h2>Painting Fast</h2>
 						<ul>
-							<li>Don't depend on video</li>
-							<li>Identify Critical CSS</li>
-							<li>No blocking assets (JS / CSS)</li>
-							<li>Prioritize key assets</li>
+							<li class="fragment">Don't depend on video</li>
+							<li class="fragment">Identify Critical CSS</li>
+							<li class="fragment">No blocking assets (JS / CSS)</li>
+							<li class="fragment">Prioritize key assets</li>
+							<li class="fragment"><code>preload</code> known critical assets</li>
 						</ul>
 					</section>
 					<section>
-						<h2>Prioritising Assets</h2>
-						<ul>
-							<li>Use <code>loading</code> attribute</li>
-							<li><code>preload</code> known critical assets</li>
-						</ul>
+						<h2>Tools can Help</h2>
+						<img loading="lazy" src="">
+						<p class="todo">TODO: Add recommendations screenshot from PSI</p>
 					</section>
 				</section>
 
