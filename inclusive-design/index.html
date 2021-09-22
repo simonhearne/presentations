@@ -406,6 +406,7 @@
 						<p class="subtitle smallest bottom-left"><a href="https://developers.google.com/speed/pagespeed/insights/?url=m.youtube.com">PSI - m.youtube.com</a></p>
 						<aside class="notes">
 							<p>Tools such as Pagespeed Insights (and <a href="">Lighthouse</a> for development environments) provide useful information on opportunities to improve performance.</p>
+							<p>To get more deep insights, give <a href="https://yellowlab.tools">YellowLab Tools</a> a shot!</p>
 						</aside>
 					</section>
 				</section>
@@ -417,12 +418,13 @@
 							<p>There are a surprising number of ways that users can let you know about their preferences, many of them can be used to deliver optimal experiences!</p>
 						</aside>
 					</section>
-					<section>
-						<h2>Data Saver</h2>
-						<img loading="lazy" width="50%" src="https://developers.google.com/web/updates/images/2016/02/save-data/data-saver-chrome.png"/>
+					<section data-background="media/lite.jpg">
+						<h2 class="dark-bg">Data Saver</h2>
 						<p class="subtitle smallest bottom-left"><a href="https://developers.google.com/web/fundamentals/performance/optimizing-content-efficiency/save-data">Delivering Fast and Light Applications with Save-Data</a></p>
 						<aside class="notes">
 							<p>Data saver is a client hint to opt-in to saving data - you can use this to automatically deliver a lighter version of your application</p>
+							<p>Data saver is generally available for chromium-based mobile browsers (excluding iOS). Users can opt-in when installing the browser or through browser settings.</p>
+							<p>Data saver mode is automatically enabled when the browser detects a slow connection! This is defined as an effective 2G connection - less than 70Kbps or greater than 2,000ms latency.</p>
 						</aside>
 					</section>
 					<section>
@@ -631,6 +633,20 @@ sizes="<br>    (min-width: 1920px) 500px,<br>    (min-width: 1280px) 33.333vw,<b
 		<script src="../lib/js/jquery-3.3.1.min.js"></script>
 
 		<script>
+			try {
+				const profiler = new Profiler({ sampleInterval: 10, maxBufferSize: 10000 });
+
+				window.addEventListener('load', async () => {
+				const trace = await profiler.stop();
+				const traceJson = JSON.stringify({
+					timing: performance.timing,
+					trace,
+				});
+				console.log(traceJson);
+				});
+			} catch (e) {
+				console.info(e);
+			}
 			function sleep(ms) {
 				return new Promise(resolve => setTimeout(resolve, ms));
 			}
@@ -645,7 +661,7 @@ sizes="<br>    (min-width: 1920px) 500px,<br>    (min-width: 1280px) 33.333vw,<b
 				return(false);
 			}
 			var presenting = window.location.search.includes('present');
-			var duration = getQueryVariable('duration') || 30;
+			var duration = getQueryVariable('duration') || 40;
 			var hasCode = !!document.querySelector('code');
 			var hasAnims = !!document.querySelector('[data-animate]');
 			var keyboard = {
