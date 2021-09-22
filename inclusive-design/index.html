@@ -17,14 +17,14 @@
 		<link rel="stylesheet" href="../css/reveal.css">
 		<link rel="stylesheet" href="../css/theme/simon2.css" id="theme">
 
-		<meta property="og:image" content="https://simonhearne.com/presentations/psych-speed/social.png" />
+		<meta property="og:image" content="https://simonhearne.com/presentations/inclusive-design/social.png" />
 		<meta property="og:image:width" content=1200 />
 		<meta property="og:image:height" content=600 />
 		<meta name="twitter:card" content="summary_large_image" />
 		<meta name="twitter:creator" content="@SimonHearne" />
 		<meta name="twitter:title" content="Presentation: An Inclusive Web is Fast by Default.">
 		<meta name="twitter:description" content="" />
-		<meta name="twitter:image" content="https://simonhearne.com/presentations/psych-speed/social.png" />
+		<meta name="twitter:image" content="https://simonhearne.com/presentations/inclusive-design/social.png" />
 		
 		<!-- Printing and PDF exports -->
 		<script>
@@ -476,18 +476,11 @@ device-memory: 8
 					<section>
 						<h2>Responsive Images</h2>
 						<pre><code data-trim data-noescape>
-&lt;img
-src="/images/image.jpg" alt=".."
-loading="eager" decoding="async"
-width="1920" height="1080" srcset="
-    /images/image.jpg?w=600 600w,
+&lt;img src="/image.jpg" alt=".." loading="eager" decoding="async"
+width="1920" height="1080" srcset="<br>    /image_600.jpg 600w,
 	...
-    /images/image.jpg 1920w"
-sizes="
-    (min-width: 1920px) 500px,
-    (min-width: 1280px) 33.333vw,
-    (max-width: 895px) 83.333vw,
-    500px"&gt;
+    /image.jpg 1920w"
+sizes="<br>    (min-width: 1920px) 500px,<br>    (min-width: 1280px) 33.333vw,<br>    (max-width: 895px) 83.333vw,<br>    500px"&gt;
 						</code></pre>
 
 					</section>
@@ -506,8 +499,10 @@ sizes="
 					</section>
 					<section>
 						<h2>Understand Speed @ Design</h2>
+						<aside class="notes">
+							<p>If there's one takeaway from this - speed must be understood at the design stage!</p>
+						</aside>
 					</section>
-						
 				</section>
 				
 				<section id="convince-bosses">
