@@ -334,13 +334,19 @@
 						<img class="plain" loading="lazy" src="media/pathtoperf2.svg" />
 						<p class="smallest bottom-left subtitle"><a href="https://speakerdeck.com/katiekovalcin/the-path-to-performance">The Path to Performance - Katie Kovalcin</a></p>
 					</section>
+					<section>
+						<img loading="lazy" src="media/fix-cost.jpg">
+						<p class="subtitle smallest bottom-left"><a href="https://deepsource.io/blog/exponential-cost-of-fixing-bugs/">The Exponential Cost of Fixing Bugs</a></p>
+						<aside class="notes">
+							<p>It is widely understood that bugs become exponentially more difficult to fix as they progress through the development cycle. Performance issues are similar, although the later they are discovered the less likely they are to be fixed at all!</p>
+						</aside>
+					</section>
 					<section data-background-color="#941f55" data-background-size="contain" data-background-image="media/mustard.jpg">
 						<h2 class="dark-bg">Progressive Enhancement FTW</h2>
 						<p class="subtitle smallest bottom-left"><a href="https://speakerdeck.com/patrickhamann/breaking-news-at-1000ms-tech-dot-insight-2014?slide=21">Breaking News at 1000ms - Patrick Hamann</a></p>
 						<aside class="notes">
 							<p>Progressive enhancement is the concept of shipping the important content (from a user's point-of-view) first, then adding more content later.</p>
 						</aside>
-
 					</section>
 					<section>
 						<h2>Images</h2>
@@ -350,6 +356,10 @@
 							<li class="fragment">Use modern formats (WEBP / AVIF)</li>
 							<li class="fragment">Send the right sized image</li>
 						</ul>
+						<aside class="notes">
+							<p>Images make up the majority of bytes for most pages, totalling almost 1MB for the average page!</p>
+							<p>Delivering only the required images, using modern formats and delivering the correct size image can greatly reduce their impact on performance.</p>
+						</aside>
 					</section>
 					<section>
 						<h2>JavaScript</h2>
@@ -358,21 +368,32 @@
 							<li class="fragment">Use native browser features</li>
 							<li class="fragment">Measure impact on real devices</li>
 						</ul>
+						<aside class="notes">
+							<p>JavaScript bytes are the most expensive on the web - not only must they be downloaded, but the browser then must parse and execute them - this often takes as long as the download time, or longer on lower-powered devices!</p>
+							<p>Ideally it should be possible to render the page entirely without JavaScript, then load only the minimum code required to add interactivity.</p>
+						</aside>
 					</section>
 					<section>
 						<h2>Painting Fast</h2>
 						<ul>
 							<li class="fragment">Don't depend on video</li>
-							<li class="fragment">Identify Critical CSS</li>
+							<li class="fragment">Identify &amp; inline critical CSS</li>
 							<li class="fragment">No blocking assets (JS / CSS)</li>
 							<li class="fragment">Prioritize key assets</li>
 							<li class="fragment"><code>preload</code> known critical assets</li>
 						</ul>
+						<aside class="notes">
+							<p>Your goal should be to render a page with just the HTML document downloaded. This means moving the critical CSS inline to the document and removing blocking requests to JavaScript.</p>
+							<p>Preload is a useful tool to tell the browser what it will need to download - use this sparingly for webfonts and hero images.</p>
+						</aside>
 					</section>
 					<section>
 						<h2>Tools can Help</h2>
-						<img loading="lazy" src="">
-						<p class="todo">TODO: Add recommendations screenshot from PSI</p>
+						<img loading="lazy" width="50%" src="psi-recommendations.png">
+						<p class="subtitle smallest bottom-left"><a href="https://developers.google.com/speed/pagespeed/insights/?url=m.youtube.com">PSI - m.youtube.com</a></p>
+						<aside class="notes">
+							<p>Tools such as Pagespeed Insights (and <a href="">Lighthouse</a> for development environments) provide useful information on opportunities to improve performance.</p>
+						</aside>
 					</section>
 				</section>
 
