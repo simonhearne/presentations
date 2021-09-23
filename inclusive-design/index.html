@@ -133,7 +133,7 @@
 						<p class="subtitle smallest bottom-left"><a href="https://treo.sh/sitespeed/m.youtube.com">Connection data from CRUX for m.youtube.com, July 2021</a></p>
 						<aside class="notes">
 							<p>Switching to view connection quality explains the issue. High quality connections are represented in dark blue - as high proportions of connections at 4G speeds. The whiter countries have poorer connectivity, with the brightest countries having close to zero connections rated as effective 4G (this is defined as latency less than 270ms and downlink greater than 700kb/s!).</p>
-							<p>Note especially that countries such as Iran, Afghanistan and Turmenistan have poor connectivity, as do most African countries and Venezuela in South America.</p>
+							<p>Note especially that countries such as Iran, Afghanistan and Turkmenistan have poor connectivity, as do most African countries and Venezuela in South America.</p>
 						</aside>
 					</section>
 					<section>
@@ -310,7 +310,7 @@
 					</section>
 					<section data-background="media/goojf.jpg">
 						<aside class="notes">
-							<p>I'll tell you a secret - there is a solution which is a bit of a "get out of jail free" card for performance and inclusivity - lite sites</p>
+							<p>This feels like a "get out of jail free" option...</p>
 						</aside>
 					</section>
 					<section>
@@ -518,6 +518,9 @@ sizes="<br>    (min-width: 1920px) 500px,<br>    (min-width: 1280px) 33.333vw,<b
 					<section>
 						<img loading="lazy" src="media/wpostats.png" />
 						<p class="subtitle smallest bottom-left"><a href="https://wpostats.com/">WPO Stats</a></p>
+						<aside class="notes">
+							<p><a href="https://wpostats.com/">WPO Stats</a> is a great reference for web performance case studies - hundreds of organizations have seen business metrics improve when performance is improved!</p>
+						</aside>
 					</section>
 					<section>
 						<h2>Buy-In Methods</h2>
@@ -537,7 +540,7 @@ sizes="<br>    (min-width: 1920px) 500px,<br>    (min-width: 1280px) 33.333vw,<b
 					<section>
 						<h2>But seriously...</h2>
 						<p>Getting buy-in is difficult,<br>especially after a project starts.</p>
-						<p class="fragment">Include speed &amp; budgets in proposals,<br>early designs and success criteria.</p>
+						<p class="fragment">Include speed &amp; performance budgets in proposals,<br>early designs and success criteria.</p>
 					</section>
 
 				</section>
@@ -549,20 +552,35 @@ sizes="<br>    (min-width: 1920px) 500px,<br>    (min-width: 1280px) 33.333vw,<b
 					<section>
 						<h3>1. Use Chrome's throttling features</h3>
 						<img loading="lazy" src="media/throttling.jpg" />
+						<aside class="notes">
+							<p>Browsing with throttled connection <em>and</em> CPU can be an eye-opening experience. Some of your visitors will have worse experiences than this, so it is worth trying to make sure your application delivers a reasonable experience under these conditions.</p>
+						</aside>
 					</section>
 					<section>
 						<h3>2. 2G Tuesdays</h3>
 						<img loading="lazy" class="plain" src="media/2g.svg" />
 						<p class="subtitle smallest bottom-left"><a href="https://engineering.fb.com/2015/10/27/networking-traffic/building-for-emerging-markets-the-story-behind-2g-tuesdays/">Building for emerging markets: The story behind 2G Tuesdays</a></p>
+						<aside class="notes">
+							<p>Facebook throttled their office WiFi to 2G speeds on Tuesdays to help engineers build empathy with users in emerging markets. You can acheive the same by simply disabling 3G &amp; 4G in your device settings.</p>
+						</aside>
 					</section>
 					<section>
 						<h3>3. Use a low-spec device for testing</h3>
 						<img loading="lazy" class="" width="60%" src="media/amazon.jpg" />
 						<p class="subtitle smallest bottom-left"><a href="https://www.amazon.co.uk/gp/bestsellers/electronics/356496011">Amazon UK Best Sellers, updated hourly.</a></p>
+						<aside class="notes">
+							<p>It's easy to assume that everyone has access to a reasonably performant mobile device, but the top-selling prepaid phones on Amazon UK show that most folks are spending less than $300 / £200 on their phones!</p>
+							<p>The good news is that these devices are inexpensive to buy for testing the performance of your apps.</p>
+						</aside>
 					</section>
 					<section>
 						<h3>4. Browse with JavaScript disabled</h3>
 						<img loading="lazy" class="" width="60%" src="media/twitter.png" />
+						<aside class="notes">
+							<p>All browsers have the ability to disable JavaScript - and <a href="https://www.searchenginepeople.com/blog/stats-no-javascript.html#:~:text=After%20filtering%20out%20automated%20requests,The%20average%20hovers%20around%201.3%25.">over 1.3% of visitors browse without JS</a>!</p>
+							<p>Browsing your site with JavaScript disabled will always be enlightening - either your site will not work at all, it will only partially work or it will be lightning fast!</p>
+							<p>In all of these scenarios there will be takeaways - either to reduce dependency on JavaScript or to investigate the performance of your scripts.</p>
+						</aside>
 					</section>
 					<section>
 						<h3>5. Test with third-parties</h3>
@@ -572,6 +590,9 @@ sizes="<br>    (min-width: 1920px) 500px,<br>    (min-width: 1280px) 33.333vw,<b
 							<li>Defer third-parties until after page load</li>
 							<li>Have a third-party budget</li>
 						</ul>
+						<aside class="notes">
+							<p>Third-party code can often be a major bottleneck - ensure that performance testing includes them!</p>
+						</aside>
 					</section>
 				</section>
 				
