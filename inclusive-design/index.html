@@ -107,7 +107,7 @@
 						<aside class="notes">
 							<p>Consider YouTube. For me, it is generally an entertainment service. For some folks, it is a source of education, information, news and health advice (for better or for worse). YouTube seems so ubiquitous that, like our connectivity, we might consider it a utility. But what if your connection was too slow to load the video player? Or your device so limited on storage that you had to choose between family photos or the YouTube app?</p>
 							<p>Back in 2009 YouTube was a hefty web app. The video player page came in at 1.2MB - before the video had even started to load! Chris Zacharias was a developer on the team and started a project to fix the performance problems - codenamed Project Feather. The engineering work was intense: hand-writing the CSS and JavaScript, manually optimising image sprites and implementing the just-written HTML5 video player to replace the Flash player. The result of this work was a page load in under 100kB with only 14 requests, quite the improvement!</p>
-							<p>Project Feather was pushed live with as a small opt-in experiment in order to collect metrics on the success of the project. After a week of data collection - the results were in! The key metric tracked was the page onload event - a standard performance measure in 2009. Take a second to think how much improvement you might expect - reducing page weight by over 90%, swapping Flash for native video, hand-crafting the code for optimal performance. 50% improvement? 100% improvement?</p>
+							<p>Testing in development showed significant performance gains over the live player page, so Project Feather was pushed live with as a small opt-in experiment in order to collect metrics on the success of the project. After a week of data collection from real users - the results were in! The key metric tracked was the page onload event - a standard performance measure in 2009. Take a second to think how much improvement you might expect - reducing page weight by over 90%, swapping Flash for native video, hand-crafting the code for optimal performance. 50% improvement? 80% improvement?</p>
 						</aside>
 					</section>
 					<section class="pull-up" data-background="../backgrounds/turtle.jpg">
@@ -507,13 +507,17 @@ sizes="<br>    (min-width: 1920px) 500px,<br>    (min-width: 1280px) 33.333vw,<b
 					</section>
 				</section>
 				
-				<section id="convince-bosses">
+				<section id="convince-the-boss">
 					<section data-state="secondary-slide">
 						<h2>Convincing the Boss</h2>
 						<aside class="notes">
 							<p>By now, I'd like to think that you are all convinced of the intrinsic value of improving site speed. Unfortunately some of us also need to convince others that the work is meaningful and time should be scheduled for it.</p>
 							<p>Unfortunately, performance as a topic is often under-funded unless there has been a major issue. I'd like to share some tips that I have learned from working on performance projects for a decade.</p>
 						</aside>
+					</section>
+					<section>
+						<img loading="lazy" src="media/wpostats.png" />
+						<p class="subtitle smallest bottom-left"><a href="https://wpostats.com/">WPO Stats</a></p>
 					</section>
 					<section>
 						<h2>Buy-In Methods</h2>
