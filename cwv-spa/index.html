@@ -57,60 +57,319 @@
 					</aside>
 				</section>
 				<section id="intro">
-					<section data-background-image="../backgrounds/coffee_split.jpg">
-						<h2 class="light-bg">CWV &amp; SPAs</h2>
-						<p class="light-bg">Both divisive topics!</p>
-						<aside class="notes">
-							<p>Core Web Vitals and Single Page Application frameworks have something in common - they have been very divisive!<p>
-						</aside>
+					<section data-auto-animate>
+						<blockquote>Hi Simon! I was wondering if you could help with...</blockquote><br>
+						<img style="max-width: 75%;" loading="lazy" class="fragment" src="media/2022-05-06-09-04-15.png"/>
 					</section>
 					<section>
-						<h2>Single-page Apps?</h2>
+						<img style="max-width: 75%;" loading="lazy" src="media/2022-05-06-09-33-30.png"/>
 					</section>
 					<section>
-						<h2>Core Web Vitals?</h2>
+						<h2>Don't panic!</h2>
+						<p>Core Web Vitals are your friend, not your foe</p>
 					</section>
 					<section>
-						<h2>Goals for today</h2>
-						<ul>
-							<li><a href="#cwv_fundamentals">CWV fundamentals</a></li>
-							<li><a href="#seo_impact">SEO impact</a></li>
-							<li><a href="#spas_special">Why SPAs are special</a></li>
-							<li><a href="#optimising_spas">Optimising your SPA</a></li>
+						<h2>In this talk:</h2>
+						<ul class="lightning-bullets">
+							<li>What the Core Web Vitals are</li>
+							<li>Why they matter (to you and Google)</li>
+							<li>Why SPAs are special</li>
+							<li>How to improve and monitor progress</li>
 						</ul>
 					</section>
 				</section>
 
-				
-				<section id="cwv_fundamentals">
-					<section data-state="tertiary-slide">
-						<h2>Fundamentals of Core Web Vitals</h2>
+
+				<section>
+					<section data-auto-animate>
+						<h2>Core Web Vitals?</h2>
+					</section>
+					<section data-auto-animate>
+						<h2>Core Web Vitals?</h2>
+						<p>Not just that Google thing</p>
+					</section>
+					<section>
+						<h2>CWVs are proxies of<br><em>User Experience</em></h2>
+					</section>
+					<section data-auto-animate data-background-image="../backgrounds/vitals_monitor.jpg">
+					</section>
+					<section data-auto-animate data-background-image="../backgrounds/vitals_monitor.jpg">
+						<dl style="background: rgba(0,0,0,0.5);padding: 20px 100px;">
+							<dt>Largest Contentful Paint</dt>
+							<dd>How fast it feels</dd>
+							<dt>Cumulative Layout Shift</dt>
+							<dd>How jumpy it is</dd>
+							<dt>First Input Delay</dt>
+							<dd>How interactive it feels</dd>
+							<div class="fragment">
+								<dt>Input to Next Paint</dt>
+								<dd>How interactive it feels</dd>
+							</div>
+						</dl>
 					</section>
 				</section>
 
-				<section id="seo_impact">
+
+				<section id="field_vs_lab">
+					<section data-background-image="../backgrounds/test-tube.jpg">
+						<h2 class="dark-bg">Intermission:<br>Field vs. Lab</h2>
+					</section>
+					<section>
+						<h2>🧪 Lab</h2>
+						<p>Controlled tests of a single page / interaction</p>
+					</section>
+					<section>
+						<h2>🌍 Field</h2>
+						<p>Real data from real users out on interweb</h2>
+					</section>
+					<section>
+						<h2>Distributions &amp; Percentiles</h2>
+
+						<ul class="no-bullets small">
+							<li>CWV measured in the field, where data is noisy</li>
+							<li>We use summary metrics to make sense of the noise</li>
+							<li><em>75th percentile</em> - ¼ experiences are worse, ¾ better</li>
+						</ul>
+						<img loading="lazy" class="fragment" style="max-width:50%" src="media/2022-05-06-12-41-54.png"/>
+					</section>
+					<section>
+						<h2>Results will differ between tools</h2>
+						<ul class="no-bullets">
+							<li>Google Analytics + web_vitals.js 🌍</li>
+							<li>CrUX (PSI, GSC) <span style="position:relative">🌍<span style="position:absolute;left:0;">🧪</span></span></li>
+							<li>Search Console 🌍</li>
+							<li>Real User Monitoring 🌍</li>
+							<li>WebPageTest 🧪</li>
+						</ul>
+					</section>
+					<section>
+						<h2>Who uses what?</h2>
+						<ul class="no-bullets">
+							<li>Search Console for SEO folks</li>
+							<li>CrUX &amp; RUM for product</li>
+							<li>PSI &amp; WebPageTest for engineers</li>
+						</ul>
+					</section>
+				</section>
+				
+
+				<section id="why_cwv_matter">
+					<section>
+						<h2>Why Core Web Vitals Matter</h2>
+					</section>
+
+					<section>
+						<svg viewBox="0 0 48 48" style="width:10ch;">
+						<title>Google Logo</title>
+						<clipPath id="g">
+							<path d="M44.5 20H24v8.5h11.8C34.7 33.9 30.1 37 24 37c-7.2 0-13-5.8-13-13s5.8-13 13-13c3.1 0 5.9 1.1 8.1 2.9l6.4-6.4C34.6 4.1 29.6 2 24 2 11.8 2 2 11.8 2 24s9.8 22 22 22c11 0 21-8 21-22 0-1.3-.2-2.7-.5-4z"/>
+						</clipPath>
+						<g class="colors" clip-path="url(#g)">
+							<path fill="#FBBC05" d="M0 37V11l17 13z"/>
+							<path fill="#EA4335" d="M0 11l17 13 7-6.1L48 14V0H0z"/>
+							<path fill="#34A853" d="M0 37l30-23 7.9 1L48 0v48H0z"/>
+							<path fill="#4285F4" d="M48 48L17 24l-4-3 35-10z"/>
+						</g>
+						</svg>
+						<h2>Search <span data-animate="heartBeat" class="delay-1s infinite">❤️</span> CWV <span data-animate="heartBeat" class="delay-1s infinite">❤️</span> Speed</h2>
+					</section>
+
 					<section data-state="tertiary-slide">
 						<h2>SEO impact of Core Web Vitals</h2>
 					</section>
+					<section data-state="tertiary-slide">
+						<h2>SEO is a <span data-animate="heartBeat" class="delay-1s">🥕</span> to create better UX</h2>
+						<p class="fragment">Don't expect massive ranking boosts</p>
+					</section>
+					<section>
+						<h2>CWV are not pass / fail!</h2>
+						<img loading="lazy" style="max-width:75%;" src="media/2022-05-06-10-25-13.png">
+						<p class="fragment">Assuming max ranking boost of 1, this page will get ~0.75</p>
+						<aside class="notes">
+						<p>Assuming a maximum ranking boost of 1, achieving a high amber in LCP, green in CLS and green in FID will give you a ranking boost of 0.75</p>
+						</aside>
+					</section>
+					<section data-state="tertiary-slide">
+						<h2><span data-animate="hinge" class="delay-2s">SEO </span> impact of Core Web Vitals</h2>
+					</section>
+					<section data-background-image="../backgrounds/clock.jpg">
+						<h2 style="width: 33%;color: #69b1c1;">A brief history of #WebPerf</h2>
+					</section>
+					<section>
+						<ul>
+							<li><span style="font-family: monospace">2010</span> - Navigation Timing API</li>
+							<li class="fragment"><span style="font-family: monospace">2017</span> - Paint Timing API</li>
+							<li class="fragment"><span style="font-family: monospace">2019</span> - ALL THE APIS <span class="fragment smaller"> (in Chrome)</span>
+							<ul class="fragment">
+								<li>LargestContentfulPaint API</li>
+								<li>LayoutInstability API</li>
+								<li>EventTiming API</li>
+							</li>
+						</ul>
+					</section>
 				</section>
 
-				<section id="spas_special">
-					<section data-state="tertiary-slide">
-						<h2>SPAs are Special!</h2>
+
+				<section id="why_spas_special">
+					<section data-background-image="../backgrounds/coffee_split.jpg">
+						<h2 style="transform:rotate(36deg);margin-top:25%;">CWV &amp; SPAs</h2>
+						<aside class="notes">
+							<p>Core Web Vitals and Single Page Application frameworks have something in common - they have been very divisive!<p>
+						</aside>
+					</section>
+					
+					<section>
+						<h2>SPAs <span data-animate="jello" class="infinite" >break</span> a lot of stuff</h2>
+					</section>
+					<section>
+						<h2>SPAs break performance APIs</h2>
+						<p class="fragment">One load event per session, one FCP, one LCP...</p>
+					</section>
+					<section>
+						<h2>LCP is only measured on the<br>first page load</h2>
+					</section>
+					<section>
+						<h2>CLS is measured throughout<br>the whole session</h2>
+						<p class="fragment">This breaks page-level attribution 😱</p>
+					</section>
+					<section>
+						<h2>FID is only measured on the<br>first page load</h2>
+					</section>
+					<section>
+						<h2>In summary...</h2>
+						<p>SPA websites are penalised by <br>ignoring mid-session navigations</p>
+						<p class="fragment">except CLS - where the <em>worst</em> 1-5s window is captured</p>
 					</section>
 				</section>
 
 				<section id="optimising_spas">
 					<section data-state="tertiary-slide">
-						<h2>Optimising SPAs</h2>
+						<h2>Optimising CWVs on SPAs</h2>
+					</section>
+					
+					<section>
+						<h2>Largest Contentful Paint</h2>
+					</section>
+					<section data-auto-animate>
+						<img loading="lazy" src="media/2022-05-06-10-42-40.png"/>
+					</section>
+					<section data-auto-animate>
+						<img loading="lazy" src="media/2022-05-06-10-43-52.png"/>
+					</section>
+					<section data-auto-animate>
+						<img loading="lazy" src="media/2022-05-06-10-47-14.png"/>
+					</section>
+					<section data-auto-animate>
+						<img loading="lazy" src="media/2022-05-06-10-48-09.png"/>
+					</section>
+					<section data-auto-animate>
+						<img loading="lazy" src="media/2022-05-06-10-50-59.png"/>
+					</section>
+					<section data-auto-animate>
+						<img loading="lazy" src="media/2022-05-06-10-51-38.png"/>
+					</section>
+					<section>
+						<h2>Let's remove preloads</h2>
+						<img loading="lazy" style="max-width: 75%;" src="media/2022-05-06-11-11-09.png"/>
+						<p class="subtitle smallest bottom-left"><a href="https://perfproxy.com">perfproxy.com</a></p>
+					</section>
+					<section data-auto-animate>
+						<img loading="lazy" src="media/2022-05-06-11-05-24.png"/>
+					</section>
+					<section data-auto-animate>
+						<img loading="lazy" src="media/2022-05-06-11-06-02.png"/>
+					</section>
+					<section data-auto-animate>
+						<img loading="lazy" src="media/2022-05-06-11-06-33.png"/>
+					</section>
+					<section data-auto-animate>
+						<img loading="lazy" src="media/2022-05-06-11-13-27.png"/>
+					</section>
+					<section data-auto-animate>
+						<img loading="lazy" src="media/2022-05-06-11-15-06.png"/>
+					</section>
+					<section data-auto-animate>
+						<img loading="lazy" style="max-width: 75%;"  src="media/2022-05-06-11-16-09.png"/>
+						<p class="subtitle smallest bottom-left"><a href="https://www.debugbear.com/html-size-analyzer">HTML Size Analyser</a></p>
+					</section>
+					<section>
+						<h2>Where we got to (3G)</h2>
+						<img class="fragment" nloading="lazy" src="media/2022-05-06-12-17-21.png"/>
+					</section>
+					<section>
+						<h2>LCP top-tips</h2>
+						<ul>
+							<li class="fragment">SSR all landing pages</li>
+							<li class="fragment">Defer / reduce / remove hydration</li>
+							<li class="fragment">Increase hero element priority</li>
+							<li class="fragment">Only preload critical assets</li>
+							<li class="fragment">No cross-origin requests in critical path</li>
+							<li class="fragment">Reduce HTML size (<50kB compressed)</li>
+						</ul>
+					</section>
+					<section>
+						<h2>Image LCP?</h2>
+						<ul class="lightning-bullets">
+							<li class="fragment">Ensure <code>&lt;img src=""&gt;</code> in HTML source</li>
+							<li class="fragment">Ensure <code>loading</code> attribute is <em>not</em> <code>"lazy"</code></li>
+							<li class="fragment">Try <code>fetchpriority="high"</code> attribute</li>
+							<li class="fragment">Keep hero images &lt;100kB</li>
+							<li class="fragment">Use modern formats<br>(<code>AVIF</code> &gt; <code>WEBP</code> &gt; <code>JPEG</code> &gt; <code>PNG</code> &gt; <code>GIF</code>)</li>
+						</ul>
+					</section>
+					
+					<section>
+						<h2>Cumulative Layout <span data-animate="shake" class="delay-1s infinite slow">Shift</span></h2>
+					</section>
+					
+					<section>
+						<style>
+							#fid-heading {
+								cursor: pointer;
+							}
+							#fid-heading:active {
+								margin-top: 2px;
+							}
+							#fid-heading.active {
+								color: lightcoral;
+							}
+						</style>
+						<h2 id="fid-heading">First Input Delay</h2>
+						<script>
+							let fid_el = document.getElementById('fid-heading');
+							fid_el.addEventListener('click',(el) => {
+								setTimeout(()=>{el.target.classList.toggle('active')},500)
+							})
+						</script>
+					</section>
+
+					<section>
+						<h2>Bonus:<br>Input to Next Paint (INP)</h2>
 					</section>
 				</section>
 
-				
 
-				<section class="pull-up" data-background-image="../backgrounds/passion.jpg">
-					<h2 class="dark-bg">Thank you 🙏</h2>
-					<p class="dark-bg" style="margin-top: 9em !important;"><a style="color:white !important;" href="https://twitter.com/SimonHearne">@SimonHearne</a><br><a style="color:white !important;" href="https://simonhearne.com/">simonhearne.com</a></p>
+				<section id="summary">
+					<section>
+						<h2>In summary</h2>
+						<p>CWVs are a useful tool, SEO impact is low, CrUX is free RUM data</p>
+						<p>Optimising for CWVs is (normally) quite simple - and will benefit business metrics</p>
+						<p>Become the "go-to" for CWV in your organisation to build personal brand</p>
+					</section>
+					<section class="pull-up" data-background-image="media/cyclist_number.jpeg">
+						<h2>Chase one number at your peril</h2>
+					</section>
+					<section>
+						<h2>Links &amp; Tools</h2>
+						<ul>
+							<li><a href="https://webperf.tools/">WebPerf.tools</a> - my library of useful tools</li>
+							<li><a href="https://simonhearne.com/2022/core-web-vitals-on-spas/">simonhearne.com/2022/core-web-vitals-on-spas/</a> - this talk, as a post</li>
+						</ul>
+					</section>
+					<section class="pull-up" data-background-image="../backgrounds/passion.jpg">
+						<h2 class="dark-bg">Thank you 🙏</h2>
+						<p class="dark-bg" style="margin-top: 9em !important;"><a style="color:white !important;" href="https://twitter.com/SimonHearne">@SimonHearne</a><br><a style="color:white !important;" href="https://simonhearne.com/">simonhearne.com</a></p>
+					</section>
 				</section>
 			</div>
 			<div id="chart-controls" class="hide"></div>

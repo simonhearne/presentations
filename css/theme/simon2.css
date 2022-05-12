@@ -12,12 +12,12 @@
 /*@import url(https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic);*/
 
 :root {
-  --background-color:   hsl(210,7%,12%);
   --dark-highlight:     hsl(272,14%,33%);
-  --bright-highlight-1: hsl(290,100%,40%);
-  --bright-highlight-2: hsl(314,79%,30%);
-  --bright-highlight-3: hsl(251,100%,18%);
-  --bright-highlight-4: hsl(113,92%,26%);
+  --background-color:   linear-gradient(129deg, rgba(0,0,0,1) 0%, rgba(71,0,77,1) 100%);
+  --bright-highlight-1: linear-gradient(129deg, rgba(0,0,0,1) 0%, rgba(227,0,212,1) 65%);
+  --bright-highlight-2: linear-gradient(129deg, rgba(0,0,0,1) 0%, rgba(154,0,227,1) 65%);
+  --bright-highlight-3: linear-gradient(129deg, rgba(0,0,0,1) 0%, rgba(0,10,227,1) 65%);
+  --bright-highlight-4: linear-gradient(129deg, rgba(0,0,0,1) 0%, rgba(0,227,81,1) 65%);
 }
 
 /*********************************************
@@ -30,7 +30,7 @@ body {
 }
 
 body.title-slide {
-  --background-color: var(--bright-highlight-1);
+  --background-color: linear-gradient(129deg, rgba(4,0,80,1) 0%, rgba(113,0,121,1) 75%);
 }
 
 body.main-slide {
@@ -183,8 +183,11 @@ body.tertiary-slide {
   font-size: 115%;
  }
 
-.reveal ul.no-bullets {
-    list-style-type: none;
+.reveal ul.no-bullets, .reveal ul.lightning-bullets {
+  list-style-type: none;
+}
+.reveal ul.lightning-bullets li::before{
+    content: '⚡️ '
 }
 
 .reveal ul ul {
@@ -204,7 +207,8 @@ body.tertiary-slide {
   font-weight: bold; }
 
 .reveal dd {
-  margin-left: 40px; }
+  margin-left: 40px;
+  margin-bottom: 10px; }
 
 .reveal blockquote {
   display: block;
@@ -276,13 +280,13 @@ body.tertiary-slide {
 .reveal sub {
   vertical-align: sub; }
 
-.reveal small {
+.reveal .small {
   display: inline-block;
-  font-size: 0.6em;
+  font-size: 90%;
   line-height: 1.2em;
   vertical-align: top; }
 
-.reveal small * {
+.reveal .small * {
   vertical-align: top; }
 
 /*********************************************
