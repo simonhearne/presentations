@@ -101,10 +101,6 @@
 							<dd>How jumpy it is</dd>
 							<dt>First Input Delay</dt>
 							<dd>How interactive it feels</dd>
-							<div class="fragment">
-								<dt>Input to Next Paint</dt>
-								<dd>How interactive it feels</dd>
-							</div>
 						</dl>
 					</section>
 				</section>
@@ -120,7 +116,7 @@
 					</section>
 					<section>
 						<h2>🌍 Field</h2>
-						<p>Real data from real users out on interweb</h2>
+						<p>Real data from real users on the web</h2>
 					</section>
 					<section>
 						<h2>Distributions &amp; Percentiles</h2>
@@ -135,8 +131,8 @@
 					<section>
 						<h2>Results will differ between tools</h2>
 						<ul class="no-bullets">
-							<li>Google Analytics + web_vitals.js 🌍</li>
-							<li>CrUX (PSI, GSC) <span style="position:relative">🌍<span style="position:absolute;left:0;">🧪</span></span></li>
+							<li>Google Analytics + web-vitals.js 🌍</li>
+							<li>Pagespeed Insights <span style="position:relative">🌍<span style="position:absolute;left:0;">🧪</span></span></li>
 							<li>Search Console 🌍</li>
 							<li>Real User Monitoring 🌍</li>
 							<li>WebPageTest 🧪</li>
@@ -184,9 +180,9 @@
 					<section>
 						<h2>CWV are not pass / fail!</h2>
 						<img loading="lazy" style="max-width:75%;" src="media/2022-05-06-10-25-13.png">
-						<p class="fragment">Assuming max ranking boost of 1, this page will get ~0.75</p>
+						<p class="fragment">If max ranking boost == 1, this page will get ~0.7</p>
 						<aside class="notes">
-						<p>Assuming a maximum ranking boost of 1, achieving a high amber in LCP, green in CLS and green in FID will give you a ranking boost of 0.75</p>
+						<p>Assuming a maximum ranking boost of 1, achieving a high amber in LCP, green in CLS and green in FID will give you a ranking boost of approximately 0.7</p>
 						</aside>
 					</section>
 					<section data-state="tertiary-slide">
@@ -207,6 +203,9 @@
 							</li>
 						</ul>
 					</section>
+					<section>
+						<h2>Web vitals are the best performance metrics we've ever had</h2>
+					</section>
 				</section>
 
 
@@ -221,16 +220,22 @@
 					<section>
 						<h2>SPAs <span data-animate="jello" class="infinite" >break</span> a lot of stuff</h2>
 					</section>
-					<section>
+					<section data-auto-animate>
 						<h2>SPAs break performance APIs</h2>
-						<p class="fragment">One load event per session, one FCP, one LCP...</p>
+					</section>
+					<section data-auto-animate>
+						<h2>SPAs break performance APIs</h2>
+						<p>One load event per session, one FCP, one LCP...</p>
 					</section>
 					<section>
 						<h2>LCP is only measured on the<br>first page load</h2>
 					</section>
-					<section>
+					<section data-auto-animate>
 						<h2>CLS is measured throughout<br>the whole session</h2>
-						<p class="fragment">This breaks page-level attribution 😱</p>
+					</section>
+					<section data-auto-animate>
+						<h2>CLS is measured throughout<br>the whole session</h2>
+						<p>This breaks page-level attribution 😱</p>
 					</section>
 					<section>
 						<h2>FID is only measured on the<br>first page load</h2>
@@ -251,22 +256,22 @@
 						<h2>Largest Contentful Paint</h2>
 					</section>
 					<section data-auto-animate>
-						<img loading="lazy" src="media/2022-05-06-10-42-40.png"/>
+						<img loading="lazy"  style="max-width:75%;" src="media/2022-05-06-10-42-40.png"/>
 					</section>
 					<section data-auto-animate>
-						<img loading="lazy" src="media/2022-05-06-10-43-52.png"/>
+						<img loading="lazy"  style="max-width:75%;" src="media/2022-05-06-10-43-52.png"/>
 					</section>
 					<section data-auto-animate>
-						<img loading="lazy" src="media/2022-05-06-10-47-14.png"/>
+						<img loading="lazy"  style="max-width:75%;" src="media/2022-05-06-10-47-14.png"/>
 					</section>
 					<section data-auto-animate>
-						<img loading="lazy" src="media/2022-05-06-10-48-09.png"/>
+						<img loading="lazy"  style="max-width:75%;" src="media/2022-05-06-10-48-09.png"/>
 					</section>
 					<section data-auto-animate>
-						<img loading="lazy" src="media/2022-05-06-10-50-59.png"/>
+						<img loading="lazy"  style="max-width:75%;" src="media/2022-05-06-10-50-59.png"/>
 					</section>
 					<section data-auto-animate>
-						<img loading="lazy" src="media/2022-05-06-10-51-38.png"/>
+						<img loading="lazy"  style="max-width:75%;" src="media/2022-05-06-10-51-38.png"/>
 					</section>
 					<section>
 						<h2>Let's remove preloads</h2>
@@ -274,19 +279,19 @@
 						<p class="subtitle smallest bottom-left"><a href="https://perfproxy.com">perfproxy.com</a></p>
 					</section>
 					<section data-auto-animate>
-						<img loading="lazy" src="media/2022-05-06-11-05-24.png"/>
+						<img loading="lazy"  style="max-width:75%;" src="media/2022-05-06-11-05-24.png"/>
 					</section>
 					<section data-auto-animate>
-						<img loading="lazy" src="media/2022-05-06-11-06-02.png"/>
+						<img loading="lazy"  style="max-width:75%;" src="media/2022-05-06-11-06-02.png"/>
 					</section>
 					<section data-auto-animate>
-						<img loading="lazy" src="media/2022-05-06-11-06-33.png"/>
+						<img loading="lazy"  style="max-width:75%;" src="media/2022-05-06-11-06-33.png"/>
 					</section>
 					<section data-auto-animate>
-						<img loading="lazy" src="media/2022-05-06-11-13-27.png"/>
+						<img loading="lazy"  style="max-width:75%;" src="media/2022-05-06-11-13-27.png"/>
 					</section>
 					<section data-auto-animate>
-						<img loading="lazy" src="media/2022-05-06-11-15-06.png"/>
+						<img loading="lazy"  style="max-width:75%;" src="media/2022-05-06-11-15-06.png"/>
 					</section>
 					<section data-auto-animate>
 						<img loading="lazy" style="max-width: 75%;"  src="media/2022-05-06-11-16-09.png"/>
@@ -294,17 +299,17 @@
 					</section>
 					<section>
 						<h2>Where we got to (3G)</h2>
-						<img class="fragment" nloading="lazy" src="media/2022-05-06-12-17-21.png"/>
+						<img class="fragment" loading="lazy" src="media/2022-05-06-12-17-21.png"/>
 					</section>
 					<section>
-						<h2>LCP top-tips</h2>
-						<ul>
+						<h2>LCP top tips</h2>
+						<ul class="lightning-bullets">
 							<li class="fragment">SSR all landing pages</li>
-							<li class="fragment">Defer / reduce / remove hydration</li>
+							<li class="fragment">Defer / reduce / remove expensive JS</li>
 							<li class="fragment">Increase hero element priority</li>
 							<li class="fragment">Only preload critical assets</li>
 							<li class="fragment">No cross-origin requests in critical path</li>
-							<li class="fragment">Reduce HTML size (<50kB compressed)</li>
+							<li class="fragment">Reduce HTML size (&lt;50kB compressed)</li>
 						</ul>
 					</section>
 					<section>
@@ -317,11 +322,50 @@
 							<li class="fragment">Use modern formats<br>(<code>AVIF</code> &gt; <code>WEBP</code> &gt; <code>JPEG</code> &gt; <code>PNG</code> &gt; <code>GIF</code>)</li>
 						</ul>
 					</section>
+					<section>
+						<h2>Consent LCP?</h2>
+						<img loading="lazy" src="media/2022-05-13-10-13-07.png"/>
+						<p class="subtitle smallest"><a href="https://www.webpagetest.org/video/compare.php?tests=220513_AiDc7B_6E2-r%3A1-c%3A0&highlightLCP=1&thumbSize=200&ival=1000&end=visual">WebPageTest.org</a></p>
+					</section>
+					<!--
+					<section>
+						<h2>Consent LCP?</h2>
+						<img loading="lazy" style="max-width:50%;" src="media/2022-05-13-09-20-37.png"/>
+					</section>
+					-->
+					<section>
+						<h2>Consent LCP?</h2>
+						<ul class="lightning-bullets">
+							<li>Break text into separate paragraphs!</li>
+						</ul>
+					</section>
 					
 					<section>
 						<h2>Cumulative Layout <span data-animate="shake" class="delay-1s infinite slow">Shift</span></h2>
 					</section>
-					
+					<section>
+						<h2>CLS can come from anywhere!</h2>
+						<ul>
+							<li class="fragment">On page load (easy)</li>
+							<li class="fragment">On scroll (medium)</li>
+							<li class="fragment">On (slow) interactions (tricky)</li>
+						</ul>
+						<p class="small fragment">Remember that CLS attribution is broken in Search Console</p>
+					</section>
+					<section>
+						<h2>CLS top tips</h2>
+						<ul class="lightning-bullets">
+							<li class="fragment">Ensure all images have size attributes <br>(or <code>aspect-ratio</code>)</li>
+							<li class="fragment">Preload critical web fonts</li>
+							<li class="fragment">Use transforms instead of <code>top</code> etc.</li>
+							<li class="fragment">Pre-allocate space for dynamic elements</li>
+							<li class="fragment">Record profiles of key interactions</li>
+						</ul>
+					</section>
+					<section>
+						<img loading="lazy" src="media/2022-05-13-10-33-34.png"/>
+					</section>
+
 					<section>
 						<style>
 							#fid-heading {
@@ -344,7 +388,34 @@
 					</section>
 
 					<section>
-						<h2>Bonus:<br>Input to Next Paint (INP)</h2>
+						<h2>Your FID <em>should</em> be green!</h2>
+						<img loading="lazy" style="max-width:50%;" src="media/2022-05-13-10-36-46.png"/>
+						<p class="subtitle smallest"><a href="https://almanac.httparchive.org/en/2021/performance#first-input-delay-fid">Web Almanac 2021</a></p>
+					</section>
+
+					<section>
+						<h2>FID top tips</h2>
+						<ul class="lightning-bullets">
+							<li class="fragment">Focus on Total Blocking Time</li>
+							<li class="fragment">Break tasks into small chunks</li>
+							<li class="fragment">Consider <a href="https://github.com/BuilderIO/partytown">PartyTown</a>?</li>
+						</ul>
+					</section>
+
+					<section>
+						<h2>Bonus:<br>Interaction to Next Paint (INP)</h2>
+					</section>
+					<section>
+						<h2>INP may replace FID</h2>
+						<figure style="max-width:75%;margin:0 auto;"><video autoplay="" controls="" loop="" muted=""><source src="https://storage.googleapis.com/web-dev-uploads/video/jL3OLOhcWUQDnR4XjewLBx4e3PC3/vPC97OKo8wX4RtYZDtMQ.mp4" type="video/mp4"></video></figure>
+						<p class="subtitle smallest"><a href="https://web.dev/inp/">web.dev/inp/</a></p>
+					</section>
+					<section>
+						<h2>INP top tips</h2>
+						<ul class="lightning-bullets">
+							<li class="fragment">Provide visual feedback to user input</li>
+							<li class="fragment">Don't attach blocking JS on input events</li>
+						</ul>
 					</section>
 				</section>
 
@@ -352,9 +423,12 @@
 				<section id="summary">
 					<section>
 						<h2>In summary</h2>
-						<p>CWVs are a useful tool, SEO impact is low, CrUX is free RUM data</p>
-						<p>Optimising for CWVs is (normally) quite simple - and will benefit business metrics</p>
-						<p>Become the "go-to" for CWV in your organisation to build personal brand</p>
+						<ul class="lightning-bullets">
+							<li class="fragment">CWVs are great performance metrics</li>
+							<li class="fragment">CrUX data is free RUM!</li>
+							<li class="fragment">SEO impact is low</li>
+							<li class="fragment">Optimising CWV improves UX</li>
+						</ul>
 					</section>
 					<section class="pull-up" data-background-image="media/cyclist_number.jpeg">
 						<h2>Chase one number at your peril</h2>
@@ -363,7 +437,9 @@
 						<h2>Links &amp; Tools</h2>
 						<ul>
 							<li><a href="https://webperf.tools/">WebPerf.tools</a> - my library of useful tools</li>
+							<li><a href="https://webpagetest.org/">WebPageTest.org</a> - the gold standard tool</li>
 							<li><a href="https://simonhearne.com/2022/core-web-vitals-on-spas/">simonhearne.com/2022/core-web-vitals-on-spas/</a> - this talk, as a post</li>
+							<li><a href="https://chrome.google.com/webstore/detail/web-vitals/ahfhijdlegdabablpippeagghigmibma?hl=en">Web Vitals Chrome Extension</a></li>
 						</ul>
 					</section>
 					<section class="pull-up" data-background-image="../backgrounds/passion.jpg">
@@ -395,7 +471,7 @@
 				return(false);
 			}
 			var presenting = window.location.search.includes('present');
-			var duration = getQueryVariable('duration') || 40;
+			var duration = getQueryVariable('duration') || 20;
 			var hasCode = !!document.querySelector('code');
 			var hasAnims = !!document.querySelector('[data-animate]');
 			var keyboard = {
@@ -435,7 +511,7 @@
 				transition: 'none', // none/fade/slide/convex/concave/zoom
 				transitionSpeed: 'fast',
 
-				allottedTime: duration * 60 * 1000, // 30 minutes
+				allottedTime: duration * 60 * 1000,
 				barColor: 'hsl(220,99%,54%)',
 
 				// More info https://github.com/hakimel/reveal.js#dependencies
