@@ -644,6 +644,12 @@
 				// zero key to first slide
 				48: () => {
 					Reveal.slide( 0 );
+				},
+				// getting to starting position with [
+				219: () => {
+					Reveal.slide( 0 );
+					ElapsedTimeBar.reset();
+					ElapsedTimeBar.pause();
 				}
 			}
 			if (presenting) {
