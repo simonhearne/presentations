@@ -146,6 +146,9 @@ body.tertiary-slide {
   margin: 20px 0;
   line-height: 1.3;
   text-shadow: 1px 1px 3px rgba(0,0,0,0.5); }
+.reveal .speaker-notes {
+  font-size: clamp(18px, 1.75vw, 40px) !important;
+}
 .reveal .speaker-notes p {
   text-shadow: none; }
 .reveal sup {

@@ -60,13 +60,18 @@
 					<section data-auto-animate>
 						<blockquote>Hi Simon! I was wondering if you could help with...</blockquote><br>
 						<img style="max-width: 75%;" loading="lazy" class="fragment" src="media/2022-05-06-09-04-15.png"/>
-					</section>
-					<section>
-						<img style="max-width: 75%;" loading="lazy" src="media/2022-05-06-09-33-30.png"/>
+						<aside class="notes">
+							<p>I work with clients to help improve performance, and there is one question I get from new clients more than any other question...</p>
+							<p>"Help! Our site is failing core web vitals!"</p>
+						</aside>
 					</section>
 					<section>
 						<h2>Don't panic!</h2>
 						<p>Core Web Vitals are your friend, not your foe</p>
+						<aside class="notes">
+							<p>Our instinct is to panic when we see "failing" and red warnings, but I always tell my clients not to panic.</p>
+							<p>I think the core web vitals are great, but the messaging around search has been inflammatory.</p>
+						</aside>
 					</section>
 					<section>
 						<h2>In this talk:</h2>
@@ -87,11 +92,18 @@
 					<section data-auto-animate>
 						<h2>Core Web Vitals?</h2>
 						<p>Not just that Google thing</p>
+						<aside class="notes">
+							<p>Let's get a baseline understanding of core web vitals. Importantly, these metrics are not just SEO focussed, they have huge value to us as developers and product owners.</p>
+						</aside>
 					</section>
 					<section>
 						<h2>CWVs are proxies of<br><em>User Experience</em></h2>
 					</section>
 					<section data-auto-animate data-background-image="../backgrounds/vitals_monitor.jpg">
+						<aside class="notes">
+							<p>Think of core web vitals like a hospital vitals monitor. A big display with a small number of key measurements which indicate health.</p>
+							<p>At a glance you can see the patient's status, and the printout shows how this has trended over time. CWV are this, but for your web applications.</p>
+						</aside>
 					</section>
 					<section data-auto-animate data-background-image="../backgrounds/vitals_monitor.jpg">
 						<dl style="background: rgba(0,0,0,0.5);padding: 20px 100px;">
@@ -102,6 +114,9 @@
 							<dt>First Input Delay</dt>
 							<dd>How interactive it feels</dd>
 						</dl>
+						<aside class="notes">
+							<p>The core web vitals are designed to track three different aspects of user experience, in ways that have historically been very hard to track accurately on the web.</p>
+						</aside>
 					</section>
 				</section>
 
@@ -109,24 +124,41 @@
 				<section id="field_vs_lab">
 					<section data-background-image="../backgrounds/test-tube.jpg">
 						<h2 class="dark-bg">Intermission:<br>Field vs. Lab</h2>
+						<aside class="notes">
+							<p>Before we get any deeper it is important to clarify the difference between lab and field data.</p>
+							<p>Again using our medical analogy - we can collect data for clinical trials in a lab - with a small number of subjects in a controlled environment - or in the field - with a large number of subjects in an uncontrolled environment.</p>
+							<p>The difference in medicine is critical - for example a large cohort study might show that diets high in salt result in early mortality, but lab tests show that high salt intake has no impact on health.</p>
+						</aside>
 					</section>
 					<section>
 						<h2>🧪 Lab</h2>
 						<p>Controlled tests of a single page / interaction</p>
+						<aside class="notes">
+							<p>Lab testing is what we're used to in web development - a controlled test to measure performance and track changes.</p>
+							<p>Think WebPageTest, browser developer tools, synthetic monitoring etc.</p>
+						</aside>
 					</section>
 					<section>
 						<h2>🌍 Field</h2>
 						<p>Real data from real users on the web</h2>
+						<aside class="notes">
+							<p>Field data on the web has huge value, as it is impossible to simulate every possible user environment.</p>
+							<p>Think analytics, real user monitoring etc.</p>
+						</aside>
 					</section>
 					<section>
 						<h2>Distributions &amp; Percentiles</h2>
-
 						<ul class="no-bullets small">
 							<li>CWV measured in the field, where data is noisy</li>
 							<li>We use summary metrics to make sense of the noise</li>
 							<li><em>75th percentile</em> - ¼ experiences are worse, ¾ better</li>
 						</ul>
 						<img loading="lazy" class="fragment" style="max-width:50%" src="media/2022-05-06-12-41-54.png"/>
+						<aside class="notes">
+							<p>The challenge with field or real user measurement (RUM) data is the noise - millions of data points with huge variability.</p>
+							<p>Aggregates like the mean can be meaningless (pun intended!) with these types of distribution, so we use better statistical summaries to get a clear view of user experience.</p>
+							<p>Google selected the 75th percentile as a good balance between meaningfulness (is that a word?) and variability when changes are made. The 75th percentile metric means that three quarters of experiences had a value better than this (generally lower in web performance) and one quarter had a worse experience.</p>
+						</aside>
 					</section>
 					<section>
 						<h2>Results will differ between tools</h2>
@@ -145,6 +177,17 @@
 							<li>CrUX &amp; RUM for product</li>
 							<li>PSI &amp; WebPageTest for engineers</li>
 						</ul>
+						<aside class="notes">
+							<p>Traditionally specific roles use different toolsets, but there is nothing to stop all folks using all data sources.</p>
+							<p>It is worth noting, though, that all tools may present different values, even of the same metrics!</p>
+						</aside>
+					</section>
+					<section data-state="secondary-slide">
+						<p>Google only cares about field metrics 🌍!<p>
+						<aside class="notes">
+							<p>In search, the only metrics that matter are those collected by the Chrome UX Report (CrUX).</p>
+							<p>The crawler does not measure CWV!</p>
+						</aside>
 					</section>
 				</section>
 				
@@ -168,28 +211,43 @@
 						</g>
 						</svg>
 						<h2>Search <span data-animate="heartBeat" class="delay-1s infinite">❤️</span> CWV <span data-animate="heartBeat" class="delay-1s infinite">❤️</span> Speed</h2>
+						<aside class="notes">
+							<p>Search and Speed are different teams at Google, but they both care about the speed of user experiences. CWV are the intersection of the two - meaningful speed metrics that can be used to inform the search algorithm.</p>
+						</aside>
 					</section>
 
 					<section data-state="tertiary-slide">
 						<h2>SEO impact of Core Web Vitals</h2>
+						<aside class="notes">
+							<p>Of course, SEO has been the driving force behind core web vitals. There has been a lot of fear, uncertainty and doubt in the SEO world, leading to a long overdue focus on web performance!</p>
+						</aside>
 					</section>
 					<section data-state="tertiary-slide">
 						<h2>SEO is a <span data-animate="heartBeat" class="delay-1s">🥕</span> to create better UX</h2>
 						<p class="fragment">Don't expect massive ranking boosts</p>
+						<aside class="notes">
+							<p>Whilst there has been a lot of noise about CWV and SEO, the impact is relatively small. Instead think of it as a carrot to encourage website owners to focus on great user experiences.</p>
+						</aside>
 					</section>
 					<section>
 						<h2>CWV are not pass / fail!</h2>
 						<img loading="lazy" style="max-width:75%;" src="media/2022-05-06-10-25-13.png">
 						<p class="fragment">If max ranking boost == 1, this page will get ~0.7</p>
 						<aside class="notes">
-						<p>Assuming a maximum ranking boost of 1, achieving a high amber in LCP, green in CLS and green in FID will give you a ranking boost of approximately 0.7</p>
+							<p>Assuming a maximum ranking boost of 1, achieving a high amber in LCP, green in CLS and green in FID will give you a ranking boost of approximately 0.7</p>
 						</aside>
 					</section>
 					<section data-state="tertiary-slide">
 						<h2><span data-animate="hinge" class="delay-2s">SEO </span> impact of Core Web Vitals</h2>
+						<aside class="notes">
+							<p>So if SEO impact is low, why are CWV so important?</p>
+						</aside>
 					</section>
 					<section data-background-image="../backgrounds/clock.jpg">
 						<h2 style="width: 33%;color: #69b1c1;">A brief history of #WebPerf</h2>
+						<aside class="notes">
+							<p>We need to take a very quick tour through the history of web performance metrics to understand why CWV are so important...</p>
+						</aside>
 					</section>
 					<section>
 						<ul>
@@ -202,9 +260,13 @@
 								<li>EventTiming API</li>
 							</li>
 						</ul>
+						<aside class="notes">
+							<p>Until 2019 we didn't have any good proxies of user experience, only technical measurements emitted by the browser engine like onLoad, DOM content ready etc.</p>
+						</aside>
 					</section>
 					<section>
 						<h2>Web vitals are the best performance metrics we've ever had</h2>
+						<p class="fragment"><br>And they're collected from users around the world for free!</p>
 					</section>
 				</section>
 
@@ -213,93 +275,168 @@
 					<section data-background-image="../backgrounds/coffee_split.jpg">
 						<h2 style="transform:rotate(36deg);margin-top:25%;">CWV &amp; SPAs</h2>
 						<aside class="notes">
-							<p>Core Web Vitals and Single Page Application frameworks have something in common - they have been very divisive!<p>
+							<p>So what about SPAs? Core Web Vitals and Single Page Application frameworks have something in common - they have been very divisive! They've also given us a lot to learn over the past few years.<p>
 						</aside>
 					</section>
 					
 					<section>
 						<h2>SPAs <span data-animate="jello" class="infinite" >break</span> a lot of stuff</h2>
+						<aside class="notes">
+							<p>If you built a SPA in the dark ages - remember Angular 1? - you'll have had to deal with browser compatibility, search engine indexer issues, history issues etc. etc.</p>
+						</aside>
 					</section>
 					<section data-auto-animate>
 						<h2>SPAs break performance APIs</h2>
+						<aside class="notes">
+							<p>Importantly for us, SPAs break almost all performance APIs.</p>
+						</aside>
 					</section>
 					<section data-auto-animate>
 						<h2>SPAs break performance APIs</h2>
 						<p>One load event per session, one FCP, one LCP...</p>
+						<aside class="notes">
+							<p>Importantly for us, SPAs break almost all performance APIs.</p>
+							<p>Generally only the initial page load is measured, route transitions are totally invisible to the APIs.</p>
+						</aside>
 					</section>
 					<section>
 						<h2>LCP is only measured on the<br>first page load</h2>
+						<aside class="notes">
+							<p>So thinking about CWVs - only the first page load of a session matters for LCP (see any problems there?).</p>
+						</aside>
 					</section>
 					<section data-auto-animate>
 						<h2>CLS is measured throughout<br>the whole session</h2>
+						<aside class="notes">
+							<p>CLS is aggregated throughout a page lifetime - on SPAs that means the whole session!</p>
+						</aside>
 					</section>
 					<section data-auto-animate>
 						<h2>CLS is measured throughout<br>the whole session</h2>
 						<p>This breaks page-level attribution 😱</p>
+						<aside class="notes">
+							<p>CLS is aggregated throughout a page lifetime - on SPAs that means the whole session!</p>
+							<p>So if you see a high CLS in search console attributed to the homepage, that CLS could have come from any page the visitor navigated to.</p>
+						</aside>
 					</section>
 					<section>
 						<h2>FID is only measured on the<br>first page load</h2>
+						<aside class="notes">
+							<p>Like LCP, first input delay is only measured until the first interaction (it's in the name!) so, assuming the user interacts to navigate to another page, only the landing page matters.</p>
+						</aside>
 					</section>
 					<section>
 						<h2>In summary...</h2>
 						<p>SPA websites are penalised by <br>ignoring mid-session navigations</p>
 						<p class="fragment">except CLS - where the <em>worst</em> 1-5s window is captured</p>
+						<aside class="notes">
+							<p>CWV focus on the worst case for SPAs - when the main thread is most busy (FID), when the visitor's cache is most likely to be empty (LCP) and by selecting the worst window throughout a session for CLS.</p>
+						</aside>
 					</section>
 				</section>
 
 				<section id="optimising_spas">
 					<section data-state="tertiary-slide">
 						<h2>Optimising CWVs on SPAs</h2>
+						<aside class="notes">
+							<p>Given what we now know, let's look at how we can optimise CWVs on SPAs.</p>
+						</aside>
 					</section>
 					
 					<section>
 						<h2>Largest Contentful Paint</h2>
+
+						<aside class="notes">
+							<p>LCP is my favourite CWV - it measures how long it took for the biggest (thus presumably the most important) element to render on the screen.</p>
+						</aside>
 					</section>
 					<section data-auto-animate>
 						<img loading="lazy"  style="max-width:75%;" src="media/2022-05-06-10-42-40.png"/>
+						<aside class="notes">
+							<p>This is a waterfall of a client's SPA generated with WebPageTest.</p>
+						</aside>
 					</section>
 					<section data-auto-animate>
 						<img loading="lazy"  style="max-width:75%;" src="media/2022-05-06-10-43-52.png"/>
+						<aside class="notes">
+							<p>Note the LCP (vertical dashed green line) is around 7.2s!</p>
+						</aside>
 					</section>
 					<section data-auto-animate>
 						<img loading="lazy"  style="max-width:75%;" src="media/2022-05-06-10-47-14.png"/>
+						<aside class="notes">
+							<p>Before LCP we have 2.5MB of deferred &amp; async JavaScript(!).</p>
+						</aside>
 					</section>
 					<section data-auto-animate>
 						<img loading="lazy"  style="max-width:75%;" src="media/2022-05-06-10-48-09.png"/>
+						<aside class="notes">
+							<p>There also appears to be a render-blocking third-party asset (note the new connection).</p>
+						</aside>
 					</section>
 					<section data-auto-animate>
 						<img loading="lazy"  style="max-width:75%;" src="media/2022-05-06-10-50-59.png"/>
+						<aside class="notes">
+							<p>The LCP element on this page is the image at row 28, requested after 4.5s. It takes about a second to download then there is another 1.5s delay before it is rendered.</p>
+						</aside>
 					</section>
 					<section data-auto-animate>
 						<img loading="lazy"  style="max-width:75%;" src="media/2022-05-06-10-51-38.png"/>
+						<aside class="notes">
+							<p>It looks like this block of JS execution is blocking render, delaying LCP. Hydration?</p>
+						</aside>
 					</section>
 					<section>
 						<h2>Let's remove preloads</h2>
 						<img loading="lazy" style="max-width: 75%;" src="media/2022-05-06-11-11-09.png"/>
 						<p class="subtitle smallest bottom-left"><a href="https://perfproxy.com">perfproxy.com</a></p>
+						<aside class="notes">
+							<p>I've built a little tool to help experiment with optimisations, in this case removing <code>&lt;link rel="preload" as="script"&gt;</code> elements from the document.</p>
+						</aside>
 					</section>
 					<section data-auto-animate>
 						<img loading="lazy"  style="max-width:75%;" src="media/2022-05-06-11-05-24.png"/>
+						<aside class="notes">
+							<p>The impact here is huge, the page does not need the JS to render so removing it from the critical path we let the browser better prioritise the other assets.</p>
+						</aside>
 					</section>
 					<section data-auto-animate>
 						<img loading="lazy"  style="max-width:75%;" src="media/2022-05-06-11-06-02.png"/>
+						<aside class="notes">
+							<p>We also learn that this third-party (an A/B testing provider) is not actually render blocking, phew!</p>
+						</aside>
 					</section>
 					<section data-auto-animate>
 						<img loading="lazy"  style="max-width:75%;" src="media/2022-05-06-11-06-33.png"/>
+						<aside class="notes">
+							<p>By implementing this simple change we get an LCP of under 3s!</p>
+						</aside>
 					</section>
 					<section data-auto-animate>
 						<img loading="lazy"  style="max-width:75%;" src="media/2022-05-06-11-13-27.png"/>
+						<aside class="notes">
+							<p>Looking again at the LCP image we can see that part of the delay is due to the image being hosted on a different domain, incurring a cost to establish a new connection.</p>
+						</aside>
 					</section>
 					<section data-auto-animate>
 						<img loading="lazy"  style="max-width:75%;" src="media/2022-05-06-11-15-06.png"/>
+						<aside class="notes">
+							<p>It is also more clear that the (very) large HTML document is delaying first contentful paint (dark green vertical line) and is another area for improvement...</p>
+						</aside>
 					</section>
 					<section data-auto-animate>
 						<img loading="lazy" style="max-width: 75%;"  src="media/2022-05-06-11-16-09.png"/>
 						<p class="subtitle smallest bottom-left"><a href="https://www.debugbear.com/html-size-analyzer">HTML Size Analyser</a></p>
+						<aside class="notes">
+							<p>The DebugBear HTML Size Analyser tool shows that there is 280kB of inline CSS and 160kB of inline JS - this removes additional requests but at the cost of a massive document. This can cause reflow as the browser parses the HTML in chunks.</p>
+						</aside>
 					</section>
 					<section>
 						<h2>Where we got to (3G)</h2>
 						<img class="fragment" loading="lazy" src="media/2022-05-06-12-17-21.png"/>
+						<aside class="notes">
+							<p>(Blurred for anonymity) - testing at 3G speeds shows that by implementing some simple changes we dramatically improved render performance for this landing page. LCP better than halved!</p>
+						</aside>
 					</section>
 					<section>
 						<h2>LCP top tips</h2>
@@ -326,6 +463,10 @@
 						<h2>Consent LCP?</h2>
 						<img loading="lazy" src="media/2022-05-13-10-13-07.png"/>
 						<p class="subtitle smallest"><a href="https://www.webpagetest.org/video/compare.php?tests=220513_AiDc7B_6E2-r%3A1-c%3A0&highlightLCP=1&thumbSize=200&ival=1000&end=visual">WebPageTest.org</a></p>
+						<aside class="notes">
+							<p>If you use a consent management provider - check if this is your LCP element for new visitors. This has a bigger impact on SPAs than traditional web apps!</p>
+							<p>Use WebPageTest filmstrip view and enable LCP highlights to show if this is the case.</p>
+						</aside>
 					</section>
 					<!--
 					<section>
@@ -336,6 +477,7 @@
 					<section>
 						<h2>Consent LCP?</h2>
 						<ul class="lightning-bullets">
+							<li>Work with CMP to improve render time</li>
 							<li>Break text into separate paragraphs!</li>
 						</ul>
 					</section>
@@ -364,6 +506,10 @@
 					</section>
 					<section>
 						<img loading="lazy" src="media/2022-05-13-10-33-34.png"/>
+
+						<aside class="notes">
+							<p>This example shows a layout shift caused by a navigation which took longer than 500ms. Note the "Had recent input: No" field - layout shifts that occur within 500ms of a user interaction do not count towards CLS.</p>
+						</aside>
 					</section>
 
 					<section>
@@ -391,6 +537,9 @@
 						<h2>Your FID <em>should</em> be green!</h2>
 						<img loading="lazy" style="max-width:50%;" src="media/2022-05-13-10-36-46.png"/>
 						<p class="subtitle smallest"><a href="https://almanac.httparchive.org/en/2021/performance#first-input-delay-fid">Web Almanac 2021</a></p>
+						<aside class="notes">
+							<p>FID is green for 100% of desktop landing pages and 90% on mobile.</p>
+						</aside>
 					</section>
 
 					<section>
@@ -409,6 +558,9 @@
 						<h2>INP may replace FID</h2>
 						<figure style="max-width:75%;margin:0 auto;"><video autoplay="" controls="" loop="" muted=""><source src="https://storage.googleapis.com/web-dev-uploads/video/jL3OLOhcWUQDnR4XjewLBx4e3PC3/vPC97OKo8wX4RtYZDtMQ.mp4" type="video/mp4"></video></figure>
 						<p class="subtitle smallest"><a href="https://web.dev/inp/">web.dev/inp/</a></p>
+						<aside class="notes">
+							<p>INP is the newest web vital and is touted as the replacement for FID. It measures an aggregate score of how long it took for the next frame to be painted after a user interaction.</p>
+						</aside>
 					</section>
 					<section>
 						<h2>INP top tips</h2>
@@ -416,6 +568,9 @@
 							<li class="fragment">Provide visual feedback to user input</li>
 							<li class="fragment">Don't attach blocking JS on input events</li>
 						</ul>
+						<aside class="notes">
+							<p>I've <a href="https://simonhearne.com/2021/optimistic-ui-patterns/">written about optimistic UI patterns</a> which helps INP.</p>
+						</aside>
 					</section>
 				</section>
 
