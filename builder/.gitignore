@@ -2,8 +2,5 @@ node_modules/
 talks/*/dist/*
 _site/
 .DS_Store
-.memsearch/
-.playwright-mcp/
-.superpowers/
 inspiration/*
 /specs/

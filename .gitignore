@@ -1,2 +1,9 @@
 .DS_Store
 ~$*
+
+# AI / session / note artifacts
+.memsearch/
+.playwright-mcp/
+.superpowers/
+.claude/
+docs/superpowers/
