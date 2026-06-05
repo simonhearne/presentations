@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { splitSlides, parseAttrs, slugify, extractTitle, renderSlide, parseAuthors, extractAuthors, renderAuthors, copyAuthorPhotos, parseVega, extractVega, renderVega, embedVegaSpecs, extractDot, DOT_DEFAULTS, renderDot, buildDeck, extractDeckConfig, renderAgendaChunk, parseThree, extractThree, THREE_PLACEHOLDER, embedThreeModules, renderThree, parseIframe, extractIframe, renderIframe, IFRAME_PLACEHOLDER, parseAttrList, applyFragmentAttrs, escapeHtml } from '../bin/build.js';
+import { splitSlides, parseAttrs, slugify, extractTitle, renderSlide, parseAuthors, extractAuthors, renderAuthors, copyAuthorPhotos, parseVega, extractVega, renderVega, embedVegaSpecs, extractDot, DOT_DEFAULTS, renderDot, buildDeck, extractDeckConfig, renderAgendaChunk, parseThree, extractThree, THREE_PLACEHOLDER, embedThreeModules, renderThree, parseIframe, extractIframe, renderIframe, IFRAME_PLACEHOLDER, parseAttrList, applyFragmentAttrs, escapeHtml, stripComments } from '../bin/build.js';
 import { mkdtempSync, writeFileSync, readFileSync, existsSync, rmSync, mkdirSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
@@ -677,6 +677,43 @@ test('renderSlide: text before and after a dot block renders as separate paragra
   assert.notEqual(bIdx, -1);
   assert.ok(aIdx < figIdx);
   assert.ok(figIdx < bIdx);
+});
+
+test('stripComments: removes single-line and multi-line HTML comments', () => {
+  assert.equal(stripComments('a<!-- x -->b'), 'ab');
+  assert.equal(stripComments('a<!--\nmulti\nline\n-->b'), 'ab');
+  assert.equal(stripComments('a<!-- one --><!-- two -->b'), 'ab');
+});
+
+test('stripComments: leaves comment-free content untouched', () => {
+  assert.equal(stripComments('<p>no comments here</p>'), '<p>no comments here</p>');
+});
+
+test('renderSlide: strips author HTML comments from the rendered slide', () => {
+  const html = renderSlide({
+    chunk: '# Slide\n\n<!-- VIS: scatter goes here -->\n\nReal content.',
+    index: 1,
+    total: 1,
+  });
+  assert.doesNotMatch(html, /<!--/);
+  assert.match(html, /Real content\./);
+});
+
+test('renderSlide: a comment shown as literal code (escaped) is preserved', () => {
+  const html = renderSlide({ chunk: '# Slide\n\n`<!-- example -->`', index: 1, total: 1 });
+  assert.match(html, /<code>&lt;!-- example --&gt;<\/code>/);
+});
+
+test('renderSlide: stripping comments does not eat the dot placeholder', () => {
+  const { body } = extractDot('# Slide\n\n```dot\nA -> B\n```\n');
+  const html = renderSlide({
+    chunk: body,
+    index: 1,
+    total: 1,
+    dotFigures: ['<figure class="dot" id="diagram-slide">SVG</figure>'],
+  });
+  assert.match(html, /class="dot"/);
+  assert.doesNotMatch(html, /dot-placeholder/);
 });
 
 test('buildDeck: integration — local vega spec is inlined as data URI and scripts injected', async () => {

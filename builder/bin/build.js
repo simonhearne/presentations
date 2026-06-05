@@ -183,6 +183,10 @@ export function escapeHtml(s) {
     .replace(/"/g, '&quot;');
 }
 
+export function stripComments(html) {
+  return html.replace(/<!--[\s\S]*?-->/g, '');
+}
+
 function parseKvList(body, label) {
   const lines = String(body).replace(/\r\n/g, '\n').split('\n');
   const items = [];
@@ -551,6 +555,7 @@ export function renderSlide({ chunk, index, total, currentTitle = '', nextTitle 
       ? html.replace(marker, dotFigures[i])
       : `${html}\n${dotFigures[i]}`;
   }
+  html = stripComments(html);
   const classList = ['slide', ...classes].join(' ');
   const noChrome = classes.includes('no-chrome');
   const chrome = noChrome
