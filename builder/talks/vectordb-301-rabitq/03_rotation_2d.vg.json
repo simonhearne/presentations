@@ -1,0 +1,202 @@
+{
+  "$schema": "https://vega.github.io/schema/vega/v5.json",
+  "description": "Interactive RaBitQ rotation demo in 2D. Drag the data-angle slider; watch the snap to the nearest codebook vertex and the resulting error angle. Axis-aligned data (0°, 90°, 180°, 270°) hits the worst case (45° error); rotated data sits in the comfortable middle.",
+  "width": 600,
+  "height": 580,
+  "padding": 12,
+  "background": "transparent",
+  "signals": [
+    {
+      "name": "theta_deg", "value": 0,
+      "on": [
+        { "events": { "signal": "preset_idx" }, "update": "presets[preset_idx]" }
+      ],
+      "bind": { "input": "range", "min": 0, "max": 360, "step": 1, "name": "data angle° " }
+    },
+    {
+      "name": "preset_idx", "value": 0,
+      "bind": { "input": "range", "min": 0, "max": 9, "step": 1, "name": "preset " }
+    },
+    { "name": "presets", "value": [0, 17, 38, 73, 90, 112, 156, 201, 244, 289] },
+    { "name": "data_x", "update": "cos(theta_deg * PI / 180)" },
+    { "name": "data_y", "update": "sin(theta_deg * PI / 180)" },
+    { "name": "near_idx", "update": "floor(((theta_deg + 45) % 360) / 90) % 4" },
+    { "name": "near_angle", "update": "near_idx * 90 + 45" },
+    { "name": "near_x", "update": "cos(near_angle * PI / 180)" },
+    { "name": "near_y", "update": "sin(near_angle * PI / 180)" },
+    { "name": "error_offset", "update": "(theta_deg % 90) - 45" },
+    { "name": "error_deg", "update": "abs(error_offset)" },
+    { "name": "error_color", "update": "error_deg > 30 ? '#e45756' : (error_deg < 15 ? '#00a884' : '#7f47ff')" }
+  ],
+  "data": [
+    {
+      "name": "codebook",
+      "values": [
+        { "idx": 0, "label": "(+,+)" },
+        { "idx": 1, "label": "(−,+)" },
+        { "idx": 2, "label": "(−,−)" },
+        { "idx": 3, "label": "(+,−)" }
+      ],
+      "transform": [
+        { "type": "formula", "as": "ang", "expr": "datum.idx * 90 + 45" },
+        { "type": "formula", "as": "x", "expr": "cos(datum.ang * PI / 180)" },
+        { "type": "formula", "as": "y", "expr": "sin(datum.ang * PI / 180)" }
+      ]
+    }
+  ],
+  "scales": [
+    { "name": "x", "type": "linear", "domain": [-1.35, 1.35], "range": [40, 560] },
+    { "name": "y", "type": "linear", "domain": [-1.35, 1.35], "range": [520, 40] }
+  ],
+  "marks": [
+    {
+      "type": "rule",
+      "encode": {
+        "enter": {
+          "x": { "scale": "x", "value": -1.35 },
+          "x2": { "scale": "x", "value": 1.35 },
+          "y": { "scale": "y", "value": 0 },
+          "stroke": { "value": "#cbd5e1" }
+        }
+      }
+    },
+    {
+      "type": "rule",
+      "encode": {
+        "enter": {
+          "y": { "scale": "y", "value": -1.35 },
+          "y2": { "scale": "y", "value": 1.35 },
+          "x": { "scale": "x", "value": 0 },
+          "stroke": { "value": "#cbd5e1" }
+        }
+      }
+    },
+    {
+      "type": "symbol",
+      "encode": {
+        "enter": {
+          "x": { "scale": "x", "value": 0 },
+          "y": { "scale": "y", "value": 0 },
+          "size": { "value": 116599 },
+          "shape": { "value": "circle" },
+          "fill": { "value": "transparent" },
+          "stroke": { "value": "#94a3b8" },
+          "strokeWidth": { "value": 1 },
+          "strokeDash": { "value": [4, 4] }
+        }
+      }
+    },
+    {
+      "type": "symbol",
+      "from": { "data": "codebook" },
+      "encode": {
+        "enter": {
+          "x": { "scale": "x", "field": "x" },
+          "y": { "scale": "y", "field": "y" },
+          "size": { "value": 220 },
+          "fill": { "value": "#175fff" },
+          "stroke": { "value": "#ffffff" },
+          "strokeWidth": { "value": 2 }
+        }
+      }
+    },
+    {
+      "type": "symbol",
+      "encode": {
+        "update": {
+          "x": { "scale": "x", "signal": "near_x" },
+          "y": { "scale": "y", "signal": "near_y" },
+          "size": { "value": 600 },
+          "fill": { "value": "transparent" },
+          "stroke": { "value": "#7f47ff" },
+          "strokeWidth": { "value": 2 },
+          "strokeOpacity": { "value": 0.85 }
+        }
+      }
+    },
+    {
+      "type": "rule",
+      "encode": {
+        "update": {
+          "x": { "scale": "x", "signal": "data_x" },
+          "y": { "scale": "y", "signal": "data_y" },
+          "x2": { "scale": "x", "signal": "near_x" },
+          "y2": { "scale": "y", "signal": "near_y" },
+          "stroke": { "value": "#e45756" },
+          "strokeWidth": { "value": 2 },
+          "strokeDash": { "value": [5, 5] },
+          "strokeOpacity": { "value": 0.7 }
+        }
+      }
+    },
+    {
+      "type": "rule",
+      "encode": {
+        "update": {
+          "x": { "scale": "x", "value": 0 },
+          "y": { "scale": "y", "value": 0 },
+          "x2": { "scale": "x", "signal": "data_x" },
+          "y2": { "scale": "y", "signal": "data_y" },
+          "stroke": { "value": "#c84cff" },
+          "strokeWidth": { "value": 2.5 }
+        }
+      }
+    },
+    {
+      "type": "symbol",
+      "encode": {
+        "update": {
+          "x": { "scale": "x", "signal": "data_x" },
+          "y": { "scale": "y", "signal": "data_y" },
+          "size": { "value": 240 },
+          "shape": { "signal": "'M0,-3L9,0L0,3Z'" },
+          "fill": { "value": "#c84cff" },
+          "angle": { "signal": "-theta_deg" }
+        }
+      }
+    },
+    {
+      "type": "text",
+      "encode": {
+        "enter": {
+          "x": { "value": 40 },
+          "y": { "value": 540 },
+          "fontSize": { "value": 18 },
+          "fontWeight": { "value": 600 },
+          "font": { "value": "IBM Plex Mono, monospace" }
+        },
+        "update": {
+          "fill": { "signal": "error_color" },
+          "text": { "signal": "'error angle: ' + format(error_deg, '.1f') + '°'" }
+        }
+      }
+    },
+    {
+      "type": "text",
+      "encode": {
+        "enter": {
+          "x": { "value": 40 },
+          "y": { "value": 562 },
+          "fontSize": { "value": 11 },
+          "fontStyle": { "value": "italic" },
+          "fill": { "value": "#94a3b8" },
+          "text": { "value": "(worst case: 45°  ·  best case: 0°  ·  random rotation averages ~22°)" }
+        }
+      }
+    },
+    {
+      "type": "text",
+      "encode": {
+        "update": {
+          "x": { "value": 560 },
+          "y": { "value": 540 },
+          "align": { "value": "right" },
+          "fontSize": { "value": 12 },
+          "font": { "value": "IBM Plex Mono, monospace" },
+          "fill": { "value": "#475569" },
+          "text": { "signal": "'θ = ' + theta_deg + '°  →  snap to ' + near_angle + '°'" }
+        }
+      }
+    }
+  ]
+}

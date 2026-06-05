@@ -1,0 +1,295 @@
+{
+  "$schema": "https://vega.github.io/schema/vega/v5.json",
+  "description": "Stepped walkthrough of scalar quantisation as a vertical vector column: float32 vector -> a ladder of int8 levels -> snap each value to its nearest level -> int8 output column. Stepped via the stage signal.",
+  "width": 820,
+  "height": 500,
+  "padding": 5,
+  "signals": [
+    {"name": "stage", "value": 0},
+    {"name": "colX", "value": 150},
+    {"name": "ladderX", "value": 372},
+    {"name": "ladderW", "value": 46},
+    {"name": "outX", "value": 600},
+    {"name": "stripY", "value": 104},
+    {"name": "cellW", "value": 54},
+    {"name": "cellH", "value": 13},
+    {"name": "n", "value": 24},
+    {"name": "bandH", "update": "n * cellH / 8"},
+    {"name": "midY", "update": "stripY + n * cellH / 2"},
+    {
+      "name": "headline",
+      "value": "512 float32 values",
+      "on": [
+        {
+          "events": {"signal": "stage"},
+          "update": "['512 float32 values', '256 evenly-spaced int8 levels', 'round each value to the nearest level', 'store one int8 per dimension'][stage]"
+        }
+      ]
+    },
+    {
+      "name": "narration",
+      "value": "One 512-D vector — 4 bytes per number, 2 KB total.",
+      "on": [
+        {
+          "events": {"signal": "stage"},
+          "update": "['One 512-D vector — 4 bytes per number, 2 KB total.', 'Carve the value range into 256 integer buckets — 8 shown here for clarity.', 'Each float jumps to its nearest bucket — the only information lost.', 'One byte per dimension: 4× smaller, recall barely moves.'][stage]"
+        }
+      ]
+    }
+  ],
+  "data": [
+    {
+      "name": "cells",
+      "values": [
+        {"i": 0, "v": 0.12}, {"i": 1, "v": 0.84}, {"i": 2, "v": 0.45},
+        {"i": 3, "v": 0.67}, {"i": 4, "v": 0.30}, {"i": 5, "v": 0.91},
+        {"i": 6, "v": 0.22}, {"i": 7, "v": 0.58}, {"i": 8, "v": 0.74},
+        {"i": 9, "v": 0.15}, {"i": 10, "v": 0.63}, {"i": 11, "v": 0.40},
+        {"i": 12, "v": 0.88}, {"i": 13, "v": 0.51}, {"i": 14, "v": 0.07},
+        {"i": 15, "v": 0.71}, {"i": 16, "v": 0.34}, {"i": 17, "v": 0.60},
+        {"i": 18, "v": 0.93}, {"i": 19, "v": 0.18}, {"i": 20, "v": 0.47},
+        {"i": 21, "v": 0.80}, {"i": 22, "v": 0.25}, {"i": 23, "v": 0.55}
+      ],
+      "transform": [
+        {"type": "formula", "expr": "round(datum.v * 7) / 7", "as": "band"},
+        {"type": "formula", "expr": "round(datum.v * 255)", "as": "iv"}
+      ]
+    },
+    {
+      "name": "levels",
+      "values": [{"l": 0}, {"l": 1}, {"l": 2}, {"l": 3}, {"l": 4}, {"l": 5}, {"l": 6}, {"l": 7}]
+    }
+  ],
+  "scales": [
+    {
+      "name": "heat",
+      "type": "linear",
+      "domain": [0, 1],
+      "range": ["#e6f0ff", "#49bcff", "#175fff", "#061982"]
+    }
+  ],
+  "marks": [
+    {
+      "type": "text",
+      "encode": {
+        "update": {
+          "x": {"signal": "(colX + outX + cellW) / 2"},
+          "y": {"value": 50},
+          "text": {"signal": "headline"},
+          "align": {"value": "center"}, "baseline": {"value": "alphabetic"},
+          "fontSize": {"value": 21}, "fontWeight": {"value": "bold"},
+          "fill": {"value": "#1e293b"}
+        }
+      }
+    },
+    {
+      "type": "text",
+      "encode": {
+        "update": {
+          "x": {"signal": "colX + cellW / 2"},
+          "y": {"signal": "stripY - 12"},
+          "text": {"value": "the vector · 512-D"},
+          "align": {"value": "center"}, "baseline": {"value": "alphabetic"},
+          "fontSize": {"value": 13}, "fontWeight": {"value": "bold"},
+          "fill": {"value": "#64748b"}
+        }
+      }
+    },
+    {
+      "type": "rect",
+      "from": {"data": "cells"},
+      "encode": {
+        "update": {
+          "x": {"signal": "colX"},
+          "width": {"signal": "cellW"},
+          "y": {"signal": "stripY + datum.i * cellH"},
+          "height": {"signal": "cellH - 1.5"},
+          "fill": {"scale": "heat", "field": "v"},
+          "cornerRadius": {"value": 1.5}
+        }
+      }
+    },
+    {
+      "type": "rule",
+      "encode": {
+        "update": {
+          "x": {"signal": "colX + cellW + 14"}, "x2": {"signal": "ladderX - 14"},
+          "y": {"signal": "midY"}, "y2": {"signal": "midY"},
+          "stroke": {"value": "#94a3b8"}, "strokeWidth": {"value": 2},
+          "opacity": [{"test": "stage >= 1", "value": 1}, {"value": 0}]
+        }
+      }
+    },
+    {
+      "type": "symbol",
+      "encode": {
+        "update": {
+          "x": {"signal": "ladderX - 14"}, "y": {"signal": "midY"},
+          "shape": {"value": "triangle-right"}, "size": {"value": 100},
+          "fill": {"value": "#94a3b8"},
+          "opacity": [{"test": "stage >= 1", "value": 1}, {"value": 0}]
+        }
+      }
+    },
+    {
+      "type": "text",
+      "encode": {
+        "update": {
+          "x": {"signal": "ladderX + ladderW / 2"},
+          "y": {"signal": "stripY - 12"},
+          "text": {"value": "int8 levels"},
+          "align": {"value": "center"}, "baseline": {"value": "alphabetic"},
+          "fontSize": {"value": 13}, "fontWeight": {"value": "bold"},
+          "fill": {"value": "#64748b"},
+          "opacity": [{"test": "stage >= 1", "value": 1}, {"value": 0}]
+        }
+      }
+    },
+    {
+      "type": "rect",
+      "from": {"data": "levels"},
+      "encode": {
+        "update": {
+          "x": {"signal": "ladderX"},
+          "width": {"signal": "ladderW"},
+          "y": {"signal": "stripY + datum.l * bandH"},
+          "height": {"signal": "bandH - 1"},
+          "fill": {"scale": "heat", "signal": "1 - datum.l / 7"},
+          "stroke": {"value": "#ffffff"}, "strokeWidth": {"value": 1},
+          "opacity": [{"test": "stage >= 1", "value": 1}, {"value": 0}]
+        }
+      }
+    },
+    {
+      "type": "text",
+      "encode": {
+        "update": {
+          "x": {"signal": "ladderX + ladderW + 6"},
+          "y": {"signal": "stripY + 4"},
+          "text": {"value": "255"},
+          "align": {"value": "left"}, "baseline": {"value": "middle"},
+          "fontSize": {"value": 11}, "fill": {"value": "#94a3b8"},
+          "opacity": [{"test": "stage >= 1", "value": 1}, {"value": 0}]
+        }
+      }
+    },
+    {
+      "type": "text",
+      "encode": {
+        "update": {
+          "x": {"signal": "ladderX + ladderW + 6"},
+          "y": {"signal": "midY"},
+          "text": {"value": "128"},
+          "align": {"value": "left"}, "baseline": {"value": "middle"},
+          "fontSize": {"value": 11}, "fill": {"value": "#94a3b8"},
+          "opacity": [{"test": "stage >= 1", "value": 1}, {"value": 0}]
+        }
+      }
+    },
+    {
+      "type": "text",
+      "encode": {
+        "update": {
+          "x": {"signal": "ladderX + ladderW + 6"},
+          "y": {"signal": "stripY + n * cellH - 4"},
+          "text": {"value": "0"},
+          "align": {"value": "left"}, "baseline": {"value": "middle"},
+          "fontSize": {"value": 11}, "fill": {"value": "#94a3b8"},
+          "opacity": [{"test": "stage >= 1", "value": 1}, {"value": 0}]
+        }
+      }
+    },
+    {
+      "type": "rule",
+      "encode": {
+        "update": {
+          "x": {"signal": "ladderX + ladderW + 30"}, "x2": {"signal": "outX - 26"},
+          "y": {"signal": "midY"}, "y2": {"signal": "midY"},
+          "stroke": {"value": "#94a3b8"}, "strokeWidth": {"value": 2},
+          "opacity": [{"test": "stage >= 2", "value": 1}, {"value": 0}]
+        }
+      }
+    },
+    {
+      "type": "symbol",
+      "encode": {
+        "update": {
+          "x": {"signal": "outX - 26"}, "y": {"signal": "midY"},
+          "shape": {"value": "triangle-right"}, "size": {"value": 100},
+          "fill": {"value": "#94a3b8"},
+          "opacity": [{"test": "stage >= 2", "value": 1}, {"value": 0}]
+        }
+      }
+    },
+    {
+      "type": "text",
+      "encode": {
+        "update": {
+          "x": {"signal": "outX + cellW / 2"},
+          "y": {"signal": "stripY - 12"},
+          "text": {"signal": "stage >= 3 ? 'int8 · 1 byte/dim' : 'snapped'"},
+          "align": {"value": "center"}, "baseline": {"value": "alphabetic"},
+          "fontSize": {"value": 13}, "fontWeight": {"value": "bold"},
+          "fill": {"value": "#175fff"},
+          "opacity": [{"test": "stage >= 2", "value": 1}, {"value": 0}]
+        }
+      }
+    },
+    {
+      "type": "rect",
+      "from": {"data": "cells"},
+      "encode": {
+        "update": {
+          "x": {"signal": "outX"},
+          "width": {"signal": "cellW"},
+          "y": {"signal": "stripY + datum.i * cellH"},
+          "height": {"signal": "cellH - 1.5"},
+          "fill": {"scale": "heat", "field": "band"},
+          "cornerRadius": {"value": 1.5},
+          "opacity": [{"test": "stage >= 2", "value": 1}, {"value": 0}]
+        }
+      }
+    },
+    {
+      "type": "text",
+      "from": {"data": "cells"},
+      "encode": {
+        "update": {
+          "x": {"signal": "outX + cellW / 2"},
+          "y": {"signal": "stripY + datum.i * cellH + (cellH - 1.5) / 2"},
+          "text": {"signal": "'' + datum.iv"},
+          "align": {"value": "center"}, "baseline": {"value": "middle"},
+          "fontSize": {"value": 10}, "fontWeight": {"value": "bold"},
+          "fill": {"signal": "datum.band > 0.5 ? '#ffffff' : '#1e293b'"},
+          "opacity": [{"test": "stage >= 3", "value": 1}, {"value": 0}]
+        }
+      }
+    },
+    {
+      "type": "text",
+      "encode": {
+        "update": {
+          "x": {"signal": "(colX + outX + cellW) / 2"},
+          "y": {"value": 82},
+          "text": {"value": "2 KB  →  512 bytes   ·   4× smaller"},
+          "align": {"value": "center"}, "baseline": {"value": "alphabetic"},
+          "fontSize": {"value": 18}, "fontWeight": {"value": "bold"},
+          "fill": {"value": "#175fff"},
+          "opacity": [{"test": "stage >= 3", "value": 1}, {"value": 0}]
+        }
+      }
+    },
+    {
+      "type": "text",
+      "encode": {
+        "update": {
+          "x": {"signal": "(colX + outX + cellW) / 2"},
+          "y": {"value": 476},
+          "text": {"signal": "narration"},
+          "align": {"value": "center"}, "baseline": {"value": "alphabetic"},
+          "fontSize": {"value": 16}, "fill": {"value": "#1e293b"}
+        }
+      }
+    }
+  ]
+}

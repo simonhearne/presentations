@@ -1,0 +1,508 @@
+{
+  "$schema": "https://vega.github.io/schema/vega/v5.json",
+  "description": "Interactive HNSW search explainer — 3-layer hierarchical graph traversal with live distance scores",
+  "width": 1000,
+  "height": 500,
+  "padding": 0,
+  "autosize": "fit",
+  "background": "rgba(0,0,0,0)",
+
+  "signals": [
+    {
+      "name": "panelHeight",
+      "value": "(height / 3)",
+      "update": "(height / 3)"
+    },
+    {
+      "name": "step",
+      "value": 0
+    },
+    {
+      "name": "M",
+      "value": 16,
+      "bind": {
+        "input": "range", "min": 4, "max": 48, "step": 1,
+        "name": "M  (edges / node):  "
+      }
+    },
+    {
+      "name": "efConstruction",
+      "value": 200,
+      "bind": {
+        "input": "range", "min": 16, "max": 400, "step": 1,
+        "name": "efConstruction  (build):  "
+      }
+    },
+    {
+      "name": "ef",
+      "value": 64,
+      "bind": {
+        "input": "range", "min": 8, "max": 128, "step": 1,
+        "name": "ef  (query):  "
+      }
+    },
+    {
+      "name": "narration",
+      "update": "['Step 1 — LAYER 2: Enter at fixed entry point A. Distance to query: 7.16. Greedily check A neighbors on this layer.', 'Step 2 — LAYER 2: Neighbor B distance 3.20, closer than A (7.16). Move to B.', 'Step 3 — LAYER 2: Checked C (distance 3.35), farther than B. No closer neighbor of B. Drop to layer 1.', 'Step 4 — LAYER 1: Restart from B (best so far). Layer 1 is denser; new neighbors D, E now visible.', 'Step 5 — LAYER 1: E distance 1.12, much closer than B (3.20) and D (5.10). Move to E.', 'Step 6 — LAYER 1: Checked F (distance 1.58), farther than E. No closer neighbor. Drop to layer 0.', 'Step 7 — LAYER 0: Restart from E. Densest layer; new neighbors G, H, J now visible.', 'Step 8 — LAYER 0: Evaluated G=3.04, J=1.80, H=0.28 ← closest. Move to H.', 'Step 9 — LAYER 0: H remaining neighbor F (1.58) is farther. ★ CONVERGED: H is the nearest neighbor at distance 0.28.'][step]"
+    },
+    {
+      "name": "currentLayer",
+      "update": "[2,2,2,1,1,1,0,0,0][step]"
+    },
+    {
+      "name": "queryX", "value": 8.0
+    },
+    {
+      "name": "queryY", "value": 5.0
+    }
+  ],
+
+  "data": [
+    {
+      "name": "nodes",
+      "values": [
+        {"id": "A", "x": 1.5, "y": 8.0, "maxLayer": 2},
+        {"id": "B", "x": 6.0, "y": 7.5, "maxLayer": 2},
+        {"id": "C", "x": 9.5, "y": 2.0, "maxLayer": 2},
+        {"id": "D", "x": 3.0, "y": 4.0, "maxLayer": 1},
+        {"id": "E", "x": 7.5, "y": 6.0, "maxLayer": 1},
+        {"id": "F", "x": 8.5, "y": 3.5, "maxLayer": 1},
+        {"id": "G", "x": 5.0, "y": 5.5, "maxLayer": 0},
+        {"id": "H", "x": 7.8, "y": 4.8, "maxLayer": 0},
+        {"id": "I", "x": 6.5, "y": 3.0, "maxLayer": 0},
+        {"id": "J", "x": 9.0, "y": 6.5, "maxLayer": 0},
+        {"id": "K", "x": 2.0, "y": 6.0, "maxLayer": 0}
+      ],
+      "transform": [
+        {
+          "type": "formula",
+          "as": "dist",
+          "expr": "sqrt(pow(datum.x - queryX, 2) + pow(datum.y - queryY, 2))"
+        }
+      ]
+    },
+
+    {
+      "name": "stepStates",
+      "values": [
+        {"step": 0, "layer": 2, "current": "A", "visited": "A",          "candidates": "",        "best": "A"},
+        {"step": 1, "layer": 2, "current": "B", "visited": "A,B",        "candidates": "B",       "best": "B"},
+        {"step": 2, "layer": 2, "current": "B", "visited": "A,B,C",      "candidates": "C",       "best": "B"},
+        {"step": 3, "layer": 1, "current": "B", "visited": "B",          "candidates": "",        "best": "B"},
+        {"step": 4, "layer": 1, "current": "E", "visited": "B,E,D",      "candidates": "E,D",     "best": "E"},
+        {"step": 5, "layer": 1, "current": "E", "visited": "B,E,D,F",    "candidates": "F",       "best": "E"},
+        {"step": 6, "layer": 0, "current": "E", "visited": "E",          "candidates": "",        "best": "E"},
+        {"step": 7, "layer": 0, "current": "H", "visited": "E,H,J,G",    "candidates": "H,J,G",   "best": "H"},
+        {"step": 8, "layer": 0, "current": "H", "visited": "E,H,J,G,F",  "candidates": "F",       "best": "H"}
+      ]
+    },
+
+    {
+      "name": "currentState",
+      "source": "stepStates",
+      "transform": [
+        {"type": "filter", "expr": "datum.step === step"}
+      ]
+    },
+
+    {
+      "name": "edges_raw",
+      "values": [
+        {"a": "A", "b": "B", "layer": 2},
+        {"a": "B", "b": "C", "layer": 2},
+
+        {"a": "A", "b": "B", "layer": 1},
+        {"a": "B", "b": "C", "layer": 1},
+        {"a": "A", "b": "D", "layer": 1},
+        {"a": "D", "b": "E", "layer": 1},
+        {"a": "E", "b": "F", "layer": 1},
+        {"a": "B", "b": "E", "layer": 1},
+        {"a": "C", "b": "F", "layer": 1},
+
+        {"a": "A", "b": "D", "layer": 0, "mRank": 8},
+        {"a": "A", "b": "K", "layer": 0, "mRank": 40},
+        {"a": "D", "b": "K", "layer": 0, "mRank": 44},
+        {"a": "D", "b": "G", "layer": 0, "mRank": 20},
+        {"a": "G", "b": "E", "layer": 0, "mRank": 6},
+        {"a": "G", "b": "B", "layer": 0, "mRank": 28},
+        {"a": "B", "b": "E", "layer": 0, "mRank": 10},
+        {"a": "E", "b": "J", "layer": 0, "mRank": 6},
+        {"a": "E", "b": "H", "layer": 0, "mRank": 4},
+        {"a": "H", "b": "J", "layer": 0, "mRank": 12},
+        {"a": "H", "b": "F", "layer": 0, "mRank": 8},
+        {"a": "F", "b": "C", "layer": 0, "mRank": 24},
+        {"a": "F", "b": "I", "layer": 0, "mRank": 32},
+        {"a": "I", "b": "C", "layer": 0, "mRank": 36},
+        {"a": "I", "b": "G", "layer": 0, "mRank": 16},
+        {"a": "B", "b": "J", "layer": 0, "mRank": 22}
+      ]
+    },
+
+    {
+      "name": "edges",
+      "source": "edges_raw",
+      "transform": [
+        {
+          "type": "lookup",
+          "from": "nodes", "key": "id",
+          "fields": ["a"], "as": ["nodeA"]
+        },
+        {
+          "type": "lookup",
+          "from": "nodes", "key": "id",
+          "fields": ["b"], "as": ["nodeB"]
+        },
+        {
+          "type": "formula", "as": "x1",
+          "expr": "datum.nodeA.x"
+        },
+        {
+          "type": "formula", "as": "y1",
+          "expr": "datum.nodeA.y"
+        },
+        {
+          "type": "formula", "as": "x2",
+          "expr": "datum.nodeB.x"
+        },
+        {
+          "type": "formula", "as": "y2",
+          "expr": "datum.nodeB.y"
+        },
+        {
+          "type": "formula", "as": "isPath",
+          "expr": "datum.layer === data('currentState')[0].layer && indexof(','+data('currentState')[0].visited+',', ','+datum.a+',') >= 0 && indexof(','+data('currentState')[0].visited+',', ','+datum.b+',') >= 0"
+        },
+        {
+          "type": "formula", "as": "isActiveLayer",
+          "expr": "datum.layer === data('currentState')[0].layer"
+        },
+        {
+          "type": "formula", "as": "showByM",
+          "expr": "datum.layer !== 0 || datum.isPath || datum.mRank <= M"
+        }
+      ]
+    },
+
+    {
+      "name": "nodesByLayer",
+      "values": [
+        {"id": "A", "x": 1.5, "y": 8.0, "layer": 2},
+        {"id": "B", "x": 6.0, "y": 7.5, "layer": 2},
+        {"id": "C", "x": 9.5, "y": 2.0, "layer": 2},
+
+        {"id": "A", "x": 1.5, "y": 8.0, "layer": 1},
+        {"id": "B", "x": 6.0, "y": 7.5, "layer": 1},
+        {"id": "C", "x": 9.5, "y": 2.0, "layer": 1},
+        {"id": "D", "x": 3.0, "y": 4.0, "layer": 1},
+        {"id": "E", "x": 7.5, "y": 6.0, "layer": 1},
+        {"id": "F", "x": 8.5, "y": 3.5, "layer": 1},
+
+        {"id": "A", "x": 1.5, "y": 8.0, "layer": 0},
+        {"id": "B", "x": 6.0, "y": 7.5, "layer": 0},
+        {"id": "C", "x": 9.5, "y": 2.0, "layer": 0},
+        {"id": "D", "x": 3.0, "y": 4.0, "layer": 0},
+        {"id": "E", "x": 7.5, "y": 6.0, "layer": 0},
+        {"id": "F", "x": 8.5, "y": 3.5, "layer": 0},
+        {"id": "G", "x": 5.0, "y": 5.5, "layer": 0},
+        {"id": "H", "x": 7.8, "y": 4.8, "layer": 0},
+        {"id": "I", "x": 6.5, "y": 3.0, "layer": 0},
+        {"id": "J", "x": 9.0, "y": 6.5, "layer": 0},
+        {"id": "K", "x": 2.0, "y": 6.0, "layer": 0}
+      ],
+      "transform": [
+        {
+          "type": "formula", "as": "dist",
+          "expr": "sqrt(pow(datum.x - queryX, 2) + pow(datum.y - queryY, 2))"
+        },
+        {
+          "type": "formula", "as": "isCurrent",
+          "expr": "datum.layer === data('currentState')[0].layer && datum.id === data('currentState')[0].current"
+        },
+        {
+          "type": "formula", "as": "isVisited",
+          "expr": "datum.layer === data('currentState')[0].layer && indexof(','+data('currentState')[0].visited+',', ','+datum.id+',') >= 0"
+        },
+        {
+          "type": "formula", "as": "isCandidate",
+          "expr": "datum.layer === data('currentState')[0].layer && indexof(','+data('currentState')[0].candidates+',', ','+datum.id+',') >= 0 && !datum.isCurrent"
+        },
+        {
+          "type": "formula", "as": "isFinal",
+          "expr": "step === 8 && datum.layer === 0 && datum.id === 'H'"
+        },
+        {
+          "type": "formula", "as": "state",
+          "expr": "datum.isFinal ? 'final' : datum.isCurrent ? 'current' : datum.isCandidate ? 'candidate' : datum.isVisited ? 'visited' : 'idle'"
+        },
+        {
+          "type": "formula", "as": "isActiveLayer",
+          "expr": "datum.layer === data('currentState')[0].layer"
+        }
+      ]
+    },
+
+    {
+      "name": "frontier",
+      "source": "nodesByLayer",
+      "transform": [
+        {"type": "filter", "expr": "datum.isActiveLayer"},
+        {"type": "collect", "sort": {"field": "dist", "order": "ascending"}},
+        {"type": "window", "ops": ["row_number"], "as": ["distRank"]},
+        {"type": "filter", "expr": "datum.distRank <= max(1, round(ef / 16))"}
+      ]
+    }
+  ],
+
+  "scales": [
+    {
+      "name": "xScale",
+      "type": "linear",
+      "domain": [0, 11],
+      "range": {"signal": "[40, width-30]"}
+    },
+    {
+      "name": "yScaleL2",
+      "type": "linear",
+      "domain": [0, 10],
+      "range": {"signal": "[panelHeight+20, 30]"}
+    },
+    {
+      "name": "yScaleL1",
+      "type": "linear",
+      "domain": [0, 10],
+      "range": {"signal": "[panelHeight*2+60, panelHeight+50]"}
+    },
+    {
+      "name": "yScaleL0",
+      "type": "linear",
+      "domain": [0, 10],
+      "range": {"signal": "[panelHeight*3+80, panelHeight*2+60]"}
+    },
+    {
+      "name": "stateColor",
+      "type": "ordinal",
+      "domain": ["idle", "visited", "candidate", "current", "final"],
+      "range": ["#d0d0d0", "#9ec5e8", "#f5b76b", "#4c78a8", "#54a24b"]
+    },
+    {
+      "name": "stateSize",
+      "type": "ordinal",
+      "domain": ["idle", "visited", "candidate", "current", "final"],
+      "range": [200, 260, 320, 440, 520]
+    }
+  ],
+
+  "marks": [
+    {
+      "type": "group",
+      "name": "panelL2",
+      "encode": {
+        "enter": {
+          "x": {"value": 0}, "y": {"value": 20},
+          "width": {"signal": "width - 20"}, "height": {"signal": "panelHeight"}
+        },
+        "update": {
+          "fill": {"signal": "currentLayer === 2 ? '#fafbfd' : '#f7f7f7'"},
+          "stroke": {"signal": "currentLayer === 2 ? '#4c78a8' : '#dddddd'"},
+          "strokeWidth": {"signal": "currentLayer === 2 ? 1.5 : 1"}
+        }
+      },
+      "marks": [
+        {
+          "type": "text",
+          "encode": {
+            "enter": {
+              "x": {"value": 12}, "y": {"value": 16},
+              "text": {"value": "Layer 2  —  sparse  (entry layer)"},
+              "fontSize": {"value": 12}, "fontWeight": {"value": "bold"}
+            },
+            "update": {
+              "fill": {"signal": "currentLayer === 2 ? '#4c78a8' : '#999'"}
+            }
+          }
+        }
+      ]
+    },
+    {
+      "type": "group",
+      "name": "panelL1",
+      "encode": {
+        "enter": {
+          "x": {"value": 0}, "y": {"signal": "panelHeight*1+40"},
+          "width": {"signal": "width - 20"}, "height": {"signal": "panelHeight"}
+        },
+        "update": {
+          "fill": {"signal": "currentLayer === 1 ? '#fafbfd' : '#f7f7f7'"},
+          "stroke": {"signal": "currentLayer === 1 ? '#4c78a8' : '#dddddd'"},
+          "strokeWidth": {"signal": "currentLayer === 1 ? 1.5 : 1"}
+        }
+      },
+      "marks": [
+        {
+          "type": "text",
+          "encode": {
+            "enter": {
+              "x": {"value": 12}, "y": {"value": 16},
+              "text": {"value": "Layer 1  —  medium density"},
+              "fontSize": {"value": 12}, "fontWeight": {"value": "bold"}
+            },
+            "update": {
+              "fill": {"signal": "currentLayer === 1 ? '#4c78a8' : '#999'"}
+            }
+          }
+        }
+      ]
+    },
+    {
+      "type": "group",
+      "name": "panelL0",
+      "encode": {
+        "enter": {
+          "x": {"value": 0}, "y": {"signal": "panelHeight*2+60"},
+          "width": {"signal": "width - 20"}, "height": {"signal": "panelHeight"}
+        },
+        "update": {
+          "fill": {"signal": "currentLayer === 0 ? '#fafbfd' : '#f7f7f7'"},
+          "stroke": {"signal": "currentLayer === 0 ? '#4c78a8' : '#dddddd'"},
+          "strokeWidth": {"signal": "currentLayer === 0 ? 1.5 : 1"}
+        }
+      },
+      "marks": [
+        {
+          "type": "text",
+          "encode": {
+            "enter": {
+              "x": {"value": 12}, "y": {"value": 16},
+              "text": {"value": "Layer 0  —  dense  (contains all vectors)"},
+              "fontSize": {"value": 12}, "fontWeight": {"value": "bold"}
+            },
+            "update": {
+              "fill": {"signal": "currentLayer === 0 ? '#4c78a8' : '#999'"}
+            }
+          }
+        }
+      ]
+    },
+
+    {
+      "type": "rule",
+      "from": {"data": "edges"},
+      "encode": {
+        "update": {
+          "x":  {"scale": "xScale", "field": "x1"},
+          "x2": {"scale": "xScale", "field": "x2"},
+          "y":  {
+            "signal": "datum.layer === 2 ? scale('yScaleL2', datum.y1) : datum.layer === 1 ? scale('yScaleL1', datum.y1) : scale('yScaleL0', datum.y1)"
+          },
+          "y2": {
+            "signal": "datum.layer === 2 ? scale('yScaleL2', datum.y2) : datum.layer === 1 ? scale('yScaleL1', datum.y2) : scale('yScaleL0', datum.y2)"
+          },
+          "stroke": {
+            "signal": "datum.isPath ? '#4c78a8' : datum.isActiveLayer ? '#bbbbbb' : '#e5e5e5'"
+          },
+          "strokeWidth": {
+            "signal": "datum.isPath ? 2.5 : 1"
+          },
+          "opacity": {
+            "signal": "!datum.showByM ? 0 : (datum.isActiveLayer ? 1 : 0.5)"
+          }
+        }
+      }
+    },
+
+    {
+      "type": "symbol",
+      "from": {"data": "nodesByLayer"},
+      "encode": {
+        "update": {
+          "x": {"scale": "xScale", "field": "x"},
+          "y": {
+            "signal": "datum.layer === 2 ? scale('yScaleL2', datum.y) : datum.layer === 1 ? scale('yScaleL1', datum.y) : scale('yScaleL0', datum.y)"
+          },
+          "size": {"scale": "stateSize", "field": "state"},
+          "fill": {"scale": "stateColor", "field": "state"},
+          "stroke": {"value": "#222"},
+          "strokeWidth": {"value": 1},
+          "opacity": {"signal": "datum.isActiveLayer ? 1.0 : 0.45"},
+          "tooltip": {
+            "signal": "{Node: datum.id, 'Distance to query': format(datum.dist, '.2f'), State: datum.state, Layer: datum.layer}"
+          }
+        }
+      }
+    },
+
+    {
+      "type": "symbol",
+      "from": {"data": "frontier"},
+      "encode": {
+        "update": {
+          "x": {"scale": "xScale", "field": "x"},
+          "y": {
+            "signal": "datum.layer === 2 ? scale('yScaleL2', datum.y) : datum.layer === 1 ? scale('yScaleL1', datum.y) : scale('yScaleL0', datum.y)"
+          },
+          "size": {"value": 900},
+          "fill": {"value": "transparent"},
+          "stroke": {"value": "#f5b76b"},
+          "strokeWidth": {"value": 2},
+          "strokeDash": {"value": [3, 3]},
+          "opacity": {"value": 0.75},
+          "tooltip": {
+            "signal": "{'ef frontier': 'within candidate-list width', Node: datum.id, 'Distance to query': format(datum.dist, '.2f')}"
+          }
+        }
+      }
+    },
+
+    {
+      "type": "text",
+      "from": {"data": "nodesByLayer"},
+      "encode": {
+        "update": {
+          "x": {"scale": "xScale", "field": "x"},
+          "y": {
+            "signal": "(datum.layer === 2 ? scale('yScaleL2', datum.y) : datum.layer === 1 ? scale('yScaleL1', datum.y) : scale('yScaleL0', datum.y)) - 14"
+          },
+          "text": {"field": "id"},
+          "fontSize": {"value": 10},
+          "fontWeight": {"value": "bold"},
+          "align": {"value": "center"},
+          "fill": {"value": "#222"},
+          "opacity": {"signal": "datum.isActiveLayer ? 1 : 0.5"}
+        }
+      }
+    },
+
+    {
+      "type": "symbol",
+      "encode": {
+        "update": {
+          "x": {"scale": "xScale", "signal": "queryX"},
+          "y": {
+            "signal": "currentLayer === 2 ? scale('yScaleL2', queryY) : currentLayer === 1 ? scale('yScaleL1', queryY) : scale('yScaleL0', queryY)"
+          },
+          "shape": {"value": "M0,-1 L0.225,-0.309 L0.951,-0.309 L0.363,0.118 L0.588,0.809 L0,0.382 L-0.588,0.809 L-0.363,0.118 L-0.951,-0.309 L-0.225,-0.309 Z"},
+          "size": {"value": 380},
+          "fill": {"value": "#e45756"},
+          "stroke": {"value": "#a02020"},
+          "strokeWidth": {"value": 1},
+          "tooltip": {"value": {"Query": "(8.0, 5.0)"}}
+        }
+      }
+    },
+
+    {
+      "type": "text",
+      "encode": {
+        "update": {
+          "x": {"value": 360},
+          "y": {"value": 12},
+          "text": {"signal": "narration"},
+          "fontSize": {"value": 12},
+          "align": {"value": "center"},
+          "fill": {"value": "#1a1a1a"},
+          "limit": {"value": 720}
+        }
+      }
+    }
+  ]
+}

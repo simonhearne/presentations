@@ -1,0 +1,397 @@
+{
+  "$schema": "https://vega.github.io/schema/vega/v5.json",
+  "description": "Trade-off triangle: Speed / Accuracy / Cheap. One section per stage: 1 = exact (FLAT), 2 = ANN index family (IVF_FLAT, HNSW, DISKANN, SCANN, AISAQ), 3 = quantisation arrows for valid Milvus index+quant combos (IVF_SQ8/PQ/RABITQ, HNSW_SQ/PQ/PRQ), 4 = dimensionality reduction (one global PCA/MRL arrow toward Fast/Cheap), 5 = refinement / rescoring (one arrow toward Accurate, anti-parallel to the PCA/MRL arrow). Reveal is cumulative: stage < current is dimmed, stage === current is highlighted, stage > current is hidden. GPU_* index variants are intentionally excluded (not covered in the talk).",
+  "width": 600,
+  "height": 600,
+  "padding": 32,
+  "signals": [
+    { "name": "stage", "value": 0 },
+    {
+      "name": "vSpeed",
+      "value": {"x": 300, "y": 20}
+    },
+    {
+      "name": "vAccuracy",
+      "value": {"x": 30, "y": 500}
+    },
+    {
+      "name": "vCost",
+      "value": {"x": 570, "y": 500}
+    }
+  ],
+  "data": [
+    {
+      "name": "corners",
+      "values": [
+        {"label": "Fast", "x": 300, "y": 20, "ax": "center", "ay": "bottom", "dy": -12, "color": "#175fff"},
+        {"label": "Accurate", "x": 30, "y": 500, "ax": "left", "ay": "top", "dy": 14, "color": "#c84cff"},
+        {"label": "Cheap", "x": 570, "y": 500, "ax": "right", "ay": "top", "dy": 14, "color": "#f59e0b"}
+      ]
+    },
+    {
+      "name": "edges",
+      "values": [
+        {"x": 300, "y": 20, "x2": 30, "y2": 500},
+        {"x": 30, "y": 500, "x2": 570, "y2": 500},
+        {"x": 570, "y": 500, "x2": 300, "y2": 20}
+      ]
+    },
+    {
+      "name": "techniques",
+      "values": [
+        {"name": "FLAT",       "stage": 1, "kind": "base",  "ws": 0.10, "wa": 1.00, "wc": 0.10},
+        {"name": "IVF_FLAT",   "stage": 2, "kind": "base",  "ws": 0.70, "wa": 0.55, "wc": 0.45},
+        {"name": "HNSW",       "stage": 2, "kind": "base",  "ws": 1.00, "wa": 0.95, "wc": 0.20},
+        {"name": "DISKANN",    "stage": 2, "kind": "base",  "ws": 0.50, "wa": 0.80, "wc": 0.90},
+        {"name": "SCANN",      "stage": 2, "kind": "base",  "ws": 0.95, "wa": 0.45, "wc": 0.75},
+        {"name": "AISAQ",      "stage": 2, "kind": "base",  "ws": 0.35, "wa": 0.70, "wc": 1.10},
+        {"name": "IVF_SQ8",    "stage": 3, "kind": "quant", "ws": 0.75, "wa": 0.48, "wc": 0.65, "bws": 0.70, "bwa": 0.55, "bwc": 0.45, "ldx": 4,   "ldy": 15, "lalign": "left",  "lbaseline": "top"},
+        {"name": "IVF_PQ",     "stage": 3, "kind": "quant", "ws": 0.78, "wa": 0.32, "wc": 0.85, "bws": 0.70, "bwa": 0.55, "bwc": 0.45, "ldx": 11,  "ldy": 0,  "lalign": "left",  "lbaseline": "middle"},
+        {"name": "IVF_RABITQ", "stage": 3, "kind": "quant", "ws": 0.80, "wa": 0.45, "wc": 0.95, "bws": 0.70, "bwa": 0.55, "bwc": 0.45, "ldx": 8,   "ldy": 19, "lalign": "left",  "lbaseline": "top"},
+        {"name": "HNSW_SQ",    "stage": 3, "kind": "quant", "ws": 1.00, "wa": 0.88, "wc": 0.42, "bws": 1.00, "bwa": 0.95, "bwc": 0.20, "ldx": -11, "ldy": 0,  "lalign": "right", "lbaseline": "middle"},
+        {"name": "HNSW_PQ",    "stage": 3, "kind": "quant", "ws": 1.00, "wa": 0.64, "wc": 0.68, "bws": 1.00, "bwa": 0.95, "bwc": 0.20, "ldx": 0,   "ldy": -15, "lalign": "center", "lbaseline": "bottom"},
+        {"name": "HNSW_PRQ",   "stage": 3, "kind": "quant", "ws": 1.00, "wa": 0.80, "wc": 0.78, "bws": 1.00, "bwa": 0.95, "bwc": 0.20, "ldx": -8,  "ldy": 13, "lalign": "right", "lbaseline": "top"}
+      ],
+      "transform": [
+        {"type": "formula", "expr": "datum.ws + datum.wa + datum.wc", "as": "wsum"},
+        {"type": "formula", "expr": "(datum.ws * vSpeed.x + datum.wa * vAccuracy.x + datum.wc * vCost.x) / datum.wsum", "as": "x"},
+        {"type": "formula", "expr": "(datum.ws * vSpeed.y + datum.wa * vAccuracy.y + datum.wc * vCost.y) / datum.wsum", "as": "y"},
+        {"type": "formula", "expr": "datum.kind === 'quant' ? datum.bws + datum.bwa + datum.bwc : 0", "as": "bsum"},
+        {"type": "formula", "expr": "datum.kind === 'quant' ? (datum.bws * vSpeed.x + datum.bwa * vAccuracy.x + datum.bwc * vCost.x) / datum.bsum : null", "as": "bx"},
+        {"type": "formula", "expr": "datum.kind === 'quant' ? (datum.bws * vSpeed.y + datum.bwa * vAccuracy.y + datum.bwc * vCost.y) / datum.bsum : null", "as": "by"},
+        {"type": "formula", "expr": "datum.kind === 'quant' ? atan2(datum.x - datum.bx, -(datum.y - datum.by)) * 180 / PI : 0", "as": "qangle"}
+      ]
+    },
+    {
+      "name": "baseIndexes",
+      "source": "techniques",
+      "transform": [
+        {"type": "filter", "expr": "datum.kind === 'base'"}
+      ]
+    },
+    {
+      "name": "quantArrows",
+      "source": "techniques",
+      "transform": [
+        {"type": "filter", "expr": "datum.kind === 'quant'"}
+      ]
+    },
+    {
+      "name": "triangle",
+      "values": [
+        {"path": "M300,20 L30,500 L570,500 Z"}
+      ]
+    },
+    {
+      "name": "drArrow",
+      "values": [
+        {"x": 300, "y": 340, "x2": 425, "y2": 280, "label": "PCA / MRL: fewer dims", "lx": 448, "ly": 252}
+      ],
+      "transform": [
+        {"type": "formula", "expr": "atan2(datum.x2 - datum.x, -(datum.y2 - datum.y)) * 180 / PI", "as": "angle"}
+      ]
+    },
+    {
+      "name": "refineArrow",
+      "values": [
+        {"x": 430, "y": 300, "x2": 260, "y2": 390, "label": "Refine: recover recall", "lx": 240, "ly": 400}
+      ],
+      "transform": [
+        {"type": "formula", "expr": "atan2(datum.x2 - datum.x, -(datum.y2 - datum.y)) * 180 / PI", "as": "angle"}
+      ]
+    }
+  ],
+  "marks": [
+    {
+      "type": "path",
+      "from": {"data": "triangle"},
+      "encode": {
+        "enter": {
+          "path": {"field": "path"},
+          "fill": {"value": "#175fff33"}
+        }
+      }
+    },
+    {
+      "type": "path",
+      "from": {"data": "triangle"},
+      "encode": {
+        "enter": {
+          "path": {"field": "path"},
+          "fill": {
+            "value": {
+              "gradient": "linear",
+              "x1": 0,    "y1": 1,
+              "x2": 0.76, "y2": 0.52,
+              "stops": [
+                {"offset": 0, "color": "#c84cff80"},
+                {"offset": 1, "color": "#c84cff00"}
+              ]
+            }
+          }
+        }
+      }
+    },
+    {
+      "type": "path",
+      "from": {"data": "triangle"},
+      "encode": {
+        "enter": {
+          "path": {"field": "path"},
+          "fill": {
+            "value": {
+              "gradient": "linear",
+              "x1": 1,    "y1": 1,
+              "x2": 0.24, "y2": 0.52,
+              "stops": [
+                {"offset": 0, "color": "#f59e0b80"},
+                {"offset": 1, "color": "#f59e0b00"}
+              ]
+            }
+          }
+        }
+      }
+    },
+    {
+      "type": "rule",
+      "from": {"data": "edges"},
+      "encode": {
+        "enter": {
+          "x": {"field": "x"},
+          "y": {"field": "y"},
+          "x2": {"field": "x2"},
+          "y2": {"field": "y2"},
+          "stroke": {"value": "#1a1f4d"},
+          "strokeWidth": {"value": 2}
+        }
+      }
+    },
+    {
+      "type": "text",
+      "from": {"data": "corners"},
+      "encode": {
+        "enter": {
+          "x": {"field": "x"},
+          "y": {"field": "y"},
+          "dy": {"field": "dy"},
+          "align": {"field": "ax"},
+          "baseline": {"field": "ay"},
+          "text": {"field": "label"},
+          "fontSize": {"value": 22},
+          "fontWeight": {"value": 500},
+          "font": {"value": "Inter, system-ui, -apple-system, sans-serif"},
+          "fill": {"signal": "datum.color"}
+        }
+      }
+    },
+    {
+      "type": "rule",
+      "from": {"data": "quantArrows"},
+      "encode": {
+        "enter": {
+          "stroke": {"value": "#f59e0b"},
+          "strokeWidth": {"value": 2.5},
+          "strokeCap": {"value": "round"}
+        },
+        "update": {
+          "x": {"field": "bx"},
+          "y": {"field": "by"},
+          "x2": {"field": "x"},
+          "y2": {"field": "y"},
+          "opacity": {"signal": "datum.stage > stage ? 0 : (datum.stage === stage ? 0.9 : 0.45)"}
+        }
+      }
+    },
+    {
+      "type": "symbol",
+      "from": {"data": "quantArrows"},
+      "encode": {
+        "enter": {
+          "shape": {"value": "triangle"},
+          "size": {"value": 130},
+          "fill": {"value": "#f59e0b"}
+        },
+        "update": {
+          "x": {"field": "x"},
+          "y": {"field": "y"},
+          "angle": {"field": "qangle"},
+          "opacity": {"signal": "datum.stage > stage ? 0 : (datum.stage === stage ? 0.9 : 0.45)"}
+        }
+      }
+    },
+    {
+      "type": "text",
+      "from": {"data": "quantArrows"},
+      "encode": {
+        "enter": {
+          "fontWeight": {"value": 600},
+          "font": {"value": "Inter, system-ui, -apple-system, sans-serif"},
+          "fill": {"value": "#925c00"}
+        },
+        "update": {
+          "x": {"field": "x", "offset": {"field": "ldx"}},
+          "y": {"field": "y", "offset": {"field": "ldy"}},
+          "align": {"field": "lalign"},
+          "baseline": {"field": "lbaseline"},
+          "text": {"field": "name"},
+          "fontSize": {"value": 12},
+          "opacity": {"signal": "datum.stage === stage ? 1 : 0"}
+        }
+      }
+    },
+    {
+      "type": "rule",
+      "from": {"data": "drArrow"},
+      "encode": {
+        "enter": {
+          "x": {"field": "x"},
+          "y": {"field": "y"},
+          "x2": {"field": "x2"},
+          "y2": {"field": "y2"},
+          "stroke": {"value": "#14b8a6"},
+          "strokeWidth": {"value": 3},
+          "strokeCap": {"value": "round"}
+        },
+        "update": {
+          "opacity": {"signal": "stage >= 4 ? 0.95 : 0"}
+        }
+      }
+    },
+    {
+      "type": "symbol",
+      "from": {"data": "drArrow"},
+      "encode": {
+        "enter": {
+          "x": {"field": "x2"},
+          "y": {"field": "y2"},
+          "shape": {"value": "triangle"},
+          "size": {"value": 160},
+          "angle": {"field": "angle"},
+          "fill": {"value": "#14b8a6"}
+        },
+        "update": {
+          "opacity": {"signal": "stage >= 4 ? 0.95 : 0"}
+        }
+      }
+    },
+    {
+      "type": "text",
+      "from": {"data": "drArrow"},
+      "encode": {
+        "enter": {
+          "x": {"field": "lx"},
+          "y": {"field": "ly"},
+          "text": {"field": "label"},
+          "align": {"value": "left"},
+          "baseline": {"value": "middle"},
+          "fontSize": {"value": 16},
+          "fontWeight": {"value": 600},
+          "fontStyle": {"value": "italic"},
+          "font": {"value": "Inter, system-ui, -apple-system, sans-serif"},
+          "fill": {"value": "#0f8a7c"}
+        },
+        "update": {
+          "opacity": {"signal": "stage >= 4 ? 1 : 0"}
+        }
+      }
+    },
+    {
+      "type": "rule",
+      "from": {"data": "refineArrow"},
+      "encode": {
+        "enter": {
+          "x": {"field": "x"},
+          "y": {"field": "y"},
+          "x2": {"field": "x2"},
+          "y2": {"field": "y2"},
+          "stroke": {"value": "#e11d48"},
+          "strokeWidth": {"value": 3},
+          "strokeCap": {"value": "round"}
+        },
+        "update": {
+          "opacity": {"signal": "stage >= 5 ? 0.95 : 0"}
+        }
+      }
+    },
+    {
+      "type": "symbol",
+      "from": {"data": "refineArrow"},
+      "encode": {
+        "enter": {
+          "x": {"field": "x2"},
+          "y": {"field": "y2"},
+          "shape": {"value": "triangle"},
+          "size": {"value": 160},
+          "angle": {"field": "angle"},
+          "fill": {"value": "#e11d48"}
+        },
+        "update": {
+          "opacity": {"signal": "stage >= 5 ? 0.95 : 0"}
+        }
+      }
+    },
+    {
+      "type": "text",
+      "from": {"data": "refineArrow"},
+      "encode": {
+        "enter": {
+          "x": {"field": "lx"},
+          "y": {"field": "ly"},
+          "text": {"field": "label"},
+          "align": {"value": "center"},
+          "baseline": {"value": "top"},
+          "fontSize": {"value": 16},
+          "fontWeight": {"value": 600},
+          "fontStyle": {"value": "italic"},
+          "font": {"value": "Inter, system-ui, -apple-system, sans-serif"},
+          "fill": {"value": "#be123c"}
+        },
+        "update": {
+          "opacity": {"signal": "stage >= 5 ? 1 : 0"}
+        }
+      }
+    },
+    {
+      "type": "symbol",
+      "from": {"data": "baseIndexes"},
+      "encode": {
+        "update": {
+          "x": {"field": "x"},
+          "y": {"field": "y"},
+          "shape": {"value": "circle"},
+          "size": [
+            {"test": "datum.stage === stage", "value": 380},
+            {"value": 260}
+          ],
+          "fill": {"value": "#9bb5ff"},
+          "stroke": {"value": "#1a1f4d"},
+          "strokeWidth": {"value": 1.5},
+          "opacity": {
+            "signal": "datum.stage > stage ? 0 : (datum.stage === stage ? 1 : 0.6)"
+          }
+        }
+      }
+    },
+    {
+      "type": "text",
+      "from": {"data": "baseIndexes"},
+      "encode": {
+        "enter": {
+          "fontWeight": {"value": 500},
+          "font": {"value": "Inter, system-ui, -apple-system, sans-serif"},
+          "fill": {"value": "#1a1f4d"},
+          "align": {"value": "center"},
+          "baseline": {"value": "top"},
+          "opacity": {"value": 0}
+        },
+        "update": {
+          "x": {"field": "x"},
+          "y": {"field": "y", "offset": 18},
+          "text": {"field": "name"},
+          "fontSize": {"value": 16},
+          "opacity": {"signal": "datum.stage === stage ? 1 : 0"}
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,207 @@
+{
+  "$schema": "https://vega.github.io/schema/vega/v5.json",
+  "description": "Click anywhere to drop a query point. The k nearest neighbours light up.",
+  "width": 600,
+  "height": 600,
+  "padding": 24,
+  "background": "transparent",
+  "config": {
+    "axis": { "labelFontSize": 12, "titleFontSize": 14 }
+  },
+  "signals": [
+    {
+      "name": "k",
+      "value": 5,
+      "bind": {"input": "range", "name": "k ", "min": 1, "max": 20, "step": 1}
+    },
+    {
+      "name": "metric",
+      "value": "euclidean",
+      "bind": {"input": "radio", "name": "metric ", "options": ["euclidean", "cosine"]}
+    },
+    {
+      "name": "qx",
+      "value": 1.2,
+      "on": [
+        {
+          "events": "pointermove",
+          "update": "clamp(invert('x', x()), -5, 5)"
+        }
+      ]
+    },
+    {
+      "name": "qy",
+      "value": 0.8,
+      "on": [
+        {
+          "events": "pointermove",
+          "update": "clamp(invert('y', y()), -5, 5)"
+        }
+      ]
+    }
+  ],
+  "data": [
+    {
+      "name": "points",
+      "values": [
+        {"x": -3.2, "y":  2.4}, {"x":  1.8, "y": -3.5}, {"x":  4.1, "y":  1.7},
+        {"x": -1.5, "y":  3.8}, {"x":  2.6, "y":  3.2}, {"x": -4.3, "y": -1.2},
+        {"x":  3.7, "y": -2.1}, {"x": -2.8, "y":  0.6}, {"x":  0.4, "y":  4.2},
+        {"x": -3.9, "y":  2.9}, {"x":  1.1, "y":  1.5}, {"x":  4.6, "y": -3.7},
+        {"x": -0.7, "y": -2.6}, {"x":  3.3, "y":  0.8}, {"x": -2.1, "y":  4.5},
+        {"x":  2.9, "y": -4.2}, {"x": -4.7, "y":  3.1}, {"x":  0.9, "y":  2.7},
+        {"x": -1.8, "y": -3.9}, {"x":  4.4, "y":  3.6}, {"x": -3.5, "y": -2.8},
+        {"x":  2.2, "y":  4.8}, {"x": -0.3, "y": -1.1}, {"x":  3.8, "y": -0.5},
+        {"x": -2.4, "y":  1.9}, {"x":  1.5, "y": -1.7}, {"x": -4.1, "y":  0.3},
+        {"x":  0.7, "y": -4.6}, {"x":  3.0, "y":  2.5}, {"x": -1.2, "y":  0.9},
+        {"x": -3.7, "y": -4.4}, {"x":  4.9, "y":  0.2}, {"x": -0.6, "y":  3.5},
+        {"x":  2.4, "y": -2.9}, {"x": -2.6, "y":  3.4}, {"x":  4.2, "y": -1.4},
+        {"x": -4.5, "y":  1.6}, {"x":  1.7, "y":  0.4}, {"x": -1.9, "y": -1.6},
+        {"x":  3.4, "y":  4.1}, {"x": -3.1, "y": -0.9}, {"x":  0.2, "y": -3.2},
+        {"x": -4.8, "y":  4.7}, {"x":  2.0, "y":  2.0}, {"x": -0.9, "y":  4.6},
+        {"x":  1.3, "y": -0.4}, {"x": -2.2, "y": -4.7}, {"x":  4.7, "y":  2.8},
+        {"x": -3.4, "y":  0.7}, {"x":  0.6, "y":  1.1}, {"x":  3.1, "y": -3.3},
+        {"x": -1.4, "y":  2.2}, {"x":  4.0, "y": -4.5}, {"x": -2.7, "y": -2.3},
+        {"x":  2.7, "y":  0.1}, {"x": -3.8, "y":  3.7}, {"x":  1.0, "y":  3.9},
+        {"x": -0.1, "y": -0.7}, {"x":  3.6, "y":  1.3}, {"x": -4.6, "y": -3.6},
+        {"x":  0.5, "y":  0.5}, {"x":  2.1, "y": -1.0}, {"x": -1.7, "y":  1.3},
+        {"x":  4.3, "y": -2.7}, {"x": -2.9, "y":  4.3}, {"x":  3.5, "y":  3.0},
+        {"x": -0.4, "y": -4.1}, {"x":  1.6, "y":  4.4}, {"x": -3.6, "y": -1.5},
+        {"x":  2.3, "y":  1.2}, {"x": -4.4, "y":  2.2}, {"x":  0.8, "y": -2.0},
+        {"x":  3.9, "y":  4.7}, {"x": -1.1, "y": -3.0}, {"x":  4.5, "y":  0.6},
+        {"x": -2.5, "y":  2.7}, {"x":  1.9, "y":  3.6}, {"x": -3.3, "y": -3.2},
+        {"x":  2.8, "y": -0.3}
+      ]
+    },
+    {
+      "name": "ranked",
+      "source": "points",
+      "transform": [
+        {
+          "type": "formula",
+          "expr": "metric === 'cosine' ? (1 - (datum.x * qx + datum.y * qy) / (sqrt(datum.x * datum.x + datum.y * datum.y) * sqrt(qx * qx + qy * qy) + 0.000001)) : sqrt(pow(datum.x - qx, 2) + pow(datum.y - qy, 2))",
+          "as": "dist"
+        },
+        {
+          "type": "window",
+          "sort": {"field": "dist", "order": "ascending"},
+          "ops": ["row_number"],
+          "as": ["rank"]
+        }
+      ]
+    },
+    {
+      "name": "neighbours",
+      "source": "ranked",
+      "transform": [
+        {"type": "filter", "expr": "datum.rank <= k"},
+        {"type": "formula", "expr": "qx", "as": "qx"},
+        {"type": "formula", "expr": "qy", "as": "qy"},
+        {"type": "formula", "expr": "metric === 'cosine' ? 1 - datum.dist : datum.dist", "as": "score"}
+      ]
+    }
+  ],
+  "scales": [
+    {
+      "name": "x",
+      "type": "linear",
+      "domain": [-5, 5],
+      "range": "width",
+      "nice": false,
+      "zero": false
+    },
+    {
+      "name": "y",
+      "type": "linear",
+      "domain": [-5, 5],
+      "range": "height",
+      "nice": false,
+      "zero": false,
+      "reverse": true
+    }
+  ],
+  "axes": [
+    {"orient": "bottom", "scale": "x", "title": "x", "grid": true, "gridColor": "#eee"},
+    {"orient": "left", "scale": "y", "title": "y", "grid": true, "gridColor": "#eee"}
+  ],
+  "marks": [
+    {
+      "type": "rule",
+      "from": {"data": "neighbours"},
+      "encode": {
+        "update": {
+          "x": {"scale": "x", "field": "qx"},
+          "y": {"scale": "y", "field": "qy"},
+          "x2": {"scale": "x", "field": "x"},
+          "y2": {"scale": "y", "field": "y"},
+          "stroke": {"value": "#2858ff"},
+          "strokeWidth": {"value": 1.2},
+          "opacity": {"value": 0.55}
+        }
+      }
+    },
+    {
+      "type": "symbol",
+      "from": {"data": "ranked"},
+      "encode": {
+        "update": {
+          "x": {"scale": "x", "field": "x"},
+          "y": {"scale": "y", "field": "y"},
+          "shape": {"value": "circle"},
+          "size": [
+            {"test": "datum.rank <= k", "value": 220},
+            {"value": 70}
+          ],
+          "fill": [
+            {"test": "datum.rank <= k", "value": "#9d41ff"},
+            {"value": "#cccccc"}
+          ],
+          "opacity": [
+            {"test": "datum.rank <= k", "value": 1},
+            {"value": 0.55}
+          ],
+          "stroke": [
+            {"test": "datum.rank <= k", "value": "#5f1f9c"},
+            {"value": "transparent"}
+          ],
+          "strokeWidth": {"value": 1}
+        }
+      }
+    },
+    {
+      "type": "symbol",
+      "encode": {
+        "enter": {
+          "shape": {"value": "diamond"},
+          "size": {"value": 420},
+          "fill": {"value": "#ff5757"},
+          "stroke": {"value": "#000"},
+          "strokeWidth": {"value": 2}
+        },
+        "update": {
+          "x": {"scale": "x", "signal": "qx"},
+          "y": {"scale": "y", "signal": "qy"}
+        }
+      }
+    },
+    {
+      "type": "text",
+      "from": {"data": "neighbours"},
+      "encode": {
+        "enter": {
+          "fill": {"value": "#0a2540"},
+          "fontSize": {"value": 11},
+          "fontWeight": {"value": "bold"},
+          "align": {"value": "center"},
+          "baseline": {"value": "middle"},
+          "dy": {"value": -6}
+        },
+        "update": {
+          "x": {"scale": "x", "signal": "(datum.qx + datum.x) / 2"},
+          "y": {"scale": "y", "signal": "(datum.qy + datum.y) / 2"},
+          "text": {"signal": "format(datum.score, '.2f')"}
+        }
+      }
+    }
+  ]
+}

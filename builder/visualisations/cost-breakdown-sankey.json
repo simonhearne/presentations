@@ -1,0 +1,120 @@
+{
+  "$schema": "https://vega.github.io/schema/vega/v5.json",
+  "description": "Vector DB cost breakdown — sankey of one source flowing to five spend categories.",
+  "width": 800,
+  "height": 440,
+  "padding": 8,
+  "autosize": "fit",
+  "background": "transparent",
+
+  "signals": [
+    {"name": "totalH", "value": 360},
+    {"name": "scale", "update": "totalH / 100"},
+    {"name": "gap", "value": 20},
+    {"name": "srcX0", "value": 150},
+    {"name": "srcX1", "value": 170},
+    {"name": "tgtX0", "value": 600},
+    {"name": "tgtX1", "value": 620},
+    {"name": "midX", "update": "(srcX1 + tgtX0) / 2"}
+  ],
+
+  "data": [
+    {
+      "name": "flows",
+      "values": [
+        {"name": "RAM",     "pct": 75, "color": "#175fff"},
+        {"name": "Compute", "pct": 12, "color": "#7f47ff"},
+        {"name": "Storage", "pct":  8, "color": "#49bcff"},
+        {"name": "Egress",  "pct":  3, "color": "#00dcc6"},
+        {"name": "Ops",     "pct":  2, "color": "#c84cff"}
+      ],
+      "transform": [
+        {"type": "stack", "field": "pct", "as": ["s0", "s1"]},
+        {"type": "formula", "expr": "datum.s0 * scale", "as": "sy0"},
+        {"type": "formula", "expr": "datum.s1 * scale", "as": "sy1"},
+        {"type": "window", "ops": ["row_number"], "as": ["idx"]},
+        {"type": "formula", "expr": "datum.sy0 + (datum.idx - 1) * gap", "as": "ty0"},
+        {"type": "formula", "expr": "datum.sy1 + (datum.idx - 1) * gap", "as": "ty1"},
+        {"type": "formula", "expr": "(datum.ty0 + datum.ty1) / 2", "as": "tyMid"},
+        {
+          "type": "formula",
+          "expr": "'M' + srcX1 + ',' + datum.sy0 + ' C' + midX + ',' + datum.sy0 + ' ' + midX + ',' + datum.ty0 + ' ' + tgtX0 + ',' + datum.ty0 + ' L' + tgtX0 + ',' + datum.ty1 + ' C' + midX + ',' + datum.ty1 + ' ' + midX + ',' + datum.sy1 + ' ' + srcX1 + ',' + datum.sy1 + ' Z'",
+          "as": "path"
+        }
+      ]
+    }
+  ],
+
+  "marks": [
+    {
+      "type": "path",
+      "from": {"data": "flows"},
+      "encode": {
+        "enter": {
+          "path": {"field": "path"},
+          "fill": {"field": "color"},
+          "fillOpacity": {"value": 0.45}
+        }
+      }
+    },
+    {
+      "type": "rect",
+      "from": {"data": "flows"},
+      "encode": {
+        "enter": {
+          "x": {"signal": "srcX0"},
+          "x2": {"signal": "srcX1"},
+          "y": {"field": "sy0"},
+          "y2": {"field": "sy1"},
+          "fill": {"field": "color"}
+        }
+      }
+    },
+    {
+      "type": "rect",
+      "from": {"data": "flows"},
+      "encode": {
+        "enter": {
+          "x": {"signal": "tgtX0"},
+          "x2": {"signal": "tgtX1"},
+          "y": {"field": "ty0"},
+          "y2": {"field": "ty1"},
+          "fill": {"field": "color"}
+        }
+      }
+    },
+    {
+      "type": "text",
+      "encode": {
+        "enter": {
+          "x": {"signal": "srcX0 - 14"},
+          "y": {"signal": "totalH / 2"},
+          "text": {"value": "Total cost"},
+          "align": {"value": "right"},
+          "baseline": {"value": "middle"},
+          "font": {"value": "Inter"},
+          "fontSize": {"value": 18},
+          "fontWeight": {"value": 700},
+          "fill": {"value": "#061982"}
+        }
+      }
+    },
+    {
+      "type": "text",
+      "from": {"data": "flows"},
+      "encode": {
+        "enter": {
+          "x": {"signal": "tgtX1 + 14"},
+          "y": {"field": "tyMid"},
+          "text": {"signal": "datum.name + ' — ' + datum.pct + '%'"},
+          "align": {"value": "left"},
+          "baseline": {"value": "middle"},
+          "font": {"value": "Inter"},
+          "fontSize": {"value": 16},
+          "fontWeight": {"value": 600},
+          "fill": {"value": "#061982"}
+        }
+      }
+    }
+  ]
+}

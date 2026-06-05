@@ -1,0 +1,233 @@
+{
+  "$schema": "https://vega.github.io/schema/vega/v5.json",
+  "description": "Naive filtering on a graph index — masking non-matching nodes severs the edges that lead to the true nearest match, so greedy search stops short.",
+  "width": 1000,
+  "height": 300,
+  "padding": 0,
+  "autosize": "fit",
+  "background": "rgba(0,0,0,0)",
+
+  "signals": [
+    {"name": "stage", "value": 0},
+    {"name": "queryX", "value": 9.6},
+    {"name": "queryY", "value": 5.0},
+    {
+      "name": "narration",
+      "update": "['The graph — every vector is a node, linked to its nearest neighbours. Green is the query true nearest match.', 'Filter applied — non-matching vectors are masked out and their edges vanish. The true match is now stranded on an island.', 'Greedy search walks only the surviving graph and stops at the orange node — the green match is never reached.'][stage]"
+    }
+  ],
+
+  "data": [
+    {
+      "name": "nodes",
+      "values": [
+        {"id": "S",  "x": 0.9, "y": 5.0, "keep": true},
+        {"id": "N1", "x": 2.5, "y": 6.6, "keep": true},
+        {"id": "N2", "x": 3.0, "y": 3.2, "keep": true},
+        {"id": "N3", "x": 4.5, "y": 5.5, "keep": true},
+        {"id": "N4", "x": 5.8, "y": 3.3, "keep": true},
+        {"id": "R",  "x": 7.0, "y": 4.8, "keep": true},
+        {"id": "M",  "x": 8.6, "y": 5.2, "keep": true},
+        {"id": "F1", "x": 3.7, "y": 7.6, "keep": false},
+        {"id": "F2", "x": 5.3, "y": 6.9, "keep": false},
+        {"id": "B1", "x": 7.5, "y": 6.7, "keep": false},
+        {"id": "B2", "x": 7.6, "y": 3.1, "keep": false},
+        {"id": "F3", "x": 6.2, "y": 1.9, "keep": false}
+      ],
+      "transform": [
+        {
+          "type": "formula", "as": "dist",
+          "expr": "sqrt(pow(datum.x - queryX, 2) + pow(datum.y - queryY, 2))"
+        }
+      ]
+    },
+    {
+      "name": "edges_raw",
+      "values": [
+        {"a": "S",  "b": "N1"},
+        {"a": "S",  "b": "N2"},
+        {"a": "N1", "b": "N3"},
+        {"a": "N2", "b": "N3"},
+        {"a": "N2", "b": "N4"},
+        {"a": "N3", "b": "N4"},
+        {"a": "N3", "b": "R"},
+        {"a": "N4", "b": "R"},
+        {"a": "M",  "b": "B1"},
+        {"a": "M",  "b": "B2"},
+        {"a": "B1", "b": "R"},
+        {"a": "B1", "b": "F2"},
+        {"a": "B2", "b": "R"},
+        {"a": "B2", "b": "F3"},
+        {"a": "F1", "b": "N1"},
+        {"a": "F1", "b": "N3"},
+        {"a": "F2", "b": "N3"},
+        {"a": "F3", "b": "N4"}
+      ],
+      "transform": [
+        {"type": "lookup", "from": "nodes", "key": "id", "fields": ["a"], "as": ["nodeA"]},
+        {"type": "lookup", "from": "nodes", "key": "id", "fields": ["b"], "as": ["nodeB"]},
+        {"type": "formula", "as": "x1", "expr": "datum.nodeA.x"},
+        {"type": "formula", "as": "y1", "expr": "datum.nodeA.y"},
+        {"type": "formula", "as": "x2", "expr": "datum.nodeB.x"},
+        {"type": "formula", "as": "y2", "expr": "datum.nodeB.y"},
+        {"type": "formula", "as": "key", "expr": "datum.a + '-' + datum.b"},
+        {"type": "formula", "as": "rkey", "expr": "datum.b + '-' + datum.a"}
+      ]
+    }
+  ],
+
+  "scales": [
+    {
+      "name": "xScale", "type": "linear",
+      "domain": [0.3, 10.2], "range": {"signal": "[40, width - 50]"}
+    },
+    {
+      "name": "yScale", "type": "linear",
+      "domain": [1.4, 8.1], "range": {"signal": "[height - 28, 40]"}
+    }
+  ],
+
+  "marks": [
+    {
+      "type": "rule",
+      "from": {"data": "edges_raw"},
+      "encode": {
+        "update": {
+          "x":  {"scale": "xScale", "field": "x1"},
+          "y":  {"scale": "yScale", "field": "y1"},
+          "x2": {"scale": "xScale", "field": "x2"},
+          "y2": {"scale": "yScale", "field": "y2"},
+          "stroke": {
+            "signal": "(stage >= 2 && (indexof(',S-N2,N2-N4,N4-R,', ',' + datum.key + ',') >= 0 || indexof(',S-N2,N2-N4,N4-R,', ',' + datum.rkey + ',') >= 0)) ? '#1f6f3f' : '#c3cad6'"
+          },
+          "strokeWidth": {
+            "signal": "(stage >= 2 && (indexof(',S-N2,N2-N4,N4-R,', ',' + datum.key + ',') >= 0 || indexof(',S-N2,N2-N4,N4-R,', ',' + datum.rkey + ',') >= 0)) ? 5 : 2"
+          },
+          "opacity": {
+            "signal": "(stage >= 1 && (datum.nodeA.keep === false || datum.nodeB.keep === false)) ? 0 : 1"
+          }
+        }
+      }
+    },
+
+    {
+      "type": "symbol",
+      "from": {"data": "nodes"},
+      "encode": {
+        "update": {
+          "x": {"scale": "xScale", "field": "x"},
+          "y": {"scale": "yScale", "field": "y"},
+          "size": {
+            "signal": "datum.id === 'M' ? 760 : (stage >= 2 && datum.id === 'R') ? 660 : (!datum.keep ? 400 : 460)"
+          },
+          "fill": {
+            "signal": "datum.id === 'M' ? '#54a24b' : (stage >= 2 && datum.id === 'R') ? '#e49a3b' : (stage >= 2 && indexof(',S,N2,N4,', ',' + datum.id + ',') >= 0) ? '#3f6fb5' : (!datum.keep ? '#b8bec9' : '#9ec5e8')"
+          },
+          "stroke": {
+            "signal": "datum.id === 'M' ? '#2f7d2f' : (stage >= 2 && datum.id === 'R') ? '#b06a17' : '#3a4660'"
+          },
+          "strokeWidth": {
+            "signal": "(datum.id === 'M' || (stage >= 2 && datum.id === 'R')) ? 3 : 1"
+          },
+          "opacity": {
+            "signal": "(stage >= 1 && !datum.keep) ? 0.12 : 1"
+          },
+          "tooltip": {
+            "signal": "{Node: datum.id, 'Distance to query': format(datum.dist, '.2f'), 'Passes filter': datum.keep}"
+          }
+        }
+      }
+    },
+
+    {
+      "type": "symbol",
+      "encode": {
+        "update": {
+          "x": {"scale": "xScale", "signal": "queryX"},
+          "y": {"scale": "yScale", "signal": "queryY"},
+          "shape": {"value": "M0,-1 L0.225,-0.309 L0.951,-0.309 L0.363,0.118 L0.588,0.809 L0,0.382 L-0.588,0.809 L-0.363,0.118 L-0.951,-0.309 L-0.225,-0.309 Z"},
+          "size": {"value": 520},
+          "fill": {"value": "#e45756"},
+          "stroke": {"value": "#a02020"},
+          "strokeWidth": {"value": 1}
+        }
+      }
+    },
+    {
+      "type": "text",
+      "encode": {
+        "update": {
+          "x": {"scale": "xScale", "signal": "queryX"},
+          "y": {"scale": "yScale", "signal": "queryY"},
+          "dy": {"value": 28},
+          "text": {"value": "query"},
+          "align": {"value": "center"},
+          "fontSize": {"value": 15},
+          "fontWeight": {"value": "bold"},
+          "fill": {"value": "#a02020"}
+        }
+      }
+    },
+
+    {
+      "type": "text",
+      "encode": {
+        "update": {
+          "x": {"scale": "xScale", "value": 8.6},
+          "y": {"scale": "yScale", "value": 5.2},
+          "dy": {"value": -26},
+          "text": {"value": "true match"},
+          "align": {"value": "center"},
+          "fontSize": {"value": 15},
+          "fontWeight": {"value": "bold"},
+          "fill": {"value": "#2f7d2f"}
+        }
+      }
+    },
+    {
+      "type": "text",
+      "encode": {
+        "update": {
+          "x": {"scale": "xScale", "value": 7.0},
+          "y": {"scale": "yScale", "value": 4.8},
+          "dy": {"value": 30},
+          "text": {"value": "search stops here"},
+          "align": {"value": "center"},
+          "fontSize": {"value": 15},
+          "fontWeight": {"value": "bold"},
+          "fill": {"value": "#b06a17"},
+          "opacity": {"signal": "stage >= 2 ? 1 : 0"}
+        }
+      }
+    },
+    {
+      "type": "text",
+      "encode": {
+        "update": {
+          "x": {"scale": "xScale", "value": 0.9},
+          "y": {"scale": "yScale", "value": 5.0},
+          "dy": {"value": -24},
+          "text": {"value": "entry"},
+          "align": {"value": "center"},
+          "fontSize": {"value": 13},
+          "fill": {"value": "#5a6478"}
+        }
+      }
+    },
+
+    {
+      "type": "text",
+      "encode": {
+        "update": {
+          "x": {"signal": "width / 2"},
+          "y": {"value": 16},
+          "text": {"signal": "narration"},
+          "align": {"value": "center"},
+          "fontSize": {"value": 16},
+          "fill": {"value": "#1a1a1a"},
+          "limit": {"value": 980}
+        }
+      }
+    }
+  ]
+}

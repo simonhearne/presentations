@@ -1,0 +1,169 @@
+{
+  "$schema": "https://vega.github.io/schema/vega/v5.json",
+  "description": "PCA in four steps — raw two-class cloud, principal axes, rotate PC1 to horizontal, drop PC2. Step with ArrowRight/Left.",
+  "width": 1200,
+  "height": 640,
+  "padding": 0,
+  "background": "transparent",
+  "autosize": "none",
+  "config": {
+    "axis": { "labels": false }
+  },
+  "signals": [
+    { "name": "stage", "value": 0 },
+    { "name": "phi", "value": 0.4363 },
+    { "name": "axesOn", "update": "stage >= 1 ? 1 : 0" },
+    { "name": "rotTarget", "update": "stage >= 2 ? 1 : 0" },
+    { "name": "projTarget", "update": "stage >= 3 ? 1 : 0" },
+    {
+      "name": "rotT",
+      "value": 0,
+      "on": [
+        {
+          "events": { "type": "timer", "throttle": 16 },
+          "update": "abs(rotTarget - rotT) < 0.001 ? rotTarget : rotT + (rotTarget - rotT) * 0.18"
+        }
+      ]
+    },
+    {
+      "name": "projT",
+      "value": 0,
+      "on": [
+        {
+          "events": { "type": "timer", "throttle": 16 },
+          "update": "abs(projTarget - projT) < 0.001 ? projTarget : projT + (projTarget - projT) * 0.18"
+        }
+      ]
+    },
+    { "name": "dispPhi", "update": "phi * (1 - rotT)" }
+  ],
+  "data": [
+    {
+      "name": "points",
+      "values": [{ "seed": 0 }],
+      "transform": [
+        { "type": "sequence", "start": 0, "stop": 170, "step": 1, "as": "i" },
+        { "type": "formula", "as": "cls", "expr": "datum.i % 2 == 0 ? 'A' : 'B'" },
+        { "type": "formula", "as": "t", "expr": "(random() + random() + random() - 1.5) * 3.4" },
+        { "type": "formula", "as": "s_local", "expr": "(random() + random() + random() - 1.5) * 0.5" },
+        { "type": "formula", "as": "off", "expr": "datum.cls == 'A' ? 0.95 : -0.95" },
+        { "type": "formula", "as": "s", "expr": "datum.s_local + datum.off" }
+      ]
+    },
+    {
+      "name": "pcAxes",
+      "values": [
+        { "pc": "PC1", "len": 5.3, "dir": 0 },
+        { "pc": "PC2", "len": 1.5, "dir": 1 }
+      ],
+      "transform": [
+        { "type": "formula", "as": "ux", "expr": "datum.dir == 0 ? cos(dispPhi) : -sin(dispPhi)" },
+        { "type": "formula", "as": "uy", "expr": "datum.dir == 0 ? sin(dispPhi) : cos(dispPhi)" },
+        { "type": "formula", "as": "x1", "expr": "-datum.len * datum.ux" },
+        { "type": "formula", "as": "y1", "expr": "-datum.len * datum.uy" },
+        { "type": "formula", "as": "x2", "expr": "datum.len * datum.ux" },
+        { "type": "formula", "as": "y2", "expr": "datum.len * datum.uy" },
+        { "type": "formula", "as": "lx", "expr": "(datum.len + 0.5) * datum.ux" },
+        { "type": "formula", "as": "ly", "expr": "(datum.len + 0.5) * datum.uy" }
+      ]
+    }
+  ],
+  "scales": [
+    { "name": "xscale", "type": "linear", "domain": [-7.5, 7.5], "range": "width" },
+    { "name": "yscale", "type": "linear", "domain": [-5, 5], "range": "height" },
+    {
+      "name": "color",
+      "type": "ordinal",
+      "domain": ["A", "B"],
+      "range": ["#175fff", "#c84cff"]
+    }
+  ],
+  "marks": [
+    {
+      "type": "rule",
+      "from": { "data": "pcAxes" },
+      "encode": {
+        "update": {
+          "x": { "scale": "xscale", "field": "x1" },
+          "y": { "scale": "yscale", "field": "y1" },
+          "x2": { "scale": "xscale", "field": "x2" },
+          "y2": { "scale": "yscale", "field": "y2" },
+          "stroke": { "value": "#061982" },
+          "strokeWidth": { "signal": "datum.pc == 'PC1' ? 3 : 2" },
+          "strokeDash": { "signal": "datum.pc == 'PC1' ? [1, 0] : [4, 4]" },
+          "opacity": { "signal": "axesOn" }
+        }
+      }
+    },
+    {
+      "type": "text",
+      "from": { "data": "pcAxes" },
+      "encode": {
+        "update": {
+          "x": { "scale": "xscale", "field": "lx" },
+          "y": { "scale": "yscale", "field": "ly" },
+          "text": { "field": "pc" },
+          "align": { "value": "center" },
+          "baseline": { "value": "middle" },
+          "font": { "value": "Inter, system-ui, sans-serif" },
+          "fontSize": { "value": 15 },
+          "fontWeight": { "value": "700" },
+          "fill": { "value": "#061982" },
+          "opacity": { "signal": "axesOn" }
+        }
+      }
+    },
+    {
+      "type": "symbol",
+      "from": { "data": "points" },
+      "encode": {
+        "update": {
+          "x": { "scale": "xscale", "signal": "datum.t * cos(dispPhi) - datum.s * sin(dispPhi) * (1 - projT)" },
+          "y": { "scale": "yscale", "signal": "datum.t * sin(dispPhi) + datum.s * cos(dispPhi) * (1 - projT)" },
+          "size": { "value": 80 },
+          "fill": { "scale": "color", "field": "cls" },
+          "fillOpacity": { "signal": "projT > 0 ? 0.55 : 0.78" },
+          "stroke": { "value": "#ffffff" },
+          "strokeWidth": { "value": 0.5 }
+        }
+      }
+    },
+    {
+      "type": "text",
+      "encode": {
+        "update": {
+          "x": { "value": 22 },
+          "y": { "value": 30 },
+          "text": {
+            "signal": "stage == 0 ? '2-D · full precision · two classes' : stage == 1 ? 'PC1 captures ≈ 94% of the variance' : stage == 2 ? 'Rotate onto the principal axes — PC1 horizontal' : 'Keep PC1 only → 1 number, 94% variance kept'"
+          },
+          "align": { "value": "left" },
+          "font": { "value": "Inter, system-ui, sans-serif" },
+          "fontSize": { "value": 22 },
+          "fontWeight": { "value": "700" },
+          "fill": { "value": "#061982" }
+        }
+      }
+    },
+    {
+      "type": "text",
+      "encode": {
+        "update": {
+          "x": { "value": 22 },
+          "y": { "value": 58 },
+          "text": { "value": "…but the class split lived on PC2 — now gone" },
+          "align": { "value": "left" },
+          "font": { "value": "Inter, system-ui, sans-serif" },
+          "fontSize": { "value": 16 },
+          "fontWeight": { "value": "600" },
+          "fill": { "value": "#c84cff" },
+          "opacity": { "signal": "stage >= 3 ? 1 : 0" }
+        }
+      }
+    }
+  ],
+  "axes": [
+    { "scale": "xscale", "orient": "bottom", "grid": true, "gridDash": [2, 4], "gridColor": "#e2e8f0", "tickCount": 10, "domain": false, "ticks": false },
+    { "scale": "yscale", "orient": "left", "grid": true, "gridDash": [2, 4], "gridColor": "#e2e8f0", "tickCount": 8, "domain": false, "ticks": false }
+  ]
+}

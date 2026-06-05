@@ -1,0 +1,261 @@
+{
+  "$schema": "https://vega.github.io/schema/vega/v5.json",
+  "description": "Stepped walkthrough of Matryoshka representation learning as a vertical vector column: a full vector whose dimensions are ordered by importance -> reveal the front-loaded importance profile -> slice off a prefix and drop the tail -> a shorter, complete output vector. Stepped via the stage signal.",
+  "width": 820,
+  "height": 500,
+  "padding": 5,
+  "signals": [
+    {"name": "stage", "value": 0},
+    {"name": "colX", "value": 150},
+    {"name": "curveX", "value": 262},
+    {"name": "curveW", "value": 84},
+    {"name": "outX", "value": 600},
+    {"name": "stripY", "value": 104},
+    {"name": "cellW", "value": 54},
+    {"name": "cellH", "value": 13},
+    {"name": "n", "value": 24},
+    {"name": "prefixN", "value": 8},
+    {"name": "cutY", "update": "stripY + prefixN * cellH"},
+    {"name": "midPrefixY", "update": "stripY + prefixN * cellH / 2"},
+    {
+      "name": "headline",
+      "value": "3072 ordered dimensions",
+      "on": [
+        {
+          "events": {"signal": "stage"},
+          "update": "['3072 ordered dimensions', 'importance is front-loaded', 'keep the first 256', 'one shorter, complete vector'][stage]"
+        }
+      ]
+    },
+    {
+      "name": "narration",
+      "value": "One vector. MRL training orders the dimensions so the most informative come first.",
+      "on": [
+        {
+          "events": {"signal": "stage"},
+          "update": "['One vector. MRL training orders the dimensions so the most informative come first.', 'Most of the signal sits in the early dimensions — the tail adds only diminishing detail.', 'Slice off a prefix and discard the rest — no re-embedding, no second model.', 'The prefix is itself a valid, normalised vector — 12× smaller, ranks almost as well. (cells shown for clarity)'][stage]"
+        }
+      ]
+    }
+  ],
+  "data": [
+    {
+      "name": "cells",
+      "values": [
+        {"i": 0}, {"i": 1}, {"i": 2}, {"i": 3}, {"i": 4}, {"i": 5},
+        {"i": 6}, {"i": 7}, {"i": 8}, {"i": 9}, {"i": 10}, {"i": 11},
+        {"i": 12}, {"i": 13}, {"i": 14}, {"i": 15}, {"i": 16}, {"i": 17},
+        {"i": 18}, {"i": 19}, {"i": 20}, {"i": 21}, {"i": 22}, {"i": 23}
+      ],
+      "transform": [
+        {"type": "formula", "expr": "pow(0.9, datum.i)", "as": "imp"}
+      ]
+    }
+  ],
+  "scales": [
+    {
+      "name": "heat",
+      "type": "linear",
+      "domain": [0, 1],
+      "range": ["#e6f0ff", "#49bcff", "#175fff", "#061982"]
+    }
+  ],
+  "marks": [
+    {
+      "type": "text",
+      "encode": {
+        "update": {
+          "x": {"signal": "(colX + outX + cellW) / 2"},
+          "y": {"value": 50},
+          "text": {"signal": "headline"},
+          "align": {"value": "center"}, "baseline": {"value": "alphabetic"},
+          "fontSize": {"value": 21}, "fontWeight": {"value": "bold"},
+          "fill": {"value": "#1e293b"}
+        }
+      }
+    },
+    {
+      "type": "text",
+      "encode": {
+        "update": {
+          "x": {"signal": "(colX + outX + cellW) / 2"},
+          "y": {"value": 82},
+          "text": {"value": "3072-D  →  256-D   ·   12× smaller"},
+          "align": {"value": "center"}, "baseline": {"value": "alphabetic"},
+          "fontSize": {"value": 18}, "fontWeight": {"value": "bold"},
+          "fill": {"value": "#175fff"},
+          "opacity": [{"test": "stage >= 3", "value": 1}, {"value": 0}]
+        }
+      }
+    },
+
+    {
+      "type": "text",
+      "encode": {
+        "update": {
+          "x": {"signal": "colX + cellW / 2"},
+          "y": {"signal": "stripY - 12"},
+          "text": {"value": "the vector · 3072-D"},
+          "align": {"value": "center"}, "baseline": {"value": "alphabetic"},
+          "fontSize": {"value": 13}, "fontWeight": {"value": "bold"},
+          "fill": {"value": "#64748b"}
+        }
+      }
+    },
+    {
+      "type": "rect",
+      "from": {"data": "cells"},
+      "encode": {
+        "update": {
+          "x": {"signal": "colX"},
+          "width": {"signal": "cellW"},
+          "y": {"signal": "stripY + datum.i * cellH"},
+          "height": {"signal": "cellH - 1.5"},
+          "fill": {"scale": "heat", "field": "imp"},
+          "cornerRadius": {"value": 1.5},
+          "opacity": [{"test": "stage >= 2 && datum.i >= prefixN", "value": 0.18}, {"value": 1}]
+        }
+      }
+    },
+
+    {
+      "type": "text",
+      "encode": {
+        "update": {
+          "x": {"signal": "curveX"},
+          "y": {"signal": "stripY - 12"},
+          "text": {"value": "importance →"},
+          "align": {"value": "left"}, "baseline": {"value": "alphabetic"},
+          "fontSize": {"value": 13}, "fontWeight": {"value": "bold"},
+          "fill": {"value": "#64748b"},
+          "opacity": [{"test": "stage >= 1", "value": 1}, {"value": 0}]
+        }
+      }
+    },
+    {
+      "type": "rect",
+      "from": {"data": "cells"},
+      "encode": {
+        "update": {
+          "x": {"signal": "curveX"},
+          "width": {"signal": "max(2, datum.imp * curveW)"},
+          "y": {"signal": "stripY + datum.i * cellH"},
+          "height": {"signal": "cellH - 2.5"},
+          "fill": {"value": "#7c3aed"},
+          "cornerRadius": {"value": 1},
+          "opacity": [
+            {"test": "stage >= 2 && datum.i >= prefixN", "value": 0.16},
+            {"test": "stage >= 1", "value": 0.85},
+            {"value": 0}
+          ]
+        }
+      }
+    },
+
+    {
+      "type": "rule",
+      "encode": {
+        "update": {
+          "x": {"signal": "colX - 12"}, "x2": {"signal": "curveX + curveW + 8"},
+          "y": {"signal": "cutY"}, "y2": {"signal": "cutY"},
+          "stroke": {"value": "#16a34a"}, "strokeWidth": {"value": 2},
+          "strokeDash": {"value": [5, 4]},
+          "opacity": [{"test": "stage >= 2", "value": 1}, {"value": 0}]
+        }
+      }
+    },
+    {
+      "type": "text",
+      "encode": {
+        "update": {
+          "x": {"signal": "curveX + curveW + 16"},
+          "y": {"signal": "midPrefixY - 6"},
+          "text": {"value": "keep · 256-D"},
+          "align": {"value": "left"}, "baseline": {"value": "middle"},
+          "fontSize": {"value": 13}, "fontWeight": {"value": "bold"},
+          "fill": {"value": "#16a34a"},
+          "opacity": [{"test": "stage >= 2", "value": 1}, {"value": 0}]
+        }
+      }
+    },
+    {
+      "type": "text",
+      "encode": {
+        "update": {
+          "x": {"signal": "curveX + curveW + 16"},
+          "y": {"signal": "cutY + 22"},
+          "text": {"value": "drop · 2816-D"},
+          "align": {"value": "left"}, "baseline": {"value": "middle"},
+          "fontSize": {"value": 13}, "fontWeight": {"value": "bold"},
+          "fill": {"value": "#94a3b8"},
+          "opacity": [{"test": "stage >= 2", "value": 1}, {"value": 0}]
+        }
+      }
+    },
+
+    {
+      "type": "rule",
+      "encode": {
+        "update": {
+          "x": {"signal": "curveX + curveW + 120"}, "x2": {"signal": "outX - 26"},
+          "y": {"signal": "midPrefixY"}, "y2": {"signal": "midPrefixY"},
+          "stroke": {"value": "#94a3b8"}, "strokeWidth": {"value": 2},
+          "opacity": [{"test": "stage >= 3", "value": 1}, {"value": 0}]
+        }
+      }
+    },
+    {
+      "type": "symbol",
+      "encode": {
+        "update": {
+          "x": {"signal": "outX - 26"}, "y": {"signal": "midPrefixY"},
+          "shape": {"value": "triangle-right"}, "size": {"value": 100},
+          "fill": {"value": "#94a3b8"},
+          "opacity": [{"test": "stage >= 3", "value": 1}, {"value": 0}]
+        }
+      }
+    },
+    {
+      "type": "text",
+      "encode": {
+        "update": {
+          "x": {"signal": "outX + cellW / 2"},
+          "y": {"signal": "stripY - 12"},
+          "text": {"value": "256-D prefix"},
+          "align": {"value": "center"}, "baseline": {"value": "alphabetic"},
+          "fontSize": {"value": 13}, "fontWeight": {"value": "bold"},
+          "fill": {"value": "#175fff"},
+          "opacity": [{"test": "stage >= 3", "value": 1}, {"value": 0}]
+        }
+      }
+    },
+    {
+      "type": "rect",
+      "from": {"data": "cells"},
+      "encode": {
+        "update": {
+          "x": {"signal": "outX"},
+          "width": {"signal": "cellW"},
+          "y": {"signal": "stripY + datum.i * cellH"},
+          "height": {"signal": "cellH - 1.5"},
+          "fill": {"scale": "heat", "field": "imp"},
+          "cornerRadius": {"value": 1.5},
+          "opacity": [{"test": "stage >= 3 && datum.i < prefixN", "value": 1}, {"value": 0}]
+        }
+      }
+    },
+
+    {
+      "type": "text",
+      "encode": {
+        "update": {
+          "x": {"signal": "(colX + outX + cellW) / 2"},
+          "y": {"value": 476},
+          "text": {"signal": "narration"},
+          "align": {"value": "center"}, "baseline": {"value": "alphabetic"},
+          "fontSize": {"value": 16}, "fill": {"value": "#1e293b"}
+        }
+      }
+    }
+  ]
+}

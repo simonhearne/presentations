@@ -1,0 +1,61 @@
+html, body, .slide {
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+}
+
+html, body {
+  height: auto;
+  background: white;
+  overflow: visible;
+}
+
+.deck-viewport {
+  position: static;
+  display: block;
+}
+
+.deck {
+  width: auto;
+  height: auto;
+  transform: none !important;
+}
+
+.slide {
+  display: flex !important;
+  position: relative;
+  page-break-after: always;
+  break-after: page;
+  opacity: 1 !important;
+  transition: none !important;
+}
+
+.slide:last-child {
+  page-break-after: auto;
+  break-after: auto;
+}
+
+/* Large blurred text-shadows (white headings over dark gradients) rasterise
+   into a solid dark box in some PDF engines. They only buy legibility over
+   imagery on screen — drop them for print. */
+.slide,
+.slide * {
+  text-shadow: none !important;
+}
+
+/* Gradient-clipped-to-text doesn't survive print: the clip fails and the
+   gradient paints as a solid block. Fall back to a solid brand fill. */
+.hero-text,
+.hero-text.alternate,
+.hero-text.smashing {
+  background: none !important;
+  background-clip: border-box !important;
+  -webkit-background-clip: border-box !important;
+  -webkit-text-fill-color: var(--zilliz-purple) !important;
+  color: var(--zilliz-purple) !important;
+  animation: none !important;
+}
+
+@page {
+  size: 1920px 1080px;
+  margin: 0;
+}

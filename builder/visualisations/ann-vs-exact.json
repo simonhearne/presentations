@@ -1,0 +1,241 @@
+{
+  "$schema": "https://vega.github.io/schema/vega/v5.json",
+  "description": "ANN vs exact search: comparisons required per query as the vector count grows. Stepped reveal via the `stage` signal.",
+  "width": 1200,
+  "height": 600,
+  "signals": [
+    {"name": "stage", "value": 0}
+  ],
+"data": [
+    {
+      "name": "raw",
+      "transform": [
+        {"type": "sequence", "start": 2, "stop": 9.0001, "step": 0.125, "as": "e"}
+      ]
+    },
+    {
+      "name": "exactLine",
+      "source": "raw",
+      "transform": [
+        {"type": "formula", "expr": "pow(10, datum.e)", "as": "n"},
+        {"type": "formula", "expr": "datum.n", "as": "comparisons"}
+      ]
+    },
+    {
+      "name": "annLine",
+      "source": "raw",
+      "transform": [
+        {"type": "formula", "expr": "pow(10, datum.e)", "as": "n"},
+        {"type": "formula", "expr": "min(datum.n, 4000 + 150 * datum.e)", "as": "comparisons"}
+      ]
+    }
+  ],
+  "scales": [
+    {
+      "name": "x",
+      "type": "log",
+      "base": 10,
+      "domain": [80, 2000000000],
+      "range": "width",
+      "nice": false,
+      "clamp": true
+    },
+    {
+      "name": "y",
+      "type": "log",
+      "base": 10,
+      "domain": [80, 2000000000],
+      "range": "height",
+      "nice": false,
+      "clamp": true
+    }
+  ],
+  "axes": [
+    {
+      "orient": "bottom",
+      "scale": "x",
+      "title": "Vector count",
+      "values": [100, 1000, 10000, 100000, 1000000, 10000000, 100000000, 1000000000],
+      "format": "~s",
+      "grid": true,
+      "tickSize": 6,
+      "labelPadding": 6,
+      "titlePadding": 14
+    },
+    {
+      "orient": "left",
+      "scale": "y",
+      "title": "Comparisons per query",
+      "values": [100, 1000, 10000, 100000, 1000000, 10000000, 100000000, 1000000000],
+      "format": "~s",
+      "grid": true,
+      "tickSize": 6,
+      "labelPadding": 6,
+      "titlePadding": 14
+    }
+  ],
+  "marks": [
+    {
+      "type": "line",
+      "from": {"data": "exactLine"},
+      "encode": {
+        "enter": {
+          "x": {"scale": "x", "field": "n"},
+          "y": {"scale": "y", "field": "comparisons"},
+          "stroke": {"value": "#175fff"},
+          "strokeWidth": {"value": 4},
+          "strokeCap": {"value": "round"},
+          "interpolate": {"value": "monotone"}
+        }
+      }
+    },
+    {
+      "type": "line",
+      "from": {"data": "annLine"},
+      "encode": {
+        "enter": {
+          "x": {"scale": "x", "field": "n"},
+          "y": {"scale": "y", "field": "comparisons"},
+          "stroke": {"value": "#f59e0b"},
+          "strokeWidth": {"value": 4},
+          "strokeCap": {"value": "round"},
+          "interpolate": {"value": "monotone"}
+        },
+        "update": {
+          "opacity": {"signal": "stage >= 1 ? 1 : 0"}
+        }
+      }
+    },
+    {
+      "type": "symbol",
+      "encode": {
+        "enter": {
+          "x": {"scale": "x", "value": 1000000000},
+          "y": {"scale": "y", "value": 1000000000},
+          "size": {"value": 130},
+          "fill": {"value": "#175fff"},
+          "stroke": {"value": "#ffffff"},
+          "strokeWidth": {"value": 2}
+        }
+      }
+    },
+    {
+      "type": "symbol",
+      "encode": {
+        "enter": {
+          "x": {"scale": "x", "value": 1000000000},
+          "y": {"scale": "y", "value": 5350},
+          "size": {"value": 130},
+          "fill": {"value": "#f59e0b"},
+          "stroke": {"value": "#ffffff"},
+          "strokeWidth": {"value": 2}
+        },
+        "update": {
+          "opacity": {"signal": "stage >= 1 ? 1 : 0"}
+        }
+      }
+    },
+    {
+      "type": "text",
+      "encode": {
+        "enter": {
+          "x": {"scale": "x", "value": 300000},
+          "y": {"scale": "y", "value": 300000},
+          "dy": {"value": -10},
+          "angle": {"value": -26},
+          "align": {"value": "center"},
+          "baseline": {"value": "bottom"},
+          "text": {"value": "Exact search"},
+          "fill": {"value": "#175fff"},
+          "fontSize": {"value": 17},
+          "fontWeight": {"value": 600}
+        }
+      }
+    },
+    {
+      "type": "text",
+      "encode": {
+        "enter": {
+          "x": {"scale": "x", "value": 1000000},
+          "y": {"scale": "y", "value": 6000},
+          "align": {"value": "center"},
+          "baseline": {"value": "bottom"},
+          "text": {"value": "ANN search"},
+          "fill": {"value": "#b45309"},
+          "fontSize": {"value": 17},
+          "fontWeight": {"value": 600}
+        },
+        "update": {
+          "opacity": {"signal": "stage >= 1 ? 1 : 0"}
+        }
+      }
+    },
+    {
+      "type": "rule",
+      "encode": {
+        "enter": {
+          "x": {"scale": "x", "value": 1000000000},
+          "y": {"scale": "y", "value": 5350},
+          "y2": {"scale": "y", "value": 1000000000},
+          "stroke": {"value": "#64748b"},
+          "strokeWidth": {"value": 1.5},
+          "strokeDash": {"value": [5, 4]}
+        },
+        "update": {
+          "opacity": {"signal": "stage >= 2 ? 1 : 0"}
+        }
+      }
+    },
+    {
+      "type": "rule",
+      "encode": {
+        "enter": {
+          "x": {"scale": "x", "value": 1000000000, "offset": -7},
+          "x2": {"scale": "x", "value": 1000000000, "offset": 7},
+          "y": {"scale": "y", "value": 1000000000},
+          "y2": {"scale": "y", "value": 1000000000},
+          "stroke": {"value": "#64748b"},
+          "strokeWidth": {"value": 1.5}
+        },
+        "update": {
+          "opacity": {"signal": "stage >= 2 ? 1 : 0"}
+        }
+      }
+    },
+    {
+      "type": "rule",
+      "encode": {
+        "enter": {
+          "x": {"scale": "x", "value": 1000000000, "offset": -7},
+          "x2": {"scale": "x", "value": 1000000000, "offset": 7},
+          "y": {"scale": "y", "value": 5350},
+          "y2": {"scale": "y", "value": 5350},
+          "stroke": {"value": "#64748b"},
+          "strokeWidth": {"value": 1.5}
+        },
+        "update": {
+          "opacity": {"signal": "stage >= 2 ? 1 : 0"}
+        }
+      }
+    },
+    {
+      "type": "text",
+      "encode": {
+        "enter": {
+          "x": {"scale": "x", "value": 1000000000, "offset": -18},
+          "y": {"scale": "y", "value": 735000},
+          "align": {"value": "right"},
+          "baseline": {"value": "middle"},
+          "lineHeight": {"value": 21},
+          "text": {"value": ["> 5 orders of magnitude", "fewer comparisons"]},
+          "fill": {"value": "#1a1f4d"},
+          "fontSize": {"value": 17},
+          "fontWeight": {"value": 700}
+        },
+        "update": {
+          "opacity": {"signal": "stage >= 2 ? 1 : 0"}
+        }
+      }
+    }
+  ]
+}

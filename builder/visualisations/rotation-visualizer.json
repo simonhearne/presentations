@@ -1,0 +1,114 @@
+{
+  "$schema": "https://vega.github.io/schema/vega/v5.json",
+  "description": "Rotation visualiser — drag the rotation slider; watch quantization cells light up.",
+  "width": 800,
+  "height": 520,
+  "padding": 0,
+  "background": "transparent",
+  "config": {
+    "axis": { "labelFontSize": 12, "titleFontSize": 14 }
+  },
+  "signals": [
+    { "name": "theta_deg", "value": 0, "bind": { "input": "range", "min": 0, "max": 90, "step": 1, "name": "rotation° " } },
+    { "name": "theta", "update": "theta_deg * PI / 180" },
+    { "name": "grid_n", "value": 8 },
+    { "name": "extent", "value": 6 },
+    { "name": "cell_size", "update": "(2 * extent) / grid_n" }
+  ],
+  "data": [
+    {
+      "name": "raw_points",
+      "values": [
+        { "x": 0, "y": 0 }
+      ],
+      "transform": [
+        { "type": "sequence", "start": 0, "stop": 300, "step": 1, "as": "i" },
+        { "type": "formula", "as": "u", "expr": "(random() + random() + random() - 1.5) * 2" },
+        { "type": "formula", "as": "v", "expr": "(random() + random() + random() - 1.5) * 0.4" },
+        { "type": "formula", "as": "raw_x", "expr": "datum.u * cos(PI/4) - datum.v * sin(PI/4)" },
+        { "type": "formula", "as": "raw_y", "expr": "datum.u * sin(PI/4) + datum.v * cos(PI/4)" }
+      ]
+    },
+    {
+      "name": "rotated_points",
+      "source": "raw_points",
+      "transform": [
+        { "type": "formula", "as": "x", "expr": "datum.raw_x * cos(theta) - datum.raw_y * sin(theta)" },
+        { "type": "formula", "as": "y", "expr": "datum.raw_x * sin(theta) + datum.raw_y * cos(theta)" },
+        { "type": "formula", "as": "cell_x", "expr": "floor((datum.x + extent) / cell_size)" },
+        { "type": "formula", "as": "cell_y", "expr": "floor((datum.y + extent) / cell_size)" },
+        { "type": "formula", "as": "cell_id", "expr": "datum.cell_x + ',' + datum.cell_y" }
+      ]
+    },
+    {
+      "name": "occupied_cells",
+      "source": "rotated_points",
+      "transform": [
+        { "type": "aggregate", "groupby": ["cell_x", "cell_y"], "fields": ["x"], "ops": ["count"], "as": ["n"] }
+      ]
+    },
+    {
+      "name": "cells_summary",
+      "source": "occupied_cells",
+      "transform": [
+        { "type": "aggregate", "fields": ["n"], "ops": ["count"], "as": ["used"] },
+        { "type": "formula", "as": "total", "expr": "grid_n * grid_n" },
+        { "type": "formula", "as": "label", "expr": "datum.used + ' / ' + datum.total + ' cells used'" }
+      ]
+    }
+  ],
+  "scales": [
+    { "name": "xscale", "type": "linear", "domain": { "signal": "[-extent, extent]" }, "range": "width" },
+    { "name": "yscale", "type": "linear", "domain": { "signal": "[-extent, extent]" }, "range": "height" }
+  ],
+  "marks": [
+    {
+      "type": "rect",
+      "from": { "data": "occupied_cells" },
+      "encode": {
+        "update": {
+          "x": { "scale": "xscale", "signal": "datum.cell_x * cell_size - extent" },
+          "x2": { "scale": "xscale", "signal": "(datum.cell_x + 1) * cell_size - extent" },
+          "y": { "scale": "yscale", "signal": "datum.cell_y * cell_size - extent" },
+          "y2": { "scale": "yscale", "signal": "(datum.cell_y + 1) * cell_size - extent" },
+          "fill": { "value": "#1f6feb" },
+          "fillOpacity": { "value": 0.12 },
+          "stroke": { "value": "#1f6feb" },
+          "strokeOpacity": { "value": 0.4 }
+        }
+      }
+    },
+    {
+      "type": "symbol",
+      "from": { "data": "rotated_points" },
+      "encode": {
+        "update": {
+          "x": { "scale": "xscale", "field": "x" },
+          "y": { "scale": "yscale", "field": "y" },
+          "size": { "value": 36 },
+          "fill": { "value": "#0d2b5c" },
+          "fillOpacity": { "value": 0.7 }
+        }
+      }
+    },
+    {
+      "type": "text",
+      "from": { "data": "cells_summary" },
+      "encode": {
+        "update": {
+          "x": { "value": 24 },
+          "y": { "value": 36 },
+          "text": { "field": "label" },
+          "fontSize": { "value": 22 },
+          "font": { "value": "Inter, system-ui, sans-serif" },
+          "fontWeight": { "value": "600" },
+          "fill": { "value": "#0d2b5c" }
+        }
+      }
+    }
+  ],
+  "axes": [
+    { "scale": "xscale", "orient": "bottom", "grid": true, "gridDash": [2, 4], "gridColor": "#cbd5e1", "tickCount": 9, "labels": false },
+    { "scale": "yscale", "orient": "left", "grid": true, "gridDash": [2, 4], "gridColor": "#cbd5e1", "tickCount": 9, "labels": false }
+  ]
+}

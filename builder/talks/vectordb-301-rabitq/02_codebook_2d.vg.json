@@ -1,0 +1,274 @@
+{
+  "$schema": "https://vega.github.io/schema/vega/v5.json",
+  "description": "RaBitQ 2D codebook vs typical embedding directions. Left panel shows the 4-vertex codebook on the unit circle; right panel shows axis-clustered data points that snap nowhere near where they actually point.",
+  "width": 800,
+  "height": 460,
+  "padding": 8,
+  "background": "transparent",
+  "config": {
+    "axis": { "labelFontSize": 11, "titleFontSize": 12 }
+  },
+  "signals": [
+    { "name": "panel_w", "value": 360 },
+    { "name": "panel_h", "value": 360 },
+    { "name": "panel_gap", "value": 60 },
+    { "name": "left_x", "value": 20 },
+    { "name": "right_x", "update": "left_x + panel_w + panel_gap" },
+    { "name": "panel_y", "value": 40 }
+  ],
+  "data": [
+    {
+      "name": "codebook",
+      "values": [
+        { "sx": 1, "sy": 1, "label": "(+,+)", "lx": 0.78, "ly": 0.92 },
+        { "sx": -1, "sy": 1, "label": "(−,+)", "lx": -0.78, "ly": 0.92 },
+        { "sx": -1, "sy": -1, "label": "(−,−)", "lx": -0.78, "ly": -0.92 },
+        { "sx": 1, "sy": -1, "label": "(+,−)", "lx": 0.78, "ly": -0.92 }
+      ],
+      "transform": [
+        { "type": "formula", "as": "x", "expr": "datum.sx / sqrt(2)" },
+        { "type": "formula", "as": "y", "expr": "datum.sy / sqrt(2)" }
+      ]
+    },
+    {
+      "name": "raw_data",
+      "values": [{}],
+      "transform": [
+        { "type": "sequence", "start": 0, "stop": 64, "step": 1, "as": "i" },
+        { "type": "formula", "as": "axis", "expr": "datum.i % 4" },
+        { "type": "formula", "as": "h", "expr": "((datum.i * 9301 + 49297) % 233280) / 233280" },
+        { "type": "formula", "as": "h2", "expr": "((datum.i * 16807 + 13) % 65521) / 65521" },
+        { "type": "formula", "as": "dom", "expr": "0.85 + datum.h * 0.13" },
+        { "type": "formula", "as": "noise", "expr": "(datum.h2 - 0.5) * 0.18" },
+        { "type": "formula", "as": "rx", "expr": "datum.axis === 0 ? datum.dom : (datum.axis === 1 ? datum.noise : (datum.axis === 2 ? -datum.dom : datum.noise))" },
+        { "type": "formula", "as": "ry", "expr": "datum.axis === 0 ? datum.noise : (datum.axis === 1 ? datum.dom : (datum.axis === 2 ? datum.noise : -datum.dom))" },
+        { "type": "formula", "as": "norm", "expr": "sqrt(datum.rx * datum.rx + datum.ry * datum.ry)" },
+        { "type": "formula", "as": "x", "expr": "datum.rx / datum.norm" },
+        { "type": "formula", "as": "y", "expr": "datum.ry / datum.norm" }
+      ]
+    }
+  ],
+  "marks": [
+    {
+      "type": "text",
+      "encode": {
+        "enter": {
+          "x": { "signal": "left_x" },
+          "y": { "value": 22 },
+          "text": { "value": "What RaBitQ can represent" },
+          "fontSize": { "value": 14 },
+          "fontWeight": { "value": 600 },
+          "fontStyle": { "value": "italic" },
+          "fill": { "value": "#1e293b" }
+        }
+      }
+    },
+    {
+      "type": "text",
+      "encode": {
+        "enter": {
+          "x": { "signal": "right_x" },
+          "y": { "value": 22 },
+          "text": { "value": "Where real embeddings tend to sit" },
+          "fontSize": { "value": 14 },
+          "fontWeight": { "value": 600 },
+          "fontStyle": { "value": "italic" },
+          "fill": { "value": "#1e293b" }
+        }
+      }
+    },
+    {
+      "type": "group",
+      "name": "left_panel",
+      "encode": {
+        "update": {
+          "x": { "signal": "left_x" },
+          "y": { "signal": "panel_y" },
+          "width": { "signal": "panel_w" },
+          "height": { "signal": "panel_h" }
+        }
+      },
+      "scales": [
+        { "name": "x", "type": "linear", "domain": [-1.25, 1.25], "range": [0, {"signal": "panel_w"}] },
+        { "name": "y", "type": "linear", "domain": [-1.25, 1.25], "range": [{"signal": "panel_h"}, 0] }
+      ],
+      "marks": [
+        {
+          "type": "rule",
+          "encode": {
+            "enter": {
+              "x": { "scale": "x", "value": -1.25 },
+              "x2": { "scale": "x", "value": 1.25 },
+              "y": { "scale": "y", "value": 0 },
+              "stroke": { "value": "#cbd5e1" },
+              "strokeWidth": { "value": 1 }
+            }
+          }
+        },
+        {
+          "type": "rule",
+          "encode": {
+            "enter": {
+              "y": { "scale": "y", "value": -1.25 },
+              "y2": { "scale": "y", "value": 1.25 },
+              "x": { "scale": "x", "value": 0 },
+              "stroke": { "value": "#cbd5e1" },
+              "strokeWidth": { "value": 1 }
+            }
+          }
+        },
+        {
+          "type": "symbol",
+          "encode": {
+            "enter": {
+              "x": { "scale": "x", "value": 0 },
+              "y": { "scale": "y", "value": 0 },
+              "size": { "signal": "PI * pow(panel_w / 2.5, 2)" },
+              "shape": { "value": "circle" },
+              "fill": { "value": "transparent" },
+              "stroke": { "value": "#94a3b8" },
+              "strokeWidth": { "value": 1 },
+              "strokeDash": { "value": [4, 4] }
+            }
+          }
+        },
+        {
+          "type": "symbol",
+          "from": { "data": "codebook" },
+          "encode": {
+            "enter": {
+              "x": { "scale": "x", "field": "x" },
+              "y": { "scale": "y", "field": "y" },
+              "size": { "value": 280 },
+              "fill": { "value": "#175fff" },
+              "stroke": { "value": "#ffffff" },
+              "strokeWidth": { "value": 2 }
+            }
+          }
+        },
+        {
+          "type": "text",
+          "from": { "data": "codebook" },
+          "encode": {
+            "enter": {
+              "x": { "scale": "x", "field": "lx" },
+              "y": { "scale": "y", "field": "ly" },
+              "text": { "field": "label" },
+              "fontSize": { "value": 12 },
+              "font": { "value": "IBM Plex Mono, ui-monospace, monospace" },
+              "fill": { "value": "#475569" },
+              "align": { "value": "center" },
+              "baseline": { "value": "middle" }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "type": "group",
+      "name": "right_panel",
+      "encode": {
+        "update": {
+          "x": { "signal": "right_x" },
+          "y": { "signal": "panel_y" },
+          "width": { "signal": "panel_w" },
+          "height": { "signal": "panel_h" }
+        }
+      },
+      "scales": [
+        { "name": "x", "type": "linear", "domain": [-1.25, 1.25], "range": [0, {"signal": "panel_w"}] },
+        { "name": "y", "type": "linear", "domain": [-1.25, 1.25], "range": [{"signal": "panel_h"}, 0] }
+      ],
+      "marks": [
+        {
+          "type": "rule",
+          "encode": {
+            "enter": {
+              "x": { "scale": "x", "value": -1.25 },
+              "x2": { "scale": "x", "value": 1.25 },
+              "y": { "scale": "y", "value": 0 },
+              "stroke": { "value": "#cbd5e1" }
+            }
+          }
+        },
+        {
+          "type": "rule",
+          "encode": {
+            "enter": {
+              "y": { "scale": "y", "value": -1.25 },
+              "y2": { "scale": "y", "value": 1.25 },
+              "x": { "scale": "x", "value": 0 },
+              "stroke": { "value": "#cbd5e1" },
+              "strokeWidth": { "value": 1 }
+            }
+          }
+        },
+        {
+          "type": "symbol",
+          "encode": {
+            "enter": {
+              "x": { "scale": "x", "value": 0 },
+              "y": { "scale": "y", "value": 0 },
+              "size": { "signal": "PI * pow(panel_w / 2.5, 2)" },
+              "shape": { "value": "circle" },
+              "fill": { "value": "transparent" },
+              "stroke": { "value": "#94a3b8" }
+            }
+          }
+        },
+        {
+          "type": "symbol",
+          "from": { "data": "codebook" },
+          "encode": {
+            "enter": {
+              "x": { "scale": "x", "field": "x" },
+              "y": { "scale": "y", "field": "y" },
+              "size": { "value": 200 },
+              "fill": { "value": "#175fff" },
+              "fillOpacity": { "value": 0.18 }
+            }
+          }
+        },
+        {
+          "type": "symbol",
+          "from": { "data": "raw_data" },
+          "encode": {
+            "enter": {
+              "x": { "scale": "x", "field": "x" },
+              "y": { "scale": "y", "field": "y" },
+              "size": { "value": 60 },
+              "fill": { "value": "#c84cff" },
+              "fillOpacity": { "value": 0.75 }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "encode": {
+        "enter": {
+          "x": { "value": 20 },
+          "y": { "value": 430 },
+          "text": { "value": "Embedding vectors usually have one or two dominant dimensions — they sit along the coordinate axes. The codebook" },
+          "fontSize": { "value": 11 },
+          "fontStyle": { "value": "italic" },
+          "fill": { "value": "#6b7280" }
+        }
+      }
+    },
+    {
+      "type": "text",
+      "encode": {
+        "enter": {
+          "x": { "value": 20 },
+          "y": { "value": 446 },
+          "text": { "value": "sits 45° away at the diagonals. Without intervention, every data point snaps to a vertex that's nowhere near where it actually points." },
+          "fontSize": { "value": 11 },
+          "fontStyle": { "value": "italic" },
+          "fill": { "value": "#6b7280" }
+        }
+      }
+    }
+  ]
+}

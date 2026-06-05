@@ -1,0 +1,623 @@
+/* Default content slide — used when no layout class is set */
+.slide h1 { font-size: 80px; font-weight: 800; margin: 0 0 var(--zilliz-s-6); line-height: 1.05; z-index: 1; }
+.slide.small-title h1 { font-size: 48px; margin-bottom: var(--zilliz-s-2); }
+.slide h2 { font-size: 56px; font-weight: 700; margin: 0 0 var(--zilliz-s-4); line-height: 1.1; }
+.slide h3 { font-size: 40px; font-weight: 600; margin: 0 0 var(--zilliz-s-3); line-height: 1.15; }
+.slide p, .slide li { font-size: 32px; font-weight: 400; line-height: 1.4; margin: 0 0 var(--zilliz-s-2); }
+.slide.big-text p, .slide.big-text li { font-size: 50px; line-height: 2; }
+.slide .small { font-size: 26px; }
+.slide ul, .slide ol { padding-left: var(--zilliz-s-6); margin: 0 0 var(--zilliz-s-4); }
+.slide li { margin-bottom: var(--zilliz-s-2); }
+.slide strong { font-weight: 600; }
+.slide a { color: var(--zilliz-blue); text-decoration: underline; text-underline-offset: 4px; }
+.slide code {
+  font-family: var(--zilliz-font-mono);
+  font-size: 0.9em;
+  background: var(--zilliz-blue-10);
+  padding: 2px 8px;
+  border-radius: 4px;
+}
+.slide pre {
+  font-family: var(--zilliz-font-mono);
+  background: var(--zilliz-blue-10);
+  padding: var(--zilliz-s-4);
+  border-radius: 12px;
+  font-size: 22px;
+  line-height: 1.5;
+  overflow: auto;
+  max-width: 100%;
+}
+.slide pre code { background: none; padding: 0; font-size: inherit; }
+.slide pre mark {
+  background: var(--zilliz-berry);
+  color: var(--zilliz-white);
+  border-radius: 4px;
+  padding: 1px 5px;
+  font-weight: 700;
+}
+.slide img { max-width: 100%; height: auto; }
+.slide blockquote {
+  margin: 0;
+  background: var(--zilliz-berry-10);
+  border-left: 4px solid var(--zilliz-berry);
+  border-radius: 8px;
+  padding: var(--zilliz-s-2) var(--zilliz-s-3);
+  color: var(--zilliz-ink);
+}
+.slide blockquote + blockquote { margin-top: var(--zilliz-s-4); }
+
+.slide blockquote.blue {
+  background: var(--zilliz-blue-10);
+  border-left: 4px solid var(--zilliz-blue);
+}
+
+.slide blockquote.bottom {
+  position: absolute;
+  bottom: var(--zilliz-s-16);
+  left: var(--zilliz-s-16);
+  width: calc(100% - var(--zilliz-s-16) * 2);
+  box-sizing: border-box;
+}
+
+.slide blockquote .label {
+  font-family: var(--zilliz-font-mono);
+  font-size: 14px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--zilliz-berry);
+  margin-bottom: 2px;
+  display: block;
+}
+
+.slide blockquote.blue .label {
+  color: var(--zilliz-blue);
+}
+
+.slide blockquote p {
+  font-size: 26px;
+  line-height: 1.4;
+  margin: 0;
+}
+
+.slide blockquote.small p {
+  font-size: 18px;
+}
+
+.hit-text {
+  color: var(--zilliz-blue);
+  font-weight: 700;
+}
+
+.slide p.punchline { font-size: 32px; font-weight: 700; line-height: 1.3; text-align: center; margin: 7vh 0; }
+.slide p.punchline em { color: var(--zilliz-blue, #175fff); font-style: italic; }
+
+/* .title — opening slide: gradient background, white text */
+.slide.title {
+  color: var(--zilliz-white);
+  justify-content: flex-end;
+  text-shadow: 0 8px 10px rgba(0, 0, 0, 0.4);
+}
+.slide.title h1 { font-size: 120px; font-weight: 800; line-height: 1.0; }
+.slide.title h2 { font-size: 48px; font-weight: 600; opacity: 0.92; margin-bottom: var(--zilliz-s-8); }
+.slide.title p { font-size: 32px; font-weight: 400; opacity: 0.85; }
+.slide.title .logo {
+  position: absolute;
+  top: var(--zilliz-s-12);
+  left: var(--zilliz-s-16);
+  width: 280px;
+  color: var(--zilliz-white);
+}
+
+/* .section — divider: light gradient, oversized number, section name */
+.slide.section {
+  background: var(--zilliz-gradient-light);
+  color: var(--zilliz-black);
+  justify-content: space-between;
+}
+.slide.section h1 {
+  margin-top: 10vh;
+  font-size: 120px;
+  font-weight: 700;
+  line-height: 0.9;
+  letter-spacing: -0.04em;
+}
+.slide.section h2 {
+  align-self: flex-end;
+  font-size: 96px;
+  font-weight: 400;
+  margin: 0;
+}
+
+/* .agenda — auto-generated TOC: numbered, hyperlinked section list */
+/* .slide.agenda h1 {
+  font-size: 96px;
+  font-weight: 600;
+  margin-bottom: var(--zilliz-s-12);
+} */
+.slide.agenda ol {
+  padding-left: 1.5em;
+  margin-left: 5vw;
+}
+.slide.agenda ol li {
+  font-size: 40px;
+  line-height: 1.5;
+  margin: 0;
+}
+.slide.agenda ol li::marker {
+  color: var(--zilliz-navy);
+  font-weight: 500;
+  font-family: var(--zilliz-font-mono);
+  font-size: 38px;
+}
+.slide.agenda a {
+  color: var(--zilliz-black);
+  text-decoration: none;
+  font-weight: 600;
+}
+.slide.agenda a:hover,
+.slide.agenda a:focus {
+  color: var(--zilliz-blue);
+  text-decoration: underline;
+  text-underline-offset: 6px;
+}
+
+/* .hero — full-bleed statement: dark gradient, large white text */
+.slide.hero, .slide.title {
+  background: var(--zilliz-gradient);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' preserveAspectRatio='xMidYMid slice' viewBox='0 0 1920 1080'%3E%3Cdefs%3E%3CradialGradient id='a' cx='20%25' cy='30%25' r='80%25'%3E%3Cstop offset='0%25' stop-color='%23175fff'/%3E%3Cstop offset='60%25' stop-color='%23061982'/%3E%3Cstop offset='100%25'/%3E%3C/radialGradient%3E%3CradialGradient id='b' cx='80%25' cy='80%25' r='60%25'%3E%3Cstop offset='0%25' stop-color='%23c84cff' stop-opacity='.8'/%3E%3Cstop offset='100%25' stop-color='%23c84cff' stop-opacity='0'/%3E%3C/radialGradient%3E%3C/defs%3E%3Cpath fill='url(%23a)' d='M0 0h1920v1080H0z'/%3E%3Cpath fill='url(%23b)' d='M0 0h1920v1080H0z'/%3E%3Cg fill='%23fff' fill-opacity='.1'%3E%3Ccircle cx='320' cy='220' r='6'/%3E%3Ccircle cx='640' cy='160' r='3'/%3E%3Ccircle cx='980' cy='380' r='5'/%3E%3Ccircle cx='1240' cy='220' r='4'/%3E%3Ccircle cx='1480' cy='540' r='7'/%3E%3Ccircle cx='1700' cy='320' r='3'/%3E%3Ccircle cx='180' cy='640' r='4'/%3E%3Ccircle cx='520' cy='780' r='6'/%3E%3Ccircle cx='860' cy='900' r='3'/%3E%3Ccircle cx='1180' cy='820' r='5'/%3E%3C/g%3E%3C/svg%3E");
+}
+
+.slide.title.automata {
+  background: url(../img/automata.jpg) right no-repeat, linear-gradient(180deg, #050a0e 0%, #070c17 100%)
+}
+
+.slide.hero {
+  color: var(--zilliz-white);
+  justify-content: center;
+  align-items: flex-start;
+}
+.slide.hero h1 {
+  font-size: 144px;
+  font-weight: 600;
+  line-height: 1.05;
+  max-width: 80%;
+}
+.slide.hero p {
+  font-size: 40px;
+  font-weight: 400;
+  opacity: 0.85;
+  max-width: 70%;
+  margin-top: var(--zilliz-s-6);
+}
+
+/* .bg — full-bleed background image; first markdown image becomes the bg */
+.slide.bg {
+  color: var(--zilliz-white);
+  justify-content: flex-end;
+}
+.slide.bg > p:first-of-type {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  z-index: 0;
+}
+.slide.bg > p:first-of-type img,
+.slide.bg > p:first-of-type svg {
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  object-fit: cover;
+  display: block;
+}
+/* .slide.bg > h1,
+.slide.bg > h2,
+.slide.bg > h3,
+.slide.bg > p:not(:first-of-type),
+.slide.bg > ul,
+.slide.bg > ol,
+.slide.bg > blockquote {
+  position: relative;
+  z-index: 1;
+  text-shadow: 0 2px 16px rgba(0, 0, 0, 0.6);
+} */
+
+/* Modifier: .center — horizontally and vertically center content */
+.slide.center {
+  align-items: center;
+  text-align: center;
+  justify-content: center;
+}
+
+/* Modifier: .dark — invert default content slide to dark on navy */
+.slide.dark {
+  background: var(--zilliz-nearly-black);
+  color: var(--zilliz-white);
+}
+.slide.dark a { color: var(--zilliz-sky); }
+.slide.dark code, .slide.dark pre {
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--zilliz-white);
+}
+
+/* Speaker cards — used by the `authors` frontmatter block */
+.speakers {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--zilliz-s-4);
+  width: 100%;
+}
+.speaker {
+  display: flex;
+  align-items: center;
+  gap: var(--zilliz-s-3);
+  flex: 1 1 calc(33.333% - var(--zilliz-s-4));
+  min-width: 360px;
+}
+.avatar {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  flex: 0 0 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #f59e0b, #ec4899);
+  color: var(--zilliz-white);
+  font-family: var(--zilliz-font-mono);
+  font-weight: 700;
+  font-size: 28px;
+  letter-spacing: 0.04em;
+  overflow: hidden;box-shadow: 4px 4px 0px black;
+  border: 3px solid rgb(0 0 0);
+  box-sizing: border-box;
+}
+.avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.who-name {
+  font-family: var(--zilliz-font-sans);
+  font-weight: 700;
+  font-size: 32px;
+  line-height: 1.1;
+}
+.who-role {
+  font-family: var(--zilliz-font-mono);
+  font-weight: 400;
+  font-size: 22px;
+  line-height: 1.3;
+  opacity: 0.85;
+  margin-top: 4px;
+}
+
+/* Title slide places the speakers row above the footer area */
+.slide.title .speakers {
+  margin-top: var(--zilliz-s-8);
+}
+.slide.title .who-name { color: var(--zilliz-white); }
+.slide.title .who-role { color: var(--zilliz-white); opacity: 0.85; }
+
+/* Vega charts — rendered by `vega` frontmatter block */
+.slide .vega-chart {
+  /* width: 100%; */
+  height: 100%;
+  margin: var(--zilliz-s-1) auto;
+
+  display: grid;
+  /* grid-template-columns: 1fr 360px; */
+  grid-template-columns: fit-content(100vw) fit-content(10vw);
+  gap: var(--zilliz-s-4);
+}
+/* Center the chart horizontally when there are no (or hidden) bindings.
+   vega-embed always emits a <form class="vega-bindings">, empty when the spec
+   has no bound inputs — so test for a non-empty form, not just its presence. */
+.slide .vega-chart:not(:has(.vega-bindings:not(:empty))),
+.slide.no-vega-bindings .vega-chart {
+  grid-template-columns: auto;
+  justify-content: center;
+}
+.slide .vega-chart .vega-embed {
+  width: 100%;
+}
+.slide .vega-chart .vega-embed details,
+.slide .vega-chart .vega-embed summary {
+  font-size: 14px;
+}
+.slide .vega-chart canvas,
+.slide .vega-chart svg {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Vega interactive controls — laid out as a brand-styled form */
+.slide .vega-bindings {
+  align-self: center;
+  display: flex;
+  flex-direction: column;
+  gap: var(--zilliz-s-2);
+  min-width: max-content;
+  font-family: var(--zilliz-font-sans);
+  font-size: 30px;
+  line-height: 1.3;
+  color: inherit;
+}
+.slide .vega-bindings .vega-bind {
+  display: flex;
+  align-items: center;
+  gap: var(--zilliz-s-2);
+  margin: 0;
+}
+.slide .vega-bindings .vega-bind > label {
+  display: flex;
+  align-items: center;
+  gap: var(--zilliz-s-2);
+  flex: 1;
+  margin: 0;
+}
+.slide .vega-bindings .vega-bind-name {
+  flex: 0 0 auto;
+  min-width: 6em;
+  font-weight: 500;
+  white-space: nowrap;
+}
+.slide .vega-bindings input,
+.slide .vega-bindings select {
+  accent-color: var(--zilliz-blue);
+  font: inherit;
+  color: inherit;
+  margin: 0;
+}
+.slide .vega-bindings select {
+  padding: 0.1em 0.5em;
+  border: 2px solid var(--zilliz-blue-20);
+  border-radius: 8px;
+  background: var(--zilliz-white);
+  cursor: pointer;
+}
+.slide .vega-bindings input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  accent-color: auto;
+  flex: 1;
+  min-width: 240px;
+  height: 6px;
+  border-radius: 999px;
+  background: var(--zilliz-blue-20);
+  cursor: pointer;
+}
+.slide .vega-bindings input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  border: 2px solid var(--zilliz-blue);
+  height: 30px;
+  width: 30px;
+  border-radius: 50%;
+  background: var(--zilliz-white);
+  /* keep the thumb centred on the 6px track: -(height - track) / 2 */
+  margin-top: -4px;
+  cursor: ew-resize;
+}
+.slide .vega-bindings input[type="range"]::-moz-range-thumb {
+  border: 2px solid var(--zilliz-blue);
+  height: 30px;
+  width: 30px;
+  border-radius: 50%;
+  background: var(--zilliz-white);
+  cursor: ew-resize;
+}
+.slide .vega-bindings input[type="radio"],
+.slide .vega-bindings input[type="checkbox"] {
+  width: 1.1em;
+  height: 1.1em;
+  cursor: pointer;
+}
+.slide .vega-bindings input[type="range"] + span {
+  flex: 0 0 auto;
+  min-width: 1.6em;
+  text-align: right;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: var(--zilliz-blue);
+}
+.slide .vega-bindings .vega-bind-radio {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--zilliz-s-2);
+}
+.slide .vega-bindings .vega-bind-radio label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4em;
+  margin: 0;
+  font-weight: 400;
+  cursor: pointer;
+}
+
+.slide.chart-animate .vega-chart svg.marks * {
+  -webkit-transition: -webkit-transform 1000ms, opacity 250ms;
+  transition: transform 1000ms, opacity 250ms;
+}
+
+.slide.no-vega-bindings .vega-bindings {
+  display: none;
+}
+
+#vg-tooltip-element {
+  font-size: 20px !important;
+}
+
+/* Two-column body — wrap content in <div class="two-col"> with two child <div>s */
+.slide .two-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--zilliz-s-8);
+  align-items: start;
+}
+.slide .two-col > div > :last-child { margin-bottom: 0; }
+
+/* Three-column body — wrap content in <div class="three-col"> with three child <div>s */
+.slide .three-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: var(--zilliz-s-6);
+  align-items: start;
+}
+.slide .three-col > div > :last-child { margin-bottom: 0; }
+
+/* .cards modifier — each column becomes an independent soft-tinted panel */
+.slide .two-col.cards > div,
+.slide .three-col.cards > div {
+  background: var(--zilliz-blue-10);
+  border: 1px solid var(--zilliz-blue-20);
+  border-radius: 18px;
+  padding: var(--zilliz-s-3) var(--zilliz-s-4);
+}
+
+.slide .three-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* Full-bleed three.js canvas as a slide background, text legible on top.
+   Pair with .dark (light text) and .no-chrome (clean hero). */
+.slide.three-bg .three-canvas { z-index: 0; }
+.slide.three-bg > :not(.three-canvas):not(.chrome):not(.footer) {
+  position: relative;
+  z-index: 1;
+  text-shadow: 0 2px 18px rgba(0, 0, 0, 0.6);
+}
+
+/* iframe embeds — full-bleed; chrome/footer overlay on top via source order */
+.slide .iframe-embed {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  display: block;
+  background: var(--zilliz-white);
+  z-index: 0;
+}
+
+/* custom per-deck styles */
+.search-demo .header { display: flex; justify-content: center; align-items: center; gap: var(--zilliz-s-4); margin-bottom: var(--zilliz-s-4); }
+.search-demo .header .query {
+  display: inline-block;
+  position: relative;
+  font-size: 36px;
+  font-weight: 600;
+  color: var(--zilliz-black);
+  background: var(--zilliz-white);
+  border: 2px solid var(--zilliz-blue-20);
+  border-radius: 14px;
+  padding: 10px 76px 10px 24px;
+  margin-top: 8px;
+  box-shadow: 0 4px 14px rgba(6, 25, 130, 0.08);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='44' viewBox='0 0 56 44'%3E%3Crect width='56' height='44' rx='12' fill='%23175fff'/%3E%3Cg stroke='white' stroke-width='2.6' fill='none' stroke-linecap='round'%3E%3Ccircle cx='25' cy='20' r='6.5'/%3E%3Cline x1='30' y1='25' x2='35.5' y2='30.5'/%3E%3C/g%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  background-size: 56px 44px;
+}
+.search-demo .header .query::after {
+  content: "";
+  display: inline-block;
+  width: 3px;
+  height: 0.95em;
+  background: var(--zilliz-blue);
+  margin-left: 4px;
+  vertical-align: -3px;
+  animation: query-caret-blink 1s steps(2, start) infinite;
+}
+@keyframes query-caret-blink {
+  to { background: transparent; }
+}
+.search-demo .query-label { font-family: var(--zilliz-font-mono); font-size: 19px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--zilliz-navy); opacity: 0.7; }
+.search-demo .eyebrow { font-family: var(--zilliz-font-mono); font-size: 20px; font-weight: 600; color: var(--zilliz-navy); background: var(--zilliz-blue-10); padding: 8px 18px; border-radius: 999px; }
+
+.search-demo .body { display: grid; grid-template-columns: 1fr 1fr; gap: var(--zilliz-s-6); align-items: start; }
+
+.search-demo .section-title { display: flex; justify-content: space-between; align-items: baseline; font-family: var(--zilliz-font-mono); font-size: 18px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--zilliz-navy); padding-bottom: var(--zilliz-s-1); border-bottom: 2px solid var(--zilliz-navy); margin-bottom: var(--zilliz-s-2); }
+.search-demo .section-title .tag { font-family: var(--zilliz-font-mono); font-size: 18px; font-weight: 600; opacity: 0.6; }
+
+.search-demo .results { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 6px; }
+.search-demo .result { display: grid; grid-template-columns: 40px 1fr auto; align-items: center; gap: var(--zilliz-s-2); padding: 6px 12px; border-radius: 6px; background: rgba(6, 25, 130, 0.03); font-size: 20px; line-height: 1.2; margin: 0; }
+.search-demo .result.is-hit { background: var(--zilliz-blue-10); }
+.search-demo .result.below { opacity: 0.55; }
+.search-demo .rank { font-family: var(--zilliz-font-mono); font-weight: 600; font-size: 17px; color: var(--zilliz-navy); }
+.search-demo .result .title { font-weight: 500; font-size: 24px; }
+.search-demo .year { font-family: var(--zilliz-font-mono); font-size: 18px; opacity: 0.55; margin-left: 6px; }
+.search-demo .pill { font-family: var(--zilliz-font-mono); font-size: 15px; font-weight: 700; padding: 3px 10px; border-radius: 999px; text-transform: uppercase; letter-spacing: 0.06em; white-space: nowrap; }
+.search-demo .pill.hit { background: var(--zilliz-blue); color: var(--zilliz-white); }
+.search-demo .pill.miss { background: rgba(0,0,0,0.08); color: rgba(0,0,0,0.5); }
+
+.search-demo .cutoff { display: flex; align-items: center; gap: var(--zilliz-s-2); padding: 6px 0; }
+.search-demo .cutoff-label { font-family: var(--zilliz-font-mono); font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--zilliz-berry); white-space: nowrap; }
+.search-demo .cutoff-line { flex: 1; border-top: 2px dashed var(--zilliz-berry); }
+
+.search-demo .below-note { font-size: 17px; line-height: 1.4; opacity: 0.75; margin: var(--zilliz-s-2) 0 0; font-style: italic; }
+
+.search-demo .formulas { display: flex; flex-direction: column; gap: var(--zilliz-s-3); }
+.search-demo .formula-card, .search-demo .section { border: 2px solid var(--zilliz-blue-20); border-radius: 14px; padding: var(--zilliz-s-3); background: var(--zilliz-white); }
+.search-demo .formula-name { font-family: var(--zilliz-font-mono); font-size: 15px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--zilliz-navy); margin-bottom: 4px; }
+.search-demo .formula-q { font-size: 22px; font-weight: 500; margin: 0 0 var(--zilliz-s-2); line-height: 1.3; color: var(--zilliz-black); }
+.search-demo .formula-q em { font-style: italic; color: var(--zilliz-blue); font-weight: 600; }
+
+.search-demo .equation { display: flex; align-items: center; justify-content: center; gap: var(--zilliz-s-2); margin: var(--zilliz-s-2) 0; font-family: var(--zilliz-font-mono); }
+.search-demo .fraction { display: inline-flex; flex-direction: column; align-items: stretch; text-align: center; min-width: 60px; }
+.search-demo .num, .search-demo .den { font-size: 17px; padding: 4px 8px; line-height: 1.2; }
+.search-demo .num.hit-num { color: var(--zilliz-blue); font-weight: 700; }
+.search-demo .bar { border-top: 2px solid var(--zilliz-ink); }
+.search-demo .equals { font-size: 26px; opacity: 0.5; font-weight: 300; }
+.search-demo .result-num { font-size: 34px; font-weight: 800; color: var(--zilliz-navy); font-family: var(--zilliz-font-mono); }
+
+.search-demo .legend { font-size: 15px; line-height: 1.45; opacity: 0.75; margin: var(--zilliz-s-2) 0 0; }
+.search-demo .legend strong { color: var(--zilliz-navy); font-weight: 700; }
+
+/* Use-case grid — 3x3 tiles with fragment reveals */
+.usecase-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--zilliz-s-4); }
+.usecase-tile { background: var(--zilliz-blue-10); border: 2px solid var(--zilliz-blue-20); border-radius: 18px; padding: var(--zilliz-s-3) var(--zilliz-s-3); display: flex; flex-direction: column; align-items: center; text-align: center; gap: var(--zilliz-s-2); }
+.usecase-tile .icon { font-size: 64px; line-height: 1; }
+.usecase-tile .label { font-size: 30px; font-weight: 700; color: var(--zilliz-navy); margin: 0; }
+.usecase-tile .tagline { font-size: 22px; line-height: 1.35; color: var(--zilliz-ink); opacity: 0.85; margin: 0; }
+
+/* Stat grid — 3x2 metric cards (modality-gap numbers). .is-warn flags a gap-revealing stat */
+.stat-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--zilliz-s-4); margin: var(--zilliz-s-6) 0; }
+.stat-card { background: var(--zilliz-blue-10); border: 2px solid var(--zilliz-blue-20); border-radius: 18px; padding: var(--zilliz-s-3) var(--zilliz-s-4); display: flex; flex-direction: column; gap: var(--zilliz-s-1); }
+.stat-card .stat-label { font-family: var(--zilliz-font-mono); font-size: 19px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--zilliz-navy); opacity: 0.75; }
+.stat-card .stat-value { font-family: var(--zilliz-font-mono); font-size: 60px; font-weight: 600; line-height: 1; color: var(--zilliz-blue); }
+.stat-card .stat-note { font-size: 21px; line-height: 1.3; color: var(--zilliz-ink); opacity: 0.85; margin: 0; }
+.stat-card.is-warn { background: var(--zilliz-berry-10); border-color: var(--zilliz-berry-20); }
+.stat-card.is-warn .stat-value { color: var(--zilliz-berry); }
+
+/* UMAP modality-gap viz — legend over the full-bleed three.js canvas */
+.umap-legend { display: flex; gap: var(--zilliz-s-6); align-items: center; font-family: var(--zilliz-font-mono); font-size: 24px; }
+.umap-legend .key { display: flex; align-items: center; gap: var(--zilliz-s-2); }
+.umap-legend .swatch { width: 22px; height: 22px; border-radius: 50%; flex: none; }
+.umap-legend .swatch.image { background: var(--zilliz-blue); }
+.umap-legend .swatch.text { background: var(--zilliz-berry); }
+.umap-legend .swatch.gap { width: 38px; height: 0; border-radius: 0; border-top: 3px dashed var(--zilliz-white); }
+.umap-hint { font-family: var(--zilliz-font-mono); font-size: 20px; opacity: 0.6; margin-top: var(--zilliz-s-3); }
+
+/* dark bg lift — for slides with dark backgrounds, add a semi-transparent white overlay behind text for improved legibility */
+*.dark-bg-lift {
+  font-weight: 400 !important;
+  color: #ffffff !important;
+  text-shadow: 0px 0px 20px black, -1px -1px #000000, 0 0 3px #fff, 0 0 20px #000000, 0 0 20px #000000 !important;
+}
+
+.align-right {
+  text-align: right;
+}
+.bold {
+  font-weight: 700 !important;
+}
+.blue {
+  color: var(--zilliz-blue) !important;
+}

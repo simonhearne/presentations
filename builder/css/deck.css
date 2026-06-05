@@ -1,0 +1,247 @@
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  background: var(--zilliz-black);
+  color: var(--zilliz-ink);
+  overflow: hidden;
+  font-family: var(--zilliz-font-sans);
+}
+
+.deck-viewport {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.deck {
+  width: var(--zilliz-slide-w);
+  height: var(--zilliz-slide-h);
+  position: absolute;
+  transform-origin: center;
+}
+
+.slide {
+  position: absolute;
+  inset: 0;
+  width: var(--zilliz-slide-w);
+  height: var(--zilliz-slide-h);
+  display: flex;
+  flex-direction: column;
+  font-family: var(--zilliz-font-sans);
+  color: var(--zilliz-black);
+  background: var(--zilliz-white);
+  padding: var(--zilliz-s-16);
+  box-sizing: border-box;
+  overflow: hidden;
+  opacity: 0;
+  pointer-events: none;
+}
+.slide.is-current {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.chrome {
+  position: absolute;
+  top: var(--zilliz-s-4);
+  right: var(--zilliz-s-4);
+  display: flex;
+  align-items: center;
+  gap: var(--zilliz-s-2);
+  font-family: var(--zilliz-font-mono);
+  font-size: 18px;
+  opacity: 0.5;
+  color: inherit;
+}
+
+.chrome.logo {
+  left: var(--zilliz-s-16);
+  right: auto;
+  opacity: 1;
+  top: var(--zilliz-s-4);
+  width: 160px;
+  height: 50px;
+}
+
+.footer {
+  border-top: 2px dashed currentColor;
+  padding-top: var(--zilliz-s-2);
+  position: absolute;
+  left: var(--zilliz-s-8);
+  right: var(--zilliz-s-8);
+  bottom: var(--zilliz-s-3);
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: var(--zilliz-s-4);
+  font-family: var(--zilliz-font-mono);
+  font-size: 18px;
+  opacity: 0.75;
+  color: inherit;
+  pointer-events: none;
+}
+.footer-left, .footer-right {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 45%;
+}
+.footer-right { text-align: right; }
+
+.footer-right::before {
+  content: 'Next: ';
+}
+
+.hero-text {
+  background: linear-gradient(90deg, var(--zilliz-navy), var(--zilliz-berry));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-weight: 900;
+  animation: shimmer 5s linear infinite;
+  background-size: 200% 100%;
+}
+.hero-text.alternate {
+  background: linear-gradient(90deg, #f59e0b, #ec4899);
+}
+.hero-text.smashing {
+  background-image: linear-gradient(45deg, rgb(255, 69, 0), rgb(127 73 173), rgb(112, 161, 255), rgb(255, 0, 128), rgb(255, 69, 0));
+  background-size: 300% 100%;
+  background-clip: text;
+  color: transparent;
+  animation: 10s linear 0s infinite normal none running shimmer-gradient;
+}
+
+.chrome .mark {
+  width: 24px;
+  height: 24px;
+}
+
+.no-chrome .chrome {
+  display: none;
+}
+.slide.no-title h1 {
+  display: none;
+}
+
+.slide.no-footer .footer {
+  display: none;
+}
+
+.slide table {
+  border-collapse: collapse;
+  margin: var(--zilliz-s-3) auto;
+  font-size: 24px;
+  background: var(--zilliz-white);
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.04);
+}
+.slide thead th {
+  text-align: left;
+  font-weight: 700;
+  font-size: 0.78em;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--zilliz-navy);
+  padding: var(--zilliz-s-2) var(--zilliz-s-3);
+  border-bottom: 2px solid var(--zilliz-navy);
+  background: var(--zilliz-blue-10);
+}
+.slide tbody td {
+  padding: var(--zilliz-s-2) var(--zilliz-s-3);
+  border-bottom: 1px solid rgba(6, 25, 130, 0.08);
+  vertical-align: top;
+}
+.slide tbody tr:last-child td {
+  border-bottom: none;
+}
+.slide tbody tr:hover {
+  background: var(--zilliz-blue-10);
+}
+.slide table code {
+  font-family: var(--zilliz-font-mono);
+  background: var(--zilliz-blue-10);
+  color: var(--zilliz-navy);
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 0.95em;
+}
+
+.slide .dot {
+  margin: var(--zilliz-s-3) auto;
+  display: flex;
+  justify-content: center;
+  transform: scale(1.25);
+  transform-origin: top;
+  margin-bottom: 60px;
+}
+.slide .dot svg {
+  max-width: 100%;
+  max-height: 60vh;
+  height: auto;
+  width: auto;
+}
+
+/* section numbers */
+body {
+  counter-reset: section;
+}
+
+body.cursor-hidden {
+  cursor: none;
+}
+
+.slide.section h1::after {
+  counter-increment: section;
+  content: counter(section, decimal-leading-zero);
+  font-size: 96px;
+  font-weight: 400;
+  position: absolute;
+  display: block;
+  right: 1.5em;
+  bottom: 1.5em;
+}
+
+.fragment { visibility: hidden; opacity: 0; transition: opacity 200ms ease; }
+.fragment.is-revealed { visibility: visible; opacity: 1; }
+
+/* Matryoshka pop — MRL-slide accent. Parked below the bottom edge (clipped by
+   the slide's overflow:hidden), it springs up and rightward on reveal and
+   settles with a slight left tilt. */
+.matryoshka-pop {
+  position: absolute;
+  right: var(--zilliz-s-8);
+  bottom: var(--zilliz-s-12);
+  font-size: 14vh;
+  line-height: 1;
+  transform-origin: bottom center;
+  pointer-events: none;
+  z-index: 2;
+}
+.matryoshka-pop.is-revealed {
+  animation: matryoshka-pop 720ms cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+@keyframes matryoshka-pop {
+  0%   { opacity: 0; transform: translate(-45%, 120%) rotate(12deg); }
+  100% { opacity: 1; transform: translate(0, 0) rotate(-7deg); }
+}
+
+/* animations */
+@keyframes shimmer {
+  0% {
+    background-position-x: 0;
+  }
+  50% {
+      background-position-x: 100%;
+  }
+  100% {
+      background-position-x: 0;
+  }
+}
+
+@keyframes shimmer-gradient {
+  0% { background-position: 0% 50%; }
+  100% { background-position: 300% 50%; }
+}

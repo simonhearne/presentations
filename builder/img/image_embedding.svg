@@ -1,0 +1,212 @@
+<svg xmlns="http://www.w3.org/2000/svg" font-family="ui-sans-serif, system-ui, -apple-system, sans-serif" viewBox="45 50 870 500">
+<defs>
+<linearGradient id="d" x1="0%" x2="100%" y1="0%" y2="100%"><stop offset="0%" stop-color="#175fff"/><stop offset="50%" stop-color="#7f47ff"/><stop offset="100%" stop-color="#c84cff"/></linearGradient>
+<linearGradient id="b" x1="0%" x2="0%" y1="0%" y2="100%"><stop offset="0%" stop-color="#7dd3fc"/><stop offset="100%" stop-color="#e0f2fe"/></linearGradient>
+<clipPath id="imgc"><rect width="160" height="100" x="60" y="90" rx="4"/></clipPath>
+<clipPath id="audc"><rect width="160" height="100" x="60" y="230" rx="4"/></clipPath>
+<clipPath id="txtc"><rect width="160" height="100" x="60" y="370" rx="4"/></clipPath>
+<marker id="c" markerHeight="7" markerWidth="7" orient="auto-start-reverse" refX="9" refY="5" viewBox="0 0 10 10"><path fill="#374151" d="m0 0 10 5-10 5z"/></marker>
+</defs>
+
+<!-- IMAGE INPUT -->
+<rect width="180" height="120" x="50" y="80" fill="#fff" stroke="#1f2937" stroke-width="2" rx="8"/>
+<g clip-path="url(#imgc)">
+<rect width="160" height="100" x="60" y="90" fill="url(#b)"/>
+<circle cx="190" cy="118" r="10" fill="#fbbf24"/>
+<polygon fill="#475569" points="60,190 100,138 140,160 185,125 220,150 220,190"/>
+<polygon fill="#64748b" points="60,190 88,158 128,176 172,152 220,170 220,190"/>
+<polygon fill="#f1f5f9" points="92,160 100,148 110,160"/>
+<polygon fill="#f1f5f9" points="178,138 185,128 192,138"/>
+<rect width="160" height="5" x="60" y="185" fill="#22c55e"/>
+</g>
+<text x="140" y="218" fill="#0f172a" font-size="15" font-weight="600" text-anchor="middle">Image</text>
+
+<!-- AUDIO INPUT -->
+<rect width="180" height="120" x="50" y="230" fill="#fff" stroke="#1f2937" stroke-width="2" rx="8"/>
+<g clip-path="url(#audc)">
+<polygon points="50,240 220,250 230,360 60,350" fill="#fef3c7"/>
+<line x1="60" y1="290" x2="220" y2="290" stroke="#c084fc" stroke-width="0.6" opacity="0.5"/>
+<g fill="#7f47ff">
+<rect x="70" y="280" width="4" height="20" rx="2"/>
+<rect x="78" y="270" width="4" height="40" rx="2"/>
+<rect x="86" y="260" width="4" height="60" rx="2"/>
+<rect x="94" y="250" width="4" height="80" rx="2"/>
+<rect x="102" y="265" width="4" height="50" rx="2"/>
+<rect x="110" y="275" width="4" height="30" rx="2"/>
+<rect x="118" y="255" width="4" height="70" rx="2"/>
+<rect x="126" y="247" width="4" height="86" rx="2"/>
+<rect x="134" y="260" width="4" height="60" rx="2"/>
+<rect x="142" y="272" width="4" height="36" rx="2"/>
+<rect x="150" y="255" width="4" height="70" rx="2"/>
+<rect x="158" y="265" width="4" height="50" rx="2"/>
+<rect x="166" y="275" width="4" height="30" rx="2"/>
+<rect x="174" y="260" width="4" height="60" rx="2"/>
+<rect x="182" y="270" width="4" height="40" rx="2"/>
+<rect x="190" y="278" width="4" height="24" rx="2"/>
+<rect x="198" y="265" width="4" height="50" rx="2"/>
+<rect x="206" y="273" width="4" height="34" rx="2"/>
+<rect x="214" y="280" width="4" height="20" rx="2"/>
+</g>
+</g>
+<text x="140" y="368" fill="#0f172a" font-size="15" font-weight="600" text-anchor="middle">Audio</text>
+
+<!-- TEXT INPUT -->
+<rect width="180" height="120" x="50" y="380" fill="#fff" stroke="#1f2937" stroke-width="2" rx="8"/>
+<g clip-path="url(#txtc)">
+<rect width="160" height="100" x="60" y="390" fill="#f8fafc"/>
+<rect width="160" height="100" x="60" y="390" fill="#f8fafc"/>
+<rect x="74" y="404" width="95" height="7" rx="2" fill="#1f2937"/>
+<rect x="74" y="422" width="132" height="4" rx="2" fill="#94a3b8"/>
+<rect x="74" y="434" width="124" height="4" rx="2" fill="#94a3b8"/>
+<rect x="74" y="446" width="136" height="4" rx="2" fill="#94a3b8"/>
+<rect x="74" y="458" width="90" height="4" rx="2" fill="#94a3b8"/>
+<rect x="74" y="470" width="118" height="4" rx="2" fill="#94a3b8"/>
+</g>
+<text x="140" y="518" fill="#0f172a" font-size="15" font-weight="600" text-anchor="middle">Text</text>
+
+<!-- ARROWS FROM INPUTS TO MODEL -->
+<line x1="230" x2="334" y1="140" y2="220" stroke="#374151" stroke-width="3" marker-end="url(#c)"/>
+<line x1="230" x2="334" y1="280" y2="290" stroke="#374151" stroke-width="3" marker-end="url(#c)"/>
+<line x1="230" x2="334" y1="420" y2="360" stroke="#374151" stroke-width="3" marker-end="url(#c)"/>
+
+<!-- EMBEDDING MODEL -->
+<rect width="280" height="380" x="340" y="100" fill="url(#d)" rx="14"/>
+
+<g stroke="#fff" stroke-width=".6" opacity=".35">
+<line x1="385" x2="445" y1="160" y2="140"/>
+<line x1="385" x2="445" y1="160" y2="200"/>
+<line x1="385" x2="445" y1="160" y2="260"/>
+<line x1="385" x2="445" y1="160" y2="320"/>
+<line x1="385" x2="445" y1="160" y2="380"/>
+<line x1="385" x2="445" y1="160" y2="450"/>
+<line x1="385" x2="445" y1="230" y2="140"/>
+<line x1="385" x2="445" y1="230" y2="200"/>
+<line x1="385" x2="445" y1="230" y2="260"/>
+<line x1="385" x2="445" y1="230" y2="320"/>
+<line x1="385" x2="445" y1="230" y2="380"/>
+<line x1="385" x2="445" y1="230" y2="450"/>
+<line x1="385" x2="445" y1="300" y2="140"/>
+<line x1="385" x2="445" y1="300" y2="200"/>
+<line x1="385" x2="445" y1="300" y2="260"/>
+<line x1="385" x2="445" y1="300" y2="320"/>
+<line x1="385" x2="445" y1="300" y2="380"/>
+<line x1="385" x2="445" y1="300" y2="450"/>
+<line x1="385" x2="445" y1="370" y2="140"/>
+<line x1="385" x2="445" y1="370" y2="200"/>
+<line x1="385" x2="445" y1="370" y2="260"/>
+<line x1="385" x2="445" y1="370" y2="320"/>
+<line x1="385" x2="445" y1="370" y2="380"/>
+<line x1="385" x2="445" y1="370" y2="450"/>
+<line x1="385" x2="445" y1="440" y2="140"/>
+<line x1="385" x2="445" y1="440" y2="200"/>
+<line x1="385" x2="445" y1="440" y2="260"/>
+<line x1="385" x2="445" y1="440" y2="320"/>
+<line x1="385" x2="445" y1="440" y2="380"/>
+<line x1="385" x2="445" y1="440" y2="450"/>
+<line x1="445" x2="515" y1="140" y2="140"/>
+<line x1="445" x2="515" y1="140" y2="200"/>
+<line x1="445" x2="515" y1="140" y2="260"/>
+<line x1="445" x2="515" y1="140" y2="320"/>
+<line x1="445" x2="515" y1="140" y2="380"/>
+<line x1="445" x2="515" y1="140" y2="450"/>
+<line x1="445" x2="515" y1="200" y2="140"/>
+<line x1="445" x2="515" y1="200" y2="200"/>
+<line x1="445" x2="515" y1="200" y2="260"/>
+<line x1="445" x2="515" y1="200" y2="320"/>
+<line x1="445" x2="515" y1="200" y2="380"/>
+<line x1="445" x2="515" y1="200" y2="450"/>
+<line x1="445" x2="515" y1="260" y2="140"/>
+<line x1="445" x2="515" y1="260" y2="200"/>
+<line x1="445" x2="515" y1="260" y2="260"/>
+<line x1="445" x2="515" y1="260" y2="320"/>
+<line x1="445" x2="515" y1="260" y2="380"/>
+<line x1="445" x2="515" y1="260" y2="450"/>
+<line x1="445" x2="515" y1="320" y2="140"/>
+<line x1="445" x2="515" y1="320" y2="200"/>
+<line x1="445" x2="515" y1="320" y2="260"/>
+<line x1="445" x2="515" y1="320" y2="320"/>
+<line x1="445" x2="515" y1="320" y2="380"/>
+<line x1="445" x2="515" y1="320" y2="450"/>
+<line x1="445" x2="515" y1="380" y2="140"/>
+<line x1="445" x2="515" y1="380" y2="200"/>
+<line x1="445" x2="515" y1="380" y2="260"/>
+<line x1="445" x2="515" y1="380" y2="320"/>
+<line x1="445" x2="515" y1="380" y2="380"/>
+<line x1="445" x2="515" y1="380" y2="450"/>
+<line x1="445" x2="515" y1="450" y2="140"/>
+<line x1="445" x2="515" y1="450" y2="200"/>
+<line x1="445" x2="515" y1="450" y2="260"/>
+<line x1="445" x2="515" y1="450" y2="320"/>
+<line x1="445" x2="515" y1="450" y2="380"/>
+<line x1="445" x2="515" y1="450" y2="450"/>
+<line x1="515" x2="585" y1="140" y2="200"/>
+<line x1="515" x2="585" y1="140" y2="280"/>
+<line x1="515" x2="585" y1="140" y2="360"/>
+<line x1="515" x2="585" y1="140" y2="420"/>
+<line x1="515" x2="585" y1="200" y2="200"/>
+<line x1="515" x2="585" y1="200" y2="280"/>
+<line x1="515" x2="585" y1="200" y2="360"/>
+<line x1="515" x2="585" y1="200" y2="420"/>
+<line x1="515" x2="585" y1="260" y2="200"/>
+<line x1="515" x2="585" y1="260" y2="280"/>
+<line x1="515" x2="585" y1="260" y2="360"/>
+<line x1="515" x2="585" y1="260" y2="420"/>
+<line x1="515" x2="585" y1="320" y2="200"/>
+<line x1="515" x2="585" y1="320" y2="280"/>
+<line x1="515" x2="585" y1="320" y2="360"/>
+<line x1="515" x2="585" y1="320" y2="420"/>
+<line x1="515" x2="585" y1="380" y2="200"/>
+<line x1="515" x2="585" y1="380" y2="280"/>
+<line x1="515" x2="585" y1="380" y2="360"/>
+<line x1="515" x2="585" y1="380" y2="420"/>
+<line x1="515" x2="585" y1="450" y2="200"/>
+<line x1="515" x2="585" y1="450" y2="280"/>
+<line x1="515" x2="585" y1="450" y2="360"/>
+<line x1="515" x2="585" y1="450" y2="420"/>
+</g>
+
+<g fill="#fff" stroke="#312e81" stroke-width="1.5">
+<circle cx="385" cy="160" r="9"/>
+<circle cx="385" cy="230" r="9"/>
+<circle cx="385" cy="300" r="9"/>
+<circle cx="385" cy="370" r="9"/>
+<circle cx="385" cy="440" r="9"/>
+<circle cx="445" cy="140" r="9"/>
+<circle cx="445" cy="200" r="9"/>
+<circle cx="445" cy="260" r="9"/>
+<circle cx="445" cy="320" r="9"/>
+<circle cx="445" cy="380" r="9"/>
+<circle cx="445" cy="450" r="9"/>
+<circle cx="515" cy="140" r="9"/>
+<circle cx="515" cy="200" r="9"/>
+<circle cx="515" cy="260" r="9"/>
+<circle cx="515" cy="320" r="9"/>
+<circle cx="515" cy="380" r="9"/>
+<circle cx="515" cy="450" r="9"/>
+<circle cx="585" cy="200" r="9"/>
+<circle cx="585" cy="280" r="9"/>
+<circle cx="585" cy="360" r="9"/>
+<circle cx="585" cy="420" r="9"/>
+</g>
+
+<text x="480" y="510" fill="#0f172a" font-size="16" font-weight="600" text-anchor="middle">Embedding Model</text>
+
+<!-- ARROW TO VECTOR -->
+<line x1="630" x2="722" y1="290" y2="290" stroke="#374151" stroke-width="3" marker-end="url(#c)"/>
+
+<!-- OUTPUT VECTOR -->
+<rect width="180" height="380" x="730" y="100" fill="#fff" stroke="#1f2937" stroke-width="2" rx="8"/>
+<text x="748" y="138" fill="#0f172a" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="20" font-weight="700">[</text>
+<text x="763" y="170" fill="#4338ca" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="15">  0.018013807,</text>
+<text x="763" y="196" fill="#4338ca" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="15"> -0.028013546,</text>
+<text x="763" y="222" fill="#4338ca" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="15">  0.037925401,</text>
+<text x="763" y="248" fill="#4338ca" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="15"> -0.123849656,</text>
+<text x="763" y="274" fill="#4338ca" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="15">  0.789371889,</text>
+<text x="763" y="300" fill="#4338ca" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="15"> -0.345424876,</text>
+<text x="763" y="326" fill="#4338ca" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="15">  0.615464502,</text>
+<text x="763" y="352" fill="#4338ca" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="15"> -0.070378968,</text>
+<text x="763" y="378" fill="#4338ca" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="15">  0.507896075,</text>
+<text x="820" y="408" fill="#94a3b8" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="18" text-anchor="middle">⋮</text>
+<text x="748" y="442" fill="#0f172a" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="20" font-weight="700">]</text>
+<text x="820" y="510" fill="#0f172a" font-size="16" font-weight="600" text-anchor="middle">Embedding Vector</text>
+</svg>

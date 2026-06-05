@@ -1,0 +1,48 @@
+:root {
+  /* Brand — primary */
+  --zilliz-black: #000000;
+  --zilliz-white: #ffffff;
+  --zilliz-blue: #175fff;
+  --zilliz-blue-10: #e6f0ff;
+  --zilliz-blue-20: #cce0ff;
+
+  /* Brand — secondary */
+  --zilliz-nearly-black: #0a0e1a;
+  --zilliz-navy: #061982;
+  --zilliz-berry: #c84cff;
+  --zilliz-berry-10: #fbe6ff;
+  --zilliz-berry-20: #f7c9ff;
+  --zilliz-purple: #7f47ff;
+  --zilliz-sky: #49bcff;
+  --zilliz-green: #00dcc6;
+
+  /* Brand — gradients */
+  --zilliz-gradient: linear-gradient(135deg, #175fff 0%, #7f47ff 50%, #c84cff 100%);
+  --zilliz-gradient-light:
+    radial-gradient(circle at 12% 8%, var(--zilliz-blue-20) 0%, transparent 78%),
+    radial-gradient(circle at 88% 92%, var(--zilliz-berry-20) 0%, transparent 78%),
+    var(--zilliz-white);
+  --zilliz-gradient-dark:
+    radial-gradient(circle at 12% 8%, var(--zilliz-blue) 0%, transparent 78%),
+    radial-gradient(circle at 88% 92%, var(--zilliz-berry) 0%, transparent 78%),
+    var(--zilliz-navy);
+
+  /* Type */
+  --zilliz-ink: #1e293b;
+  --zilliz-font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+  --zilliz-font-mono: 'IBM Plex Mono', ui-monospace, SFMono-Regular, monospace;
+
+  /* Canvas */
+  --zilliz-slide-w: 1920px;
+  --zilliz-slide-h: 1080px;
+
+  /* Spacing scale (8px base) */
+  --zilliz-s-1: 8px;
+  --zilliz-s-2: 16px;
+  --zilliz-s-3: 24px;
+  --zilliz-s-4: 32px;
+  --zilliz-s-6: 48px;
+  --zilliz-s-8: 64px;
+  --zilliz-s-12: 96px;
+  --zilliz-s-16: 128px;
+}

@@ -1,0 +1,111 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "description": "One query, four columns — BM25, dense, fused, reranked.",
+  "width": 760,
+  "height": 360,
+  "padding": 24,
+  "background": "transparent",
+  "config": {
+    "axis": { "labelFontSize": 12, "titleFontSize": 13 }
+  },
+  "params": [
+    {
+      "name": "query",
+      "value": "ECONNRESET in pod-7f4b",
+      "bind": { "input": "select", "name": "Query ", "options": [
+        "ECONNRESET in pod-7f4b",
+        "how does HNSW work",
+        "INV-204871 refund status"
+      ] }
+    }
+  ],
+  "data": {
+    "values": [
+      {"query":"ECONNRESET in pod-7f4b","doc":"runbook: pod-7f4b restart loop","stage":"BM25",     "rank":1},
+      {"query":"ECONNRESET in pod-7f4b","doc":"k8s networking primer",         "stage":"BM25",     "rank":4},
+      {"query":"ECONNRESET in pod-7f4b","doc":"TCP error reference",           "stage":"BM25",     "rank":2},
+      {"query":"ECONNRESET in pod-7f4b","doc":"AWS NLB idle timeout",          "stage":"BM25",     "rank":5},
+      {"query":"ECONNRESET in pod-7f4b","doc":"connection error patterns",     "stage":"BM25",     "rank":3},
+      {"query":"ECONNRESET in pod-7f4b","doc":"runbook: pod-7f4b restart loop","stage":"Dense",    "rank":5},
+      {"query":"ECONNRESET in pod-7f4b","doc":"k8s networking primer",         "stage":"Dense",    "rank":2},
+      {"query":"ECONNRESET in pod-7f4b","doc":"TCP error reference",           "stage":"Dense",    "rank":4},
+      {"query":"ECONNRESET in pod-7f4b","doc":"AWS NLB idle timeout",          "stage":"Dense",    "rank":3},
+      {"query":"ECONNRESET in pod-7f4b","doc":"connection error patterns",     "stage":"Dense",    "rank":1},
+      {"query":"ECONNRESET in pod-7f4b","doc":"runbook: pod-7f4b restart loop","stage":"Fused",    "rank":1},
+      {"query":"ECONNRESET in pod-7f4b","doc":"k8s networking primer",         "stage":"Fused",    "rank":4},
+      {"query":"ECONNRESET in pod-7f4b","doc":"TCP error reference",           "stage":"Fused",    "rank":2},
+      {"query":"ECONNRESET in pod-7f4b","doc":"AWS NLB idle timeout",          "stage":"Fused",    "rank":5},
+      {"query":"ECONNRESET in pod-7f4b","doc":"connection error patterns",     "stage":"Fused",    "rank":3},
+      {"query":"ECONNRESET in pod-7f4b","doc":"runbook: pod-7f4b restart loop","stage":"Reranked", "rank":1},
+      {"query":"ECONNRESET in pod-7f4b","doc":"k8s networking primer",         "stage":"Reranked", "rank":5},
+      {"query":"ECONNRESET in pod-7f4b","doc":"TCP error reference",           "stage":"Reranked", "rank":3},
+      {"query":"ECONNRESET in pod-7f4b","doc":"AWS NLB idle timeout",          "stage":"Reranked", "rank":2},
+      {"query":"ECONNRESET in pod-7f4b","doc":"connection error patterns",     "stage":"Reranked", "rank":4},
+
+      {"query":"how does HNSW work","doc":"HNSW original paper",          "stage":"BM25",     "rank":1},
+      {"query":"how does HNSW work","doc":"vector index overview blog",   "stage":"BM25",     "rank":4},
+      {"query":"how does HNSW work","doc":"graph algorithms textbook",    "stage":"BM25",     "rank":2},
+      {"query":"how does HNSW work","doc":"approximate NN survey",        "stage":"BM25",     "rank":3},
+      {"query":"how does HNSW work","doc":"Milvus index docs",            "stage":"BM25",     "rank":5},
+      {"query":"how does HNSW work","doc":"HNSW original paper",          "stage":"Dense",    "rank":2},
+      {"query":"how does HNSW work","doc":"vector index overview blog",   "stage":"Dense",    "rank":1},
+      {"query":"how does HNSW work","doc":"graph algorithms textbook",    "stage":"Dense",    "rank":5},
+      {"query":"how does HNSW work","doc":"approximate NN survey",        "stage":"Dense",    "rank":3},
+      {"query":"how does HNSW work","doc":"Milvus index docs",            "stage":"Dense",    "rank":4},
+      {"query":"how does HNSW work","doc":"HNSW original paper",          "stage":"Fused",    "rank":1},
+      {"query":"how does HNSW work","doc":"vector index overview blog",   "stage":"Fused",    "rank":2},
+      {"query":"how does HNSW work","doc":"graph algorithms textbook",    "stage":"Fused",    "rank":5},
+      {"query":"how does HNSW work","doc":"approximate NN survey",        "stage":"Fused",    "rank":3},
+      {"query":"how does HNSW work","doc":"Milvus index docs",            "stage":"Fused",    "rank":4},
+      {"query":"how does HNSW work","doc":"HNSW original paper",          "stage":"Reranked", "rank":2},
+      {"query":"how does HNSW work","doc":"vector index overview blog",   "stage":"Reranked", "rank":1},
+      {"query":"how does HNSW work","doc":"graph algorithms textbook",    "stage":"Reranked", "rank":5},
+      {"query":"how does HNSW work","doc":"approximate NN survey",        "stage":"Reranked", "rank":4},
+      {"query":"how does HNSW work","doc":"Milvus index docs",            "stage":"Reranked", "rank":3},
+
+      {"query":"INV-204871 refund status","doc":"invoice INV-204871 record",      "stage":"BM25",     "rank":1},
+      {"query":"INV-204871 refund status","doc":"refund policy doc",              "stage":"BM25",     "rank":3},
+      {"query":"INV-204871 refund status","doc":"customer support FAQ",           "stage":"BM25",     "rank":5},
+      {"query":"INV-204871 refund status","doc":"billing system overview",        "stage":"BM25",     "rank":4},
+      {"query":"INV-204871 refund status","doc":"refund processing runbook",      "stage":"BM25",     "rank":2},
+      {"query":"INV-204871 refund status","doc":"invoice INV-204871 record",      "stage":"Dense",    "rank":5},
+      {"query":"INV-204871 refund status","doc":"refund policy doc",              "stage":"Dense",    "rank":1},
+      {"query":"INV-204871 refund status","doc":"customer support FAQ",           "stage":"Dense",    "rank":3},
+      {"query":"INV-204871 refund status","doc":"billing system overview",        "stage":"Dense",    "rank":2},
+      {"query":"INV-204871 refund status","doc":"refund processing runbook",      "stage":"Dense",    "rank":4},
+      {"query":"INV-204871 refund status","doc":"invoice INV-204871 record",      "stage":"Fused",    "rank":1},
+      {"query":"INV-204871 refund status","doc":"refund policy doc",              "stage":"Fused",    "rank":2},
+      {"query":"INV-204871 refund status","doc":"customer support FAQ",           "stage":"Fused",    "rank":5},
+      {"query":"INV-204871 refund status","doc":"billing system overview",        "stage":"Fused",    "rank":4},
+      {"query":"INV-204871 refund status","doc":"refund processing runbook",      "stage":"Fused",    "rank":3},
+      {"query":"INV-204871 refund status","doc":"invoice INV-204871 record",      "stage":"Reranked", "rank":1},
+      {"query":"INV-204871 refund status","doc":"refund policy doc",              "stage":"Reranked", "rank":4},
+      {"query":"INV-204871 refund status","doc":"customer support FAQ",           "stage":"Reranked", "rank":5},
+      {"query":"INV-204871 refund status","doc":"billing system overview",        "stage":"Reranked", "rank":3},
+      {"query":"INV-204871 refund status","doc":"refund processing runbook",      "stage":"Reranked", "rank":2}
+    ]
+  },
+  "transform": [ { "filter": "datum.query == query" } ],
+  "mark": "rect",
+  "encoding": {
+    "x": {
+      "field": "stage",
+      "type": "nominal",
+      "sort": ["BM25", "Dense", "Fused", "Reranked"],
+      "title": null,
+      "axis": { "orient": "top", "labelFontSize": 14 }
+    },
+    "y": {
+      "field": "doc",
+      "type": "nominal",
+      "title": null,
+      "axis": { "labelFontSize": 12 }
+    },
+    "color": {
+      "field": "rank",
+      "type": "quantitative",
+      "scale": { "scheme": "blues", "reverse": true, "domain": [1, 5] },
+      "legend": { "title": "rank", "labelFontSize": 12 }
+    }
+  }
+}

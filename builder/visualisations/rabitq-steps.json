@@ -1,0 +1,225 @@
+{
+  "$schema": "https://vega.github.io/schema/vega/v5.json",
+  "description": "Stepped walkthrough of RaBitQ as a vertical vector column: original vector -> random orthonormal rotation -> keep the sign of each dimension -> 1-bit output column. Stepped via the stage signal.",
+  "width": 820,
+  "height": 500,
+  "padding": 5,
+  "signals": [
+    {"name": "stage", "value": 0},
+    {"name": "colX", "value": 168},
+    {"name": "outX", "value": 596},
+    {"name": "stripY", "value": 104},
+    {"name": "cellW", "value": 56},
+    {"name": "cellH", "value": 13},
+    {"name": "n", "value": 24},
+    {"name": "midY", "update": "stripY + n * cellH / 2"},
+    {"name": "arrowX0", "update": "colX + cellW + 40"},
+    {"name": "arrowX1", "update": "outX - 28"},
+    {"name": "midX", "update": "(arrowX0 + arrowX1) / 2"},
+    {
+      "name": "headline",
+      "value": "768 float32 values",
+      "on": [
+        {
+          "events": {"signal": "stage"},
+          "update": "['768 float32 values', '↻  rotate by a random orthonormal R', 'keep the sign of each axis', 'pack signs into bits — 1 per dimension'][stage]"
+        }
+      ]
+    },
+    {
+      "name": "narration",
+      "value": "One 768-D vector — 3 KB of float32.",
+      "on": [
+        {
+          "events": {"signal": "stage"},
+          "update": "['One 768-D vector — 3 KB of float32.', 'A random rotation spreads magnitude evenly across every axis.', 'Keep only the sign of each dimension — discard all magnitude.', '1 bit per dimension — angles preserved within a provable error bound.'][stage]"
+        }
+      ]
+    }
+  ],
+  "data": [
+    {
+      "name": "cells",
+      "values": [
+        {"i": 0, "v0": -0.80, "v1": -0.52}, {"i": 1, "v0": 0.30, "v1": 0.61}, {"i": 2, "v0": -0.15, "v1": 0.48}, {"i": 3, "v0": 0.65, "v1": -0.55},
+        {"i": 4, "v0": 0.05, "v1": 0.43}, {"i": 5, "v0": -0.90, "v1": -0.66}, {"i": 6, "v0": 0.45, "v1": -0.50}, {"i": 7, "v0": -0.25, "v1": 0.58},
+        {"i": 8, "v0": 0.70, "v1": 0.62}, {"i": 9, "v0": -0.55, "v1": -0.45}, {"i": 10, "v0": 0.10, "v1": 0.54}, {"i": 11, "v0": 0.85, "v1": -0.60},
+        {"i": 12, "v0": -0.40, "v1": -0.50}, {"i": 13, "v0": 0.20, "v1": 0.47}, {"i": 14, "v0": -0.70, "v1": 0.63}, {"i": 15, "v0": 0.50, "v1": -0.56},
+        {"i": 16, "v0": 0.02, "v1": 0.44}, {"i": 17, "v0": -0.35, "v1": 0.53}, {"i": 18, "v0": 0.95, "v1": -0.64}, {"i": 19, "v0": -0.60, "v1": -0.59},
+        {"i": 20, "v0": 0.15, "v1": 0.49}, {"i": 21, "v0": -0.80, "v1": -0.55}, {"i": 22, "v0": 0.40, "v1": 0.51}, {"i": 23, "v0": -0.10, "v1": 0.46}
+      ],
+      "transform": [
+        {"type": "formula", "expr": "datum.v1 >= 0 ? 1 : -1", "as": "sign"},
+        {"type": "formula", "expr": "datum.v1 >= 0 ? 1 : 0", "as": "bit"}
+      ]
+    }
+  ],
+  "scales": [
+    {
+      "name": "div",
+      "type": "linear",
+      "domain": [-1, 0, 1],
+      "range": ["#ff5757", "#eef2f7", "#175fff"]
+    }
+  ],
+  "marks": [
+    {
+      "type": "text",
+      "encode": {
+        "update": {
+          "x": {"signal": "(colX + outX + cellW) / 2"},
+          "y": {"value": 50},
+          "text": {"signal": "headline"},
+          "align": {"value": "center"}, "baseline": {"value": "alphabetic"},
+          "fontSize": {"value": 21}, "fontWeight": {"value": "bold"},
+          "fill": {"value": "#1e293b"}
+        }
+      }
+    },
+    {
+      "type": "text",
+      "encode": {
+        "update": {
+          "x": {"signal": "colX + cellW / 2"},
+          "y": {"signal": "stripY - 12"},
+          "text": {"value": "the vector · 768-D"},
+          "align": {"value": "center"}, "baseline": {"value": "alphabetic"},
+          "fontSize": {"value": 13}, "fontWeight": {"value": "bold"},
+          "fill": {"value": "#64748b"}
+        }
+      }
+    },
+    {
+      "type": "rect",
+      "from": {"data": "cells"},
+      "encode": {
+        "update": {
+          "x": {"signal": "colX"},
+          "width": {"signal": "cellW"},
+          "y": {"signal": "stripY + datum.i * cellH"},
+          "height": {"signal": "cellH - 1.5"},
+          "cornerRadius": {"value": 1.5},
+          "fill": [
+            {"test": "stage >= 1", "scale": "div", "field": "v1"},
+            {"scale": "div", "field": "v0"}
+          ]
+        }
+      }
+    },
+    {
+      "type": "rule",
+      "encode": {
+        "update": {
+          "x": {"signal": "arrowX0"}, "x2": {"signal": "arrowX1"},
+          "y": {"signal": "midY"}, "y2": {"signal": "midY"},
+          "stroke": {"value": "#94a3b8"}, "strokeWidth": {"value": 2},
+          "opacity": [{"test": "stage >= 2", "value": 1}, {"value": 0}]
+        }
+      }
+    },
+    {
+      "type": "symbol",
+      "encode": {
+        "update": {
+          "x": {"signal": "arrowX1"}, "y": {"signal": "midY"},
+          "shape": {"value": "triangle-right"}, "size": {"value": 110},
+          "fill": {"value": "#94a3b8"},
+          "opacity": [{"test": "stage >= 2", "value": 1}, {"value": 0}]
+        }
+      }
+    },
+    {
+      "type": "text",
+      "encode": {
+        "update": {
+          "x": {"signal": "midX"}, "y": {"signal": "midY - 14"},
+          "text": {"signal": "stage >= 3 ? 'pack to bits' : 'keep sign'"},
+          "align": {"value": "center"}, "baseline": {"value": "alphabetic"},
+          "fontSize": {"value": 13}, "fill": {"value": "#64748b"},
+          "opacity": [{"test": "stage >= 2", "value": 1}, {"value": 0}]
+        }
+      }
+    },
+    {
+      "type": "text",
+      "encode": {
+        "update": {
+          "x": {"signal": "outX + cellW / 2"},
+          "y": {"signal": "stripY - 12"},
+          "text": {"signal": "stage >= 3 ? '1 bit / dim' : 'sign'"},
+          "align": {"value": "center"}, "baseline": {"value": "alphabetic"},
+          "fontSize": {"value": 13}, "fontWeight": {"value": "bold"},
+          "fill": {"value": "#175fff"},
+          "opacity": [{"test": "stage >= 2", "value": 1}, {"value": 0}]
+        }
+      }
+    },
+    {
+      "type": "rect",
+      "from": {"data": "cells"},
+      "encode": {
+        "update": {
+          "x": {"signal": "outX"},
+          "width": {"signal": "cellW"},
+          "y": {"signal": "stripY + datum.i * cellH"},
+          "height": {"signal": "cellH - 1.5"},
+          "cornerRadius": {"value": 1.5},
+          "fill": [
+            {"test": "stage >= 3", "signal": "datum.bit === 1 ? '#175fff' : '#ffffff'"},
+            {"signal": "datum.bit === 1 ? '#175fff' : '#ff5757'"}
+          ],
+          "stroke": [{"test": "stage >= 3", "value": "#cbd5e1"}, {"value": "transparent"}],
+          "strokeWidth": {"value": 1},
+          "opacity": [{"test": "stage >= 2", "value": 1}, {"value": 0}]
+        }
+      }
+    },
+    {
+      "type": "text",
+      "from": {"data": "cells"},
+      "encode": {
+        "update": {
+          "x": {"signal": "outX + cellW / 2"},
+          "y": {"signal": "stripY + datum.i * cellH + (cellH - 1.5) / 2"},
+          "align": {"value": "center"}, "baseline": {"value": "middle"},
+          "fontSize": {"value": 11}, "fontWeight": {"value": "bold"},
+          "text": [
+            {"test": "stage >= 3", "signal": "'' + datum.bit"},
+            {"signal": "datum.sign > 0 ? '+' : '−'"}
+          ],
+          "fill": [
+            {"test": "stage >= 3", "signal": "datum.bit === 1 ? '#ffffff' : '#1e293b'"},
+            {"value": "#ffffff"}
+          ],
+          "opacity": [{"test": "stage >= 2", "value": 1}, {"value": 0}]
+        }
+      }
+    },
+    {
+      "type": "text",
+      "encode": {
+        "update": {
+          "x": {"signal": "(colX + outX + cellW) / 2"},
+          "y": {"value": 82},
+          "text": {"value": "3 KB  →  96 bytes   ·   32× smaller"},
+          "align": {"value": "center"}, "baseline": {"value": "alphabetic"},
+          "fontSize": {"value": 18}, "fontWeight": {"value": "bold"},
+          "fill": {"value": "#175fff"},
+          "opacity": [{"test": "stage >= 3", "value": 1}, {"value": 0}]
+        }
+      }
+    },
+    {
+      "type": "text",
+      "encode": {
+        "update": {
+          "x": {"signal": "(colX + outX + cellW) / 2"},
+          "y": {"value": 476},
+          "text": {"signal": "narration"},
+          "align": {"value": "center"}, "baseline": {"value": "alphabetic"},
+          "fontSize": {"value": 16}, "fill": {"value": "#1e293b"}
+        }
+      }
+    }
+  ]
+}

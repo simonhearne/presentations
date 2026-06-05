@@ -1,0 +1,42 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "description": "Random scatter plot with two clusters.",
+  "width": 1200,
+  "height": 600,
+  "background": "transparent",
+  "config": {
+    "axis": { "labelFontSize": 16, "titleFontSize": 18 },
+    "legend": { "labelFontSize": 16, "titleFontSize": 18 }
+  },
+  "data": {
+    "values": [
+      {"x": 1.2, "y": 2.1, "group": "A"},
+      {"x": 1.8, "y": 2.6, "group": "A"},
+      {"x": 2.1, "y": 2.0, "group": "A"},
+      {"x": 2.4, "y": 2.9, "group": "A"},
+      {"x": 2.7, "y": 2.3, "group": "A"},
+      {"x": 3.1, "y": 3.2, "group": "A"},
+      {"x": 3.4, "y": 2.8, "group": "A"},
+      {"x": 3.7, "y": 3.5, "group": "A"},
+      {"x": 5.5, "y": 5.2, "group": "B"},
+      {"x": 5.9, "y": 5.7, "group": "B"},
+      {"x": 6.2, "y": 5.4, "group": "B"},
+      {"x": 6.5, "y": 6.1, "group": "B"},
+      {"x": 6.8, "y": 5.8, "group": "B"},
+      {"x": 7.1, "y": 6.4, "group": "B"},
+      {"x": 7.4, "y": 6.0, "group": "B"},
+      {"x": 7.7, "y": 6.7, "group": "B"}
+    ]
+  },
+  "mark": { "type": "circle", "size": 200, "opacity": 0.8 },
+  "encoding": {
+    "x": { "field": "x", "type": "quantitative", "title": "Embedding dim 1" },
+    "y": { "field": "y", "type": "quantitative", "title": "Embedding dim 2" },
+    "color": {
+      "field": "group",
+      "type": "nominal",
+      "title": "Cluster",
+      "scale": { "range": ["#2858ff", "#9d41ff"] }
+    }
+  }
+}

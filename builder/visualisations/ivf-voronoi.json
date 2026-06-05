@@ -1,0 +1,246 @@
+{
+  "$schema": "https://vega.github.io/schema/vega/v5.json",
+  "description": "IVF intuition — pick a query point, see which nprobe cells it searches.",
+  "width": 1200,
+  "height": 640,
+  "padding": 0,
+  "background": "transparent",
+  "config": {
+    "axis": { "labelFontSize": 12, "titleFontSize": 14 }
+  },
+  "signals": [
+    { "name": "nlist", "value": 24, "bind": { "input": "range", "min": 8, "max": 64, "step": 8, "name": "nlist " } },
+    { "name": "stage", "value": 2, "bind": { "input": "range", "min": 1, "max": 16, "step": 1, "name": "nprobe " } },
+    { "name": "nprobe", "update": "stage" },
+    { "name": "probed_cells", "update": "min(nprobe, nlist)" },
+    { "name": "scanned", "update": "round(probed_cells / nlist * 500)"},
+    { "name": "skipped", "update": "500  - scanned"},
+    { "name": "interactive", "value": true, "on": [{"events": "click", "update": "!interactive" }] },
+    { "name": "qx", "value": 6, "on": [ { "events": "*:pointerover", "update": "interactive ? invert('xscale', x()) : qx" } ] },
+    { "name": "qy", "value": 5, "on": [ { "events": "*:pointerover", "update": "interactive ? invert('yscale', y()) : qy" } ] }
+  ],
+  "data": [
+    {
+      "name": "centroids",
+      "transform": [
+        { "type": "sequence", "start": 0, "stop": {"signal": "nlist"}, "as": "id" },
+        { "type": "formula", "as": "cols", "expr": "ceil(sqrt(nlist))" },
+        { "type": "formula", "as": "rows", "expr": "ceil(nlist / datum.cols)" },
+        { "type": "formula", "as": "row", "expr": "floor(datum.id / datum.cols)" },
+        { "type": "formula", "as": "col", "expr": "datum.id - datum.row * datum.cols" },
+        { "type": "formula", "as": "jx", "expr": "(sin(datum.id * 12.9898) * 43758.5453) - floor(sin(datum.id * 12.9898) * 43758.5453)" },
+        { "type": "formula", "as": "jy", "expr": "(sin(datum.id * 78.233) * 12345.6789) - floor(sin(datum.id * 78.233) * 12345.6789)" },
+        { "type": "formula", "as": "x", "expr": "((datum.col + 0.15 + 0.7 * datum.jx) / datum.cols) * 10" },
+        { "type": "formula", "as": "y", "expr": "((datum.row + 0.15 + 0.7 * datum.jy) / datum.rows) * 10" }
+      ]
+    },
+    {
+      "name": "centroids_with_dist",
+      "source": "centroids",
+      "transform": [
+        { "type": "formula", "as": "dist", "expr": "sqrt(pow(datum.x - qx, 2) + pow(datum.y - qy, 2))" },
+        { "type": "window", "ops": ["row_number"], "as": ["rank"], "sort": { "field": "dist" } },
+        { "type": "formula", "as": "probed", "expr": "datum.rank <= nprobe" },
+        { "type": "formula", "as": "px", "expr": "scale('xscale', datum.x)" },
+        { "type": "formula", "as": "py", "expr": "scale('yscale', datum.y)" }
+      ]
+    },
+    {
+      "name": "voronoi",
+      "source": "centroids_with_dist",
+      "transform": [
+        { "type": "voronoi", "x": "px", "y": "py", "size": [ {"signal": "width"}, {"signal": "height"} ] }
+      ]
+    },
+    {
+      "name": "background_points",
+      "transform": [
+        { "type": "sequence", "start": 0, "stop": 500, "as": "i" },
+        { "type": "formula", "as": "x", "expr": "random() * 10" },
+        { "type": "formula", "as": "y", "expr": "random() * 10" }
+      ]
+    },
+    {
+      "name": "background_with_cell",
+      "source": "background_points",
+      "transform": [
+        {
+          "type": "lookup",
+          "from": "centroids_with_dist",
+          "key": "id",
+          "fields": ["i"],
+          "values": ["x", "y"],
+          "as": ["cx0", "cy0"],
+          "default": null
+        }
+      ]
+    },
+    {
+      "name": "query",
+      "values": [ {"x": 5, "y": 5} ],
+      "transform": [
+        { "type": "formula", "as": "x", "expr": "qx" },
+        { "type": "formula", "as": "y", "expr": "qy" }
+      ]
+    },
+    {
+      "name": "probed_centroids",
+      "source": "centroids_with_dist",
+      "transform": [
+        { "type": "filter", "expr": "datum.probed" }
+      ]
+    }
+  ],
+  "scales": [
+    { "name": "xscale", "type": "linear", "domain": [0, 10], "range": "width" },
+    { "name": "yscale", "type": "linear", "domain": [0, 10], "range": "height" }
+  ],
+  "marks": [
+    {
+      "type": "path",
+      "from": { "data": "voronoi" },
+      "encode": {
+        "enter": { "stroke": { "value": "#bbb" }, "strokeWidth": { "value": 1 } },
+        "update": {
+          "path": { "field": "path" },
+          "fill": [
+            { "test": "datum.probed", "value": "#1f6feb" },
+            { "value": "#f6f8fa" }
+          ],
+          "fillOpacity": [
+            { "test": "datum.probed", "value": 0.25 },
+            { "value": 1 }
+          ]
+        }
+      }
+    },
+    {
+      "type": "symbol",
+      "from": { "data": "background_points" },
+      "encode": {
+        "enter": {
+          "shape": { "value": "circle" },
+          "size": { "value": 12 },
+          "fill": { "value": "#6b7280" },
+          "fillOpacity": { "value": 0.45 }
+        },
+        "update": {
+          "x": { "scale": "xscale", "field": "x" },
+          "y": { "scale": "yscale", "field": "y" }
+        }
+      }
+    },
+    {
+      "type": "rule",
+      "from": { "data": "probed_centroids" },
+      "encode": {
+        "enter": {
+          "stroke": { "value": "#c84cff" },
+          "strokeWidth": { "value": 1.5 },
+          "strokeDash": { "value": [4, 4] },
+          "strokeOpacity": { "value": 0.85 }
+        },
+        "update": {
+          "x": { "scale": "xscale", "signal": "qx" },
+          "y": { "scale": "yscale", "signal": "qy" },
+          "x2": { "field": "px" },
+          "y2": { "field": "py" }
+        }
+      }
+    },
+    {
+      "type": "text",
+      "from": { "data": "probed_centroids" },
+      "encode": {
+        "enter": {
+          "fill": { "value": "#0a2540" },
+          "fontSize": { "value": 11 },
+          "fontWeight": { "value": "bold" },
+          "align": { "value": "center" },
+          "baseline": { "value": "middle" }
+        },
+        "update": {
+          "x": { "signal": "(scale('xscale', qx) + datum.px) / 2" },
+          "y": { "signal": "(scale('yscale', qy) + datum.py) / 2 - 8" },
+          "text": { "signal": "format(datum.dist, '.2f')" }
+        }
+      }
+    },
+    {
+      "type": "symbol",
+      "from": { "data": "centroids_with_dist" },
+      "encode": {
+        "enter": { "size": { "value": 60 }, "shape": { "value": "circle" } },
+        "update": {
+          "x": { "field": "px" },
+          "y": { "field": "py" },
+          "fill": [
+            { "test": "datum.probed", "value": "#0a2540" },
+            { "value": "#9aa4b2" }
+          ]
+        }
+      }
+    },
+    {
+      "type": "symbol",
+      "from": { "data": "query" },
+      "encode": {
+        "enter": { "size": { "value": 220 }, "shape": { "value": "diamond" }, "fill": { "value": "#c84cff" }, "stroke": { "value": "#fff" }, "strokeWidth": { "value": 2 } },
+        "update": {
+          "x": { "scale": "xscale", "field": "x" },
+          "y": { "scale": "yscale", "field": "y" }
+        }
+      }
+    },    {
+      "type": "rect",
+      "encode": {
+        "enter": {
+          "fill": { "value": "#ffffff" },
+          "fillOpacity": { "value": 0.94 },
+          "stroke": { "value": "#d1d5db" },
+          "strokeWidth": { "value": 1 },
+          "cornerRadius": { "value": 8 }
+        },
+        "update": {
+          "x": { "value": 14 },
+          "y": { "value": 14 },
+          "width": { "value": 500 },
+          "height": { "value": 66 }
+        }
+      }
+    },
+    {
+      "type": "text",
+      "encode": {
+        "enter": {
+          "fontSize": { "value": 14 },
+          "fontWeight": { "value": "bold" },
+          "fill": { "value": "#0a2540" },
+          "align": { "value": "left" },
+          "baseline": { "value": "top" }
+        },
+        "update": {
+          "x": { "value": 26 },
+          "y": { "value": 26 },
+          "text": { "signal": "'Compared ' + scanned + ' / 500 vectors  •  Skipped ' + skipped + '  (' + format(skipped / 500, '.0%') + ' of dataset)'" }
+        }
+      }
+    },
+    {
+      "type": "text",
+      "encode": {
+        "enter": {
+          "fontSize": { "value": 11 },
+          "fill": { "value": "#475569" },
+          "align": { "value": "left" },
+          "baseline": { "value": "top" }
+        },
+        "update": {
+          "x": { "value": 26 },
+          "y": { "value": 50 },
+          "text": { "signal": "'nprobe = ' + probed_cells + ' of ' + nlist + ' cells visited, the rest of the index is never touched.'" }
+        }
+      }
+    }
+  ]
+}

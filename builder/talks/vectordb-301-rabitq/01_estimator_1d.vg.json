@@ -1,0 +1,372 @@
+{
+  "$schema": "https://vega.github.io/schema/vega/v5.json",
+  "description": "RaBitQ estimator in 1D. The codebook is {−1, +1}; the data vector o snaps to ō = sign(o). Drag o and q on the number line; watch the estimator ⟨ō,q⟩/⟨ō,o⟩ recover o·q exactly.",
+  "width": 700,
+  "height": 480,
+  "padding": 12,
+  "background": "transparent",
+  "signals": [
+    {
+      "name": "o_value", "value": 0.7,
+      "on": [
+        {
+          "events": [
+            {
+              "source": "window",
+              "type": "mousemove",
+              "between": [
+                { "markname": "o_marker", "type": "mousedown" },
+                { "source": "window", "type": "mouseup" }
+              ]
+            },
+            {
+              "source": "window",
+              "type": "touchmove",
+              "between": [
+                { "markname": "o_marker", "type": "touchstart" },
+                { "source": "window", "type": "touchend" }
+              ],
+              "consume": true
+            }
+          ],
+          "update": "clamp(round(invert('x', x()) / 0.05) * 0.05, -1, 1)"
+        }
+      ]
+    },
+    {
+      "name": "q_value", "value": 0.4,
+      "on": [
+        {
+          "events": [
+            {
+              "source": "window",
+              "type": "mousemove",
+              "between": [
+                { "markname": "q_marker", "type": "mousedown" },
+                { "source": "window", "type": "mouseup" }
+              ]
+            },
+            {
+              "source": "window",
+              "type": "touchmove",
+              "between": [
+                { "markname": "q_marker", "type": "touchstart" },
+                { "source": "window", "type": "touchend" }
+              ],
+              "consume": true
+            }
+          ],
+          "update": "clamp(round(invert('x', x()) / 0.05) * 0.05, -1, 1)"
+        }
+      ]
+    },
+    { "name": "o_bar", "update": "o_value >= 0 ? 1 : -1" },
+    { "name": "inner_oq_bar", "update": "o_bar * q_value" },
+    { "name": "inner_oo_bar", "update": "o_bar * o_bar" },
+    { "name": "estimate", "update": "inner_oq_bar / inner_oo_bar" },
+    { "name": "truth", "update": "o_bar * q_value" },
+    { "name": "agree", "update": "abs(estimate - truth) < 0.001" },
+    { "name": "agree_color", "update": "agree ? '#00a884' : '#1e293b'" },
+    { "name": "axis_y", "value": 90 },
+    { "name": "panel_y", "value": 170 },
+    { "name": "row_h", "value": 28 }
+  ],
+  "scales": [
+    { "name": "x", "type": "linear", "domain": [-1.2, 1.2], "range": [40, 660] }
+  ],
+  "data": [
+    { "name": "ticks", "values": [-1, -0.5, 0, 0.5, 1] }
+  ],
+  "marks": [
+    {
+      "type": "rule",
+      "encode": {
+        "enter": {
+          "x": { "scale": "x", "value": -1.2 },
+          "x2": { "scale": "x", "value": 1.2 },
+          "stroke": { "value": "#94a3b8" },
+          "strokeWidth": { "value": 1.5 }
+        },
+        "update": { "y": { "signal": "axis_y" } }
+      }
+    },
+    {
+      "type": "rule",
+      "from": { "data": "ticks" },
+      "encode": {
+        "enter": {
+          "x": { "scale": "x", "field": "data" },
+          "stroke": { "value": "#cbd5e1" },
+          "strokeWidth": { "value": 1 }
+        },
+        "update": {
+          "y": { "signal": "axis_y - 5" },
+          "y2": { "signal": "axis_y + 5" }
+        }
+      }
+    },
+    {
+      "type": "text",
+      "from": { "data": "ticks" },
+      "encode": {
+        "enter": {
+          "x": { "scale": "x", "field": "data" },
+          "text": { "field": "data" },
+          "fontSize": { "value": 10 },
+          "font": { "value": "IBM Plex Mono, monospace" },
+          "fill": { "value": "#94a3b8" },
+          "align": { "value": "center" }
+        },
+        "update": { "y": { "signal": "axis_y + 22" } }
+      }
+    },
+    {
+      "type": "rule",
+      "encode": {
+        "update": {
+          "x": { "scale": "x", "signal": "o_value" },
+          "x2": { "scale": "x", "signal": "o_bar" },
+          "y": { "signal": "axis_y" },
+          "y2": { "signal": "axis_y" },
+          "stroke": { "value": "#6b7280" },
+          "strokeWidth": { "value": 1.5 },
+          "strokeDash": { "value": [4, 4] }
+        }
+      }
+    },
+    {
+      "type": "symbol",
+      "name": "o_marker",
+      "encode": {
+        "enter": {
+          "size": { "value": 320 },
+          "shape": { "value": "circle" },
+          "fill": { "value": "#c84cff" },
+          "stroke": { "value": "#ffffff" },
+          "strokeWidth": { "value": 2 },
+          "cursor": { "value": "ew-resize" }
+        },
+        "update": {
+          "x": { "scale": "x", "signal": "o_value" },
+          "y": { "signal": "axis_y" }
+        }
+      }
+    },
+    {
+      "type": "text",
+      "encode": {
+        "enter": {
+          "text": { "value": "o" },
+          "fontSize": { "value": 16 },
+          "fontWeight": { "value": 600 },
+          "fontStyle": { "value": "italic" },
+          "fill": { "value": "#c84cff" },
+          "align": { "value": "center" }
+        },
+        "update": {
+          "x": { "scale": "x", "signal": "o_value" },
+          "y": { "signal": "axis_y - 18" }
+        }
+      }
+    },
+    {
+      "type": "symbol",
+      "name": "q_marker",
+      "encode": {
+        "enter": {
+          "size": { "value": 280 },
+          "shape": { "value": "diamond" },
+          "fill": { "value": "#1e293b" },
+          "cursor": { "value": "ew-resize" }
+        },
+        "update": {
+          "x": { "scale": "x", "signal": "q_value" },
+          "y": { "signal": "axis_y" }
+        }
+      }
+    },
+    {
+      "type": "text",
+      "encode": {
+        "enter": {
+          "text": { "value": "q" },
+          "fontSize": { "value": 16 },
+          "fontWeight": { "value": 600 },
+          "fontStyle": { "value": "italic" },
+          "fill": { "value": "#1e293b" },
+          "align": { "value": "center" }
+        },
+        "update": {
+          "x": { "scale": "x", "signal": "q_value" },
+          "y": { "signal": "axis_y - 18" }
+        }
+      }
+    },
+    {
+      "type": "symbol",
+      "encode": {
+        "enter": {
+          "size": { "value": 320 },
+          "shape": { "value": "circle" },
+          "fill": { "value": "#ffffff" },
+          "stroke": { "value": "#175fff" },
+          "strokeWidth": { "value": 2.5 }
+        },
+        "update": {
+          "x": { "scale": "x", "signal": "o_bar" },
+          "y": { "signal": "axis_y" }
+        }
+      }
+    },
+    {
+      "type": "text",
+      "encode": {
+        "enter": {
+          "text": { "value": "ō" },
+          "fontSize": { "value": 16 },
+          "fontWeight": { "value": 600 },
+          "fontStyle": { "value": "italic" },
+          "fill": { "value": "#175fff" },
+          "align": { "value": "center" }
+        },
+        "update": {
+          "x": { "scale": "x", "signal": "o_bar" },
+          "y": { "signal": "axis_y - 18" }
+        }
+      }
+    },
+    {
+      "type": "text",
+      "encode": {
+        "enter": {
+          "text": { "value": "snap" },
+          "fontSize": { "value": 10 },
+          "fontStyle": { "value": "italic" },
+          "fill": { "value": "#6b7280" },
+          "align": { "value": "center" }
+        },
+        "update": {
+          "x": { "scale": "x", "signal": "(o_value + o_bar) / 2" },
+          "y": { "signal": "axis_y - 8" }
+        }
+      }
+    },
+    {
+      "type": "text",
+      "encode": {
+        "enter": {
+          "x": { "value": 40 },
+          "fontSize": { "value": 12 },
+          "fontStyle": { "value": "italic" },
+          "fill": { "value": "#9ca3af" },
+          "text": { "value": "Codebook in 1D: {−1, +1}" }
+        },
+        "update": { "y": { "signal": "axis_y + 48" } }
+      }
+    },
+    {
+      "type": "text",
+      "encode": {
+        "enter": {
+          "x": { "value": 40 },
+          "fontSize": { "value": 13 },
+          "font": { "value": "IBM Plex Mono, monospace" },
+          "fill": { "value": "#475569" }
+        },
+        "update": {
+          "y": { "signal": "panel_y" },
+          "text": { "signal": "'⟨ō, q⟩  =  ō · q  =  ' + format(o_bar, '+.2f') + ' · ' + format(q_value, '+.2f') + '  =  ' + format(inner_oq_bar, '+.3f')" }
+        }
+      }
+    },
+    {
+      "type": "text",
+      "encode": {
+        "enter": {
+          "x": { "value": 40 },
+          "fontSize": { "value": 13 },
+          "font": { "value": "IBM Plex Mono, monospace" },
+          "fill": { "value": "#475569" }
+        },
+        "update": {
+          "y": { "signal": "panel_y + row_h" },
+          "text": { "signal": "'⟨ō, o⟩  =  ō · o  =  ' + format(o_bar, '+.2f') + ' · ' + format(o_bar, '+.2f') + '  =  ' + format(inner_oo_bar, '+.3f')" }
+        }
+      }
+    },
+    {
+      "type": "rule",
+      "encode": {
+        "enter": {
+          "x": { "value": 40 },
+          "x2": { "value": 660 },
+          "stroke": { "value": "#e5e7eb" },
+          "strokeWidth": { "value": 1 }
+        },
+        "update": { "y": { "signal": "panel_y + row_h * 1.55" } }
+      }
+    },
+    {
+      "type": "text",
+      "encode": {
+        "enter": {
+          "x": { "value": 40 },
+          "fontSize": { "value": 13 },
+          "font": { "value": "IBM Plex Mono, monospace" },
+          "fontWeight": { "value": 600 }
+        },
+        "update": {
+          "y": { "signal": "panel_y + row_h * 2.2" },
+          "fill": { "signal": "agree_color" },
+          "text": { "signal": "'estimate  =  ⟨ō,q⟩ / ⟨ō,o⟩  =  ' + format(estimate, '+.3f')" }
+        }
+      }
+    },
+    {
+      "type": "text",
+      "encode": {
+        "enter": {
+          "x": { "value": 40 },
+          "fontSize": { "value": 13 },
+          "font": { "value": "IBM Plex Mono, monospace" },
+          "fontWeight": { "value": 600 }
+        },
+        "update": {
+          "y": { "signal": "panel_y + row_h * 3.2" },
+          "fill": { "signal": "agree_color" },
+          "text": { "signal": "'true      =       o · q       =  ' + format(truth, '+.3f')" }
+        }
+      }
+    },
+    {
+      "type": "text",
+      "encode": {
+        "enter": {
+          "x": { "value": 40 },
+          "fontSize": { "value": 11 },
+          "fontStyle": { "value": "italic" },
+          "fill": { "value": "#6b7280" }
+        },
+        "update": {
+          "y": { "signal": "panel_y + row_h * 4.4" },
+          "text": { "value": "In 1D the codebook is just {−1, +1}. After normalization o sits at ±1; the estimator ⟨ō,q⟩ / ⟨ō,o⟩ recovers ⟨o, q⟩ exactly." }
+        }
+      }
+    },
+    {
+      "type": "text",
+      "encode": {
+        "enter": {
+          "x": { "value": 40 },
+          "fontSize": { "value": 11 },
+          "fontStyle": { "value": "italic" },
+          "fill": { "value": "#6b7280" }
+        },
+        "update": {
+          "y": { "signal": "panel_y + row_h * 4.4 + 16" },
+          "text": { "value": "Notice ⟨ō, o⟩ collapses to 1 in 1D. In higher D it's a non-trivial number that concentrates near 0.798." }
+        }
+      }
+    }
+  ]
+}

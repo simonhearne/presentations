@@ -1,0 +1,83 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "description": "Matryoshka truncation — recall vs prefix length, MRL-trained vs naive truncation. Step the prefix marker with ArrowRight/Left.",
+  "usermeta": { "embedOptions": { "renderer": "svg", "actions": false } },
+  "background": "transparent",
+  "width": 820,
+  "height": 430,
+  "config": {
+    "axis": { "labelFontSize": 13, "titleFontSize": 14 },
+    "legend": { "labelFontSize": 14, "titleFontSize": 14, "symbolType": "stroke", "symbolStrokeWidth": 3 }
+  },
+  "params": [
+    { "name": "prefix", "value": 768 }
+  ],
+  "data": {
+    "values": [
+      { "series": "MRL-trained", "dim": 3072, "recall": 1.00 },
+      { "series": "MRL-trained", "dim": 1536, "recall": 0.995 },
+      { "series": "MRL-trained", "dim": 1024, "recall": 0.992 },
+      { "series": "MRL-trained", "dim": 512, "recall": 0.97 },
+      { "series": "MRL-trained", "dim": 256, "recall": 0.959 },
+      { "series": "Naive truncation", "dim": 3072, "recall": 1.00 },
+      { "series": "Naive truncation", "dim": 1536, "recall": 0.95 },
+      { "series": "Naive truncation", "dim": 1024, "recall": 0.88 },
+      { "series": "Naive truncation", "dim": 512, "recall": 0.62 },
+      { "series": "Naive truncation", "dim": 256, "recall": 0.40 }
+    ]
+  },
+  "encoding": {
+    "x": {
+      "field": "dim",
+      "type": "quantitative",
+      "scale": { "type": "log", "base": 2, "domain": [220, 3500] },
+      "axis": { "title": "Prefix length kept (dimensions)", "values": [256, 512, 1024, 1536, 3072], "format": "d" }
+    },
+    "y": {
+      "field": "recall",
+      "type": "quantitative",
+      "scale": { "domain": [0, 1.02] },
+      "axis": { "title": "Quality retained vs full 3072-D", "format": ".0%" }
+    }
+  },
+  "layer": [
+    {
+      "mark": { "type": "line", "strokeWidth": 3, "point": { "size": 70, "filled": true } },
+      "encoding": {
+        "color": {
+          "field": "series",
+          "type": "nominal",
+          "scale": { "domain": ["MRL-trained", "Naive truncation"], "range": ["#175fff", "#c84cff"] },
+          "legend": { "title": null, "orient": "bottom-left" }
+        },
+        "tooltip": [
+          { "field": "series", "type": "nominal", "title": "Model" },
+          { "field": "dim", "type": "quantitative", "title": "Prefix dims" },
+          { "field": "recall", "type": "quantitative", "title": "Quality retained", "format": ".0%" }
+        ]
+      }
+    },
+    {
+      "transform": [{ "filter": "datum.series == 'MRL-trained' && datum.dim == prefix" }],
+      "mark": { "type": "rule", "strokeWidth": 1.5, "strokeDash": [4, 4], "color": "#94a3b8" },
+      "encoding": { "y": { "value": 0 } }
+    },
+    {
+      "transform": [{ "filter": "datum.series == 'MRL-trained' && datum.dim == prefix" }],
+      "mark": { "type": "point", "size": 320, "filled": true, "color": "#175fff", "stroke": "#ffffff", "strokeWidth": 2 }
+    },
+    {
+      "transform": [
+        { "filter": "datum.series == 'MRL-trained' && datum.dim == prefix" },
+        { "calculate": "'' + datum.dim + '-D  ·  keeps ' + format(datum.recall, '.0%') + '  ·  ' + format(3072 / datum.dim, '.0f') + '× smaller'", "as": "label" }
+      ],
+      "mark": { "type": "text", "align": "left", "fontSize": 22, "fontWeight": 700, "color": "#061982" },
+      "encoding": { "text": { "field": "label" }, "x": { "value": 30 }, "y": { "value": 50 } }
+    },
+    {
+      "data": { "values": [{ "note": "MRL line ≈ OpenAI text-embedding-3-large MTEB retained vs 3072-D (256-D keeps ~96%). Naive-truncation curve illustrative." }] },
+      "mark": { "type": "text", "align": "left", "baseline": "bottom", "fontSize": 11, "color": "#94a3b8" },
+      "encoding": { "text": { "field": "note" }, "x": { "value": 2 }, "y": { "value": 428 } }
+    }
+  ]
+}

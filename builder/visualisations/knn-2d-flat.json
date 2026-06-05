@@ -1,0 +1,273 @@
+{
+  "$schema": "https://vega.github.io/schema/vega/v5.json",
+  "description": "Flat O(N) scan. Move to position the query, click to pin and watch each point get tested.",
+  "width": 600,
+  "height": 600,
+  "signals": [
+    {
+      "name": "k",
+      "value": 5
+    },
+    { "name": "scanIdx", "value": 0 },
+    { "name": "totalPoints", "update": "length(data('ranked'))" },
+    { "name": "stage", "value": 0 },
+    {
+      "name": "qx",
+      "value": 1.2,
+      "on": [
+        {
+          "events": "pointermove",
+          "update": "interactive ? clamp(invert('x', x()), -5, 5) : qx"
+        },
+        { "events": {"signal": "stage"}, "update": "stage >= 1 ? 4 : 1.2" }
+      ]
+    },
+    {
+      "name": "qy",
+      "value": 0.8,
+      "on": [
+        {
+          "events": "pointermove",
+          "update": "interactive ? clamp(invert('y', y()), -5, 5) : qy"
+        },
+        { "events": {"signal": "stage"}, "update": "stage >= 1 ? -4 : 0.8" }
+      ]
+    },
+    {
+      "name": "interactive",
+      "value": true,
+      "on": [
+        { "events": "click", "update": "!interactive" },
+        { "events": {"signal": "stage"}, "update": "stage >= 1 ? false : true" }
+      ]
+    },
+    {
+      "name": "scanning",
+      "value": false,
+      "on": [
+        { "events": "click", "update": "!interactive" },
+        { "events": {"signal": "stage"}, "update": "stage >= 2" }
+      ]
+    }
+  ],
+  "data": [
+    {
+      "name": "points",
+      "values": [
+        {"x": -3.2, "y":  2.4}, {"x":  1.8, "y": -3.5}, {"x":  4.1, "y":  1.7},
+        {"x": -1.5, "y":  3.8}, {"x":  2.6, "y":  3.2}, {"x": -4.3, "y": -1.2},
+        {"x":  3.7, "y": -2.1}, {"x": -2.8, "y":  0.6}, {"x":  0.4, "y":  4.2},
+        {"x": -3.9, "y":  2.9}, {"x":  1.1, "y":  1.5}, {"x":  4.6, "y": -3.7},
+        {"x": -0.7, "y": -2.6}, {"x":  3.3, "y":  0.8}, {"x": -2.1, "y":  4.5},
+        {"x":  2.9, "y": -4.2}, {"x": -4.7, "y":  3.1}, {"x":  0.9, "y":  2.7},
+        {"x": -1.8, "y": -3.9}, {"x":  4.4, "y":  3.6}, {"x": -3.5, "y": -2.8},
+        {"x":  2.2, "y":  4.8}, {"x": -0.3, "y": -1.1}, {"x":  3.8, "y": -0.5},
+        {"x": -2.4, "y":  1.9}, {"x":  1.5, "y": -1.7}, {"x": -4.1, "y":  0.3},
+        {"x":  0.7, "y": -4.6}, {"x":  3.0, "y":  2.5}, {"x": -1.2, "y":  0.9},
+        {"x": -3.7, "y": -4.4}, {"x":  4.9, "y":  0.2}, {"x": -0.6, "y":  3.5},
+        {"x":  2.4, "y": -2.9}, {"x": -2.6, "y":  3.4}, {"x":  4.2, "y": -1.4},
+        {"x": -4.5, "y":  1.6}, {"x":  1.7, "y":  0.4}, {"x": -1.9, "y": -1.6},
+        {"x":  3.4, "y":  4.1}, {"x": -3.1, "y": -0.9}, {"x":  0.2, "y": -3.2},
+        {"x": -4.8, "y":  4.7}, {"x":  2.0, "y":  2.0}, {"x": -0.9, "y":  4.6},
+        {"x":  1.3, "y": -0.4}, {"x": -2.2, "y": -4.7}, {"x":  4.7, "y":  2.8},
+        {"x": -3.4, "y":  0.7}, {"x":  0.6, "y":  1.1}, {"x":  3.1, "y": -3.3},
+        {"x": -1.4, "y":  2.2}, {"x":  4.0, "y": -4.5}, {"x": -2.7, "y": -2.3},
+        {"x":  2.7, "y":  0.1}, {"x": -3.8, "y":  3.7}, {"x":  1.0, "y":  3.9},
+        {"x": -0.1, "y": -0.7}, {"x":  3.6, "y":  1.3}, {"x": -4.6, "y": -3.6},
+        {"x":  0.5, "y":  0.5}, {"x":  2.1, "y": -1.0}, {"x": -1.7, "y":  1.3},
+        {"x":  4.3, "y": -2.7}, {"x": -2.9, "y":  4.3}, {"x":  3.5, "y":  3.0},
+        {"x": -0.4, "y": -4.1}, {"x":  1.6, "y":  4.4}, {"x": -3.6, "y": -1.5},
+        {"x":  2.3, "y":  1.2}, {"x": -4.4, "y":  2.2}, {"x":  0.8, "y": -2.0},
+        {"x":  3.9, "y":  4.7}, {"x": -1.1, "y": -3.0}, {"x":  4.5, "y":  0.6},
+        {"x": -2.5, "y":  2.7}, {"x":  1.9, "y":  3.6}, {"x": -3.3, "y": -3.2},
+        {"x":  2.8, "y": -0.3}
+      ]
+    },
+    {
+      "name": "ranked",
+      "source": "points",
+      "transform": [
+        { "type": "formula", "expr": "floor((5 - datum.y) / 1.0)", "as": "rowBucket" },
+        {
+          "type": "window",
+          "sort": {"field": ["rowBucket", "x"], "order": ["ascending", "ascending"]},
+          "ops": ["row_number"],
+          "as": ["idx"]
+        },
+        {
+          "type": "formula",
+          "expr": "sqrt(pow(datum.x - qx, 2) + pow(datum.y - qy, 2))",
+          "as": "dist"
+        }
+      ]
+    },
+    {
+      "name": "scanned",
+      "source": "ranked",
+      "transform": [
+        { "type": "filter", "expr": "datum.idx <= scanIdx" },
+        {
+          "type": "window",
+          "sort": {"field": "dist", "order": "ascending"},
+          "ops": ["row_number"],
+          "as": ["scanRank"]
+        }
+      ]
+    },
+    {
+      "name": "current",
+      "source": "ranked",
+      "transform": [
+        { "type": "filter", "expr": "datum.idx === scanIdx && scanIdx > 0" }
+      ]
+    },
+    {
+      "name": "neighbours",
+      "source": "scanned",
+      "transform": [
+        { "type": "filter", "expr": "datum.scanRank <= k" }
+      ]
+    }
+  ],
+  "scales": [
+    {
+      "name": "x",
+      "type": "linear",
+      "domain": [-5, 5],
+      "range": "width",
+      "nice": false,
+      "zero": false
+    },
+    {
+      "name": "y",
+      "type": "linear",
+      "domain": [-5, 5],
+      "range": "height",
+      "nice": false,
+      "zero": false,
+      "reverse": true
+    }
+  ],
+  "axes": [
+    {"orient": "bottom", "scale": "x", "title": "x", "grid": true, "gridColor": "#eee"},
+    {"orient": "left", "scale": "y", "title": "y", "grid": true, "gridColor": "#eee"}
+  ],
+  "marks": [
+    {
+      "type": "symbol",
+      "from": {"data": "ranked"},
+      "encode": {
+        "update": {
+          "x": {"scale": "x", "field": "x"},
+          "y": {"scale": "y", "field": "y"},
+          "shape": {"value": "circle"},
+          "size": {"value": 70},
+          "fill": {"value": "#dcdcdc"},
+          "opacity": {"value": 0.7}
+        }
+      }
+    },
+    {
+      "type": "symbol",
+      "from": {"data": "scanned"},
+      "encode": {
+        "update": {
+          "x": {"scale": "x", "field": "x"},
+          "y": {"scale": "y", "field": "y"},
+          "shape": {"value": "circle"},
+          "size": [
+            {"test": "datum.scanRank <= k", "value": 220},
+            {"value": 90}
+          ],
+          "fill": [
+            {"test": "datum.scanRank <= k", "value": "#9d41ff"},
+            {"value": "#9bb5ff"}
+          ],
+          "stroke": [
+            {"test": "datum.scanRank <= k", "value": "#5f1f9c"},
+            {"value": "transparent"}
+          ],
+          "strokeWidth": {"value": 1},
+          "opacity": {"value": 1}
+        }
+      }
+    },
+    {
+      "type": "rule",
+      "from": {"data": "neighbours"},
+      "encode": {
+        "update": {
+          "x": {"scale": "x", "signal": "qx"},
+          "y": {"scale": "y", "signal": "qy"},
+          "x2": {"scale": "x", "field": "x"},
+          "y2": {"scale": "y", "field": "y"},
+          "stroke": {"value": "#175fff"},
+          "strokeWidth": {"value": 1.2},
+          "opacity": {"value": 0.55}
+        }
+      }
+    },
+    {
+      "type": "rule",
+      "from": {"data": "current"},
+      "encode": {
+        "update": {
+          "x": {"scale": "x", "signal": "qx"},
+          "y": {"scale": "y", "signal": "qy"},
+          "x2": {"scale": "x", "field": "x"},
+          "y2": {"scale": "y", "field": "y"},
+          "stroke": {"value": "#f59e0b"},
+          "strokeWidth": {"value": 2},
+          "strokeDash": {"value": [5, 3]},
+          "opacity": {"value": 0.9}
+        }
+      }
+    },
+    {
+      "type": "symbol",
+      "from": {"data": "current"},
+      "encode": {
+        "update": {
+          "x": {"scale": "x", "field": "x"},
+          "y": {"scale": "y", "field": "y"},
+          "shape": {"value": "circle"},
+          "size": {"value": 320},
+          "fill": {"value": "#f59e0b"},
+          "stroke": {"value": "#000"},
+          "strokeWidth": {"value": 1.5}
+        }
+      }
+    },
+    {
+      "type": "symbol",
+      "encode": {
+        "enter": {
+          "shape": {"value": "diamond"},
+          "size": {"value": 420},
+          "fill": {"value": "#ff5757"},
+          "stroke": {"value": "#000"},
+          "strokeWidth": {"value": 2}
+        },
+        "update": {
+          "x": {"scale": "x", "signal": "qx"},
+          "y": {"scale": "y", "signal": "qy"}
+        }
+      }
+    },
+    {
+      "type": "text",
+      "encode": {
+        "enter": {
+          "x": {"value": 12},
+          "y": {"value": 22},
+          "fontSize": {"value": 16},
+          "fontWeight": {"value": 600},
+          "fill": {"value": "#222"}
+        },
+        "update": {
+          "text": {"signal": "'comparisons: ' + min(scanIdx, totalPoints) + ' / ' + totalPoints"}
+        }
+      }
+    }
+  ]
+}

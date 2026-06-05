@@ -1,0 +1,152 @@
+{
+  "$schema": "https://vega.github.io/schema/vega/v5.json",
+  "description": "Pick a query, see cosine similarity against 10 pre-embedded documents.",
+  "width": 720,
+  "height": 480,
+  "padding": 24,
+  "background": "transparent",
+  "config": {
+    "axis": { "labelFontSize": 13, "titleFontSize": 14 }
+  },
+  "signals": [
+    {
+      "name": "query",
+      "value": "How do I cook a great steak?",
+      "bind": {
+        "input": "select",
+        "name": "Query ",
+        "options": [
+          "How do I cook a great steak?",
+          "Where should I travel next month?",
+          "Optimizing database performance",
+          "Build a search engine"
+        ]
+      }
+    }
+  ],
+  "data": [
+    {
+      "name": "scores",
+      "values": [
+        {"q": "How do I cook a great steak?", "doc": "Sear a steak without smoking the kitchen",       "sim": 0.91},
+        {"q": "How do I cook a great steak?", "doc": "Three-ingredient pasta recipe",                  "sim": 0.42},
+        {"q": "How do I cook a great steak?", "doc": "Cheapest month to fly to Tokyo",                 "sim": 0.05},
+        {"q": "How do I cook a great steak?", "doc": "Train pass vs flights for two weeks in Europe",  "sim": 0.04},
+        {"q": "How do I cook a great steak?", "doc": "Optimize a slow Postgres query",                 "sim": 0.06},
+        {"q": "How do I cook a great steak?", "doc": "Setting up a vector database in production",     "sim": 0.07},
+        {"q": "How do I cook a great steak?", "doc": "Why my React app re-renders constantly",         "sim": 0.05},
+        {"q": "How do I cook a great steak?", "doc": "What temperature for medium-rare beef",          "sim": 0.88},
+        {"q": "How do I cook a great steak?", "doc": "Solo travel safety tips for first-timers",       "sim": 0.05},
+        {"q": "How do I cook a great steak?", "doc": "HNSW vs IVF vector indexes",                     "sim": 0.04},
+
+        {"q": "Where should I travel next month?", "doc": "Sear a steak without smoking the kitchen",      "sim": 0.06},
+        {"q": "Where should I travel next month?", "doc": "Three-ingredient pasta recipe",                 "sim": 0.05},
+        {"q": "Where should I travel next month?", "doc": "Cheapest month to fly to Tokyo",                "sim": 0.93},
+        {"q": "Where should I travel next month?", "doc": "Train pass vs flights for two weeks in Europe", "sim": 0.85},
+        {"q": "Where should I travel next month?", "doc": "Optimize a slow Postgres query",                "sim": 0.04},
+        {"q": "Where should I travel next month?", "doc": "Setting up a vector database in production",    "sim": 0.03},
+        {"q": "Where should I travel next month?", "doc": "Why my React app re-renders constantly",        "sim": 0.02},
+        {"q": "Where should I travel next month?", "doc": "What temperature for medium-rare beef",         "sim": 0.04},
+        {"q": "Where should I travel next month?", "doc": "Solo travel safety tips for first-timers",      "sim": 0.79},
+        {"q": "Where should I travel next month?", "doc": "HNSW vs IVF vector indexes",                    "sim": 0.03},
+
+        {"q": "Optimizing database performance", "doc": "Sear a steak without smoking the kitchen",      "sim": 0.04},
+        {"q": "Optimizing database performance", "doc": "Three-ingredient pasta recipe",                 "sim": 0.03},
+        {"q": "Optimizing database performance", "doc": "Cheapest month to fly to Tokyo",                "sim": 0.05},
+        {"q": "Optimizing database performance", "doc": "Train pass vs flights for two weeks in Europe", "sim": 0.04},
+        {"q": "Optimizing database performance", "doc": "Optimize a slow Postgres query",                "sim": 0.94},
+        {"q": "Optimizing database performance", "doc": "Setting up a vector database in production",    "sim": 0.71},
+        {"q": "Optimizing database performance", "doc": "Why my React app re-renders constantly",        "sim": 0.51},
+        {"q": "Optimizing database performance", "doc": "What temperature for medium-rare beef",         "sim": 0.02},
+        {"q": "Optimizing database performance", "doc": "Solo travel safety tips for first-timers",      "sim": 0.03},
+        {"q": "Optimizing database performance", "doc": "HNSW vs IVF vector indexes",                    "sim": 0.62},
+
+        {"q": "Build a search engine", "doc": "Sear a steak without smoking the kitchen",      "sim": 0.05},
+        {"q": "Build a search engine", "doc": "Three-ingredient pasta recipe",                 "sim": 0.04},
+        {"q": "Build a search engine", "doc": "Cheapest month to fly to Tokyo",                "sim": 0.05},
+        {"q": "Build a search engine", "doc": "Train pass vs flights for two weeks in Europe", "sim": 0.04},
+        {"q": "Build a search engine", "doc": "Optimize a slow Postgres query",                "sim": 0.41},
+        {"q": "Build a search engine", "doc": "Setting up a vector database in production",    "sim": 0.87},
+        {"q": "Build a search engine", "doc": "Why my React app re-renders constantly",        "sim": 0.32},
+        {"q": "Build a search engine", "doc": "What temperature for medium-rare beef",         "sim": 0.02},
+        {"q": "Build a search engine", "doc": "Solo travel safety tips for first-timers",      "sim": 0.04},
+        {"q": "Build a search engine", "doc": "HNSW vs IVF vector indexes",                    "sim": 0.78}
+      ]
+    },
+    {
+      "name": "current",
+      "source": "scores",
+      "transform": [
+        {"type": "filter", "expr": "datum.q === query"},
+        {
+          "type": "window",
+          "sort": {"field": "sim", "order": "descending"},
+          "ops": ["row_number"],
+          "as": ["rank"]
+        }
+      ]
+    }
+  ],
+  "scales": [
+    {
+      "name": "x",
+      "type": "linear",
+      "domain": [0, 1],
+      "range": "width",
+      "nice": false,
+      "zero": true
+    },
+    {
+      "name": "y",
+      "type": "band",
+      "domain": {"data": "current", "field": "doc", "sort": {"field": "sim", "op": "max", "order": "descending"}},
+      "range": "height",
+      "padding": 0.2
+    }
+  ],
+  "axes": [
+    {"orient": "bottom", "scale": "x", "title": "Cosine similarity", "format": ".2f", "grid": true, "gridColor": "#eee"},
+    {"orient": "left", "scale": "y", "labelLimit": 320}
+  ],
+  "marks": [
+    {
+      "type": "rect",
+      "from": {"data": "current"},
+      "encode": {
+        "update": {
+          "x": {"scale": "x", "value": 0},
+          "x2": {"scale": "x", "field": "sim"},
+          "y": {"scale": "y", "field": "doc"},
+          "height": {"scale": "y", "band": 1},
+          "fill": [
+            {"test": "datum.rank <= 3", "value": "#2858ff"},
+            {"value": "#cdd6e0"}
+          ],
+          "cornerRadiusEnd": {"value": 4}
+        }
+      }
+    },
+    {
+      "type": "text",
+      "from": {"data": "current"},
+      "encode": {
+        "update": {
+          "x": {"scale": "x", "field": "sim", "offset": 6},
+          "y": {"scale": "y", "field": "doc", "band": 0.5},
+          "baseline": {"value": "middle"},
+          "align": {"value": "left"},
+          "text": {"signal": "format(datum.sim, '.2f')"},
+          "fontSize": {"value": 12},
+          "fill": [
+            {"test": "datum.rank <= 3", "value": "#2858ff"},
+            {"value": "#777"}
+          ],
+          "fontWeight": [
+            {"test": "datum.rank <= 3", "value": "bold"},
+            {"value": "normal"}
+          ]
+        }
+      }
+    }
+  ]
+}

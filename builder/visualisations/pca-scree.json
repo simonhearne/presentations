@@ -1,0 +1,58 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "description": "PCA scree — cumulative variance explained vs number of components for a 512-D embedding. A handful of axes carry almost all the variance.",
+  "usermeta": { "embedOptions": { "renderer": "svg", "actions": false } },
+  "background": "transparent",
+  "width": 1000,
+  "height": 520,
+  "data": {
+    "values": [
+      {"k": 1,   "cum": 0.18},
+      {"k": 2,   "cum": 0.30},
+      {"k": 4,   "cum": 0.45},
+      {"k": 8,   "cum": 0.62},
+      {"k": 16,  "cum": 0.76},
+      {"k": 32,  "cum": 0.87},
+      {"k": 64,  "cum": 0.94},
+      {"k": 128, "cum": 0.98},
+      {"k": 256, "cum": 0.995},
+      {"k": 512, "cum": 1.00}
+    ]
+  },
+  "encoding": {
+    "x": {
+      "field": "k",
+      "type": "quantitative",
+      "scale": {"type": "log", "base": 2, "domain": [0.9, 560]},
+      "axis": {"title": "Principal components kept", "values": [1, 2, 4, 8, 16, 32, 64, 128, 256, 512], "format": "d"}
+    },
+    "y": {
+      "field": "cum",
+      "type": "quantitative",
+      "scale": {"domain": [0, 1.02]},
+      "axis": {"title": "Cumulative variance explained", "format": ".0%"}
+    }
+  },
+  "layer": [
+    {"mark": {"type": "area", "opacity": 0.85, "line": {"strokeWidth": 3}}},
+    {
+      "transform": [{"filter": "datum.k == 64"}],
+      "mark": {"type": "rule", "strokeDash": [4, 4], "color": "#c84cff", "strokeWidth": 1.5},
+      "encoding": {"y": {"datum": 0.94}}
+    },
+    {
+      "transform": [{"filter": "datum.k == 64"}],
+      "mark": {"type": "point", "size": 320, "filled": true, "color": "#175fff", "stroke": "#ffffff", "strokeWidth": 2}
+    },
+    {
+      "transform": [{"filter": "datum.k == 64"}],
+      "mark": {"type": "text", "align": "left", "dx": 14, "dy": 14, "fontSize": 16, "fontWeight": 700, "color": "#061982"},
+      "encoding": {"text": {"value": "64 of 512 axes → 94%"}}
+    },
+    {
+      "data": {"values": [{"note": "Illustrative scree for a 512-D embedding — variance concentrates in the top components."}]},
+      "mark": {"type": "text", "align": "left", "baseline": "bottom", "fontSize": 11, "color": "#94a3b8"},
+      "encoding": {"text": {"field": "note"}, "x": {"value": 4}, "y": {"value": "height"}, "yOffset": {"value": -6}}
+    }
+  ]
+}

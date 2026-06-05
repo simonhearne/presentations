@@ -1,0 +1,322 @@
+{
+  "$schema": "https://vega.github.io/schema/vega/v5.json",
+  "description": "Recall vs latency — illustrative shapes for HNSW, IVF, DiskANN.",
+  "background": "transparent",
+  "width": 1200,
+  "height": 640,
+  "style": "cell",
+  "data": [
+    {
+      "name": "source_0",
+      "values": [
+        {"index": "HNSW",    "scale": "1M",   "param": 16,  "recall": 0.82, "latency": 0.9},
+        {"index": "HNSW",    "scale": "1M",   "param": 32,  "recall": 0.91, "latency": 1.6},
+        {"index": "HNSW",    "scale": "1M",   "param": 64,  "recall": 0.96, "latency": 2.8},
+        {"index": "HNSW",    "scale": "1M",   "param": 128, "recall": 0.985, "latency": 5.4},
+        {"index": "HNSW",    "scale": "1M",   "param": 256, "recall": 0.995, "latency": 11.0},
+        {"index": "HNSW",    "scale": "10M",  "param": 16,  "recall": 0.78, "latency": 3.2},
+        {"index": "HNSW",    "scale": "10M",  "param": 32,  "recall": 0.88, "latency": 5.8},
+        {"index": "HNSW",    "scale": "10M",  "param": 64,  "recall": 0.95, "latency": 9.6},
+        {"index": "HNSW",    "scale": "10M",  "param": 128, "recall": 0.98, "latency": 18.0},
+        {"index": "HNSW",    "scale": "10M",  "param": 256, "recall": 0.992, "latency": 36.0},
+        {"index": "HNSW",    "scale": "100M", "param": 16,  "recall": 0.72, "latency": 14.0},
+        {"index": "HNSW",    "scale": "100M", "param": 32,  "recall": 0.84, "latency": 24.0},
+        {"index": "HNSW",    "scale": "100M", "param": 64,  "recall": 0.93, "latency": 42.0},
+        {"index": "HNSW",    "scale": "100M", "param": 128, "recall": 0.97, "latency": 78.0},
+        {"index": "HNSW",    "scale": "100M", "param": 256, "recall": 0.985, "latency": 150.0},
+        {"index": "IVF",     "scale": "1M",   "param": 4,   "recall": 0.62, "latency": 0.7},
+        {"index": "IVF",     "scale": "1M",   "param": 16,  "recall": 0.84, "latency": 1.4},
+        {"index": "IVF",     "scale": "1M",   "param": 64,  "recall": 0.94, "latency": 3.5},
+        {"index": "IVF",     "scale": "1M",   "param": 256, "recall": 0.985, "latency": 9.5},
+        {"index": "IVF",     "scale": "10M",  "param": 4,   "recall": 0.55, "latency": 2.3},
+        {"index": "IVF",     "scale": "10M",  "param": 16,  "recall": 0.78, "latency": 5.2},
+        {"index": "IVF",     "scale": "10M",  "param": 64,  "recall": 0.91, "latency": 12.0},
+        {"index": "IVF",     "scale": "10M",  "param": 256, "recall": 0.975, "latency": 32.0},
+        {"index": "IVF",     "scale": "100M", "param": 4,   "recall": 0.48, "latency": 9.0},
+        {"index": "IVF",     "scale": "100M", "param": 16,  "recall": 0.72, "latency": 22.0},
+        {"index": "IVF",     "scale": "100M", "param": 64,  "recall": 0.88, "latency": 55.0},
+        {"index": "IVF",     "scale": "100M", "param": 256, "recall": 0.965, "latency": 140.0},
+        {"index": "DiskANN", "scale": "1M",   "param": 20,  "recall": 0.82, "latency": 4.0},
+        {"index": "DiskANN", "scale": "1M",   "param": 50,  "recall": 0.92, "latency": 8.5},
+        {"index": "DiskANN", "scale": "1M",   "param": 100, "recall": 0.97, "latency": 15.0},
+        {"index": "DiskANN", "scale": "1M",   "param": 200, "recall": 0.99, "latency": 26.0},
+        {"index": "DiskANN", "scale": "10M",  "param": 20,  "recall": 0.80, "latency": 14.0},
+        {"index": "DiskANN", "scale": "10M",  "param": 50,  "recall": 0.91, "latency": 26.0},
+        {"index": "DiskANN", "scale": "10M",  "param": 100, "recall": 0.965, "latency": 42.0},
+        {"index": "DiskANN", "scale": "10M",  "param": 200, "recall": 0.987, "latency": 70.0},
+        {"index": "DiskANN", "scale": "100M", "param": 20,  "recall": 0.78, "latency": 36.0},
+        {"index": "DiskANN", "scale": "100M", "param": 50,  "recall": 0.90, "latency": 62.0},
+        {"index": "DiskANN", "scale": "100M", "param": 100, "recall": 0.96, "latency": 95.0},
+        {"index": "DiskANN", "scale": "100M", "param": 200, "recall": 0.985, "latency": 160.0}
+      ]
+    },
+    {
+      "name": "data_0",
+      "source": "source_0",
+      "transform": [
+        {
+          "type": "formula",
+          "expr": "toNumber(datum[\"latency\"])",
+          "as": "latency"
+        },
+        {"type": "filter", "expr": "datum.scale == scale"}
+      ]
+    },
+    {
+      "name": "data_1",
+      "source": "data_0",
+      "transform": [
+        {
+          "type": "filter",
+          "expr": "isValid(datum[\"latency\"]) && isFinite(+datum[\"latency\"]) && isValid(datum[\"recall\"]) && isFinite(+datum[\"recall\"])"
+        }
+      ]
+    }
+  ],
+  "signals": [
+    {
+      "name": "scale",
+      "value": "100M"
+    },
+    {
+      "name": "scrubberX",
+      "value": null,
+      "on": [
+        { "events": "@scrubber_capture:pointermove", "update": "invert('x', x())" },
+        { "events": "@scrubber_capture:pointerout", "update": "null" }
+      ]
+    },
+    {
+      "name": "scrubberY",
+      "value": null,
+      "on": [
+        { "events": "@scrubber_capture:pointermove", "update": "invert('y', y())" },
+        { "events": "@scrubber_capture:pointerout", "update": "null" }
+      ]
+    }
+  ],
+  "marks": [
+    {
+      "name": "layer_0_pathgroup",
+      "type": "group",
+      "from": {
+        "facet": {
+          "name": "faceted_path_layer_0_main",
+          "data": "data_0",
+          "groupby": ["index"]
+        }
+      },
+      "encode": {
+        "update": {
+          "width": {"field": {"group": "width"}},
+          "height": {"field": {"group": "height"}}
+        }
+      },
+      "marks": [
+        {
+          "name": "layer_0_marks",
+          "type": "line",
+          "style": ["line"],
+          "sort": {"field": "x"},
+          "from": {"data": "faceted_path_layer_0_main"},
+          "encode": {
+            "update": {
+              "stroke": {"scale": "color", "field": "index"},
+              "x": {"scale": "x", "field": "latency"},
+              "y": {"scale": "y", "field": "recall"},
+              "defined": {
+                "signal": "isValid(datum[\"latency\"]) && isFinite(+datum[\"latency\"]) && isValid(datum[\"recall\"]) && isFinite(+datum[\"recall\"])"
+              },
+              "opacity": {"signal": "(scrubberX)?0.25:1"}
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "layer_1_marks",
+      "type": "symbol",
+      "style": ["point"],
+      "from": {"data": "data_1"},
+      "encode": {
+        "update": {
+          "opacity": {"signal": "scrubberX ? (datum['latency']<scrubberX && datum['recall']>scrubberY)?1:0.1 : 1"},
+          "size": {"value": 80},
+          "fill": {"scale": "color", "field": "index"},
+          "ariaRoleDescription": {"value": "point"},
+          "x": {"scale": "x", "field": "latency"},
+          "y": {"scale": "y", "field": "recall"}
+        }
+      }
+    },
+    {
+      "name": "scrubber",
+      "type": "group",
+      "encode": {
+        "update": {
+          "x": {"value": 0},
+          "y": {"value": 0},
+          "width": {"signal": "width"},
+          "height": {"signal": "height"}
+        }
+      },
+      "marks": [
+        {
+          "name": "scrubber_highlight",
+          "type": "rect",
+          "encode": {
+            "update": {
+              "x": {"value": 0},
+              "x2": {"signal": "scrubberX != null ? scale('x', scrubberX) : 0"},
+              "y": {"signal": "scale('y', 1)"},
+              "y2": {"signal": "scrubberY != null ? scale('y', scrubberY) : scale('y', 1)"},
+              "fill": {"value": "#22c55e"},
+              "fillOpacity": {"signal": "scrubberX != null && scrubberY != null ? 0.12 : 0"}
+            }
+          }
+        },
+        {
+          "name": "scrubber_x_line",
+          "type": "rule",
+          "encode": {
+            "update": {
+              "x": {"signal": "scrubberX != null ? scale('x', scrubberX) : 0"},
+              "y": {"value": 0},
+              "y2": {"signal": "height"},
+              "stroke": {"value": "#0a2540"},
+              "strokeWidth": {"value": 1},
+              "strokeDash": {"value": [4, 3]},
+              "opacity": {"signal": "scrubberX != null ? 1 : 0"}
+            }
+          }
+        },
+        {
+          "name": "scrubber_y_line",
+          "type": "rule",
+          "encode": {
+            "update": {
+              "x": {"value": 0},
+              "x2": {"signal": "width"},
+              "y": {"signal": "scrubberY != null ? scale('y', scrubberY) : 0"},
+              "stroke": {"value": "#0a2540"},
+              "strokeWidth": {"value": 1},
+              "strokeDash": {"value": [4, 3]},
+              "opacity": {"signal": "scrubberY != null ? 1 : 0"}
+            }
+          }
+        },
+        {
+          "name": "scrubber_tooltip",
+          "type": "text",
+          "encode": {
+            "update": {
+              "text": {"signal": "'≥'+floor(scrubberY*100)/100+' recall at <'+ceil(scrubberX)+' ms'"},
+              "opacity": {"signal": "scrubberX ? 1 : 0"},
+              "x": {"signal": "scale('x',scrubberX)-5"},
+              "y": {"signal": "scale('y',scrubberY)+5"},
+              "align": {"value": "right"},
+              "baseline": {"value": "top"},
+              "fontSize": {"value": 20}
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "scrubber_capture",
+      "type": "rect",
+      "encode": {
+        "update": {
+          "x": {"value": 0},
+          "y": {"value": 0},
+          "width": {"signal": "width"},
+          "height": {"signal": "height"},
+          "fill": {"value": "transparent"}
+        }
+      }
+    }
+  ],
+  "scales": [
+    {
+      "name": "x",
+      "type": "log",
+      "domain": {
+        "fields": [
+          {"data": "data_0", "field": "latency"},
+          {"data": "data_1", "field": "latency"}
+        ]
+      },
+      "range": [0, {"signal": "width"}],
+      "nice": true
+    },
+    {
+      "name": "y",
+      "type": "linear",
+      "domain": [0.4, 1],
+      "range": [{"signal": "height"}, 0],
+      "zero": false
+    },
+    {
+      "name": "color",
+      "type": "ordinal",
+      "domain": ["HNSW", "IVF", "DiskANN"],
+      "range": ["#1f6feb", "#c84cff", "#0a2540"]
+    }
+  ],
+  "axes": [
+    {
+      "scale": "x",
+      "orient": "bottom",
+      "gridScale": "y",
+      "grid": true,
+      "domain": false,
+      "labels": false,
+      "aria": false,
+      "maxExtent": 0,
+      "minExtent": 0,
+      "ticks": false,
+      "zindex": 0
+    },
+    {
+      "scale": "y",
+      "orient": "left",
+      "gridScale": "x",
+      "grid": true,
+      "tickCount": {"signal": "ceil(height/40)"},
+      "domain": false,
+      "labels": false,
+      "aria": false,
+      "maxExtent": 0,
+      "minExtent": 0,
+      "ticks": false,
+      "zindex": 0
+    },
+    {
+      "scale": "x",
+      "orient": "bottom",
+      "grid": false,
+      "title": "p99 latency (ms, log)",
+      "labelFlush": true,
+      "labelOverlap": "greedy",
+      "zindex": 0
+    },
+    {
+      "scale": "y",
+      "orient": "left",
+      "grid": false,
+      "title": "recall@10",
+      "labelOverlap": true,
+      "tickCount": {"signal": "ceil(height/40)"},
+      "zindex": 0
+    }
+  ],
+  "legends": [
+    {
+      "title": "Index",
+      "stroke": "color",
+      "symbolType": "circle",
+      "fill": "color",
+      "encode": {"symbols": {"update": {"opacity": {"value": 1}}}}
+    }
+  ]
+}

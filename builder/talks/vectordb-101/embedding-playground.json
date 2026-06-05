@@ -1,0 +1,223 @@
+{
+  "$schema": "https://vega.github.io/schema/vega/v5.json",
+  "description": "Pick a word, see its 5 nearest neighbours in 2D embedding space.",
+  "width": 900,
+  "height": 520,
+  "padding": 24,
+  "background": "transparent",
+  "config": {
+    "axis": { "labelFontSize": 12, "titleFontSize": 14 }
+  },
+  "signals": [
+    {
+      "name": "word",
+      "value": "cat",
+      "bind": {
+        "input": "select",
+        "name": "Pick a word ",
+        "options": [
+          "angry", "anxious", "baseball", "basketball", "bike", "boat", "burger", "bus",
+          "calm", "car", "cat", "cycling", "dog", "elephant", "excited", "fearful",
+          "golf", "happy", "horse", "joyful", "lion", "motorcycle", "mouse", "pasta",
+          "pizza", "plane", "rabbit", "running", "sad", "salad", "sandwich", "soccer",
+          "soup", "sushi", "swimming", "taco", "tennis", "tiger", "train", "truck"
+        ]
+      }
+    }
+  ],
+  "data": [
+    {
+      "name": "words",
+      "values": [
+        {"name": "cat",         "x": 2.3, "y": 8.1, "cluster": "animals"},
+        {"name": "dog",         "x": 2.0, "y": 7.8, "cluster": "animals"},
+        {"name": "lion",        "x": 1.7, "y": 8.4, "cluster": "animals"},
+        {"name": "tiger",       "x": 2.5, "y": 8.5, "cluster": "animals"},
+        {"name": "elephant",    "x": 1.5, "y": 8.0, "cluster": "animals"},
+        {"name": "mouse",       "x": 2.8, "y": 7.5, "cluster": "animals"},
+        {"name": "rabbit",      "x": 2.2, "y": 7.6, "cluster": "animals"},
+        {"name": "horse",       "x": 1.8, "y": 8.2, "cluster": "animals"},
+
+        {"name": "pizza",       "x": 8.2, "y": 7.9, "cluster": "foods"},
+        {"name": "burger",      "x": 7.8, "y": 8.3, "cluster": "foods"},
+        {"name": "pasta",       "x": 8.5, "y": 7.7, "cluster": "foods"},
+        {"name": "sushi",       "x": 8.0, "y": 8.5, "cluster": "foods"},
+        {"name": "salad",       "x": 7.5, "y": 8.0, "cluster": "foods"},
+        {"name": "taco",        "x": 8.3, "y": 8.4, "cluster": "foods"},
+        {"name": "sandwich",    "x": 7.7, "y": 7.6, "cluster": "foods"},
+        {"name": "soup",        "x": 8.6, "y": 8.2, "cluster": "foods"},
+
+        {"name": "car",         "x": 8.0, "y": 2.2, "cluster": "vehicles"},
+        {"name": "truck",       "x": 7.8, "y": 1.8, "cluster": "vehicles"},
+        {"name": "bike",        "x": 8.3, "y": 2.5, "cluster": "vehicles"},
+        {"name": "motorcycle",  "x": 8.5, "y": 2.0, "cluster": "vehicles"},
+        {"name": "plane",       "x": 7.5, "y": 2.4, "cluster": "vehicles"},
+        {"name": "train",       "x": 8.1, "y": 1.6, "cluster": "vehicles"},
+        {"name": "boat",        "x": 7.7, "y": 2.7, "cluster": "vehicles"},
+        {"name": "bus",         "x": 8.4, "y": 1.9, "cluster": "vehicles"},
+
+        {"name": "happy",       "x": 1.8, "y": 2.3, "cluster": "emotions"},
+        {"name": "sad",         "x": 2.2, "y": 1.7, "cluster": "emotions"},
+        {"name": "angry",       "x": 2.5, "y": 2.5, "cluster": "emotions"},
+        {"name": "calm",        "x": 1.5, "y": 1.8, "cluster": "emotions"},
+        {"name": "excited",     "x": 2.0, "y": 2.6, "cluster": "emotions"},
+        {"name": "anxious",     "x": 2.7, "y": 1.9, "cluster": "emotions"},
+        {"name": "joyful",      "x": 1.7, "y": 2.5, "cluster": "emotions"},
+        {"name": "fearful",     "x": 2.4, "y": 1.5, "cluster": "emotions"},
+
+        {"name": "soccer",      "x": 4.8, "y": 5.2, "cluster": "sports"},
+        {"name": "basketball",  "x": 5.2, "y": 4.8, "cluster": "sports"},
+        {"name": "tennis",      "x": 5.0, "y": 5.5, "cluster": "sports"},
+        {"name": "baseball",    "x": 4.5, "y": 4.7, "cluster": "sports"},
+        {"name": "golf",        "x": 5.5, "y": 5.3, "cluster": "sports"},
+        {"name": "swimming",    "x": 4.7, "y": 5.0, "cluster": "sports"},
+        {"name": "running",     "x": 5.3, "y": 4.5, "cluster": "sports"},
+        {"name": "cycling",     "x": 5.0, "y": 5.0, "cluster": "sports"}
+      ]
+    },
+    {
+      "name": "selected",
+      "source": "words",
+      "transform": [
+        {"type": "filter", "expr": "datum.name === word"}
+      ]
+    },
+    {
+      "name": "ranked",
+      "source": "words",
+      "transform": [
+        {
+          "type": "formula",
+          "expr": "length(data('selected')) > 0 ? sqrt(pow(datum.x - data('selected')[0].x, 2) + pow(datum.y - data('selected')[0].y, 2)) : 0",
+          "as": "dist"
+        },
+        {
+          "type": "window",
+          "sort": {"field": "dist", "order": "ascending"},
+          "ops": ["row_number"],
+          "as": ["rank"]
+        }
+      ]
+    },
+    {
+      "name": "neighbours",
+      "source": "ranked",
+      "transform": [
+        {"type": "filter", "expr": "datum.rank > 1 && datum.rank <= 6"},
+        {
+          "type": "formula",
+          "expr": "length(data('selected')) > 0 ? data('selected')[0].x : 0",
+          "as": "sx"
+        },
+        {
+          "type": "formula",
+          "expr": "length(data('selected')) > 0 ? data('selected')[0].y : 0",
+          "as": "sy"
+        }
+      ]
+    }
+  ],
+  "scales": [
+    {
+      "name": "x",
+      "type": "linear",
+      "domain": [0, 10],
+      "range": "width",
+      "nice": false,
+      "zero": false
+    },
+    {
+      "name": "y",
+      "type": "linear",
+      "domain": [0, 10],
+      "range": "height",
+      "nice": false,
+      "zero": false,
+      "reverse": true
+    },
+    {
+      "name": "color",
+      "type": "ordinal",
+      "domain": ["animals", "foods", "vehicles", "emotions", "sports"],
+      "range": ["#2858ff", "#9d41ff", "#ff5757", "#37c997", "#ffa42d"]
+    }
+  ],
+  "axes": [
+    {"orient": "bottom", "scale": "x", "title": "Embedding dim 1", "grid": true, "gridColor": "#eee"},
+    {"orient": "left", "scale": "y", "title": "Embedding dim 2", "grid": true, "gridColor": "#eee"}
+  ],
+  "legends": [
+    {"fill": "color", "title": "Cluster", "orient": "top-right", "labelFontSize": 12, "titleFontSize": 13}
+  ],
+  "marks": [
+    {
+      "type": "rule",
+      "from": {"data": "neighbours"},
+      "encode": {
+        "update": {
+          "x": {"scale": "x", "field": "sx"},
+          "y": {"scale": "y", "field": "sy"},
+          "x2": {"scale": "x", "field": "x"},
+          "y2": {"scale": "y", "field": "y"},
+          "stroke": {"value": "#888"},
+          "strokeWidth": {"value": 1.5},
+          "strokeDash": {"value": [4, 4]},
+          "opacity": {"value": 0.6}
+        }
+      }
+    },
+    {
+      "type": "symbol",
+      "from": {"data": "ranked"},
+      "encode": {
+        "enter": {
+          "shape": {"value": "circle"}
+        },
+        "update": {
+          "x": {"scale": "x", "field": "x"},
+          "y": {"scale": "y", "field": "y"},
+          "fill": {"scale": "color", "field": "cluster"},
+          "size": [
+            {"test": "datum.rank === 1", "value": 700},
+            {"test": "datum.rank <= 6", "value": 320},
+            {"value": 110}
+          ],
+          "opacity": [
+            {"test": "datum.rank <= 6", "value": 1},
+            {"value": 0.35}
+          ],
+          "stroke": [
+            {"test": "datum.rank === 1", "value": "#000"},
+            {"value": "transparent"}
+          ],
+          "strokeWidth": {"value": 2}
+        }
+      }
+    },
+    {
+      "type": "text",
+      "from": {"data": "ranked"},
+      "encode": {
+        "enter": {
+          "fontSize": {"value": 12},
+          "align": {"value": "center"},
+          "baseline": {"value": "middle"},
+          "fill": {"value": "#222"}
+        },
+        "update": {
+          "x": {"scale": "x", "field": "x"},
+          "y": {"scale": "y", "field": "y", "offset": -20},
+          "text": {"field": "name"},
+          "opacity": [
+            {"test": "datum.rank <= 6", "value": 1},
+            {"value": 0.45}
+          ],
+          "fontWeight": [
+            {"test": "datum.rank === 1", "value": "bold"},
+            {"value": "normal"}
+          ]
+        }
+      }
+    }
+  ]
+}

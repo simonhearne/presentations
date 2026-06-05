@@ -1,0 +1,114 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "usermeta": {"embedOptions": {"renderer": "svg", "actions": false}},
+  "constants_note": "Self-hosted: AWS r6i.2xlarge $0.504/hr ~2K QPS. Zilliz Cloud: $0.65/CU-hr ~6K QPS (3× via Cardinal). RAM $5/GB/mo, NVMe $0.10/GB/mo. Ops labour $400/mo amortised (self-hosted). Managed overhead 12% (Zilliz Cloud). As of 2026-05.",
+  "background": "transparent",
+  "width": 760,
+  "height": 480,
+  "config": {
+    "axis": {"labelFontSize": 12, "titleFontSize": 14},
+    "legend": {"labelFontSize": 13, "titleFontSize": 13}
+  },
+  "params": [
+    {
+      "name": "dim",
+      "value": 768,
+      "bind": {"input": "select", "options": [384, 768, 1536], "name": "Dimensions: "}
+    },
+    {
+      "name": "quant",
+      "value": "SQ8",
+      "bind": {"input": "select", "options": ["FP32", "SQ8", "PQ", "Binary"], "name": "Quantization: "}
+    },
+    {
+      "name": "hot_pct",
+      "value": 50,
+      "bind": {"input": "range", "min": 0, "max": 100, "step": 10, "name": "Hot % (RAM): "}
+    },
+    {
+      "name": "replicas",
+      "value": 2,
+      "bind": {"input": "range", "min": 1, "max": 6, "step": 1, "name": "Replicas: "}
+    },
+    {
+      "name": "qps",
+      "value": 1000,
+      "bind": {"input": "select", "options": [100, 1000, 10000], "labels": ["100 QPS", "1K QPS", "10K QPS"], "name": "Target QPS: "}
+    },
+    {
+      "name": "deployment",
+      "value": "Self-hosted",
+      "bind": {"input": "select", "options": ["Self-hosted", "Zilliz Cloud"], "name": "Deployment: "}
+    }
+  ],
+  "data": {
+    "values": [
+      {"vectors_m": 1,    "label": "1M"},
+      {"vectors_m": 10,   "label": "10M"},
+      {"vectors_m": 100,  "label": "100M"},
+      {"vectors_m": 1000, "label": "1B"}
+    ]
+  },
+  "transform": [
+    {"calculate": "quant === 'FP32' ? dim*4 : quant === 'SQ8' ? dim : quant === 'PQ' ? 16 : dim/8", "as": "bytes_per_vec"},
+    {"calculate": "datum.vectors_m * 1e6 * datum.bytes_per_vec / 1e9", "as": "total_gb"},
+    {"calculate": "datum.total_gb * hot_pct / 100", "as": "hot_gb"},
+    {"calculate": "datum.total_gb - datum.hot_gb", "as": "warm_gb"},
+    {"calculate": "datum.hot_gb * replicas * 5", "as": "ram_cost"},
+    {"calculate": "datum.warm_gb * replicas * 0.10", "as": "ssd_cost"},
+    {"calculate": "deployment === 'Zilliz Cloud' ? ceil(qps / 6000) * 0.65 * 730 : ceil(qps / 2000) * 0.504 * 730", "as": "compute_cost"},
+    {"calculate": "datum.total_gb * replicas * 0.02", "as": "net_cost"},
+    {"calculate": "deployment === 'Self-hosted' ? 400 : 0", "as": "ops_cost"},
+    {"calculate": "deployment === 'Zilliz Cloud' ? (datum.ram_cost + datum.ssd_cost + datum.compute_cost) * 0.12 : 0", "as": "overhead_cost"},
+    {"calculate": "datum.ram_cost + datum.ssd_cost + datum.compute_cost + datum.net_cost + datum.ops_cost + datum.overhead_cost", "as": "total_cost"}
+  ],
+  "layer": [
+    {
+      "transform": [
+        {"fold": ["ram_cost", "ssd_cost", "compute_cost", "net_cost", "ops_cost", "overhead_cost"], "as": ["cat", "cost"]},
+        {"calculate": "datum.cat === 'ram_cost' ? 'RAM' : datum.cat === 'ssd_cost' ? 'NVMe SSD' : datum.cat === 'compute_cost' ? 'Compute' : datum.cat === 'net_cost' ? 'Network' : datum.cat === 'ops_cost' ? 'Ops labour' : 'Managed overhead'", "as": "category"}
+      ],
+      "mark": {"type": "bar", "width": 90},
+      "encoding": {
+        "x": {
+          "field": "label",
+          "type": "ordinal",
+          "sort": ["1M", "10M", "100M", "1B"],
+          "axis": {"title": "Number of vectors", "labelAngle": 0, "labelFontSize": 14}
+        },
+        "y": {
+          "field": "cost",
+          "type": "quantitative",
+          "stack": "zero",
+          "axis": {"title": "Monthly cost ($)", "format": "$,.0f"}
+        },
+        "color": {
+          "field": "category",
+          "type": "nominal",
+          "scale": {
+            "domain": ["RAM", "NVMe SSD", "Compute", "Network", "Ops labour", "Managed overhead"],
+            "range": ["#1e40af", "#3b82f6", "#60a5fa", "#93c5fd", "#f59e0b", "#fbbf24"]
+          },
+          "legend": {"orient": "right", "title": null, "labelFontSize": 13}
+        }
+      }
+    },
+    {
+      "mark": {"type": "text", "dy": -8, "fontSize": 13, "fontWeight": "bold", "color": "#0d2b5c"},
+      "encoding": {
+        "x": {"field": "label", "type": "ordinal", "sort": ["1M", "10M", "100M", "1B"]},
+        "y": {"field": "total_cost", "type": "quantitative"},
+        "text": {"field": "total_cost", "type": "quantitative", "format": "$,.0f"}
+      }
+    },
+    {
+      "data": {"values": [{"note": "Self-hosted: AWS r6i.2xlarge + g6.2xlarge, as of 2026-05. Zilliz Cloud: published CU pricing. Numbers illustrative."}]},
+      "mark": {"type": "text", "fontSize": 11, "color": "#94a3b8", "align": "left"},
+      "encoding": {
+        "text": {"field": "note", "type": "nominal"},
+        "x": {"value": 0},
+        "y": {"value": 470}
+      }
+    }
+  ]
+}

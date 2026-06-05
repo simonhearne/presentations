@@ -1,0 +1,4 @@
+[build]
+  base = "builder"
+  command = "npm ci && node bin/site.js"
+  publish = "_site"
