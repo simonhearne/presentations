@@ -95,6 +95,19 @@ ${renderSection('Archive', legacy)}
 `;
 }
 
+export function rewriteAssetPaths(html, slug) {
+  return html
+    .replaceAll('="../../../', '="/')
+    .replaceAll('="../', `="/${slug}/`);
+}
+
+export function collectLocalAssetRefs(html) {
+  const re = /(?:href|src)="\.\.\/(?!\.\.\/)([^"]+)"/g;
+  const refs = new Set();
+  for (const m of html.matchAll(re)) refs.add(m[1]);
+  return [...refs];
+}
+
 async function defaultBuildOne(talkDir, { fetchFn } = {}) {
   await buildDeck(talkDir);
   return bundleDeck(talkDir, fetchFn ? { fetchFn } : {});

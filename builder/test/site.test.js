@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { mkdtempSync, writeFileSync, readFileSync, existsSync, mkdirSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
-import { validateManifest, normalizeDeck, deckHref, renderLanding, assembleSite, loadManifest } from '../bin/site.js';
+import { validateManifest, normalizeDeck, deckHref, renderLanding, assembleSite, loadManifest, rewriteAssetPaths, collectLocalAssetRefs } from '../bin/site.js';
 
 test('validateManifest: accepts a minimal valid manifest', () => {
   const m = { site: { title: 'T' }, decks: [{ slug: 'a', source: 'build', title: 'A' }] };
@@ -123,4 +123,23 @@ test('loadManifest: parses and validates the real decks.json', () => {
 test('renderLanding: includes an inline SVG favicon', () => {
   const html = renderLanding({ title: 'Talks' }, []);
   assert.match(html, /<link rel="icon" href="data:image\/svg\+xml/);
+});
+
+test('rewriteAssetPaths: shared three-up refs become root-absolute', () => {
+  const html = '<link href="../../../css/layouts.css"><script src="../../../script/deck.js"></script>';
+  const out = rewriteAssetPaths(html, 'deck-a');
+  assert.match(out, /href="\/css\/layouts\.css"/);
+  assert.match(out, /src="\/script\/deck\.js"/);
+  assert.doesNotMatch(out, /\.\.\//);
+});
+
+test('rewriteAssetPaths: deck-local one-up refs become /<slug>/…', () => {
+  const html = '<img src="../data/faces/003983.jpg">';
+  const out = rewriteAssetPaths(html, 'deck-a');
+  assert.match(out, /src="\/deck-a\/data\/faces\/003983\.jpg"/);
+});
+
+test('rewriteAssetPaths: does not touch a non-attribute ../ substring', () => {
+  const html = 'background: url(../img/automata.jpg);';
+  assert.equal(rewriteAssetPaths(html, 'deck-a'), html);
 });
