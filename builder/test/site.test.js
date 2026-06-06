@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { mkdtempSync, writeFileSync, readFileSync, existsSync, mkdirSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
-import { validateManifest, normalizeDeck, deckHref, renderLanding, assembleSite, loadManifest, rewriteAssetPaths, collectLocalAssetRefs } from '../bin/site.js';
+import { validateManifest, normalizeDeck, deckHref, renderLanding, assembleSite, loadManifest, rewriteAssetPaths, collectLocalAssetRefs, normalizeBaseUrl, deckCanonicalUrl, ogImageUrl, ogImageRelPath } from '../bin/site.js';
 
 test('validateManifest: accepts a minimal valid manifest', () => {
   const m = { site: { title: 'T' }, decks: [{ slug: 'a', source: 'build', title: 'A' }] };
@@ -186,4 +186,27 @@ test('collectLocalAssetRefs: returns deck-local refs, excludes shared refs', () 
 test('collectLocalAssetRefs: de-duplicates repeated refs', () => {
   const html = '<img src="../data/a.jpg"><img src="../data/a.jpg">';
   assert.deepEqual(collectLocalAssetRefs(html), ['data/a.jpg']);
+});
+
+test('normalizeBaseUrl: strips a single trailing slash', () => {
+  assert.equal(normalizeBaseUrl('https://talks.simonhearne.com/'), 'https://talks.simonhearne.com');
+  assert.equal(normalizeBaseUrl('https://talks.simonhearne.com'), 'https://talks.simonhearne.com');
+});
+
+test('deckCanonicalUrl: builds an absolute trailing-slash deck url', () => {
+  assert.equal(
+    deckCanonicalUrl('https://talks.simonhearne.com/', 'vectordb-101'),
+    'https://talks.simonhearne.com/vectordb-101/'
+  );
+});
+
+test('ogImageRelPath: returns og/<slug>.png', () => {
+  assert.equal(ogImageRelPath('vectordb-101'), 'og/vectordb-101.png');
+});
+
+test('ogImageUrl: builds an absolute og image url', () => {
+  assert.equal(
+    ogImageUrl('https://talks.simonhearne.com', 'vectordb-101'),
+    'https://talks.simonhearne.com/og/vectordb-101.png'
+  );
 });

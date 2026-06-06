@@ -6,6 +6,22 @@ import { escapeHtml, buildDeck } from './build.js';
 const HERE = dirname(fileURLToPath(import.meta.url));
 const LEGACY_BASE = 'https://simonhearne.com/presentations';
 
+export function normalizeBaseUrl(baseUrl) {
+  return String(baseUrl || '').replace(/\/+$/, '');
+}
+
+export function ogImageRelPath(slug) {
+  return `og/${slug}.png`;
+}
+
+export function deckCanonicalUrl(baseUrl, slug) {
+  return `${normalizeBaseUrl(baseUrl)}/${slug}/`;
+}
+
+export function ogImageUrl(baseUrl, slug) {
+  return `${normalizeBaseUrl(baseUrl)}/${ogImageRelPath(slug)}`;
+}
+
 export function validateManifest(manifest) {
   if (!manifest || typeof manifest !== 'object') throw new Error('manifest must be an object');
   if (!manifest.site || typeof manifest.site.title !== 'string') {
