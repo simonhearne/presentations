@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { mkdtempSync, writeFileSync, readFileSync, existsSync, mkdirSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
-import { validateManifest, normalizeDeck, deckHref, renderLanding, assembleSite, loadManifest, rewriteAssetPaths, collectLocalAssetRefs } from '../bin/site.js';
+import { validateManifest, normalizeDeck, deckHref, renderLanding, assembleSite, loadManifest, rewriteAssetPaths, collectLocalAssetRefs, normalizeBaseUrl, deckCanonicalUrl, ogImageUrl, ogImageRelPath, firstH2Text, injectOgMeta, startStaticServer, captureTitleSlide } from '../bin/site.js';
 
 test('validateManifest: accepts a minimal valid manifest', () => {
   const m = { site: { title: 'T' }, decks: [{ slug: 'a', source: 'build', title: 'A' }] };
@@ -101,7 +101,7 @@ test('assembleSite: builds (no bundle), copies shared + deck-local assets, rewri
     writeFileSync(join(deckData, 'x.jpg'), 'FACE');
 
     const manifest = {
-      site: { title: 'Talks', tagline: 'hi' },
+      site: { title: 'Talks', tagline: 'hi', baseUrl: 'https://talks.simonhearne.com' },
       decks: [
         { slug: 'deck-a', source: 'build', title: 'Deck A' },
         { slug: 'psych-speed', source: 'legacy', title: 'Psych' },
@@ -114,22 +114,34 @@ test('assembleSite: builds (no bundle), copies shared + deck-local assets, rewri
       mkdirSync(dist, { recursive: true });
       const out = join(dist, 'index.html');
       writeFileSync(out,
+        '<head></head>' +
         '<link href="../../../css/layouts.css">' +
         '<script src="../../../script/deck.js"></script>' +
         '<img src="../data/faces/x.jpg">');
       return out;
     };
 
+    const captured = [];
     await assembleSite({
       manifest, talksRoot, outDir, tokensCssPath,
       sharedDirs: [cssDir, imgDir, scriptDir],
       buildOne: fakeBuild,
+      capture: async (dir, slugs) => {
+        for (const slug of slugs) {
+          writeFileSync(join(dir, 'og', `${slug}.png`), 'PNG');
+          captured.push(slug);
+        }
+      },
     });
 
     const deckHtml = readFileSync(join(outDir, 'deck-a', 'index.html'), 'utf8');
     assert.match(deckHtml, /href="\/css\/layouts\.css"/, 'shared css rewritten root-absolute');
     assert.match(deckHtml, /src="\/deck-a\/data\/faces\/x\.jpg"/, 'deck-local rewritten with slug');
     assert.doesNotMatch(deckHtml, /\.\.\//, 'no relative ../ left in deck html');
+
+    assert.deepEqual(captured, ['deck-a'], 'capture called for built decks only');
+    assert.match(deckHtml, /property="og:image" content="https:\/\/talks\.simonhearne\.com\/og\/deck-a\.png"/);
+    assert.match(deckHtml, /property="og:url" content="https:\/\/talks\.simonhearne\.com\/deck-a\//);
 
     assert.ok(existsSync(join(outDir, 'css', 'layouts.css')), 'shared css copied');
     assert.ok(existsSync(join(outDir, 'img', 'automata.jpg')), 'automata.jpg copied');
@@ -186,4 +198,214 @@ test('collectLocalAssetRefs: returns deck-local refs, excludes shared refs', () 
 test('collectLocalAssetRefs: de-duplicates repeated refs', () => {
   const html = '<img src="../data/a.jpg"><img src="../data/a.jpg">';
   assert.deepEqual(collectLocalAssetRefs(html), ['data/a.jpg']);
+});
+
+test('normalizeBaseUrl: strips a single trailing slash', () => {
+  assert.equal(normalizeBaseUrl('https://talks.simonhearne.com/'), 'https://talks.simonhearne.com');
+  assert.equal(normalizeBaseUrl('https://talks.simonhearne.com'), 'https://talks.simonhearne.com');
+});
+
+test('deckCanonicalUrl: builds an absolute trailing-slash deck url', () => {
+  assert.equal(
+    deckCanonicalUrl('https://talks.simonhearne.com/', 'vectordb-101'),
+    'https://talks.simonhearne.com/vectordb-101/'
+  );
+});
+
+test('ogImageRelPath: returns og/<slug>.png', () => {
+  assert.equal(ogImageRelPath('vectordb-101'), 'og/vectordb-101.png');
+});
+
+test('ogImageUrl: builds an absolute og image url', () => {
+  assert.equal(
+    ogImageUrl('https://talks.simonhearne.com', 'vectordb-101'),
+    'https://talks.simonhearne.com/og/vectordb-101.png'
+  );
+});
+
+test('firstH2Text: returns text of the first h2, tags stripped', () => {
+  const html = '<h1>Title</h1><h2>A <em>sub</em>title</h2><h2>second</h2>';
+  assert.equal(firstH2Text(html), 'A subtitle');
+});
+
+test('firstH2Text: returns empty string when no h2', () => {
+  assert.equal(firstH2Text('<h1>Only</h1>'), '');
+});
+
+test('injectOgMeta: inserts OG + Twitter tags before </head>', () => {
+  const html = '<html><head><title>t</title></head><body>x</body></html>';
+  const out = injectOgMeta(html, {
+    title: 'Vector DB 101',
+    description: 'An intro',
+    url: 'https://talks.simonhearne.com/vectordb-101/',
+    image: 'https://talks.simonhearne.com/og/vectordb-101.png',
+    width: 1920,
+    height: 1080,
+  });
+  assert.match(out, /<meta property="og:title" content="Vector DB 101">/);
+  assert.match(out, /<meta property="og:description" content="An intro">/);
+  assert.match(out, /<meta property="og:type" content="website">/);
+  assert.match(out, /<meta property="og:url" content="https:\/\/talks\.simonhearne\.com\/vectordb-101\/">/);
+  assert.match(out, /<meta property="og:image" content="https:\/\/talks\.simonhearne\.com\/og\/vectordb-101\.png">/);
+  assert.match(out, /<meta property="og:image:width" content="1920">/);
+  assert.match(out, /<meta property="og:image:height" content="1080">/);
+  assert.match(out, /<meta name="twitter:card" content="summary_large_image">/);
+  assert.match(out, /<meta name="twitter:image" content="https:\/\/talks\.simonhearne\.com\/og\/vectordb-101\.png">/);
+  assert.ok(out.indexOf('og:title') < out.indexOf('</head>'));
+});
+
+test('injectOgMeta: escapes attribute values', () => {
+  const out = injectOgMeta('<head></head>', {
+    title: 'A "quoted" & <b>title</b>',
+    description: 'd', url: 'u', image: 'i', width: 1, height: 1,
+  });
+  assert.match(out, /content="A &quot;quoted&quot; &amp; &lt;b&gt;title&lt;\/b&gt;"/);
+});
+
+test('renderLanding: built deck card includes an og thumbnail', () => {
+  const decks = [{ slug: 'deck-a', source: 'build', title: 'Deck A' }];
+  const html = renderLanding({ title: 'Talks' }, decks);
+  assert.match(html, /<img class="deck-thumb"[^>]*src="\/og\/deck-a\.png"/);
+});
+
+test('renderLanding: legacy deck card has no thumbnail', () => {
+  const decks = [{ slug: 'old', source: 'legacy', title: 'Old', url: 'https://x/old/' }];
+  const html = renderLanding({ title: 'Talks' }, decks);
+  assert.doesNotMatch(html, /<img class="deck-thumb"/);
+});
+
+test('renderLanding: defines a .deck-thumb style', () => {
+  const html = renderLanding({ title: 'Talks' }, []);
+  assert.match(html, /\.deck-thumb\s*\{/);
+});
+
+test('startStaticServer: serves files from the root over http', async () => {
+  const root = mkdtempSync(join(tmpdir(), 'site-serve-'));
+  try {
+    mkdirSync(join(root, 'deck-a'), { recursive: true });
+    writeFileSync(join(root, 'deck-a', 'index.html'), '<h1>hi</h1>');
+    const server = await startStaticServer(root);
+    try {
+      const res = await fetch(`${server.origin}/deck-a/`);
+      assert.equal(res.status, 200);
+      assert.match(await res.text(), /<h1>hi<\/h1>/);
+    } finally {
+      await server.close();
+    }
+  } finally {
+    rmSync(root, { recursive: true, force: true });
+  }
+});
+
+test('assembleSite: OG description prefers deck.description, then first h2, then tagline', async () => {
+  const root = mkdtempSync(join(tmpdir(), 'site-og-'));
+  try {
+    const talksRoot = join(root, 'talks');
+    const outDir = join(root, '_site');
+    const tokensCssPath = join(root, 'tokens.css');
+    mkdirSync(talksRoot, { recursive: true });
+    writeFileSync(tokensCssPath, ':root{}');
+    const manifest = {
+      site: { title: 'Talks', tagline: 'fallback tag', baseUrl: 'https://talks.simonhearne.com' },
+      decks: [
+        { slug: 'has-desc', source: 'build', title: 'Has Desc', description: 'Explicit desc' },
+        { slug: 'has-h2', source: 'build', title: 'Has H2' },
+        { slug: 'bare', source: 'build', title: 'Bare' },
+      ],
+    };
+    const bodies = {
+      'has-desc': '<head></head><body><h1>Has Desc</h1><h2>Ignored Subtitle</h2></body>',
+      'has-h2': '<head></head><body><h1>Has H2</h1><h2>The Subtitle</h2></body>',
+      'bare': '<head></head><body><h1>Bare</h1></body>',
+    };
+    const fakeBuild = async (talkDir) => {
+      const slug = talkDir.split('/').pop();
+      const dist = join(talkDir, 'dist');
+      mkdirSync(dist, { recursive: true });
+      const out = join(dist, 'index.html');
+      writeFileSync(out, bodies[slug]);
+      return out;
+    };
+    await assembleSite({
+      manifest, talksRoot, outDir, tokensCssPath, sharedDirs: [],
+      buildOne: fakeBuild,
+      capture: async () => {},
+    });
+    const read = (slug) => readFileSync(join(outDir, slug, 'index.html'), 'utf8');
+    assert.match(read('has-desc'), /property="og:description" content="Explicit desc"/);
+    assert.match(read('has-h2'), /property="og:description" content="The Subtitle"/);
+    assert.match(read('bare'), /property="og:description" content="fallback tag"/);
+  } finally {
+    rmSync(root, { recursive: true, force: true });
+  }
+});
+
+test('assembleSite: throws when a built deck has no absolute baseUrl', async () => {
+  const root = mkdtempSync(join(tmpdir(), 'site-nobase-'));
+  try {
+    const talksRoot = join(root, 'talks');
+    mkdirSync(talksRoot, { recursive: true });
+    const tokensCssPath = join(root, 'tokens.css');
+    writeFileSync(tokensCssPath, ':root{}');
+    const manifest = {
+      site: { title: 'Talks' }, // no baseUrl
+      decks: [{ slug: 'deck-a', source: 'build', title: 'Deck A' }],
+    };
+    await assert.rejects(
+      assembleSite({
+        manifest, talksRoot, outDir: join(root, '_site'), tokensCssPath,
+        sharedDirs: [], buildOne: async () => '', capture: async () => {},
+      }),
+      /baseUrl/,
+    );
+  } finally {
+    rmSync(root, { recursive: true, force: true });
+  }
+});
+
+test('assembleSite: allows a missing baseUrl when there are no built decks', async () => {
+  const root = mkdtempSync(join(tmpdir(), 'site-nobase-ok-'));
+  try {
+    const talksRoot = join(root, 'talks');
+    mkdirSync(talksRoot, { recursive: true });
+    const tokensCssPath = join(root, 'tokens.css');
+    writeFileSync(tokensCssPath, ':root{}');
+    const manifest = {
+      site: { title: 'Talks' },
+      decks: [{ slug: 'old', source: 'legacy', title: 'Old', url: 'https://x/old/' }],
+    };
+    await assembleSite({
+      manifest, talksRoot, outDir: join(root, '_site'), tokensCssPath,
+      sharedDirs: [], capture: async () => {},
+    });
+    // no throw = pass
+  } finally {
+    rmSync(root, { recursive: true, force: true });
+  }
+});
+
+test('captureTitleSlide: writes a PNG of the .deck element', async (t) => {
+  const root = mkdtempSync(join(tmpdir(), 'site-shot-'));
+  let server;
+  try {
+    mkdirSync(join(root, 'deck-a'), { recursive: true });
+    writeFileSync(join(root, 'deck-a', 'index.html'),
+      '<!doctype html><html><head></head><body>' +
+      '<div class="deck" style="width:1920px;height:1080px;background:#123">' +
+      '<div class="slide is-current">hi</div></div></body></html>');
+    server = await startStaticServer(root);
+    const outPath = join(root, 'og', 'deck-a.png');
+    mkdirSync(join(root, 'og'), { recursive: true });
+    try {
+      await captureTitleSlide({ url: `${server.origin}/deck-a/`, outPath });
+    } catch (err) {
+      return t.skip(`chromium unavailable: ${err.message}`);
+    }
+    const bytes = readFileSync(outPath);
+    assert.ok(bytes.length > 0, 'png not empty');
+    assert.deepEqual([...bytes.subarray(0, 4)], [0x89, 0x50, 0x4e, 0x47], 'PNG magic bytes');
+  } finally {
+    if (server) await server.close();
+    rmSync(root, { recursive: true, force: true });
+  }
 });

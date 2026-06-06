@@ -13,13 +13,26 @@ Two independent pipelines:
 
 ## Site assembly & deploy
 
-3. **Site** ([bin/site.js](bin/site.js)) — `decks.json` → `_site/`. Builds +
-   bundles every `source: "build"` deck and copies its `bundle.html` to
-   `_site/<slug>/index.html`, copies `css/tokens.css` to `_site/assets/`, and
-   generates `_site/index.html` (landing page). `source: "legacy"` decks are
-   link-outs to `simonhearne.com/presentations/<slug>/`, not re-hosted. Run via
-   `npm run site`. This is the Netlify build; deployed at talks.simonhearne.com
-   from `simonhearne/presentations` (this builder lives under `builder/` there).
+3. **Site** ([bin/site.js](bin/site.js)) — `decks.json` → `_site/`. For each
+   `source:"build"` deck it runs the build, copies the deck's own local assets,
+   rewrites asset refs to root-absolute, injects OpenGraph + Twitter meta, and
+   writes `_site/<slug>/index.html`. Shared `css/`, `img/`, `script/` dirs are
+   copied once to `_site/`, and `css/tokens.css` to `_site/assets/`.
+
+   After building, it screenshots each built deck's title slide with Playwright
+   (headless Chromium) over a temporary localhost static server, writing
+   `_site/og/<slug>.png` (1920×1080). These are the `og:image` for each deck
+   and the thumbnails on the generated landing page.
+
+   `manifest.site.baseUrl` (e.g. `https://talks.simonhearne.com`) is required
+   to build absolute OG URLs — `assembleSite` throws early if any
+   `source:"build"` deck is present and `baseUrl` is not an absolute http(s)
+   URL. OG description per deck falls back `deck.description` → first `<h2>` →
+   `site.tagline`.
+
+   `source:"legacy"` decks are link-outs (no rehosting, no screenshot). Run via
+   `npm run site`. This is the Netlify build (`npm ci && npx playwright install
+   chromium && node bin/site.js`), deployed at talks.simonhearne.com.
    `bin/site.js` keeps pure helpers (`validateManifest`, `normalizeDeck`,
    `deckHref`, `renderLanding`) above the `assembleSite` orchestrator, same as
    `build.js`.

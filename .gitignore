@@ -6,4 +6,4 @@
 .playwright-mcp/
 .superpowers/
 .claude/
-docs/superpowers/
+**/docs/superpowers/

@@ -1,10 +1,53 @@
 import { readFileSync, writeFileSync, mkdirSync, copyFileSync, cpSync, realpathSync } from 'node:fs';
-import { resolve, dirname, basename } from 'node:path';
+import { createServer } from 'node:http';
+import { resolve, dirname, basename, extname, join as joinPath } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { escapeHtml, buildDeck } from './build.js';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const LEGACY_BASE = 'https://simonhearne.com/presentations';
+
+export function normalizeBaseUrl(baseUrl) {
+  return String(baseUrl || '').replace(/\/+$/, '');
+}
+
+export function ogImageRelPath(slug) {
+  return `og/${slug}.png`;
+}
+
+export function deckCanonicalUrl(baseUrl, slug) {
+  return `${normalizeBaseUrl(baseUrl)}/${slug}/`;
+}
+
+export function ogImageUrl(baseUrl, slug) {
+  return `${normalizeBaseUrl(baseUrl)}/${ogImageRelPath(slug)}`;
+}
+
+export function firstH2Text(html) {
+  const m = /<h2[^>]*>([\s\S]*?)<\/h2>/i.exec(html);
+  if (!m) return '';
+  return m[1].replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim();
+}
+
+export function injectOgMeta(html, { title, description, url, image, width, height }) {
+  const tags = [
+    `<meta property="og:title" content="${escapeHtml(title)}">`,
+    `<meta property="og:description" content="${escapeHtml(description)}">`,
+    `<meta property="og:type" content="website">`,
+    `<meta property="og:url" content="${escapeHtml(url)}">`,
+    `<meta property="og:image" content="${escapeHtml(image)}">`,
+    `<meta property="og:image:width" content="${width}">`,
+    `<meta property="og:image:height" content="${height}">`,
+    `<meta name="twitter:card" content="summary_large_image">`,
+    `<meta name="twitter:title" content="${escapeHtml(title)}">`,
+    `<meta name="twitter:description" content="${escapeHtml(description)}">`,
+    `<meta name="twitter:image" content="${escapeHtml(image)}">`,
+  ].join('\n  ');
+  const block = `  ${tags}\n`;
+  return html.includes('</head>')
+    ? html.replace('</head>', `${block}</head>`)
+    : block + html;
+}
 
 export function validateManifest(manifest) {
   if (!manifest || typeof manifest !== 'object') throw new Error('manifest must be an object');
@@ -35,10 +78,15 @@ export function deckHref(deck) {
 
 function renderCard(deck) {
   const date = deck.date ? `<span class="deck-date">${escapeHtml(deck.date)}</span>` : '';
+  const thumb = deck.source === 'build'
+    ? `<img class="deck-thumb" src="/${ogImageRelPath(deck.slug)}" alt="" loading="lazy">\n          `
+    : '';
   return `      <li class="deck-card">
         <a href="${escapeHtml(deckHref(deck))}">
-          <span class="deck-title">${escapeHtml(deck.title)}</span>
-          ${date}
+          ${thumb}<span class="deck-meta">
+            <span class="deck-title">${escapeHtml(deck.title)}</span>
+            ${date}
+          </span>
         </a>
       </li>`;
 }
@@ -74,10 +122,13 @@ export function renderLanding(site, decks) {
     .deck-group h2 { font-size: 1rem; text-transform: uppercase; letter-spacing: .08em;
       color: #5b6478; margin: 2.5rem 0 .75rem; }
     .deck-list { list-style: none; margin: 0; padding: 0; display: grid; gap: .5rem; }
-    .deck-card a { display: flex; justify-content: space-between; align-items: baseline;
-      gap: 1rem; padding: 1rem 1.25rem; border: 1px solid #e6e8ee;
+    .deck-card a { display: flex; flex-direction: column; align-items: stretch;
+      gap: .75rem; padding: 1rem 1.25rem; border: 1px solid #e6e8ee;
       border-radius: 12px; text-decoration: none; color: inherit; transition: border-color .15s; }
     .deck-card a:hover { border-color: var(--zilliz-blue, #175fff); }
+    .deck-thumb { width: 100%; aspect-ratio: 16 / 9; object-fit: cover;
+      border-radius: 8px; background: #0b1020; display: block; }
+    .deck-meta { display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; }
     .deck-title { font-weight: 600; font-size: 1.15rem; }
     .deck-date { color: #5b6478; font-variant-numeric: tabular-nums; }
   </style>
@@ -107,6 +158,75 @@ export function collectLocalAssetRefs(html) {
   return [...refs];
 }
 
+const MIME = {
+  '.html': 'text/html; charset=utf-8',
+  '.css': 'text/css; charset=utf-8',
+  '.js': 'text/javascript; charset=utf-8',
+  '.mjs': 'text/javascript; charset=utf-8',
+  '.json': 'application/json; charset=utf-8',
+  '.png': 'image/png',
+  '.jpg': 'image/jpeg',
+  '.jpeg': 'image/jpeg',
+  '.svg': 'image/svg+xml',
+};
+
+export function startStaticServer(root) {
+  return new Promise((resolveServer) => {
+    const server = createServer((req, res) => {
+      try {
+        let pathname = decodeURIComponent(new URL(req.url, 'http://localhost').pathname);
+        if (pathname.endsWith('/')) pathname += 'index.html';
+        const filePath = joinPath(root, pathname);
+        if (!filePath.startsWith(root)) { res.statusCode = 403; return res.end('forbidden'); }
+        const body = readFileSync(filePath);
+        res.setHeader('Content-Type', MIME[extname(filePath)] || 'application/octet-stream');
+        res.end(body);
+      } catch {
+        res.statusCode = 404;
+        res.end('not found');
+      }
+    });
+    server.listen(0, '127.0.0.1', () => {
+      const { port } = server.address();
+      resolveServer({
+        origin: `http://127.0.0.1:${port}`,
+        close: () => new Promise((done) => server.close(done)),
+      });
+    });
+  });
+}
+
+export async function captureTitleSlide({ url, outPath, width = 1920, height = 1080 }) {
+  const { chromium } = await import('playwright');
+  const browser = await chromium.launch();
+  try {
+    const page = await browser.newPage({ viewport: { width, height }, deviceScaleFactor: 1 });
+    await page.goto(url, { waitUntil: 'load' });
+    await page.evaluate(() => document.fonts && document.fonts.ready).catch(() => {});
+    await page.waitForSelector('.slide.is-current', { timeout: 5000 }).catch(() => {});
+    await page.waitForTimeout(400);
+    const deck = page.locator('.deck').first();
+    await deck.screenshot({ path: outPath });
+  } finally {
+    await browser.close();
+  }
+}
+
+async function defaultCapture(outDir, slugs) {
+  if (slugs.length === 0) return;
+  const server = await startStaticServer(outDir);
+  try {
+    for (const slug of slugs) {
+      await captureTitleSlide({
+        url: `${server.origin}/${slug}/`,
+        outPath: resolve(outDir, ogImageRelPath(slug)),
+      });
+    }
+  } finally {
+    await server.close();
+  }
+}
+
 async function defaultBuildOne(talkDir) {
   await buildDeck(talkDir);
   return resolve(talkDir, 'dist', 'index.html');
@@ -119,9 +239,14 @@ export async function assembleSite({
   tokensCssPath,
   sharedDirs = [],
   buildOne = defaultBuildOne,
+  capture = defaultCapture,
 }) {
   validateManifest(manifest);
   const decks = manifest.decks.map(normalizeDeck);
+
+  if (decks.some(d => d.source === 'build') && !/^https?:\/\/\S+/.test(String(manifest.site.baseUrl || ''))) {
+    throw new Error('manifest.site.baseUrl must be an absolute http(s) URL to build decks');
+  }
 
   mkdirSync(outDir, { recursive: true });
   mkdirSync(resolve(outDir, 'assets'), { recursive: true });
@@ -130,6 +255,9 @@ export async function assembleSite({
   for (const dir of sharedDirs) {
     cpSync(dir, resolve(outDir, basename(dir)), { recursive: true });
   }
+
+  const baseUrl = manifest.site.baseUrl;
+  const builtSlugs = [];
 
   for (const deck of decks) {
     if (deck.source !== 'build') continue;
@@ -143,8 +271,21 @@ export async function assembleSite({
       mkdirSync(dirname(dest), { recursive: true });
       copyFileSync(resolve(talkDir, ref), dest);
     }
-    writeFileSync(resolve(deckOut, 'index.html'), rewriteAssetPaths(html, deck.slug));
+    const rewritten = rewriteAssetPaths(html, deck.slug);
+    const withOg = injectOgMeta(rewritten, {
+      title: deck.title,
+      description: deck.description || firstH2Text(html) || manifest.site.tagline || '',
+      url: deckCanonicalUrl(baseUrl, deck.slug),
+      image: ogImageUrl(baseUrl, deck.slug),
+      width: 1920,
+      height: 1080,
+    });
+    writeFileSync(resolve(deckOut, 'index.html'), withOg);
+    builtSlugs.push(deck.slug);
   }
+
+  mkdirSync(resolve(outDir, 'og'), { recursive: true });
+  await capture(outDir, builtSlugs);
 
   writeFileSync(resolve(outDir, 'index.html'), renderLanding(manifest.site, decks));
   return outDir;
