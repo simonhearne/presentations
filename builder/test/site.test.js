@@ -101,7 +101,7 @@ test('assembleSite: builds (no bundle), copies shared + deck-local assets, rewri
     writeFileSync(join(deckData, 'x.jpg'), 'FACE');
 
     const manifest = {
-      site: { title: 'Talks', tagline: 'hi' },
+      site: { title: 'Talks', tagline: 'hi', baseUrl: 'https://talks.simonhearne.com' },
       decks: [
         { slug: 'deck-a', source: 'build', title: 'Deck A' },
         { slug: 'psych-speed', source: 'legacy', title: 'Psych' },
@@ -114,22 +114,34 @@ test('assembleSite: builds (no bundle), copies shared + deck-local assets, rewri
       mkdirSync(dist, { recursive: true });
       const out = join(dist, 'index.html');
       writeFileSync(out,
+        '<head></head>' +
         '<link href="../../../css/layouts.css">' +
         '<script src="../../../script/deck.js"></script>' +
         '<img src="../data/faces/x.jpg">');
       return out;
     };
 
+    const captured = [];
     await assembleSite({
       manifest, talksRoot, outDir, tokensCssPath,
       sharedDirs: [cssDir, imgDir, scriptDir],
       buildOne: fakeBuild,
+      capture: async (dir, slugs) => {
+        for (const slug of slugs) {
+          writeFileSync(join(dir, 'og', `${slug}.png`), 'PNG');
+          captured.push(slug);
+        }
+      },
     });
 
     const deckHtml = readFileSync(join(outDir, 'deck-a', 'index.html'), 'utf8');
     assert.match(deckHtml, /href="\/css\/layouts\.css"/, 'shared css rewritten root-absolute');
     assert.match(deckHtml, /src="\/deck-a\/data\/faces\/x\.jpg"/, 'deck-local rewritten with slug');
     assert.doesNotMatch(deckHtml, /\.\.\//, 'no relative ../ left in deck html');
+
+    assert.deepEqual(captured, ['deck-a'], 'capture called for built decks only');
+    assert.match(deckHtml, /property="og:image" content="https:\/\/talks\.simonhearne\.com\/og\/deck-a\.png"/);
+    assert.match(deckHtml, /property="og:url" content="https:\/\/talks\.simonhearne\.com\/deck-a\//);
 
     assert.ok(existsSync(join(outDir, 'css', 'layouts.css')), 'shared css copied');
     assert.ok(existsSync(join(outDir, 'img', 'automata.jpg')), 'automata.jpg copied');
@@ -280,6 +292,49 @@ test('startStaticServer: serves files from the root over http', async () => {
     } finally {
       await server.close();
     }
+  } finally {
+    rmSync(root, { recursive: true, force: true });
+  }
+});
+
+test('assembleSite: OG description prefers deck.description, then first h2, then tagline', async () => {
+  const root = mkdtempSync(join(tmpdir(), 'site-og-'));
+  try {
+    const talksRoot = join(root, 'talks');
+    const outDir = join(root, '_site');
+    const tokensCssPath = join(root, 'tokens.css');
+    mkdirSync(talksRoot, { recursive: true });
+    writeFileSync(tokensCssPath, ':root{}');
+    const manifest = {
+      site: { title: 'Talks', tagline: 'fallback tag', baseUrl: 'https://talks.simonhearne.com' },
+      decks: [
+        { slug: 'has-desc', source: 'build', title: 'Has Desc', description: 'Explicit desc' },
+        { slug: 'has-h2', source: 'build', title: 'Has H2' },
+        { slug: 'bare', source: 'build', title: 'Bare' },
+      ],
+    };
+    const bodies = {
+      'has-desc': '<head></head><body><h1>Has Desc</h1><h2>Ignored Subtitle</h2></body>',
+      'has-h2': '<head></head><body><h1>Has H2</h1><h2>The Subtitle</h2></body>',
+      'bare': '<head></head><body><h1>Bare</h1></body>',
+    };
+    const fakeBuild = async (talkDir) => {
+      const slug = talkDir.split('/').pop();
+      const dist = join(talkDir, 'dist');
+      mkdirSync(dist, { recursive: true });
+      const out = join(dist, 'index.html');
+      writeFileSync(out, bodies[slug]);
+      return out;
+    };
+    await assembleSite({
+      manifest, talksRoot, outDir, tokensCssPath, sharedDirs: [],
+      buildOne: fakeBuild,
+      capture: async () => {},
+    });
+    const read = (slug) => readFileSync(join(outDir, slug, 'index.html'), 'utf8');
+    assert.match(read('has-desc'), /property="og:description" content="Explicit desc"/);
+    assert.match(read('has-h2'), /property="og:description" content="The Subtitle"/);
+    assert.match(read('bare'), /property="og:description" content="fallback tag"/);
   } finally {
     rmSync(root, { recursive: true, force: true });
   }

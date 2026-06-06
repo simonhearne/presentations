@@ -239,6 +239,7 @@ export async function assembleSite({
   tokensCssPath,
   sharedDirs = [],
   buildOne = defaultBuildOne,
+  capture = defaultCapture,
 }) {
   validateManifest(manifest);
   const decks = manifest.decks.map(normalizeDeck);
@@ -250,6 +251,9 @@ export async function assembleSite({
   for (const dir of sharedDirs) {
     cpSync(dir, resolve(outDir, basename(dir)), { recursive: true });
   }
+
+  const baseUrl = manifest.site.baseUrl;
+  const builtSlugs = [];
 
   for (const deck of decks) {
     if (deck.source !== 'build') continue;
@@ -263,8 +267,21 @@ export async function assembleSite({
       mkdirSync(dirname(dest), { recursive: true });
       copyFileSync(resolve(talkDir, ref), dest);
     }
-    writeFileSync(resolve(deckOut, 'index.html'), rewriteAssetPaths(html, deck.slug));
+    const rewritten = rewriteAssetPaths(html, deck.slug);
+    const withOg = injectOgMeta(rewritten, {
+      title: deck.title,
+      description: deck.description || firstH2Text(html) || manifest.site.tagline || '',
+      url: deckCanonicalUrl(baseUrl, deck.slug),
+      image: ogImageUrl(baseUrl, deck.slug),
+      width: 1920,
+      height: 1080,
+    });
+    writeFileSync(resolve(deckOut, 'index.html'), withOg);
+    builtSlugs.push(deck.slug);
   }
+
+  mkdirSync(resolve(outDir, 'og'), { recursive: true });
+  await capture(outDir, builtSlugs);
 
   writeFileSync(resolve(outDir, 'index.html'), renderLanding(manifest.site, decks));
   return outDir;
