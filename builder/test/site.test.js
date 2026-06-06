@@ -75,7 +75,7 @@ test('renderLanding: groups built decks under Recent and legacy under Archive', 
   assert.match(html, /Recent[\s\S]*Archive/);
 });
 
-test('assembleSite: copies built bundles, writes landing, copies tokens.css', async () => {
+test('assembleSite: builds (no bundle), copies shared + deck-local assets, rewrites paths', async () => {
   const root = mkdtempSync(join(tmpdir(), 'site-assemble-'));
   try {
     const talksRoot = join(root, 'talks');
@@ -83,6 +83,22 @@ test('assembleSite: copies built bundles, writes landing, copies tokens.css', as
     const tokensCssPath = join(root, 'tokens.css');
     mkdirSync(talksRoot, { recursive: true });
     writeFileSync(tokensCssPath, ':root{--x:1}');
+
+    // Shared asset dirs (copied once into _site).
+    const cssDir = join(root, 'css');
+    const imgDir = join(root, 'img');
+    const scriptDir = join(root, 'script');
+    mkdirSync(cssDir, { recursive: true });
+    mkdirSync(imgDir, { recursive: true });
+    mkdirSync(scriptDir, { recursive: true });
+    writeFileSync(join(cssDir, 'layouts.css'), '.x{background:url(../img/automata.jpg)}');
+    writeFileSync(join(imgDir, 'automata.jpg'), 'JPGBYTES');
+    writeFileSync(join(scriptDir, 'deck.js'), '// deck');
+
+    // Deck-local asset.
+    const deckData = join(talksRoot, 'deck-a', 'data', 'faces');
+    mkdirSync(deckData, { recursive: true });
+    writeFileSync(join(deckData, 'x.jpg'), 'FACE');
 
     const manifest = {
       site: { title: 'Talks', tagline: 'hi' },
@@ -92,21 +108,39 @@ test('assembleSite: copies built bundles, writes landing, copies tokens.css', as
       ],
     };
 
-    // Fake builder: writes a recognizable bundle.html into the deck's dist dir.
+    // Fake builder: writes a dist/index.html with shared + deck-local refs.
     const fakeBuild = async (talkDir) => {
       const dist = join(talkDir, 'dist');
       mkdirSync(dist, { recursive: true });
-      const out = join(dist, 'bundle.html');
-      writeFileSync(out, '<html>BUNDLE deck-a</html>');
+      const out = join(dist, 'index.html');
+      writeFileSync(out,
+        '<link href="../../../css/layouts.css">' +
+        '<script src="../../../script/deck.js"></script>' +
+        '<img src="../data/faces/x.jpg">');
       return out;
     };
 
-    await assembleSite({ manifest, talksRoot, outDir, tokensCssPath, buildOne: fakeBuild });
+    await assembleSite({
+      manifest, talksRoot, outDir, tokensCssPath,
+      sharedDirs: [cssDir, imgDir, scriptDir],
+      buildOne: fakeBuild,
+    });
 
-    assert.ok(existsSync(join(outDir, 'deck-a', 'index.html')), 'built deck copied');
-    assert.match(readFileSync(join(outDir, 'deck-a', 'index.html'), 'utf8'), /BUNDLE deck-a/);
-    assert.ok(!existsSync(join(outDir, 'psych-speed')), 'legacy deck not copied');
+    const deckHtml = readFileSync(join(outDir, 'deck-a', 'index.html'), 'utf8');
+    assert.match(deckHtml, /href="\/css\/layouts\.css"/, 'shared css rewritten root-absolute');
+    assert.match(deckHtml, /src="\/deck-a\/data\/faces\/x\.jpg"/, 'deck-local rewritten with slug');
+    assert.doesNotMatch(deckHtml, /\.\.\//, 'no relative ../ left in deck html');
+
+    assert.ok(existsSync(join(outDir, 'css', 'layouts.css')), 'shared css copied');
+    assert.ok(existsSync(join(outDir, 'img', 'automata.jpg')), 'automata.jpg copied');
+    assert.ok(existsSync(join(outDir, 'script', 'deck.js')), 'shared script copied');
+    assert.ok(existsSync(join(outDir, 'deck-a', 'data', 'faces', 'x.jpg')), 'deck-local asset copied');
+
+    // CSS left verbatim so its ../img/ resolves against the css↔img sibling layout.
+    assert.match(readFileSync(join(outDir, 'css', 'layouts.css'), 'utf8'), /url\(\.\.\/img\/automata\.jpg\)/);
+
     assert.ok(existsSync(join(outDir, 'assets', 'tokens.css')), 'tokens copied');
+    assert.ok(!existsSync(join(outDir, 'psych-speed')), 'legacy deck not copied');
     const landing = readFileSync(join(outDir, 'index.html'), 'utf8');
     assert.match(landing, /href="\/deck-a\/"/);
     assert.match(landing, /presentations\/psych-speed/);

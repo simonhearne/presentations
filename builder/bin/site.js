@@ -1,8 +1,7 @@
-import { readFileSync, writeFileSync, mkdirSync, copyFileSync, realpathSync } from 'node:fs';
-import { resolve, dirname } from 'node:path';
+import { readFileSync, writeFileSync, mkdirSync, copyFileSync, cpSync, realpathSync } from 'node:fs';
+import { resolve, dirname, basename } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { escapeHtml, buildDeck } from './build.js';
-import { bundleDeck } from './bundle.js';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const LEGACY_BASE = 'https://simonhearne.com/presentations';
@@ -108,9 +107,9 @@ export function collectLocalAssetRefs(html) {
   return [...refs];
 }
 
-async function defaultBuildOne(talkDir, { fetchFn } = {}) {
+async function defaultBuildOne(talkDir) {
   await buildDeck(talkDir);
-  return bundleDeck(talkDir, fetchFn ? { fetchFn } : {});
+  return resolve(talkDir, 'dist', 'index.html');
 }
 
 export async function assembleSite({
@@ -118,8 +117,8 @@ export async function assembleSite({
   talksRoot,
   outDir,
   tokensCssPath,
+  sharedDirs = [],
   buildOne = defaultBuildOne,
-  fetchFn,
 }) {
   validateManifest(manifest);
   const decks = manifest.decks.map(normalizeDeck);
@@ -128,13 +127,23 @@ export async function assembleSite({
   mkdirSync(resolve(outDir, 'assets'), { recursive: true });
   copyFileSync(tokensCssPath, resolve(outDir, 'assets', 'tokens.css'));
 
+  for (const dir of sharedDirs) {
+    cpSync(dir, resolve(outDir, basename(dir)), { recursive: true });
+  }
+
   for (const deck of decks) {
     if (deck.source !== 'build') continue;
     const talkDir = resolve(talksRoot, deck.slug);
-    const bundlePath = await buildOne(talkDir, { fetchFn });
+    const distPath = await buildOne(talkDir);
+    const html = readFileSync(distPath, 'utf8');
     const deckOut = resolve(outDir, deck.slug);
     mkdirSync(deckOut, { recursive: true });
-    copyFileSync(bundlePath, resolve(deckOut, 'index.html'));
+    for (const ref of collectLocalAssetRefs(html)) {
+      const dest = resolve(deckOut, ref);
+      mkdirSync(dirname(dest), { recursive: true });
+      copyFileSync(resolve(talkDir, ref), dest);
+    }
+    writeFileSync(resolve(deckOut, 'index.html'), rewriteAssetPaths(html, deck.slug));
   }
 
   writeFileSync(resolve(outDir, 'index.html'), renderLanding(manifest.site, decks));
@@ -153,6 +162,7 @@ if (process.argv[1] && realpathSync(fileURLToPath(import.meta.url)) === realpath
     talksRoot: resolve(HERE, '..', 'talks'),
     outDir: resolve(HERE, '..', '_site'),
     tokensCssPath: resolve(HERE, '..', 'css', 'tokens.css'),
+    sharedDirs: ['css', 'img', 'script'].map(d => resolve(HERE, '..', d)),
   }).then(out => console.log(`assembled ${out}`))
     .catch(err => { console.error(err.stack || err.message); process.exit(1); });
 }
