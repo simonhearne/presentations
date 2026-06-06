@@ -125,9 +125,40 @@
     }
   }
 
+  // Swipe nav routes through a synthetic ArrowLeft/Right keydown rather than
+  // calling show() directly, so the capture-phase fragment/vega/three steppers
+  // get the same chance to consume a swipe as they do a real arrow key.
+  const SWIPE_MIN = 50;
+  let touchX = 0;
+  let touchY = 0;
+  let touchTracking = false;
+
+  function onTouchStart(e) {
+    touchTracking = e.touches.length === 1;
+    if (!touchTracking) return;
+    touchX = e.touches[0].clientX;
+    touchY = e.touches[0].clientY;
+  }
+
+  function onTouchEnd(e) {
+    if (!touchTracking) return;
+    touchTracking = false;
+    const t = e.changedTouches[0];
+    const dx = t.clientX - touchX;
+    const dy = t.clientY - touchY;
+    if (Math.abs(dx) < SWIPE_MIN || Math.abs(dx) <= Math.abs(dy)) return;
+    document.dispatchEvent(new KeyboardEvent('keydown', {
+      key: dx < 0 ? 'ArrowRight' : 'ArrowLeft',
+      bubbles: true,
+      cancelable: true
+    }));
+  }
+
   window.addEventListener('resize', fit);
   window.addEventListener('hashchange', () => show(fromHash()));
   document.addEventListener('keydown', onKey);
+  document.addEventListener('touchstart', onTouchStart, { passive: true });
+  document.addEventListener('touchend', onTouchEnd, { passive: true });
 
   fit();
   show(fromHash());
