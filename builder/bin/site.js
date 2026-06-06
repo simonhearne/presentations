@@ -77,10 +77,15 @@ export function deckHref(deck) {
 
 function renderCard(deck) {
   const date = deck.date ? `<span class="deck-date">${escapeHtml(deck.date)}</span>` : '';
+  const thumb = deck.source === 'build'
+    ? `<img class="deck-thumb" src="/${ogImageRelPath(deck.slug)}" alt="" loading="lazy">\n          `
+    : '';
   return `      <li class="deck-card">
         <a href="${escapeHtml(deckHref(deck))}">
-          <span class="deck-title">${escapeHtml(deck.title)}</span>
-          ${date}
+          ${thumb}<span class="deck-meta">
+            <span class="deck-title">${escapeHtml(deck.title)}</span>
+            ${date}
+          </span>
         </a>
       </li>`;
 }
@@ -116,10 +121,13 @@ export function renderLanding(site, decks) {
     .deck-group h2 { font-size: 1rem; text-transform: uppercase; letter-spacing: .08em;
       color: #5b6478; margin: 2.5rem 0 .75rem; }
     .deck-list { list-style: none; margin: 0; padding: 0; display: grid; gap: .5rem; }
-    .deck-card a { display: flex; justify-content: space-between; align-items: baseline;
-      gap: 1rem; padding: 1rem 1.25rem; border: 1px solid #e6e8ee;
+    .deck-card a { display: flex; flex-direction: column; align-items: stretch;
+      gap: .75rem; padding: 1rem 1.25rem; border: 1px solid #e6e8ee;
       border-radius: 12px; text-decoration: none; color: inherit; transition: border-color .15s; }
     .deck-card a:hover { border-color: var(--zilliz-blue, #175fff); }
+    .deck-thumb { width: 100%; aspect-ratio: 16 / 9; object-fit: cover;
+      border-radius: 8px; background: #0b1020; display: block; }
+    .deck-meta { display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; }
     .deck-title { font-weight: 600; font-size: 1.15rem; }
     .deck-date { color: #5b6478; font-variant-numeric: tabular-nums; }
   </style>

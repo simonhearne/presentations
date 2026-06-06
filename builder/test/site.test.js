@@ -249,3 +249,20 @@ test('injectOgMeta: escapes attribute values', () => {
   });
   assert.match(out, /content="A &quot;quoted&quot; &amp; &lt;b&gt;title&lt;\/b&gt;"/);
 });
+
+test('renderLanding: built deck card includes an og thumbnail', () => {
+  const decks = [{ slug: 'deck-a', source: 'build', title: 'Deck A' }];
+  const html = renderLanding({ title: 'Talks' }, decks);
+  assert.match(html, /<img class="deck-thumb"[^>]*src="\/og\/deck-a\.png"/);
+});
+
+test('renderLanding: legacy deck card has no thumbnail', () => {
+  const decks = [{ slug: 'old', source: 'legacy', title: 'Old', url: 'https://x/old/' }];
+  const html = renderLanding({ title: 'Talks' }, decks);
+  assert.doesNotMatch(html, /<img class="deck-thumb"/);
+});
+
+test('renderLanding: defines a .deck-thumb style', () => {
+  const html = renderLanding({ title: 'Talks' }, []);
+  assert.match(html, /\.deck-thumb\s*\{/);
+});
