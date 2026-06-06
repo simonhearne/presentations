@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { mkdtempSync, writeFileSync, readFileSync, existsSync, mkdirSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
-import { validateManifest, normalizeDeck, deckHref, renderLanding, assembleSite, loadManifest, rewriteAssetPaths, collectLocalAssetRefs, normalizeBaseUrl, deckCanonicalUrl, ogImageUrl, ogImageRelPath, firstH2Text, injectOgMeta } from '../bin/site.js';
+import { validateManifest, normalizeDeck, deckHref, renderLanding, assembleSite, loadManifest, rewriteAssetPaths, collectLocalAssetRefs, normalizeBaseUrl, deckCanonicalUrl, ogImageUrl, ogImageRelPath, firstH2Text, injectOgMeta, startStaticServer } from '../bin/site.js';
 
 test('validateManifest: accepts a minimal valid manifest', () => {
   const m = { site: { title: 'T' }, decks: [{ slug: 'a', source: 'build', title: 'A' }] };
@@ -265,4 +265,22 @@ test('renderLanding: legacy deck card has no thumbnail', () => {
 test('renderLanding: defines a .deck-thumb style', () => {
   const html = renderLanding({ title: 'Talks' }, []);
   assert.match(html, /\.deck-thumb\s*\{/);
+});
+
+test('startStaticServer: serves files from the root over http', async () => {
+  const root = mkdtempSync(join(tmpdir(), 'site-serve-'));
+  try {
+    mkdirSync(join(root, 'deck-a'), { recursive: true });
+    writeFileSync(join(root, 'deck-a', 'index.html'), '<h1>hi</h1>');
+    const server = await startStaticServer(root);
+    try {
+      const res = await fetch(`${server.origin}/deck-a/`);
+      assert.equal(res.status, 200);
+      assert.match(await res.text(), /<h1>hi<\/h1>/);
+    } finally {
+      await server.close();
+    }
+  } finally {
+    rmSync(root, { recursive: true, force: true });
+  }
 });

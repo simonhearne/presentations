@@ -1,5 +1,6 @@
 import { readFileSync, writeFileSync, mkdirSync, copyFileSync, cpSync, realpathSync } from 'node:fs';
-import { resolve, dirname, basename } from 'node:path';
+import { createServer } from 'node:http';
+import { resolve, dirname, basename, extname, join as joinPath } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { escapeHtml, buildDeck } from './build.js';
 
@@ -155,6 +156,44 @@ export function collectLocalAssetRefs(html) {
   const refs = new Set();
   for (const m of html.matchAll(re)) refs.add(m[1]);
   return [...refs];
+}
+
+const MIME = {
+  '.html': 'text/html; charset=utf-8',
+  '.css': 'text/css; charset=utf-8',
+  '.js': 'text/javascript; charset=utf-8',
+  '.mjs': 'text/javascript; charset=utf-8',
+  '.json': 'application/json; charset=utf-8',
+  '.png': 'image/png',
+  '.jpg': 'image/jpeg',
+  '.jpeg': 'image/jpeg',
+  '.svg': 'image/svg+xml',
+};
+
+export function startStaticServer(root) {
+  return new Promise((resolveServer) => {
+    const server = createServer((req, res) => {
+      try {
+        let pathname = decodeURIComponent(new URL(req.url, 'http://localhost').pathname);
+        if (pathname.endsWith('/')) pathname += 'index.html';
+        const filePath = joinPath(root, pathname);
+        if (!filePath.startsWith(root)) { res.statusCode = 403; return res.end('forbidden'); }
+        const body = readFileSync(filePath);
+        res.setHeader('Content-Type', MIME[extname(filePath)] || 'application/octet-stream');
+        res.end(body);
+      } catch {
+        res.statusCode = 404;
+        res.end('not found');
+      }
+    });
+    server.listen(0, '127.0.0.1', () => {
+      const { port } = server.address();
+      resolveServer({
+        origin: `http://127.0.0.1:${port}`,
+        close: () => new Promise((done) => server.close(done)),
+      });
+    });
+  });
 }
 
 async function defaultBuildOne(talkDir) {
