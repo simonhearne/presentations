@@ -340,6 +340,50 @@ test('assembleSite: OG description prefers deck.description, then first h2, then
   }
 });
 
+test('assembleSite: throws when a built deck has no absolute baseUrl', async () => {
+  const root = mkdtempSync(join(tmpdir(), 'site-nobase-'));
+  try {
+    const talksRoot = join(root, 'talks');
+    mkdirSync(talksRoot, { recursive: true });
+    const tokensCssPath = join(root, 'tokens.css');
+    writeFileSync(tokensCssPath, ':root{}');
+    const manifest = {
+      site: { title: 'Talks' }, // no baseUrl
+      decks: [{ slug: 'deck-a', source: 'build', title: 'Deck A' }],
+    };
+    await assert.rejects(
+      assembleSite({
+        manifest, talksRoot, outDir: join(root, '_site'), tokensCssPath,
+        sharedDirs: [], buildOne: async () => '', capture: async () => {},
+      }),
+      /baseUrl/,
+    );
+  } finally {
+    rmSync(root, { recursive: true, force: true });
+  }
+});
+
+test('assembleSite: allows a missing baseUrl when there are no built decks', async () => {
+  const root = mkdtempSync(join(tmpdir(), 'site-nobase-ok-'));
+  try {
+    const talksRoot = join(root, 'talks');
+    mkdirSync(talksRoot, { recursive: true });
+    const tokensCssPath = join(root, 'tokens.css');
+    writeFileSync(tokensCssPath, ':root{}');
+    const manifest = {
+      site: { title: 'Talks' },
+      decks: [{ slug: 'old', source: 'legacy', title: 'Old', url: 'https://x/old/' }],
+    };
+    await assembleSite({
+      manifest, talksRoot, outDir: join(root, '_site'), tokensCssPath,
+      sharedDirs: [], capture: async () => {},
+    });
+    // no throw = pass
+  } finally {
+    rmSync(root, { recursive: true, force: true });
+  }
+});
+
 test('captureTitleSlide: writes a PNG of the .deck element', async (t) => {
   const root = mkdtempSync(join(tmpdir(), 'site-shot-'));
   let server;

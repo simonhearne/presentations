@@ -244,6 +244,10 @@ export async function assembleSite({
   validateManifest(manifest);
   const decks = manifest.decks.map(normalizeDeck);
 
+  if (decks.some(d => d.source === 'build') && !/^https?:\/\/\S+/.test(String(manifest.site.baseUrl || ''))) {
+    throw new Error('manifest.site.baseUrl must be an absolute http(s) URL to build decks');
+  }
+
   mkdirSync(outDir, { recursive: true });
   mkdirSync(resolve(outDir, 'assets'), { recursive: true });
   copyFileSync(tokensCssPath, resolve(outDir, 'assets', 'tokens.css'));
