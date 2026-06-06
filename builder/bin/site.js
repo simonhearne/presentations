@@ -22,6 +22,12 @@ export function ogImageUrl(baseUrl, slug) {
   return `${normalizeBaseUrl(baseUrl)}/${ogImageRelPath(slug)}`;
 }
 
+export function firstH2Text(html) {
+  const m = /<h2[^>]*>([\s\S]*?)<\/h2>/i.exec(html);
+  if (!m) return '';
+  return m[1].replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim();
+}
+
 export function validateManifest(manifest) {
   if (!manifest || typeof manifest !== 'object') throw new Error('manifest must be an object');
   if (!manifest.site || typeof manifest.site.title !== 'string') {

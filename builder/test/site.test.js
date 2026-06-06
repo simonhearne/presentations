@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { mkdtempSync, writeFileSync, readFileSync, existsSync, mkdirSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
-import { validateManifest, normalizeDeck, deckHref, renderLanding, assembleSite, loadManifest, rewriteAssetPaths, collectLocalAssetRefs, normalizeBaseUrl, deckCanonicalUrl, ogImageUrl, ogImageRelPath } from '../bin/site.js';
+import { validateManifest, normalizeDeck, deckHref, renderLanding, assembleSite, loadManifest, rewriteAssetPaths, collectLocalAssetRefs, normalizeBaseUrl, deckCanonicalUrl, ogImageUrl, ogImageRelPath, firstH2Text } from '../bin/site.js';
 
 test('validateManifest: accepts a minimal valid manifest', () => {
   const m = { site: { title: 'T' }, decks: [{ slug: 'a', source: 'build', title: 'A' }] };
@@ -209,4 +209,13 @@ test('ogImageUrl: builds an absolute og image url', () => {
     ogImageUrl('https://talks.simonhearne.com', 'vectordb-101'),
     'https://talks.simonhearne.com/og/vectordb-101.png'
   );
+});
+
+test('firstH2Text: returns text of the first h2, tags stripped', () => {
+  const html = '<h1>Title</h1><h2>A <em>sub</em>title</h2><h2>second</h2>';
+  assert.equal(firstH2Text(html), 'A subtitle');
+});
+
+test('firstH2Text: returns empty string when no h2', () => {
+  assert.equal(firstH2Text('<h1>Only</h1>'), '');
 });
