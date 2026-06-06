@@ -143,6 +143,12 @@ test('slugify: strips diacritics from Latin characters', () => {
   assert.equal(slugify('Über vector'), 'uber-vector');
 });
 
+test('slugify: strips HTML entities instead of mangling them into digits', () => {
+  assert.equal(slugify('When EXPLAIN isn&#39;t there'), 'when-explain-isnt-there');
+  assert.equal(slugify('A &amp; B'), 'a-b');
+  assert.equal(slugify('he said &#8220;hi&#8221;'), 'he-said-hi');
+});
+
 test('parseAuthors: parses a single author', () => {
   const body = '- name: Jiang Chen\n  position: head of devrel\n  company: zilliz';
   assert.deepEqual(parseAuthors(body), [
