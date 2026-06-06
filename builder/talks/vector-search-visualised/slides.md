@@ -15,9 +15,9 @@
 
 <img class="logo" src="../../../img/zilliz-light.svg" alt="">
 
-# When <span class="hero-text smashing">EXPLAIN</span><br> isn't there.
+# Vector Search <br><span class="hero-text smashing">Visualised</span>
 
-## Visualising Vector Search for<br> Engineering and Product Teams
+## A crash course in vector search
 
 ```authors
 - name: Simon Hearne
