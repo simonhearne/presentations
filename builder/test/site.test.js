@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { mkdtempSync, writeFileSync, readFileSync, existsSync, mkdirSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
-import { validateManifest, normalizeDeck, deckHref, renderLanding, assembleSite, loadManifest, rewriteAssetPaths, collectLocalAssetRefs, normalizeBaseUrl, deckCanonicalUrl, ogImageUrl, ogImageRelPath, firstH2Text, injectOgMeta, startStaticServer } from '../bin/site.js';
+import { validateManifest, normalizeDeck, deckHref, renderLanding, assembleSite, loadManifest, rewriteAssetPaths, collectLocalAssetRefs, normalizeBaseUrl, deckCanonicalUrl, ogImageUrl, ogImageRelPath, firstH2Text, injectOgMeta, startStaticServer, captureTitleSlide } from '../bin/site.js';
 
 test('validateManifest: accepts a minimal valid manifest', () => {
   const m = { site: { title: 'T' }, decks: [{ slug: 'a', source: 'build', title: 'A' }] };
@@ -281,6 +281,32 @@ test('startStaticServer: serves files from the root over http', async () => {
       await server.close();
     }
   } finally {
+    rmSync(root, { recursive: true, force: true });
+  }
+});
+
+test('captureTitleSlide: writes a PNG of the .deck element', async (t) => {
+  const root = mkdtempSync(join(tmpdir(), 'site-shot-'));
+  let server;
+  try {
+    mkdirSync(join(root, 'deck-a'), { recursive: true });
+    writeFileSync(join(root, 'deck-a', 'index.html'),
+      '<!doctype html><html><head></head><body>' +
+      '<div class="deck" style="width:1920px;height:1080px;background:#123">' +
+      '<div class="slide is-current">hi</div></div></body></html>');
+    server = await startStaticServer(root);
+    const outPath = join(root, 'og', 'deck-a.png');
+    mkdirSync(join(root, 'og'), { recursive: true });
+    try {
+      await captureTitleSlide({ url: `${server.origin}/deck-a/`, outPath });
+    } catch (err) {
+      return t.skip(`chromium unavailable: ${err.message}`);
+    }
+    const bytes = readFileSync(outPath);
+    assert.ok(bytes.length > 0, 'png not empty');
+    assert.deepEqual([...bytes.subarray(0, 4)], [0x89, 0x50, 0x4e, 0x47], 'PNG magic bytes');
+  } finally {
+    if (server) await server.close();
     rmSync(root, { recursive: true, force: true });
   }
 });

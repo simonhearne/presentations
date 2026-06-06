@@ -196,6 +196,37 @@ export function startStaticServer(root) {
   });
 }
 
+export async function captureTitleSlide({ url, outPath, width = 1920, height = 1080 }) {
+  const { chromium } = await import('playwright');
+  const browser = await chromium.launch();
+  try {
+    const page = await browser.newPage({ viewport: { width, height }, deviceScaleFactor: 1 });
+    await page.goto(url, { waitUntil: 'load' });
+    await page.evaluate(() => document.fonts && document.fonts.ready).catch(() => {});
+    await page.waitForSelector('.slide.is-current', { timeout: 5000 }).catch(() => {});
+    await page.waitForTimeout(400);
+    const deck = page.locator('.deck').first();
+    await deck.screenshot({ path: outPath });
+  } finally {
+    await browser.close();
+  }
+}
+
+async function defaultCapture(outDir, slugs) {
+  if (slugs.length === 0) return;
+  const server = await startStaticServer(outDir);
+  try {
+    for (const slug of slugs) {
+      await captureTitleSlide({
+        url: `${server.origin}/${slug}/`,
+        outPath: resolve(outDir, ogImageRelPath(slug)),
+      });
+    }
+  } finally {
+    await server.close();
+  }
+}
+
 async function defaultBuildOne(talkDir) {
   await buildDeck(talkDir);
   return resolve(talkDir, 'dist', 'index.html');
