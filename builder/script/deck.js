@@ -93,6 +93,7 @@
     if (e.ctrlKey || e.metaKey || e.altKey) return;
     switch (e.key) {
       case 'ArrowRight':
+      case 'ArrowDown':
       case 'PageDown':
       case ' ':
       case 'n':
@@ -100,6 +101,7 @@
         show(current + 1);
         break;
       case 'ArrowLeft':
+      case 'ArrowUp':
       case 'PageUp':
       case 'p':
         e.preventDefault();

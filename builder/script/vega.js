@@ -165,11 +165,13 @@
     let direction = 0;
     switch (e.key) {
       case 'ArrowRight':
+      case 'ArrowDown':
       case 'PageDown':
       case ' ':
       case 'n':
         direction = 1; break;
       case 'ArrowLeft':
+      case 'ArrowUp':
       case 'PageUp':
       case 'p':
         direction = -1; break;

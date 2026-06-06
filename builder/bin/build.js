@@ -564,7 +564,7 @@ export function renderSlide({ chunk, index, total, currentTitle = '', nextTitle 
     : `<aside class="chrome logo"><svg><use href='#logo'/></svg></aside><aside class="chrome"><span class="page">${index} / ${total}</span>${SPARK_INLINE}</aside>`;
   let footer = `<footer class="footer"><span class="footer-left">${currentTitle}</span>`;
   if (nextTitle != '') {
-    footer += `<span class="footer-right">${nextTitle}</span>`;
+    footer += `<a class="footer-right" href="#${index + 1}-${slugify(nextTitle)}">${nextTitle}</a>`;
   }
   footer += `</footer>`;
   const speakers = renderAuthors(authors);

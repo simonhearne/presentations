@@ -114,6 +114,16 @@ test('renderSlide: appends chrome with N / total', () => {
   assert.match(html, /<aside class="chrome">[\s\S]*4 \/ 9[\s\S]*<\/aside>/);
 });
 
+test('renderSlide: footer-right is an anchor linking to the next slide', () => {
+  const html = renderSlide({ chunk: '# A', index: 4, total: 9, nextTitle: 'Next Up' });
+  assert.match(html, /<a class="footer-right" href="#5-next-up">Next Up<\/a>/);
+});
+
+test('renderSlide: omits footer-right anchor when there is no next slide', () => {
+  const html = renderSlide({ chunk: '# A', index: 9, total: 9 });
+  assert.doesNotMatch(html, /class="footer-right"/);
+});
+
 test('renderSlide: omits chrome when no-chrome class set', () => {
   const html = renderSlide({ chunk: '{.title .no-chrome}\n# X', index: 1, total: 5 });
   assert.doesNotMatch(html, /<footer class="chrome">/);

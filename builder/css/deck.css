@@ -90,6 +90,14 @@ html, body {
   max-width: 45%;
 }
 .footer-right { text-align: right; }
+.slide .footer a.footer-right {
+  color: inherit;
+  text-decoration: none;
+  cursor: pointer;
+}
+.slide.is-current .footer a.footer-right {
+  pointer-events: auto;
+}
 
 .footer-right::before {
   content: 'Next: ';

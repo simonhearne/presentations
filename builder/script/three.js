@@ -76,12 +76,14 @@ function onKeyCapture(e) {
   let method = null;
   switch (e.key) {
     case 'ArrowRight':
+    case 'ArrowDown':
     case 'PageDown':
     case ' ':
     case 'n':
       method = 'advance';
       break;
     case 'ArrowLeft':
+    case 'ArrowUp':
     case 'PageUp':
     case 'p':
       method = 'retreat';
