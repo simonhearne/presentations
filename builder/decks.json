@@ -6,10 +6,6 @@
   },
   "decks": [
     { "slug": "vector-search-visualised", "source": "build", "title": "Vector Search, Visualised", "date": "2026-06", "description": "A visual tour of how vector search works." },
-    { "slug": "vectordb-101", "source": "build", "title": "Vector Databases 101", "date": "2026", "description": "An introduction to vector databases." },
-    { "slug": "vectordb-201", "source": "build", "title": "Vector Databases 201", "date": "2026", "description": "Going deeper on vector database internals." },
-    { "slug": "vectordb-301", "source": "build", "title": "Vector Databases 301", "date": "2026", "description": "Advanced vector database topics." },
-    { "slug": "vectordb-301-rabitq", "source": "build", "title": "Vector Databases 301 — RaBitQ", "date": "2026", "description": "Advanced vector databases: the RaBitQ quantizer." },
     { "slug": "cwv-spa", "source": "legacy", "title": "Optimising Core Web Vitals on SPAs", "date": "2022" },
     { "slug": "inclusive-design", "source": "legacy", "title": "An Inclusive Web is Fast by Default", "date": "2021" },
     { "slug": "psych-speed", "source": "legacy", "title": "The Psychology of Speed", "date": "2020" },
