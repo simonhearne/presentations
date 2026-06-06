@@ -143,3 +143,13 @@ test('rewriteAssetPaths: does not touch a non-attribute ../ substring', () => {
   const html = 'background: url(../img/automata.jpg);';
   assert.equal(rewriteAssetPaths(html, 'deck-a'), html);
 });
+
+test('collectLocalAssetRefs: returns deck-local refs, excludes shared refs', () => {
+  const html = '<link href="../../../css/x.css"><img src="../data/a.jpg"><script src="../../../script/deck.js"></script>';
+  assert.deepEqual(collectLocalAssetRefs(html), ['data/a.jpg']);
+});
+
+test('collectLocalAssetRefs: de-duplicates repeated refs', () => {
+  const html = '<img src="../data/a.jpg"><img src="../data/a.jpg">';
+  assert.deepEqual(collectLocalAssetRefs(html), ['data/a.jpg']);
+});
