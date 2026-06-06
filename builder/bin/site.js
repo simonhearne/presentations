@@ -28,6 +28,26 @@ export function firstH2Text(html) {
   return m[1].replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim();
 }
 
+export function injectOgMeta(html, { title, description, url, image, width, height }) {
+  const tags = [
+    `<meta property="og:title" content="${escapeHtml(title)}">`,
+    `<meta property="og:description" content="${escapeHtml(description)}">`,
+    `<meta property="og:type" content="website">`,
+    `<meta property="og:url" content="${escapeHtml(url)}">`,
+    `<meta property="og:image" content="${escapeHtml(image)}">`,
+    `<meta property="og:image:width" content="${width}">`,
+    `<meta property="og:image:height" content="${height}">`,
+    `<meta name="twitter:card" content="summary_large_image">`,
+    `<meta name="twitter:title" content="${escapeHtml(title)}">`,
+    `<meta name="twitter:description" content="${escapeHtml(description)}">`,
+    `<meta name="twitter:image" content="${escapeHtml(image)}">`,
+  ].join('\n  ');
+  const block = `  ${tags}\n`;
+  return html.includes('</head>')
+    ? html.replace('</head>', `${block}</head>`)
+    : block + html;
+}
+
 export function validateManifest(manifest) {
   if (!manifest || typeof manifest !== 'object') throw new Error('manifest must be an object');
   if (!manifest.site || typeof manifest.site.title !== 'string') {

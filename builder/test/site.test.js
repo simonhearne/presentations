@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { mkdtempSync, writeFileSync, readFileSync, existsSync, mkdirSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
-import { validateManifest, normalizeDeck, deckHref, renderLanding, assembleSite, loadManifest, rewriteAssetPaths, collectLocalAssetRefs, normalizeBaseUrl, deckCanonicalUrl, ogImageUrl, ogImageRelPath, firstH2Text } from '../bin/site.js';
+import { validateManifest, normalizeDeck, deckHref, renderLanding, assembleSite, loadManifest, rewriteAssetPaths, collectLocalAssetRefs, normalizeBaseUrl, deckCanonicalUrl, ogImageUrl, ogImageRelPath, firstH2Text, injectOgMeta } from '../bin/site.js';
 
 test('validateManifest: accepts a minimal valid manifest', () => {
   const m = { site: { title: 'T' }, decks: [{ slug: 'a', source: 'build', title: 'A' }] };
@@ -218,4 +218,34 @@ test('firstH2Text: returns text of the first h2, tags stripped', () => {
 
 test('firstH2Text: returns empty string when no h2', () => {
   assert.equal(firstH2Text('<h1>Only</h1>'), '');
+});
+
+test('injectOgMeta: inserts OG + Twitter tags before </head>', () => {
+  const html = '<html><head><title>t</title></head><body>x</body></html>';
+  const out = injectOgMeta(html, {
+    title: 'Vector DB 101',
+    description: 'An intro',
+    url: 'https://talks.simonhearne.com/vectordb-101/',
+    image: 'https://talks.simonhearne.com/og/vectordb-101.png',
+    width: 1920,
+    height: 1080,
+  });
+  assert.match(out, /<meta property="og:title" content="Vector DB 101">/);
+  assert.match(out, /<meta property="og:description" content="An intro">/);
+  assert.match(out, /<meta property="og:type" content="website">/);
+  assert.match(out, /<meta property="og:url" content="https:\/\/talks\.simonhearne\.com\/vectordb-101\/">/);
+  assert.match(out, /<meta property="og:image" content="https:\/\/talks\.simonhearne\.com\/og\/vectordb-101\.png">/);
+  assert.match(out, /<meta property="og:image:width" content="1920">/);
+  assert.match(out, /<meta property="og:image:height" content="1080">/);
+  assert.match(out, /<meta name="twitter:card" content="summary_large_image">/);
+  assert.match(out, /<meta name="twitter:image" content="https:\/\/talks\.simonhearne\.com\/og\/vectordb-101\.png">/);
+  assert.ok(out.indexOf('og:title') < out.indexOf('</head>'));
+});
+
+test('injectOgMeta: escapes attribute values', () => {
+  const out = injectOgMeta('<head></head>', {
+    title: 'A "quoted" & <b>title</b>',
+    description: 'd', url: 'u', image: 'i', width: 1, height: 1,
+  });
+  assert.match(out, /content="A &quot;quoted&quot; &amp; &lt;b&gt;title&lt;\/b&gt;"/);
 });
