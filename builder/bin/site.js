@@ -242,7 +242,7 @@ export async function assembleSite({
   capture = defaultCapture,
 }) {
   validateManifest(manifest);
-  const decks = manifest.decks.map(normalizeDeck);
+  const decks = manifest.decks.map(normalizeDeck).filter(deck => deck.published !== false);
 
   if (decks.some(d => d.source === 'build') && !/^https?:\/\/\S+/.test(String(manifest.site.baseUrl || ''))) {
     throw new Error('manifest.site.baseUrl must be an absolute http(s) URL to build decks');
