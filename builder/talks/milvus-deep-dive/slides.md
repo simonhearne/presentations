@@ -149,6 +149,8 @@ need -> cloud [label="forget about ops"]
 | Distributed | large | high | self-built | high |
 | Managed | any | any | built-in | none |
 
+<p><span class="release-badge cloud">Zilliz Cloud</span> Global Cluster and Lakebase are managed-only.</p>
+
 ---
 
 # Sometimes, don't ingest at all
