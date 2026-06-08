@@ -397,6 +397,7 @@ test('assembleSite: excludes decks with published:false from build and landing',
       site: { title: 'Talks', baseUrl: 'https://example.com' },
       decks: [
         { slug: 'live', source: 'build', title: 'Live' },
+        { slug: 'explicit', source: 'build', title: 'Explicit', published: true },
         { slug: 'draft', source: 'build', title: 'Draft', published: false },
       ],
     };
@@ -420,13 +421,16 @@ test('assembleSite: excludes decks with published:false from build and landing',
     });
 
     assert.ok(built.some(p => p.endsWith('live')), 'published deck was built');
+    assert.ok(built.some(p => p.endsWith('explicit')), 'explicitly-published deck was built');
     assert.ok(!built.some(p => p.endsWith('draft')), 'unpublished deck was NOT built');
     assert.ok(existsSync(join(outDir, 'live', 'index.html')), 'live deck emitted');
+    assert.ok(existsSync(join(outDir, 'explicit', 'index.html')), 'explicit deck emitted');
     assert.ok(!existsSync(join(outDir, 'draft', 'index.html')), 'draft deck NOT emitted');
 
     const landing = readFileSync(join(outDir, 'index.html'), 'utf8');
-    assert.ok(landing.includes('Live'), 'landing lists the live deck');
-    assert.ok(!landing.includes('Draft'), 'landing omits the draft deck');
+    assert.ok(landing.includes('/live/'), 'landing lists the live deck');
+    assert.ok(landing.includes('/explicit/'), 'landing lists the explicit deck');
+    assert.ok(!landing.includes('/draft/'), 'landing omits the draft deck');
   } finally {
     rmSync(root, { recursive: true, force: true });
   }
