@@ -89,7 +89,7 @@
   font-family: var(--zilliz-font-mono);
   font-size: 0.5em;
   font-weight: 600;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--zilliz-blue);
   background: var(--zilliz-blue-10);
