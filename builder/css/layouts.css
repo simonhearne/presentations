@@ -84,6 +84,29 @@
   font-size: 18px;
 }
 
+.release-badge {
+  display: inline-block;
+  font-family: var(--zilliz-font-mono);
+  font-size: 0.5em;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--zilliz-blue);
+  background: var(--zilliz-blue-10);
+  border: 1px solid var(--zilliz-blue-20);
+  padding: 0.25em 0.8em;
+  border-radius: 999px;
+  vertical-align: middle;
+  line-height: 1.6;
+  white-space: nowrap;
+}
+
+.release-badge.cloud {
+  color: var(--zilliz-purple);
+  background: var(--zilliz-berry-10);
+  border-color: var(--zilliz-berry-20);
+}
+
 .hit-text {
   color: var(--zilliz-blue);
   font-weight: 700;
