@@ -204,6 +204,10 @@ The dominant query-side lever is **output-field / payload width** — not the in
 
 {.small-title .filter-demo}
 
+<style>
+  .slide.filter-demo .vega-chart svg { width: 1080px; max-width: 100%; height: auto; }
+</style>
+
 # Filtered search fights the graph
 
 The filter and the ANN search pull against each other — the harder you filter, the more of the graph you destroy.
@@ -270,15 +274,13 @@ Only the best index for your **recall target**, your **memory budget**, and your
 
 ---
 
-{.small-title}
+{.small-title .no-vega-bindings}
 
 # Four families, one question each
 
 <style>
   .idx-thumbs .vega-chart svg { width: 100%; height: auto; max-height: 34vh; }
   .idx-thumbs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.2vw; align-items: start; }
-  .idx-thumbs p { text-align: center; font-size: 0.9em; margin: 0.4em 0 0; }
-  .idx-thumbs .q { color: var(--zilliz-blue); font-weight: 700; }
 </style>
 
 <div class="idx-thumbs">
@@ -300,7 +302,11 @@ Only the best index for your **recall target**, your **memory budget**, and your
 
 </div>
 
-<p style="text-align:center; opacity:0.8;"><strong>HNSW</strong> — <span style="color:var(--zilliz-blue)">in-memory, low latency?</span> &nbsp;·&nbsp; <strong>IVF</strong> — <span style="color:var(--zilliz-blue)">tunable memory?</span> &nbsp;·&nbsp; <strong>DiskANN</strong> — <span style="color:var(--zilliz-blue)">won't fit in RAM?</span></p>
+<div style="display:grid; grid-template-columns:repeat(3,1fr); gap:1.2vw; margin-top:0.3em; opacity:0.85;">
+  <p style="text-align:center; margin:0"><strong>HNSW</strong><br><span style="color:var(--zilliz-blue); font-weight:700">in-memory, low latency?</span></p>
+  <p style="text-align:center; margin:0"><strong>IVF</strong><br><span style="color:var(--zilliz-blue); font-weight:700">tunable memory?</span></p>
+  <p style="text-align:center; margin:0"><strong>DiskANN</strong><br><span style="color:var(--zilliz-blue); font-weight:700">won't fit in RAM?</span></p>
+</div>
 
 <p style="text-align:center; opacity:0.8;">…and <strong>GPU CAGRA</strong> when you need build throughput and very high QPS.</p>
 
