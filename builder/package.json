@@ -6,6 +6,7 @@
     "build": "node bin/build.js",
     "bundle": "node bin/bundle.js",
     "site": "node bin/site.js",
+    "site:dev": "SITE_DEV=1 node bin/site.js",
     "test": "node --test 'test/**/*.{test,spec}.js'"
   },
   "dependencies": {

@@ -297,6 +297,23 @@ npm test
 
 Tests live in `test/` and use Node's built-in test runner.
 
+## Local development
+
+`decks.json` entries can carry `"published": false` to keep a work-in-progress
+deck out of the live site — `npm run site` (and the Netlify build) skip them
+entirely.
+
+To preview drafts locally, run the site build in development mode:
+
+```bash
+npm run site:dev      # SITE_DEV=1 node bin/site.js
+```
+
+This builds **every** deck, including unpublished ones, and marks each draft on
+the landing page with a "Draft" badge so it is never mistaken for a live talk.
+Open `_site/index.html` to review. Production is unaffected: `npm run site`
+without `SITE_DEV` always hides drafts.
+
 ## Deployment
 
 The decks are published at **https://talks.simonhearne.com** (Netlify), built

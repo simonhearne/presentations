@@ -78,13 +78,14 @@ export function deckHref(deck) {
 
 function renderCard(deck) {
   const date = deck.date ? `<span class="deck-date">${escapeHtml(deck.date)}</span>` : '';
+  const badge = deck.published === false ? '<span class="deck-badge">Draft</span>' : '';
   const thumb = deck.source === 'build'
     ? `<img class="deck-thumb" src="/${ogImageRelPath(deck.slug)}" alt="" loading="lazy">\n          `
     : '';
   return `      <li class="deck-card">
         <a href="${escapeHtml(deckHref(deck))}">
           ${thumb}<span class="deck-meta">
-            <span class="deck-title">${escapeHtml(deck.title)}</span>
+            <span class="deck-title">${escapeHtml(deck.title)}${badge}</span>
             ${date}
           </span>
         </a>
@@ -130,6 +131,9 @@ export function renderLanding(site, decks) {
       border-radius: 8px; background: #0b1020; display: block; }
     .deck-meta { display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; }
     .deck-title { font-weight: 600; font-size: 1.15rem; }
+    .deck-badge { margin-left: .6rem; padding: .1rem .45rem; border-radius: 6px;
+      font-size: .65rem; font-weight: 700; text-transform: uppercase; letter-spacing: .08em;
+      vertical-align: middle; color: #fff; background: var(--zilliz-berry, #c84cff); }
     .deck-date { color: #5b6478; font-variant-numeric: tabular-nums; }
   </style>
 </head>
@@ -238,11 +242,14 @@ export async function assembleSite({
   outDir,
   tokensCssPath,
   sharedDirs = [],
+  includeUnpublished = false,
   buildOne = defaultBuildOne,
   capture = defaultCapture,
 }) {
   validateManifest(manifest);
-  const decks = manifest.decks.map(normalizeDeck).filter(deck => deck.published !== false);
+  const decks = manifest.decks
+    .map(normalizeDeck)
+    .filter(deck => includeUnpublished || deck.published !== false);
 
   if (decks.some(d => d.source === 'build') && !/^https?:\/\/\S+/.test(String(manifest.site.baseUrl || ''))) {
     throw new Error('manifest.site.baseUrl must be an absolute http(s) URL to build decks');
@@ -304,6 +311,7 @@ if (process.argv[1] && realpathSync(fileURLToPath(import.meta.url)) === realpath
     outDir: resolve(HERE, '..', '_site'),
     tokensCssPath: resolve(HERE, '..', 'css', 'tokens.css'),
     sharedDirs: ['css', 'img', 'script'].map(d => resolve(HERE, '..', d)),
+    includeUnpublished: Boolean(process.env.SITE_DEV),
   }).then(out => console.log(`assembled ${out}`))
     .catch(err => { console.error(err.stack || err.message); process.exit(1); });
 }

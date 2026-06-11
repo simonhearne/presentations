@@ -436,6 +436,55 @@ test('assembleSite: excludes decks with published:false from build and landing',
   }
 });
 
+test('assembleSite: includeUnpublished builds drafts and badges them on the landing', async () => {
+  const root = mkdtempSync(join(tmpdir(), 'site-dev-mode-'));
+  try {
+    const talksRoot = join(root, 'talks');
+    mkdirSync(talksRoot, { recursive: true });
+    const tokensCssPath = join(root, 'tokens.css');
+    writeFileSync(tokensCssPath, ':root{}');
+
+    const built = [];
+    const manifest = {
+      site: { title: 'Talks', baseUrl: 'https://example.com' },
+      decks: [
+        { slug: 'live', source: 'build', title: 'Live' },
+        { slug: 'draft', source: 'build', title: 'Draft', published: false },
+      ],
+    };
+
+    const outDir = join(root, '_site');
+    await assembleSite({
+      manifest,
+      talksRoot,
+      outDir,
+      tokensCssPath,
+      sharedDirs: [],
+      includeUnpublished: true,
+      buildOne: async (talkDir) => {
+        built.push(talkDir);
+        const dist = join(talkDir, 'dist');
+        mkdirSync(dist, { recursive: true });
+        const html = '<!doctype html><html><body><div class="deck"></div></body></html>';
+        writeFileSync(join(dist, 'index.html'), html);
+        return join(dist, 'index.html');
+      },
+      capture: async () => {},
+    });
+
+    assert.ok(built.some(p => p.endsWith('draft')), 'draft deck was built in dev mode');
+    assert.ok(existsSync(join(outDir, 'draft', 'index.html')), 'draft deck emitted');
+
+    const landing = readFileSync(join(outDir, 'index.html'), 'utf8');
+    assert.ok(landing.includes('/draft/'), 'landing lists the draft deck');
+    assert.ok(landing.includes('class="deck-badge">Draft'), 'draft deck shows a Draft badge');
+    assert.equal(landing.match(/class="deck-badge"/g).length, 1,
+      'only the draft deck is badged, not the published one');
+  } finally {
+    rmSync(root, { recursive: true, force: true });
+  }
+});
+
 test('captureTitleSlide: writes a PNG of the .deck element', async (t) => {
   const root = mkdtempSync(join(tmpdir(), 'site-shot-'));
   let server;
