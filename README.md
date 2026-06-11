@@ -73,9 +73,12 @@ npm install
 npm run build talks/<slug>     # slides.md → dist/index.html
 npm run bundle talks/<slug>     # → dist/bundle.html (fully self-contained)
 npm run site                    # build all decks + assemble _site/ (the live site)
+npm run site:dev                # same, but also include unpublished drafts
 npm test                        # node:test unit + integration tests
 ```
 
 Requires Node 22 (see [`builder/.nvmrc`](builder/.nvmrc)). The `site` step needs Chromium (`npx playwright install chromium`) for OG screenshots.
 
 To add a deck: create `builder/talks/<slug>/slides.md`, then add an entry to `builder/decks.json` (`source: "build"` for a hosted Markdown deck, `source: "legacy"` for a link-out).
+
+Mark a work-in-progress deck with `"published": false` in `decks.json` to keep it off the live site. `npm run site` (and the Netlify deploy) skip such decks; `npm run site:dev` (`SITE_DEV=1`) builds them too and flags each with a **Draft** badge on the landing page for local preview.
