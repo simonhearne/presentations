@@ -311,8 +311,15 @@ npm run site:dev      # SITE_DEV=1 node bin/site.js
 
 This builds **every** deck, including unpublished ones, and marks each draft on
 the landing page with a "Draft" badge so it is never mistaken for a live talk.
-Open `_site/index.html` to review. Production is unaffected: `npm run site`
-without `SITE_DEV` always hides drafts.
+Production is unaffected: `npm run site` without `SITE_DEV` always hides drafts.
+
+The site uses root-absolute asset paths, so serve `_site/` over HTTP to preview
+it (opening `_site/index.html` directly over `file://` breaks asset loading):
+
+```bash
+npx serve _site                 # → http://localhost:3000
+# or: python3 -m http.server -d _site 8000
+```
 
 ## Deployment
 

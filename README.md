@@ -82,3 +82,11 @@ Requires Node 22 (see [`builder/.nvmrc`](builder/.nvmrc)). The `site` step needs
 To add a deck: create `builder/talks/<slug>/slides.md`, then add an entry to `builder/decks.json` (`source: "build"` for a hosted Markdown deck, `source: "legacy"` for a link-out).
 
 Mark a work-in-progress deck with `"published": false` in `decks.json` to keep it off the live site. `npm run site` (and the Netlify deploy) skip such decks; `npm run site:dev` (`SITE_DEV=1`) builds them too and flags each with a **Draft** badge on the landing page for local preview.
+
+The assembled site uses root-absolute asset paths, so serve `_site/` over HTTP rather than opening files directly:
+
+```bash
+npm run site:dev                # or `npm run site`
+npx serve _site                 # → http://localhost:3000
+# or: python3 -m http.server -d _site 8000
+```
