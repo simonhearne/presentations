@@ -2,7 +2,7 @@ import { readFileSync, writeFileSync, mkdirSync, copyFileSync, cpSync, realpathS
 import { createServer } from 'node:http';
 import { resolve, dirname, basename, extname, join as joinPath } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
-import { escapeHtml, buildDeck } from './build.js';
+import { escapeHtml, buildDeck, copyLocalImages } from './build.js';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const LEGACY_BASE = 'https://simonhearne.com/presentations';
@@ -273,6 +273,7 @@ export async function assembleSite({
     const html = readFileSync(distPath, 'utf8');
     const deckOut = resolve(outDir, deck.slug);
     mkdirSync(deckOut, { recursive: true });
+    copyLocalImages(talkDir, deckOut);
     for (const ref of collectLocalAssetRefs(html)) {
       const dest = resolve(deckOut, ref);
       mkdirSync(dirname(dest), { recursive: true });

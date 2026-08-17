@@ -485,6 +485,47 @@ test('assembleSite: includeUnpublished builds drafts and badges them on the land
   }
 });
 
+test('assembleSite: copies deck-local images referenced without a ../ prefix', async () => {
+  const root = mkdtempSync(join(tmpdir(), 'site-local-img-'));
+  try {
+    const talksRoot = join(root, 'talks');
+    const talkDir = join(talksRoot, 'demo');
+    mkdirSync(talkDir, { recursive: true });
+    writeFileSync(join(talkDir, 'still.png'), 'not-really-a-png');
+    const tokensCssPath = join(root, 'tokens.css');
+    writeFileSync(tokensCssPath, ':root{}');
+
+    const manifest = {
+      site: { title: 'Talks', baseUrl: 'https://example.com' },
+      decks: [{ slug: 'demo', source: 'build', title: 'Demo' }],
+    };
+
+    const outDir = join(root, '_site');
+    await assembleSite({
+      manifest,
+      talksRoot,
+      outDir,
+      tokensCssPath,
+      sharedDirs: [],
+      buildOne: async (dir) => {
+        const dist = join(dir, 'dist');
+        mkdirSync(dist, { recursive: true });
+        const html = '<!doctype html><html><body><div class="deck">' +
+          '<img class="iframe-still" src="still.png" alt=""></div></body></html>';
+        writeFileSync(join(dist, 'index.html'), html);
+        return join(dist, 'index.html');
+      },
+      capture: async () => {},
+    });
+
+    assert.ok(existsSync(join(outDir, 'demo', 'still.png')), 'deck-local image copied to the site');
+    const deckHtml = readFileSync(join(outDir, 'demo', 'index.html'), 'utf8');
+    assert.ok(deckHtml.includes('src="still.png"'), 'bare relative ref left intact');
+  } finally {
+    rmSync(root, { recursive: true, force: true });
+  }
+});
+
 test('captureTitleSlide: writes a PNG of the .deck element', async (t) => {
   const root = mkdtempSync(join(tmpdir(), 'site-shot-'));
   let server;
