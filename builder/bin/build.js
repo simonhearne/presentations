@@ -1,13 +1,23 @@
 // bin/build.js — Pipeline 1: md → HTML
 
 import { marked } from 'marked';
+import hljs from 'highlight.js/lib/common';
 import { Graphviz } from '@hpcc-js/wasm-graphviz';
-import { readFileSync, writeFileSync, mkdirSync, realpathSync, copyFileSync } from 'node:fs';
+import { readFileSync, writeFileSync, mkdirSync, realpathSync, copyFileSync, readdirSync } from 'node:fs';
 import { resolve, basename } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 marked.use({
   renderer: {
+    code({ text, lang }) {
+      const language = (lang || '').trim().split(/\s+/)[0];
+      if (language && hljs.getLanguage(language)) {
+        const { value } = hljs.highlight(text, { language });
+        return `<pre><code class="language-${escapeHtml(language)}">${value}</code></pre>\n`;
+      }
+      const cls = language ? ` class="language-${escapeHtml(language)}"` : '';
+      return `<pre><code${cls}>${escapeHtml(text)}</code></pre>\n`;
+    },
     html(token) {
       const raw = typeof token === 'string' ? token : token.text;
       return raw.replace(/`([^`\n]+)`/g, '<code>$1</code>');
@@ -481,11 +491,57 @@ export function renderIframe(entries, slug) {
   return entries.map((e, i) => {
     const id = e.id || (entries.length === 1 ? `iframe-${slug}` : `iframe-${slug}-${i + 1}`);
     const dataAttrs = Object.entries(e)
-      .filter(([k]) => k !== 'id' && k !== 'url')
+      .filter(([k]) => k !== 'id' && k !== 'url' && k !== 'still' && k !== 'still-alt')
       .map(([k, v]) => ` data-${escapeHtml(k)}="${escapeHtml(v)}"`)
       .join('');
-    return `<iframe class="iframe-embed" id="${escapeHtml(id)}" src="${escapeHtml(e.url)}"${dataAttrs}></iframe>`;
+    // data-src, not src: the runtime only loads the frame once it has probed
+    // the host and found it reachable. Without JS the frame never loads at all,
+    // which is what print, PDF export and the hosted deck all want.
+    return `<iframe class="iframe-embed" id="${escapeHtml(id)}" data-src="${escapeHtml(e.url)}"${dataAttrs}></iframe>`;
   }).join('\n');
+}
+
+export const IFRAME_FALLBACK_DEFAULT =
+  '## Live demo\n\nThis slide runs a live demo during the talk, against a local environment '
+  + 'that only exists on the presenter\'s machine — so there is nothing to show here.';
+
+export function extractIframeFallback(chunk) {
+  const found = extractFencedBlock(chunk, 'iframe-fallback');
+  if (!found) return { fallback: '', body: chunk };
+  return { fallback: found.body, body: found.remaining };
+}
+
+export function copyIframeStills(entries, talkDir, distDir) {
+  for (const e of entries) {
+    if (!e.still) continue;
+    if (/^https?:\/\//i.test(e.still)) continue;
+    const src = resolve(talkDir, e.still);
+    const name = basename(e.still);
+    try {
+      copyFileSync(src, resolve(distDir, name));
+    } catch (err) {
+      throw new Error(`copyIframeStills: failed to copy still ${e.still}: ${err.message}`);
+    }
+    e.still = name;
+  }
+  return entries;
+}
+
+const LOCAL_IMAGE_EXTENSIONS = /\.(png|jpe?g|svg)$/i;
+
+export function copyLocalImages(talkDir, distDir) {
+  for (const entry of readdirSync(talkDir, { withFileTypes: true })) {
+    if (!entry.isFile() || !LOCAL_IMAGE_EXTENSIONS.test(entry.name)) continue;
+    copyFileSync(resolve(talkDir, entry.name), resolve(distDir, entry.name));
+  }
+}
+
+export function renderIframeFallback(md, still = '', stillAlt = '') {
+  const source = md && md.trim() ? md : IFRAME_FALLBACK_DEFAULT;
+  const body = `<div class="iframe-fallback-body">\n${applyFragmentAttrs(marked.parse(source))}\n</div>`;
+  if (!still) return `<div class="iframe-fallback">\n${body}\n</div>`;
+  const img = `<img class="iframe-still" src="${escapeHtml(still)}" alt="${escapeHtml(stillAlt)}">`;
+  return `<div class="iframe-fallback has-still">\n${img}\n${body}\n</div>`;
 }
 
 export function extractDeckConfig(md) {
@@ -528,7 +584,7 @@ function autoRevealAttrs(classes, attrs) {
   return ` data-autoreveal-delay="${safeDelay}" data-autoreveal-start="${start}"`;
 }
 
-export function renderSlide({ chunk, index, total, currentTitle = '', nextTitle = '', authors = [], charts = [], dotFigures = [], threeEntries = [], iframeEntries = [] }) {
+export function renderSlide({ chunk, index, total, currentTitle = '', nextTitle = '', authors = [], charts = [], dotFigures = [], threeEntries = [], iframeEntries = [], iframeFallback = '' }) {
   const { classes, attrs, body } = parseAttrs(chunk);
   let html = applyFragmentAttrs(marked.parse(body));
   const slug = slugify(extractTitle(html) || '');
@@ -546,9 +602,12 @@ export function renderSlide({ chunk, index, total, currentTitle = '', nextTitle 
   }
   const iframe = renderIframe(iframeEntries, slug);
   if (iframe) {
+    const withStill = iframeEntries.find(e => e.still) || {};
+    const fallback = renderIframeFallback(iframeFallback, withStill.still, withStill['still-alt']);
+    const block = `${fallback}\n${iframe}`;
     html = html.includes(IFRAME_PLACEHOLDER)
-      ? html.replace(IFRAME_PLACEHOLDER, iframe)
-      : `${html}\n${iframe}`;
+      ? html.replace(IFRAME_PLACEHOLDER, block)
+      : `${html}\n${block}`;
   }
   for (let i = 0; i < dotFigures.length; i++) {
     const marker = dotPlaceholder(i);
@@ -579,17 +638,20 @@ export async function buildDeck(talkDir) {
 
   const distDir = resolve(talkDir, 'dist');
   mkdirSync(distDir, { recursive: true });
+  copyLocalImages(talkDir, distDir);
 
   const prepared = rawChunks.map(chunk => {
     const a = extractAuthors(chunk);
     const v = extractVega(a.body);
     const t = extractThree(v.body);
     const f = extractIframe(t.body);
-    const d = extractDot(f.body);
+    const fb = extractIframeFallback(f.body);
+    const d = extractDot(fb.body);
     copyAuthorPhotos(a.authors, talkDir, distDir);
+    copyIframeStills(f.entries, talkDir, distDir);
     embedVegaSpecs(v.charts, talkDir);
     embedThreeModules(t.entries, talkDir);
-    return { chunk: d.body, authors: a.authors, charts: v.charts, threeEntries: t.entries, iframeEntries: f.entries, dotBlocks: d.blocks };
+    return { chunk: d.body, authors: a.authors, charts: v.charts, threeEntries: t.entries, iframeEntries: f.entries, iframeFallback: fb.fallback, dotBlocks: d.blocks };
   });
 
   const agendaOff = String(deckConfig.agenda || '').toLowerCase() === 'false';
@@ -609,6 +671,7 @@ export async function buildDeck(talkDir) {
       charts: [],
       threeEntries: [],
       iframeEntries: [],
+      iframeFallback: '',
       dotBlocks: [],
     });
   }
@@ -627,7 +690,7 @@ export async function buildDeck(talkDir) {
   const dotHtmls = await Promise.all(prepared.map((p, i) =>
     renderDot(p.dotBlocks, slugs[i], graphviz)
   ));
-  const sections = prepared.map(({ chunk, authors, charts, threeEntries, iframeEntries }, i) =>
+  const sections = prepared.map(({ chunk, authors, charts, threeEntries, iframeEntries, iframeFallback }, i) =>
     renderSlide({
       chunk,
       index: i + 1,
@@ -639,6 +702,7 @@ export async function buildDeck(talkDir) {
       dotFigures: dotHtmls[i],
       threeEntries,
       iframeEntries,
+      iframeFallback,
     })
   );
 

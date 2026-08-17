@@ -35,6 +35,13 @@
   padding: 1px 5px;
   font-weight: 700;
 }
+/* Syntax highlighting — token colours for build-time highlight.js output */
+.slide pre .hljs-comment, .slide pre .hljs-quote { color: #64748b; font-style: italic; }
+.slide pre .hljs-keyword, .slide pre .hljs-selector-tag, .slide pre .hljs-meta { color: var(--zilliz-purple); font-weight: 600; }
+.slide pre .hljs-string, .slide pre .hljs-regexp, .slide pre .hljs-addition { color: var(--zilliz-navy); }
+.slide pre .hljs-number, .slide pre .hljs-literal, .slide pre .hljs-symbol { color: var(--zilliz-berry); }
+.slide pre .hljs-built_in, .slide pre .hljs-title, .slide pre .hljs-section { color: var(--zilliz-blue); }
+.slide pre .hljs-attr, .slide pre .hljs-attribute, .slide pre .hljs-variable, .slide pre .hljs-template-variable, .slide pre .hljs-params { color: var(--zilliz-ink); }
 .slide img { max-width: 100%; height: auto; }
 .slide blockquote {
   margin: 0;
@@ -151,6 +158,8 @@
   font-weight: 400;
   margin: 0;
 }
+.slide.section.center h1 { margin-top: 0; }
+.slide.section.center h2 { align-self: center; }
 
 /* .agenda — auto-generated TOC: numbered, hyperlinked section list */
 /* .slide.agenda h1 {
@@ -262,6 +271,12 @@
   background: rgba(255, 255, 255, 0.08);
   color: var(--zilliz-white);
 }
+.slide.dark pre .hljs-comment, .slide.dark pre .hljs-quote { color: rgba(255, 255, 255, 0.55); }
+.slide.dark pre .hljs-keyword, .slide.dark pre .hljs-selector-tag, .slide.dark pre .hljs-meta { color: var(--zilliz-sky); }
+.slide.dark pre .hljs-string, .slide.dark pre .hljs-regexp, .slide.dark pre .hljs-addition { color: var(--zilliz-green); }
+.slide.dark pre .hljs-number, .slide.dark pre .hljs-literal, .slide.dark pre .hljs-symbol { color: var(--zilliz-berry); }
+.slide.dark pre .hljs-built_in, .slide.dark pre .hljs-title, .slide.dark pre .hljs-section { color: var(--zilliz-sky); }
+.slide.dark pre .hljs-attr, .slide.dark pre .hljs-attribute, .slide.dark pre .hljs-variable, .slide.dark pre .hljs-template-variable, .slide.dark pre .hljs-params { color: var(--zilliz-white); }
 
 /* Speaker cards — used by the `authors` frontmatter block */
 .speakers {
@@ -496,7 +511,7 @@
 .slide .three-col.cards > div {
   background: var(--zilliz-blue-10);
   border: 1px solid var(--zilliz-blue-20);
-  border-radius: 18px;
+  border-radius: var(--zilliz-radius-card);
   padding: var(--zilliz-s-3) var(--zilliz-s-4);
 }
 
@@ -517,16 +532,77 @@
   text-shadow: 0 2px 18px rgba(0, 0, 0, 0.6);
 }
 
-/* iframe embeds — full-bleed; chrome/footer overlay on top via source order */
-.slide .iframe-embed {
+/* iframe embeds — full-bleed down to the footer band, which is ~66px tall
+   (offset s-3 + border + padding s-2 + one 18px line). The frame is inset
+   rather than overlaid so the embedded page reflows into the height it
+   actually has; overlaying hides whatever the page draws at its bottom edge.
+   Height is computed because an iframe is a replaced element: top/bottom
+   insets alone leave it at its 300x150 intrinsic size. */
+/* The frame and its still occupy identical geometry, so a slide that falls back
+   to the still looks like the slide that would have shown the live demo. */
+.slide .iframe-embed,
+.slide .iframe-still {
   position: absolute;
-  inset: 0;
+  top: 0;
+  left: 0;
   width: 100%;
-  height: 100%;
+  height: calc(100% - var(--zilliz-s-8) - var(--zilliz-s-2));
+}
+.slide.no-footer .iframe-embed,
+.slide.no-footer .iframe-still { height: 100%; }
+
+.slide .iframe-embed {
   border: 0;
-  display: block;
   background: var(--zilliz-white);
   z-index: 0;
+  /* Hidden until script/iframe.js probes the host and finds it reachable.
+     Anything that never runs that probe — print, PDF, JS off — keeps the
+     fallback, which is the honest state for a demo that isn't running. */
+  display: none;
+}
+.slide.iframe-live .iframe-embed { display: block; }
+.slide.iframe-live .iframe-fallback { display: none; }
+
+.slide .iframe-fallback {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  flex: 1;
+  min-height: 0;
+}
+.slide .iframe-fallback-body > :first-child { margin-top: 0; }
+.slide .iframe-fallback-body > :last-child { margin-bottom: 0; }
+
+/* With a still, the screenshot plays at full strength as the backdrop and the
+   text sits over it on frosted glass — the blur is what buys legibility, so
+   the demo stays sharp everywhere the card isn't. */
+.slide .iframe-still {
+  object-fit: cover;
+  object-position: top center;
+  z-index: 0;
+}
+.slide .iframe-fallback.has-still {
+  align-items: center;
+  z-index: 1;
+}
+.slide .iframe-fallback.has-still .iframe-fallback-body {
+  position: relative;
+  max-width: 75%;
+  background: rgba(255, 255, 255, 0.68);
+  -webkit-backdrop-filter: blur(5px);
+  backdrop-filter: blur(5px);
+  border: 1px solid rgba(255, 255, 255, 0.85);
+  border-radius: var(--zilliz-radius-card);
+  padding: var(--zilliz-s-6) var(--zilliz-s-8);
+  box-shadow: 0 24px 60px rgba(6, 25, 130, 0.28);
+}
+/* No blur available (older engines, and print) means the tint alone would sit
+   over a sharp screenshot — go opaque instead of illegible. */
+@supports not (backdrop-filter: blur(1px)) {
+  .slide .iframe-fallback.has-still .iframe-fallback-body {
+    background: var(--zilliz-white);
+    border-color: var(--zilliz-blue-20);
+  }
 }
 
 /* custom per-deck styles */
@@ -539,7 +615,7 @@
   color: var(--zilliz-black);
   background: var(--zilliz-white);
   border: 2px solid var(--zilliz-blue-20);
-  border-radius: 14px;
+  border-radius: var(--zilliz-radius-node);
   padding: 10px 76px 10px 24px;
   margin-top: 8px;
   box-shadow: 0 4px 14px rgba(6, 25, 130, 0.08);
@@ -587,7 +663,7 @@
 .search-demo .below-note { font-size: 17px; line-height: 1.4; opacity: 0.75; margin: var(--zilliz-s-2) 0 0; font-style: italic; }
 
 .search-demo .formulas { display: flex; flex-direction: column; gap: var(--zilliz-s-3); }
-.search-demo .formula-card, .search-demo .section { border: 2px solid var(--zilliz-blue-20); border-radius: 14px; padding: var(--zilliz-s-3); background: var(--zilliz-white); }
+.search-demo .formula-card, .search-demo .section { border: 2px solid var(--zilliz-blue-20); border-radius: var(--zilliz-radius-node); padding: var(--zilliz-s-3); background: var(--zilliz-white); }
 .search-demo .formula-name { font-family: var(--zilliz-font-mono); font-size: 15px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--zilliz-navy); margin-bottom: 4px; }
 .search-demo .formula-q { font-size: 22px; font-weight: 500; margin: 0 0 var(--zilliz-s-2); line-height: 1.3; color: var(--zilliz-black); }
 .search-demo .formula-q em { font-style: italic; color: var(--zilliz-blue); font-weight: 600; }
@@ -605,19 +681,132 @@
 
 /* Use-case grid — 3x3 tiles with fragment reveals */
 .usecase-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--zilliz-s-4); }
-.usecase-tile { background: var(--zilliz-blue-10); border: 2px solid var(--zilliz-blue-20); border-radius: 18px; padding: var(--zilliz-s-3) var(--zilliz-s-3); display: flex; flex-direction: column; align-items: center; text-align: center; gap: var(--zilliz-s-2); }
+.usecase-tile { background: var(--zilliz-blue-10); border: 2px solid var(--zilliz-blue-20); border-radius: var(--zilliz-radius-card); padding: var(--zilliz-s-3) var(--zilliz-s-3); display: flex; flex-direction: column; align-items: center; text-align: center; gap: var(--zilliz-s-2); }
 .usecase-tile .icon { font-size: 64px; line-height: 1; }
 .usecase-tile .label { font-size: 30px; font-weight: 700; color: var(--zilliz-navy); margin: 0; }
 .usecase-tile .tagline { font-size: 22px; line-height: 1.35; color: var(--zilliz-ink); opacity: 0.85; margin: 0; }
 
 /* Stat grid — 3x2 metric cards (modality-gap numbers). .is-warn flags a gap-revealing stat */
 .stat-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--zilliz-s-4); margin: var(--zilliz-s-6) 0; }
-.stat-card { background: var(--zilliz-blue-10); border: 2px solid var(--zilliz-blue-20); border-radius: 18px; padding: var(--zilliz-s-3) var(--zilliz-s-4); display: flex; flex-direction: column; gap: var(--zilliz-s-1); }
+.stat-card { background: var(--zilliz-blue-10); border: 2px solid var(--zilliz-blue-20); border-radius: var(--zilliz-radius-card); padding: var(--zilliz-s-3) var(--zilliz-s-4); display: flex; flex-direction: column; gap: var(--zilliz-s-1); }
 .stat-card .stat-label { font-family: var(--zilliz-font-mono); font-size: 19px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--zilliz-navy); opacity: 0.75; }
 .stat-card .stat-value { font-family: var(--zilliz-font-mono); font-size: 60px; font-weight: 600; line-height: 1; color: var(--zilliz-blue); }
 .stat-card .stat-note { font-size: 21px; line-height: 1.3; color: var(--zilliz-ink); opacity: 0.85; margin: 0; }
 .stat-card.is-warn { background: var(--zilliz-berry-10); border-color: var(--zilliz-berry-20); }
 .stat-card.is-warn .stat-value { color: var(--zilliz-berry); }
+
+/* ── Shared components — compose these before writing new CSS (docs/styleguide.md) ── */
+
+/* .card — boxed panel chrome: white, brand border, card radius/shadow.
+   .is-win lifts one card as the answer among its siblings */
+.slide .card { background: var(--zilliz-white); border: 2px solid var(--zilliz-blue-20); border-radius: var(--zilliz-radius-card); padding: var(--zilliz-s-3); display: flex; flex-direction: column; gap: var(--zilliz-s-2); box-shadow: var(--zilliz-shadow-card); }
+.slide .card.is-win { border-color: var(--zilliz-blue); box-shadow: var(--zilliz-shadow-pop); }
+
+/* .card-grid — grid of cards, 3-up by default; .cols-2/.cols-4 change the count */
+.slide .card-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--zilliz-s-3) var(--zilliz-s-4); margin-top: var(--zilliz-s-4); }
+.slide .card-grid.cols-2 { grid-template-columns: repeat(2, 1fr); }
+.slide .card-grid.cols-4 { grid-template-columns: repeat(4, 1fr); gap: var(--zilliz-s-3); }
+
+/* .pill — mono uppercase tag; equal-width so pill columns align.
+   Color modifiers: .navy (solid), .gradient (brand), .berry (soft warn),
+   .ghost (bare label, no fill) */
+.slide .pill { font-family: var(--zilliz-font-mono); font-size: 18px; font-weight: 700; line-height: 1; text-transform: uppercase; letter-spacing: 0.04em; padding: 6px 11px; border-radius: 999px; white-space: nowrap; min-width: 94px; text-align: center; }
+.slide .pill.navy { background: var(--zilliz-navy); color: var(--zilliz-white); }
+.slide .pill.gradient { background: var(--zilliz-gradient); color: var(--zilliz-white); }
+.slide .pill.berry { background: var(--zilliz-berry-10); color: var(--zilliz-berry); }
+.slide .pill.ghost { padding: 0; min-width: 0; color: var(--zilliz-navy); }
+
+/* ── Deck: talks/2026-08-milvus-search-gap ──
+   Delete this block when the deck retires; check consumers first with
+   grep -rl --include=slides.md <class> talks/ */
+
+/* Case-study cards — migration proof points on .card/.card-grid. Pills encode
+   the journey: berry = engine left behind, gradient = landed on */
+.slide .case-eyebrows { display: flex; flex-wrap: wrap; align-items: center; gap: var(--zilliz-s-1); margin: 0; }
+.slide .case-journey { display: inline-flex; align-items: center; gap: 6px; }
+.slide .case-arrow { font-family: var(--zilliz-font-mono); font-size: 18px; font-weight: 700; color: var(--zilliz-navy); }
+.slide .case-name { font-size: 40px; font-weight: 800; line-height: 1.1; color: var(--zilliz-black); margin: 0; }
+.slide .case-name:has(.pill) { display: flex; align-items: center; gap: var(--zilliz-s-2); }
+.slide .case-name .pill { margin-left: auto; }
+.slide .case-proof { font-size: 23px; line-height: 1.35; color: var(--zilliz-ink); margin: 0; }
+.slide .case-proof strong { color: var(--zilliz-blue); }
+.slide .case-note { font-size: 20px; opacity: 0.7; margin: var(--zilliz-s-3) 0 0; }
+
+/* Feature cards — category eyebrow + panel list on .card.
+   .feature-grid top-aligns so short cards size to content instead of stretching */
+.slide .feature-grid { align-items: start; margin-top: var(--zilliz-s-6); }
+.slide .feature-grid .card { padding: var(--zilliz-s-2) var(--zilliz-s-3); }
+.slide .feature-cat { font-family: var(--zilliz-font-mono); font-size: 20px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; color: var(--zilliz-navy); }
+.slide .feature-list { list-style: none; padding: 0; margin: 0; }
+.slide .feature-list li { font-size: 32px; line-height: 1.3; margin: 0; padding: 18px 0; border-bottom: 2px solid var(--zilliz-blue-20); }
+.slide .feature-list li:first-child { padding-top: 6px; }
+.slide .feature-list li:last-child { border-bottom: 0; padding-bottom: 6px; }
+.slide .feature-grid.cols-4 .feature-list li { font-size: 24px; padding: 15px 0; }
+
+/* .es-compare — per-card Elasticsearch comparison, pinned below the why */
+.slide .card .es-compare { margin-top: auto; padding-top: var(--zilliz-s-2); border-top: 2px solid var(--zilliz-blue-20); font-size: 20px; line-height: 1.35; opacity: 0.9; }
+.slide .card .es-compare strong { color: var(--zilliz-berry); }
+
+/* Query rows — exact (navy) vs semantic (gradient) example queries.
+   The card takes over as the grid and the rows dissolve into it, so every pill
+   sits in one auto-sized column and matches the widest label in the card */
+.slide .card:has(.q-row) { display: grid; grid-template-columns: auto 1fr; align-items: center; }
+.slide .card:has(.q-row) > :not(.q-row) { grid-column: 1 / -1; }
+.slide .q-row { display: contents; }
+.slide .q-text { font-size: 24px; line-height: 1.3; color: var(--zilliz-ink); min-width: 0; }
+
+/* Architecture panels — the three ways to run hybrid search, on .card/.card-grid;
+   connectors are drawn in CSS rather than a diagram so the copy stays editable
+   in slides.md. .is-win flags the one-engine answer */
+.slide .arch-grid { gap: var(--zilliz-s-4); margin-top: var(--zilliz-s-6); }
+.slide .arch-grid .card { gap: var(--zilliz-s-3); }
+.slide .arch-eyebrow { margin: 0; }
+
+.slide .arch-flow { display: flex; flex-direction: column; }
+.slide .arch-node { border-radius: var(--zilliz-radius-node); padding: 14px var(--zilliz-s-2); text-align: center; font-size: 28px; font-weight: 700; line-height: 1.15; color: var(--zilliz-navy); }
+.slide .arch-node small { display: block; font-family: var(--zilliz-font-mono); font-size: 17px; font-weight: 400; line-height: 1.3; margin-top: 7px; opacity: 0.8; }
+.slide .arch-node small code { font-size: inherit; background: none; padding: 0; }
+.slide .arch-node.app { background: var(--zilliz-blue-10); border: 2px solid var(--zilliz-blue-20); }
+.slide .arch-node.engine { background: var(--zilliz-berry-10); border: 2px solid var(--zilliz-berry-20); }
+.slide .arch-engines { display: grid; grid-template-columns: 1fr; gap: var(--zilliz-s-2); }
+.slide .arch-engines:has(.arch-node + .arch-node) { grid-template-columns: 1fr 1fr; }
+.slide .card.is-win .arch-node.engine { background: var(--zilliz-gradient); border-color: var(--zilliz-navy); color: var(--zilliz-white); }
+
+/* Fork — the query paths out of the app. Two drops split into lanes;
+   a single drop stays one stem, which is the whole point of the slide */
+.slide .arch-fork { position: relative; display: grid; grid-template-columns: 1fr; --arch-line: var(--zilliz-purple); }
+.slide .arch-fork:has(.arch-drop + .arch-drop) { grid-template-columns: 1fr 1fr; }
+.slide .arch-drop { position: relative; display: flex; justify-content: center; align-items: center; gap: var(--zilliz-s-1); padding: 26px 0; }
+.slide .arch-drop::before { content: ''; position: absolute; top: 0; bottom: 0; left: 50%; width: 3px; margin-left: -1.5px; background: var(--arch-line); }
+.slide .arch-drop::after { content: ''; position: absolute; bottom: 0; left: 50%; margin-left: -9px; border-left: 9px solid transparent; border-right: 9px solid transparent; border-top: 11px solid var(--arch-line); }
+.slide .arch-drop > .pill { position: relative; }
+
+/* Sync line — the running cost of the shape above it, berry when it's a tax */
+.slide .arch-sync { margin: var(--zilliz-s-2) 0 0; text-align: center; font-family: var(--zilliz-font-mono); font-size: 18px; letter-spacing: 0.02em; color: var(--zilliz-berry); border-top: 2px dashed var(--zilliz-berry-20); padding-top: var(--zilliz-s-2); }
+.slide .arch-sync.is-good { color: var(--zilliz-blue); border-top-color: var(--zilliz-blue-20); }
+
+.slide .arch-verdict { margin: 0; padding-top: var(--zilliz-s-2); border-top: 1px solid var(--zilliz-blue-10); font-size: 22px; line-height: 1.4; color: var(--zilliz-ink); }
+.slide .arch-verdict strong { color: var(--zilliz-berry); }
+.slide .card.is-win .arch-verdict strong { color: var(--zilliz-blue); }
+
+/* Timeline — horizontal milestone row; .is-now highlights the current release */
+.slide .timeline { display: flex; margin-top: var(--zilliz-s-8); }
+.slide .timeline .tl-item { flex: 1; position: relative; border-top: 4px solid var(--zilliz-blue-20); padding: var(--zilliz-s-3) var(--zilliz-s-3) 0 0; display: flex; flex-direction: column; gap: var(--zilliz-s-1); }
+.slide .timeline .tl-item::before { content: ''; position: absolute; top: -13px; left: 0; width: 22px; height: 22px; border-radius: 50%; background: var(--zilliz-blue); }
+.slide .timeline .tl-year { font-family: var(--zilliz-font-mono); font-size: 48px; font-weight: 600; color: var(--zilliz-navy); }
+.slide .timeline .tl-label { font-size: 26px; line-height: 1.3; color: var(--zilliz-ink); }
+.slide .timeline .tl-item.is-now { border-top-color: var(--zilliz-berry-20); }
+.slide .timeline .tl-item.is-now::before { background: var(--zilliz-gradient); width: 30px; height: 30px; top: -17px; }
+.slide .timeline .tl-item.is-now .tl-year { color: var(--zilliz-blue); }
+
+/* mark — brand-tinted highlight; encodes emphasis that survives low-res replay */
+.slide mark { background: var(--zilliz-blue-10); color: var(--zilliz-navy); font-weight: 700; padding: 2px 10px; border-radius: 8px; box-decoration-break: clone; }
+
+/* Repo CTA — the one URL the audience should leave with */
+.slide .repo-cta { font-family: var(--zilliz-font-mono); font-size: 44px; font-weight: 700; color: var(--zilliz-blue); margin: 0 0 var(--zilliz-s-2); }
+
+/* .big-code — modifier: enlarge code blocks on sparse slides for replay legibility */
+.slide.big-code pre code { font-size: 30px; }
 
 /* UMAP modality-gap viz — legend over the full-bleed three.js canvas */
 .umap-legend { display: flex; gap: var(--zilliz-s-6); align-items: center; font-family: var(--zilliz-font-mono); font-size: 24px; }
@@ -633,6 +822,31 @@
   font-weight: 400 !important;
   color: #ffffff !important;
   text-shadow: 0px 0px 20px black, -1px -1px #000000, 0 0 3px #fff, 0 0 20px #000000, 0 0 20px #000000 !important;
+}
+
+/* Version eyebrows — inline [3.0]{.eyebrow-new} marks features launched in 3.0;
+   [2.5]{.eyebrow-ver} marks the release an older feature landed in, muted so 3.0
+   still reads as the headline. Em-sized so they scale with their context
+   (table cells, bullets, headings). */
+.slide .eyebrow-new,
+.slide .eyebrow-ver {
+  display: inline-block;
+  font-family: var(--zilliz-font-mono);
+  font-size: 0.62em;
+  font-weight: 700;
+  line-height: 1.1;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--zilliz-white);
+  background: var(--zilliz-gradient);
+  padding: 4px 10px;
+  border-radius: 999px;
+  vertical-align: 0.22em;
+  white-space: nowrap;
+}
+
+.slide .eyebrow-ver {
+  background: var(--zilliz-grey);
 }
 
 .align-right {

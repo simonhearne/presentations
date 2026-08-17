@@ -12,13 +12,36 @@ npm run bundle talks/2026-05-example          # → talks/2026-05-example/dist/b
 
 Open the HTML in any browser. Right arrow / space advances; URL hash deeplinks to a specific slide.
 
+## Live preview
+
+```bash
+npm run watch talks/example        # serve + rebuild on save
+npm run watch talks/<slug> -- --port=5000  # custom port (default 4321)
+```
+
+Starts a local server (no dependencies — Node built-ins only), builds the
+deck, and prints a preview URL. Saving `slides.md` — or any shared file the
+build consumes (`css/`, `script/`, `templates/`, `visualisations/`) —
+rebuilds the deck and reloads the open tab automatically. The current slide
+is restored after reload via the URL hash. If a save produces a broken build
+(e.g. malformed vega JSON mid-edit), the error is printed to the terminal
+and the browser keeps the last good build.
+
 ## Authoring a new talk
 
 ```
 talks/<slug>/
 ├── slides.md          # your deck
-└── img/               # optional, talk-specific images
+└── logo.png           # optional, talk-specific images (alongside slides.md)
 ```
+
+Reference talk-specific images with standard Markdown — `![alt](logo.png)`.
+Any `.png`, `.jpg`/`.jpeg`, or `.svg` file sitting directly in the talk
+directory is copied into `dist/` automatically at build time, so relative
+paths resolve whether you open `dist/index.html` on its own or run it
+through `npm run bundle`. Shared, cross-talk images (like the Zilliz logo)
+live in the repo-level `img/` directory instead and are referenced with a
+relative path out of the talk directory (e.g. `../../../img/zilliz-light.svg`).
 
 Slides are separated by lines containing exactly `---`. The first non-blank
 line of a slide may be an attribute block — `{.classname .modifier}` — to
@@ -33,6 +56,9 @@ apply slide layout classes. Available layouts:
 | `.center` (modifier) | Centers content horizontally and vertically |
 | `.dark` (modifier) | Inverts default content slide to white-on-navy |
 | `.no-chrome` (modifier) | Hides the bottom-right page indicator |
+| `.no-number` (modifier) | On a `.section` slide, hides the auto-incremented section number |
+| `.dot-fit` (modifier) | Disables the 1.25× scale-up on `dot` diagrams — for diagrams that already fill the slide width |
+| `.big-code` (modifier) | Enlarges code blocks on the slide for low-res replay legibility |
 | `.three-bg` (layout) | Renders a `three` block as a full-bleed background with slide text on top; pair with `.dark` and `.no-chrome` |
 
 Example:
@@ -65,6 +91,30 @@ Example:
 - Bullet
 - Another bullet
 ````
+
+### Shared components (HTML blocks)
+
+For layouts markdown can't express, raw HTML in a slide can compose the shared
+components from `css/layouts.css` — `.card` panels in a `.card-grid`
+(3 columns by default, `.cols-2`/`.cols-4` to change), `.pill` tags
+(`.navy`/`.gradient`/`.berry`/`.ghost`), `.stat-grid` metric tiles, and inline
+version eyebrows (`[3.0]{.eyebrow-new}`, `[2.5]{.eyebrow-ver}`):
+
+```html
+<div class="card-grid cols-2">
+<div class="card fragment">
+<p><span class="pill berry">before</span> <span class="pill gradient">after</span></p>
+</div>
+</div>
+```
+
+Before writing new CSS for a slide, read [docs/styleguide.md](docs/styleguide.md)
+— it covers the full component inventory, naming conventions, and where
+deck-specific styles belong.
+
+## Code blocks
+
+Fenced code blocks with a language tag (` ```bash `, ` ```python `, ` ```json `, ...) are syntax-highlighted at build time via [highlight.js](https://highlightjs.org/) — no client runtime. Token colours follow the brand palette and adapt on `.dark` slides. Languages outside highlight.js's [common set](https://github.com/highlightjs/highlight.js#supported-languages), or fences with no language tag, render as plain escaped code.
 
 ## Deck-level config
 
@@ -260,9 +310,58 @@ A slide can embed an external page full-bleed via a fenced ` ```iframe ` block:
 - url: http://127.0.0.1:8080
 ```
 
-`url` (required) is the page to embed; any other key becomes a `data-*` attribute on the iframe. The frame fills the slide via `position: absolute; inset: 0`; chrome and footer overlay on top. Use `{.no-chrome}` on the slide if you want truly full-bleed.
+`url` (required) is the page to embed; any other key becomes a `data-*` attribute on the iframe. The frame fills the slide but stops above the footer, so the embedded page reflows into the space it actually has rather than rendering its bottom edge underneath the footer. Chrome still overlays the top — use `{.no-chrome}` to hide it, and `{.no-footer}` to drop the footer and let the frame run edge to edge.
 
 Click events pass through to the iframe normally. To keep deck navigation alive after a click, a small runtime is injected (only when a slide uses an `iframe` block) that refocuses the parent window when the iframe steals focus — so `n` / `p` / `←` / `→` continue to advance and retreat slides. Trade-off: text inputs inside the iframe won't receive typed characters, so this is intended for click-driven embeds rather than authenticated forms.
+
+For embeds that need real typing (editors, forms), add `nav: passthrough` to the block: the iframe keeps focus once clicked, so text input works, and deck keys pause until you click back on the deck's own chrome or footer. Keep the slide's chrome visible for such embeds — it's the click target that hands keyboard control back to the deck.
+
+### Fallback content
+
+A demo running on `localhost` doesn't exist for anyone reading the deck on the web or as a PDF. So the frame ships with no `src` at all: on load the runtime sends a `no-cors` probe at the host, and only sets `src` if something answers. Until then — and permanently if nothing does, or if JavaScript never runs — the slide shows fallback content instead.
+
+Write it as a second fenced block on the same slide:
+
+````markdown
+```iframe
+- url: http://localhost:8080
+```
+
+```iframe-fallback
+## Live demo
+
+What the demo shows, for anyone reading this later.
+
+- Run it yourself: **github.com/you/your-demo**
+```
+````
+
+The body is ordinary markdown (fragments work). If you omit the block, a generic placeholder is used, so an unreachable host never leaves a blank slide. Because the fence body ends at the first line starting with ` ``` `, use `~~~iframe-fallback` if the fallback itself contains a fenced code block.
+
+Add a screenshot behind it with `still` on the `iframe` block, and the fallback slide shows what the demo looks like instead of only describing it:
+
+```iframe
+- url: http://localhost:8080
+  still: live_demo_static.png
+  still-alt: The demo app comparing both engines
+```
+
+The still is copied into `dist/` at build time (so reference it by name, relative to the talk directory — a remote `https://` URL is passed through untouched) and inlined by the bundle step. It's drawn at full strength in exactly the frame's geometry, with the fallback text floated over it on a frosted-glass card (`backdrop-filter`), so the slide reads as the demo slide rather than a different slide. `still-alt` is optional and defaults to empty — the still is a backdrop, and the fallback body carries the description.
+
+The card falls back to solid white where `backdrop-filter` isn't available, and in print — PDF engines drop the blur but still report supporting it, so a translucent card would otherwise export as a tint over a sharp screenshot.
+
+The probe is configured with keys on the `iframe` block:
+
+| key | default | meaning |
+|---|---|---|
+| `probe` | the embed's `url` | URL to probe instead of the embed URL, or `false` to skip probing and always load the frame |
+| `probe-timeout` | `1500` | milliseconds before the probe is treated as a failure |
+
+The probe re-runs whenever you enter the slide, so if you start the demo after opening the deck, navigating away and back picks it up — no reload needed. State is exposed as `data-iframe-state="pending\|live\|offline"` on the `<section>` if you need to check what happened.
+
+Two things worth knowing. A failed probe logs `ERR_CONNECTION_REFUSED` to the browser console — that's the browser reporting the network failure, not an error in the deck, and it's not suppressible. And a deck served over HTTPS can't probe an `http://localhost` host (mixed content is blocked), so the hosted copy always shows the fallback — which is the intent, but it means testing the live path needs the deck served over plain HTTP.
+
+Print and PDF export always show the fallback, even when the demo host is up.
 
 ## PDF export
 
@@ -334,6 +433,12 @@ from `simonhearne/presentations` where this builder lives under `builder/`.
   copies each self-contained `bundle.html` to `_site/<slug>/index.html`, copies
   `css/tokens.css` to `_site/assets/`, and generates `_site/index.html` (the
   landing page). `_site/` is the Netlify publish directory.
+- To preview the assembled site locally, run `npm run site` and serve `_site/`
+  over HTTP — e.g. `npx serve _site` or `python3 -m http.server -d _site`.
+  Deck links on the landing page are root-absolute (`/<slug>/`), so opening
+  `_site/index.html` via `file://` won't navigate between pages. (Individual
+  decks built with `npm run build` are unaffected — their `dist/index.html`
+  works straight from the filesystem.)
 - Netlify config lives at the combined repo's root `netlify.toml`
   (`base = "builder"`, `command = "npm ci && node bin/site.js"`,
   `publish = "_site"`). Legacy decks remain served by GitHub Pages via the

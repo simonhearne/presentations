@@ -29,6 +29,9 @@
 
   /* Type */
   --zilliz-ink: #1e293b;
+  /* Muted pill fill — 3.5:1 against white text, so it reads as secondary
+     next to --zilliz-gradient without dropping below 3:1. */
+  --zilliz-grey: #7d8a9e;
   --zilliz-font-sans: 'Inter', system-ui, -apple-system, sans-serif;
   --zilliz-font-mono: 'IBM Plex Mono', ui-monospace, SFMono-Regular, monospace;
 
@@ -45,4 +48,10 @@
   --zilliz-s-8: 64px;
   --zilliz-s-12: 96px;
   --zilliz-s-16: 128px;
+
+  /* Shape & elevation — card chrome shared by every boxed component */
+  --zilliz-radius-card: 18px;
+  --zilliz-radius-node: 14px;
+  --zilliz-shadow-card: 0 4px 14px rgba(6, 25, 130, 0.06);
+  --zilliz-shadow-pop: 0 8px 26px rgba(23, 95, 255, 0.18);
 }

@@ -4,3 +4,7 @@ _site/
 .DS_Store
 inspiration/*
 /specs/
+docs/superpowers/
+.memsearch/
+.playwright-mcp/
+.superpowers/

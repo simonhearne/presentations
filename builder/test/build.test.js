@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { splitSlides, parseAttrs, slugify, extractTitle, renderSlide, parseAuthors, extractAuthors, renderAuthors, copyAuthorPhotos, parseVega, extractVega, renderVega, embedVegaSpecs, extractDot, DOT_DEFAULTS, renderDot, buildDeck, extractDeckConfig, renderAgendaChunk, parseThree, extractThree, THREE_PLACEHOLDER, embedThreeModules, renderThree, parseIframe, extractIframe, renderIframe, IFRAME_PLACEHOLDER, parseAttrList, applyFragmentAttrs, escapeHtml, stripComments } from '../bin/build.js';
+import { splitSlides, parseAttrs, slugify, extractTitle, renderSlide, parseAuthors, extractAuthors, renderAuthors, copyAuthorPhotos, parseVega, extractVega, renderVega, embedVegaSpecs, extractDot, DOT_DEFAULTS, renderDot, buildDeck, extractDeckConfig, renderAgendaChunk, parseThree, extractThree, THREE_PLACEHOLDER, embedThreeModules, renderThree, parseIframe, extractIframe, renderIframe, IFRAME_PLACEHOLDER, extractIframeFallback, renderIframeFallback, IFRAME_FALLBACK_DEFAULT, copyIframeStills, parseAttrList, applyFragmentAttrs, escapeHtml, copyLocalImages, stripComments } from '../bin/build.js';
 import { mkdtempSync, writeFileSync, readFileSync, existsSync, rmSync, mkdirSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
@@ -1375,11 +1375,16 @@ test('renderIframe: returns empty string for empty array', () => {
   assert.equal(renderIframe([], 'slug'), '');
 });
 
-test('renderIframe: emits an iframe with iframe-embed class, default id, and src', () => {
+test('renderIframe: emits an iframe with iframe-embed class, default id, and data-src', () => {
   const html = renderIframe([{ url: 'https://example.com' }], 'my-slide');
   assert.match(html, /<iframe class="iframe-embed"/);
   assert.match(html, /id="iframe-my-slide"/);
-  assert.match(html, /src="https:\/\/example\.com"/);
+  assert.match(html, /data-src="https:\/\/example\.com"/);
+});
+
+test('renderIframe: never emits a live src — the runtime sets it after probing', () => {
+  const html = renderIframe([{ url: 'https://example.com' }], 'my-slide');
+  assert.doesNotMatch(html, /\ssrc=/);
 });
 
 test('renderIframe: passes extra fields through as data-* attributes', () => {
@@ -1408,7 +1413,7 @@ test('renderIframe: HTML-escapes attributes', () => {
   const html = renderIframe([
     { url: 'https://x.example/?q="<x>"' },
   ], 'x');
-  assert.match(html, /src="https:\/\/x\.example\/\?q=&quot;&lt;x&gt;&quot;"/);
+  assert.match(html, /data-src="https:\/\/x\.example\/\?q=&quot;&lt;x&gt;&quot;"/);
 });
 
 test('renderSlide: appends iframe when entries are provided', () => {
@@ -1418,7 +1423,7 @@ test('renderSlide: appends iframe when entries are provided', () => {
     total: 1,
     iframeEntries: [{ url: 'https://example.com' }],
   });
-  assert.match(html, /<iframe class="iframe-embed"[^>]*src="https:\/\/example\.com"/);
+  assert.match(html, /<iframe class="iframe-embed"[^>]*data-src="https:\/\/example\.com"/);
   assert.match(html, /id="iframe-frame-slide"/);
 });
 
@@ -1651,4 +1656,225 @@ test('parseAttrs: tolerates whitespace inside the braces', () => {
 
 test('escapeHtml: escapes &, <, >, and quotes', () => {
   assert.equal(escapeHtml('a & b <c> "d"'), 'a &amp; b &lt;c&gt; &quot;d&quot;');
+});
+
+test('renderSlide: fenced code with a known language gets hljs spans', () => {
+  const html = renderSlide({ chunk: '# X\n\n```bash\necho "hi" # comment\n```', index: 1, total: 2 });
+  assert.match(html, /<code class="language-bash">/);
+  assert.match(html, /class="hljs-comment"/);
+});
+
+test('renderSlide: fenced code without a language stays plain and escaped', () => {
+  const html = renderSlide({ chunk: '# X\n\n```\na < b\n```', index: 1, total: 2 });
+  assert.match(html, /<pre><code>a &lt; b/);
+  assert.doesNotMatch(html, /hljs-/);
+});
+
+test('renderSlide: fenced code with an unknown language stays plain and escaped', () => {
+  const html = renderSlide({ chunk: '# X\n\n```nosuchlang\na < b\n```', index: 1, total: 2 });
+  assert.match(html, /<code class="language-nosuchlang">a &lt; b/);
+  assert.doesNotMatch(html, /hljs-/);
+});
+
+test('extractIframeFallback: returns empty fallback and original body when no fence', () => {
+  const chunk = '# Live demo\n\nsome text';
+  assert.deepEqual(extractIframeFallback(chunk), { fallback: '', body: chunk });
+});
+
+test('extractIframeFallback: strips the fence and returns its body', () => {
+  const chunk = [
+    '# Live demo',
+    '',
+    '```iframe-fallback',
+    '## Not available here',
+    '',
+    '- point one',
+    '```',
+  ].join('\n');
+  const r = extractIframeFallback(chunk);
+  assert.equal(r.fallback, '## Not available here\n\n- point one');
+  assert.equal(r.body, '# Live demo');
+});
+
+test('extractIframeFallback: does not match the iframe fence', () => {
+  const chunk = '# X\n\n```iframe\n- url: http://localhost:8080\n```';
+  assert.deepEqual(extractIframeFallback(chunk), { fallback: '', body: chunk });
+});
+
+test('renderIframeFallback: wraps rendered markdown in an iframe-fallback div', () => {
+  const html = renderIframeFallback('## Offline\n\n- a point');
+  assert.match(html, /<div class="iframe-fallback">/);
+  assert.match(html, /<h2[^>]*>Offline<\/h2>/);
+  assert.match(html, /<li>a point<\/li>/);
+});
+
+test('renderIframeFallback: falls back to the default copy when empty', () => {
+  for (const empty of ['', '   \n  ', undefined]) {
+    const html = renderIframeFallback(empty);
+    assert.match(html, /<div class="iframe-fallback">/);
+    assert.match(html, /Live demo/);
+  }
+  assert.match(IFRAME_FALLBACK_DEFAULT, /Live demo/);
+});
+
+test('renderIframeFallback: honours fragment markers', () => {
+  const html = renderIframeFallback('- reveal me {.fragment}');
+  assert.match(html, /<li class="fragment">reveal me<\/li>/);
+});
+
+test('renderSlide: emits a fallback alongside every iframe', () => {
+  const html = renderSlide({
+    chunk: '# Frame slide',
+    index: 1,
+    total: 1,
+    iframeEntries: [{ url: 'https://example.com' }],
+    iframeFallback: '## Demo unavailable',
+  });
+  assert.match(html, /<div class="iframe-fallback">/);
+  assert.match(html, /Demo unavailable/);
+  // the fallback paints under the frame, so it must come first
+  assert.ok(html.indexOf('iframe-fallback') < html.indexOf('iframe-embed'));
+});
+
+test('renderSlide: an iframe with no authored fallback still gets the default', () => {
+  const html = renderSlide({
+    chunk: '# Frame slide',
+    index: 1,
+    total: 1,
+    iframeEntries: [{ url: 'https://example.com' }],
+  });
+  assert.match(html, /<div class="iframe-fallback">/);
+});
+
+test('renderSlide: slides without an iframe get no fallback', () => {
+  const html = renderSlide({ chunk: '# Plain slide', index: 1, total: 1 });
+  assert.doesNotMatch(html, /iframe-fallback/);
+});
+
+test('renderSlide: fallback replaces the placeholder in place', () => {
+  const html = renderSlide({
+    chunk: `# Frame slide\n\n${IFRAME_PLACEHOLDER}\n\ntrailing text`,
+    index: 1,
+    total: 1,
+    iframeEntries: [{ url: 'https://example.com' }],
+    iframeFallback: '## Offline copy',
+  });
+  assert.doesNotMatch(html, /iframe-placeholder/);
+  assert.ok(html.indexOf('Offline copy') < html.indexOf('trailing text'));
+});
+
+test('copyIframeStills: copies a local still to dist and rewrites path to basename', () => {
+  const { root, dist } = makeTempTalk();
+  try {
+    writeFileSync(join(root, 'demo.png'), 'PNG-BYTES');
+    const out = copyIframeStills([{ url: 'http://localhost:8080', still: './demo.png' }], root, dist);
+    assert.equal(out[0].still, 'demo.png');
+    assert.ok(existsSync(join(dist, 'demo.png')));
+    assert.equal(readFileSync(join(dist, 'demo.png'), 'utf8'), 'PNG-BYTES');
+  } finally {
+    rmSync(root, { recursive: true, force: true });
+  }
+});
+
+test('copyIframeStills: leaves remote stills and still-less entries alone', () => {
+  const { root, dist } = makeTempTalk();
+  try {
+    const out = copyIframeStills([
+      { url: 'http://localhost:8080' },
+      { url: 'http://localhost:8081', still: 'https://example.com/shot.png' },
+    ], root, dist);
+    assert.equal(out[0].still, undefined);
+    assert.equal(out[1].still, 'https://example.com/shot.png');
+  } finally {
+    rmSync(root, { recursive: true, force: true });
+  }
+});
+
+test('copyIframeStills: throws with context when the still is missing', () => {
+  const { root, dist } = makeTempTalk();
+  try {
+    assert.throws(
+      () => copyIframeStills([{ url: 'http://x', still: 'nope.png' }], root, dist),
+      /copyIframeStills: failed to copy still nope\.png/,
+    );
+  } finally {
+    rmSync(root, { recursive: true, force: true });
+  }
+});
+
+test('copyLocalImages: copies top-level png/jpg/svg files into dist', () => {
+  const { root, dist } = makeTempTalk();
+  try {
+    writeFileSync(join(root, 'logo_wall.png'), 'PNG-BYTES');
+    writeFileSync(join(root, 'photo.jpeg'), 'JPEG-BYTES');
+    writeFileSync(join(root, 'icon.svg'), '<svg></svg>');
+    writeFileSync(join(root, 'notes.txt'), 'not an image');
+    copyLocalImages(root, dist);
+    assert.equal(readFileSync(join(dist, 'logo_wall.png'), 'utf8'), 'PNG-BYTES');
+    assert.equal(readFileSync(join(dist, 'photo.jpeg'), 'utf8'), 'JPEG-BYTES');
+    assert.equal(readFileSync(join(dist, 'icon.svg'), 'utf8'), '<svg></svg>');
+    assert.ok(!existsSync(join(dist, 'notes.txt')));
+  } finally {
+    rmSync(root, { recursive: true, force: true });
+  }
+});
+
+test('copyLocalImages: ignores subdirectories, including dist itself', () => {
+  const { root, dist } = makeTempTalk();
+  try {
+    writeFileSync(join(dist, 'stale.png'), 'STALE-BYTES');
+    mkdirSync(join(root, 'sub'));
+    writeFileSync(join(root, 'sub', 'nested.png'), 'NESTED-BYTES');
+    copyLocalImages(root, dist);
+    assert.ok(!existsSync(join(dist, 'nested.png')));
+  } finally {
+    rmSync(root, { recursive: true, force: true });
+  }
+});
+
+test('renderIframeFallback: with a still, emits the image and marks the wrapper', () => {
+  const html = renderIframeFallback('## Offline', 'demo.png');
+  assert.match(html, /<div class="iframe-fallback has-still">/);
+  assert.match(html, /<img class="iframe-still" src="demo\.png" alt="">/);
+  assert.match(html, /<div class="iframe-fallback-body">/);
+  // the still paints behind the text card
+  assert.ok(html.indexOf('iframe-still') < html.indexOf('iframe-fallback-body'));
+});
+
+test('renderIframeFallback: still-alt becomes the image alt text', () => {
+  const html = renderIframeFallback('## Offline', 'demo.png', 'The demo app');
+  assert.match(html, /alt="The demo app"/);
+});
+
+test('renderIframeFallback: escapes still src and alt', () => {
+  const html = renderIframeFallback('x', 'a"b.png', '<script>');
+  assert.match(html, /src="a&quot;b\.png"/);
+  assert.match(html, /alt="&lt;script&gt;"/);
+});
+
+test('renderIframeFallback: without a still there is no image and no has-still', () => {
+  const html = renderIframeFallback('## Offline');
+  assert.doesNotMatch(html, /iframe-still/);
+  assert.doesNotMatch(html, /has-still/);
+  assert.match(html, /<div class="iframe-fallback">/);
+});
+
+test('renderIframe: still and still-alt do not leak through as data attributes', () => {
+  const html = renderIframe([
+    { url: 'https://example.com', still: 'demo.png', 'still-alt': 'shot', label: 'keep' },
+  ], 'x');
+  assert.doesNotMatch(html, /data-still/);
+  assert.match(html, /data-label="keep"/);
+});
+
+test('renderSlide: a still on the iframe entry reaches the fallback', () => {
+  const html = renderSlide({
+    chunk: '# Frame slide',
+    index: 1,
+    total: 1,
+    iframeEntries: [{ url: 'https://example.com', still: 'demo.png' }],
+    iframeFallback: '## Offline',
+  });
+  assert.match(html, /<img class="iframe-still" src="demo\.png"/);
+  assert.match(html, /has-still/);
 });

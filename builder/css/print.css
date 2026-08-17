@@ -55,6 +55,21 @@ html, body {
   animation: none !important;
 }
 
+/* A live demo can't be printed, and the deck may well be exported while the
+   demo host is up — so force the fallback regardless of what the probe found. */
+.slide .iframe-embed { display: none !important; }
+.slide .iframe-fallback { display: flex !important; }
+
+/* PDF engines drop backdrop-filter but still report supporting it, so the
+   @supports fallback never fires here — the frosted card would print as a
+   translucent tint over a sharp screenshot. Make it opaque instead. */
+.slide .iframe-fallback.has-still .iframe-fallback-body {
+  background: var(--zilliz-white) !important;
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+  border-color: var(--zilliz-blue-20) !important;
+}
+
 @page {
   size: 1920px 1080px;
   margin: 0;
