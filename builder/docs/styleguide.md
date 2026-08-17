@@ -69,7 +69,12 @@ from a current deck; they should never need CSS.
 ````
 
 A second `##` can carry the date or venue. `<span class="hero-text">` gives a
-phrase the gradient accent on a multi-line title.
+phrase the gradient accent on a multi-line title. On the dark layouts
+(`.title`, `.hero`) add `bright` — `<span class="hero-text bright">` — for a
+still aqua-to-sky fill that holds its colour against the blue-berry background;
+the plain navy-to-berry fill disappears there. All the `hero-text` variants
+print as a flat fill (white on the dark layouts, purple elsewhere), and the
+animated ones hold still under `prefers-reduced-motion`.
 
 **Closing slide** — two accepted forms. Pick one; don't blend them.
 

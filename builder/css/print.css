@@ -53,6 +53,17 @@ html, body {
   -webkit-text-fill-color: var(--zilliz-purple) !important;
   color: var(--zilliz-purple) !important;
   animation: none !important;
+  filter: none !important;
+}
+
+/* The white-text layouts keep their dark gradient in print, where a purple
+   fill all but disappears — take the same white as the rest of the heading. */
+.slide.title .hero-text,
+.slide.hero .hero-text,
+.slide.dark .hero-text,
+.slide.bg .hero-text {
+  -webkit-text-fill-color: var(--zilliz-white) !important;
+  color: var(--zilliz-white) !important;
 }
 
 /* A live demo can't be printed, and the deck may well be exported while the

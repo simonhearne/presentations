@@ -117,9 +117,17 @@ html, body {
   background: linear-gradient(90deg, #f59e0b, #ec4899);
 }
 .hero-text.bright {
-  /* light gradient for dark backgrounds — keeps contrast at low-res replay */
-  background-image: linear-gradient(90deg, #8ec5ff, #ffd1f4, #b0f0ff, #8ec5ff);
-  background-size: 300% 100%;
+  /* Aqua to brand sky — one hue family, so it stays saturated the whole way.
+     Ramps that cross to magenta desaturate through the middle, and a glow
+     lifts the background right around the glyphs and costs more contrast than
+     it buys. The layout's text-shadow has to be restated as a drop-shadow with
+     the same values: a text-shadow paints through the transparent fill and
+     dirties the gradient, where a filter paints behind the clipped glyph — same
+     depth as the rest of the heading, clean letters. */
+  background-image: linear-gradient(94deg, #8ff8ff 0%, var(--zilliz-sky) 100%);
+  text-shadow: none;
+  filter: drop-shadow(0 8px 10px rgba(0, 0, 0, 0.4));
+  animation: none;
 }
 .hero-text.smashing {
   background-image: linear-gradient(45deg, rgb(255, 69, 0), rgb(127 73 173), rgb(112, 161, 255), rgb(255, 0, 128), rgb(255, 69, 0));
@@ -269,4 +277,10 @@ body.cursor-hidden {
 @keyframes shimmer-gradient {
   0% { background-position: 0% 50%; }
   100% { background-position: 300% 50%; }
+}
+
+/* The hero accents are the only ambient motion in a deck — hold them on their
+   opening frame when the viewer has asked for less. */
+@media (prefers-reduced-motion: reduce) {
+  .hero-text { animation: none; }
 }
