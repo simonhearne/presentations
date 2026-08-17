@@ -9,6 +9,14 @@
 // slide shows its `iframe-fallback` content instead. No JS at all — print, PDF
 // export, a saved copy of the deck — means the fallback is simply what renders.
 //
+// Local targets: probing `localhost` from a page served off a public host makes
+// Chrome ask the viewer whether the site may "access other apps and services on
+// this device" (the Local Network Access permission). Nobody reading the hosted
+// deck can reach the presenter's laptop anyway, so we skip the probe entirely
+// there and go straight to the fallback — no prompt, no pending flash. Add
+// `?simon=true` to the deck URL to probe anyway, for presenting off the hosted
+// copy with the demo running locally.
+//
 // Focus rescue: when an embedded page steals focus on click, we blur it and
 // refocus the parent so deck keys keep working. Side effect: text inputs
 // inside the frame won't receive typed characters. Opt out per embed with
@@ -16,6 +24,27 @@
 // resume after a click on the deck's own chrome or footer.
 (() => {
   const DEFAULT_TIMEOUT_MS = 1500;
+
+  function isLocalHostname(hostname) {
+    const h = hostname.replace(/^\[|\]$/g, '').toLowerCase();
+    if (h === 'localhost' || h.endsWith('.localhost') || h.endsWith('.local')) return true;
+    if (h === '::1' || h === '0.0.0.0') return true;
+    return /^(127|10)\./.test(h)
+      || /^192\.168\./.test(h)
+      || /^172\.(1[6-9]|2\d|3[01])\./.test(h);
+  }
+
+  function isLocalTarget(url) {
+    try {
+      return isLocalHostname(new URL(url, location.href).hostname);
+    } catch {
+      return false;
+    }
+  }
+
+  const servedLocally = location.protocol === 'file:' || isLocalHostname(location.hostname);
+  const probeLocal = servedLocally
+    || new URLSearchParams(location.search).get('simon') === 'true';
 
   function setState(frame, state) {
     const slide = frame.closest('.slide');
@@ -36,6 +65,10 @@
       return;
     }
     const target = frame.dataset.probe || url;
+    if (!probeLocal && isLocalTarget(target)) {
+      setState(frame, 'offline');
+      return;
+    }
     const timeout = Number(frame.dataset.probeTimeout) || DEFAULT_TIMEOUT_MS;
     frame.dataset.probing = 'true';
     fetch(target, {

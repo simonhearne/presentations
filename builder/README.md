@@ -359,7 +359,13 @@ The probe is configured with keys on the `iframe` block:
 
 The probe re-runs whenever you enter the slide, so if you start the demo after opening the deck, navigating away and back picks it up — no reload needed. State is exposed as `data-iframe-state="pending\|live\|offline"` on the `<section>` if you need to check what happened.
 
-Two things worth knowing. A failed probe logs `ERR_CONNECTION_REFUSED` to the browser console — that's the browser reporting the network failure, not an error in the deck, and it's not suppressible. And a deck served over HTTPS can't probe an `http://localhost` host (mixed content is blocked), so the hosted copy always shows the fallback — which is the intent, but it means testing the live path needs the deck served over plain HTTP.
+### Local targets and the hosted deck
+
+A `localhost` (or private-IP, or `.local`) target is only reachable from the machine running the demo, so the runtime skips the probe altogether unless the deck itself is served locally — `file://`, `localhost`, or a private address. The hosted copy at talks.simonhearne.com therefore shows the fallback immediately, with no pending flash and, more importantly, no permission prompt: Chrome asks the viewer whether the site may "access other apps and services on this device" whenever a public page requests a local address, and that prompt would greet everyone opening the deck, on slide one, whether or not they ever reached the demo slide.
+
+To present from the hosted copy with the demo running on your own laptop, add `?simon=true` to the deck URL and the probe runs as normal (expect the permission prompt — allow it). `probe: false` on the block still forces the frame to load either way, since that's an explicit choice by the author.
+
+One more thing worth knowing: a failed probe logs `ERR_CONNECTION_REFUSED` to the browser console. That's the browser reporting the network failure, not an error in the deck, and it's not suppressible.
 
 Print and PDF export always show the fallback, even when the demo host is up.
 
