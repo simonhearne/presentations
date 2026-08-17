@@ -362,14 +362,18 @@ You could be running a proof of concept in under an hour!
 
 ---
 
-{.section .center .no-number}
+{.title .no-chrome}
+<img loading="lazy" class="logo" src="../../../img/zilliz-light.svg" alt="">
 
-# Thank you
+# Thank you!
 
 ## Questions?
 
-<br><br>
+## simon @ zilliz.com
 
-**github.com/simonhearne/milvus-es-live**
-
-simon@zilliz.com
+```authors
+- name: Simon Hearne
+  position: Solutions Architect
+  company: Zilliz
+  photo: https://avatars.githubusercontent.com/u/496189?v=4
+```

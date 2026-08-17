@@ -46,6 +46,44 @@ Example — a 2-up grid of cards with pills:
 </div>
 ```
 
+## Deck bookends
+
+Openers and closers are fixed forms built from rung-1 classes only. Copy one
+from a current deck; they should never need CSS.
+
+**Opening slide** — `{.title .no-chrome}`, logo, title, subtitle, `authors`:
+
+````markdown
+{.title .no-chrome}
+<img class="logo" src="../../../img/zilliz-light.svg" alt="">
+
+# Deck title
+## One-line subtitle
+
+```authors
+- name: Simon Hearne
+  position: Solutions Architect
+  company: Zilliz
+  photo: https://avatars.githubusercontent.com/u/496189?v=4
+```
+````
+
+A second `##` can carry the date or venue. `<span class="hero-text">` gives a
+phrase the gradient accent on a multi-line title.
+
+**Closing slide** — two accepted forms. Pick one; don't blend them.
+
+1. *Sign-off* — the opener's frame reused, so the deck closes on the card it
+   opened with: same `{.title .no-chrome}` + logo + `authors`, with
+   `# Thank you!` and the contact route as `##` lines (`## simon @ zilliz.com`,
+   optionally `## Questions?`). Give the closing logo `loading="lazy"`; the
+   opener's is the first paint and shouldn't defer.
+2. *Statement* — `{.hero .no-chrome}` and one sentence that lands the argument
+   ("Meaning is a coordinate."). No contact details, no speaker card.
+
+Reach for the sign-off when the deck ends in live Q&A, the statement when the
+final line is the takeaway and the deck reads on its own afterwards.
+
 ## Conventions
 
 - **Scope content rules with `.slide `** so they can't leak into deck chrome.

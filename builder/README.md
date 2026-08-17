@@ -50,7 +50,7 @@ apply slide layout classes. Available layouts:
 | Class | Use |
 | --- | --- |
 | (none) | Content slide: white bg, black text, headings + body |
-| `.title` | Opening title slide: gradient background, white text |
+| `.title` | Title slide: gradient background, white text. Also the sign-off closing slide — see [docs/styleguide.md](docs/styleguide.md#deck-bookends) |
 | `.section` | Divider between sections: oversized number + name |
 | `.hero` | Full-bleed statement: dark gradient with one big claim |
 | `.center` (modifier) | Centers content horizontally and vertically |
