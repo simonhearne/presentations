@@ -297,7 +297,7 @@ Both engines from the last slide, queries & results evaluated side-by-side:
 - **Grouping**: `group_by` completeness against `collapse`
 - **Schema**: nullable vectors, JSON shredding, dynamic fields
 
-Run the live demo yourself: [github.com/simonhearne/milvus-es-live](https://github.com/simonhearne/milvus-es-live)
+Run the live demo yourself: [github.com/simonhearne/milvus_es_lab](https://github.com/simonhearne/milvus_es_lab)
 ```
 
 ---
@@ -338,7 +338,7 @@ If you rely on these in Elasticsearch, they're on the way:
 
 # Run it yourself
 
-<p class="repo-cta">github.com/simonhearne/milvus-es-live</p>
+<p class="repo-cta">github.com/simonhearne/milvus_es_lab</p>
 
 ```bash
 docker compose up -d
