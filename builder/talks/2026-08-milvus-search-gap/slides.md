@@ -107,7 +107,7 @@ BM25 + Vector search is greater than the sum of its parts.
 # A decade dedicated to retrieval
 
 <div class="timeline">
-<div class="tl-item fragment"><span class="tl-year">2017</span><span class="tl-label">Zilliz founded by ex-Oracle cloud engineer</span></div>
+<div class="tl-item fragment"><span class="tl-year">2017</span><span class="tl-label">Zilliz founded by ex-Oracle Cloud DB engineer</span></div>
 <div class="tl-item fragment"><span class="tl-year">2019</span><span class="tl-label">Milvus open-sourced by Zilliz</span></div>
 <div class="tl-item fragment"><span class="tl-year">2021</span><span class="tl-label">Milvus 1.0 graduates the LF AI &amp; Data Foundation</span></div>
 <div class="tl-item fragment"><span class="tl-year">2022</span><span class="tl-label">Milvus 2.0: cloud-native re-architecture</span></div>
@@ -255,7 +255,7 @@ Cloud-native high performance architecture for ANN, benefits BM25:
 <div class="card fragment">
 <p class="case-eyebrows"><span class="feature-cat">Cheaper</span></p>
 <p class="case-name">10× lower memory</p>
-<p class="case-proof"><strong>RaBitQ</strong> 1-bit primary index + <strong>SQ8</strong> refinement, at equal recall. Smaller BM25 indices. No Java overhead. No replica requirement.</p>
+<p class="case-proof"><strong>RaBitQ</strong> 1-bit primary index + <strong>SQ8</strong> refinement, at equal recall. Smaller BM25 indices. No Java overhead. No replica requirement. Tiered-storage optional.</p>
 </div>
 <div class="card fragment">
 <p class="case-eyebrows"><span class="feature-cat">Easier</span></p>
@@ -273,6 +273,7 @@ Cloud-native high performance architecture for ANN, benefits BM25:
 - Same **1024-d COSINE FP32** vectors: no re-embedding, the same floats both sides
 - Same BM25 analyzer chain (`standard` + english stem/stop)
 - The demo app's Introduction tab verifies all of this live against the running containers
+- Open source for community validation
 
 ---
 
