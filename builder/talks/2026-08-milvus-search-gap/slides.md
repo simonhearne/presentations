@@ -323,9 +323,9 @@ If you rely on these in Elasticsearch, they're on the way:
     <p class="case-proof">Shape relevance in stages, beyond <code>function_score</code></p>
   </div>
   <div class="card fragment">
-    <p class="case-eyebrows"><span class="pill berry">terms</span><span class="case-arrow">→</span><span class="pill gradient">coming</span></p>
+    <p class="case-eyebrows"><span class="pill berry">bloom</span><span class="case-arrow">→</span><span class="pill gradient">coming</span></p>
     <p class="case-name">Filters at scale</p>
-    <p class="case-proof">Bloom-filter indexes and per-element array matching replace giant OR-chains</p>
+    <p class="case-proof">Bloom-filter support and per-element array matching replace giant OR-chains</p>
   </div>
 </div>
 
@@ -338,7 +338,7 @@ If you rely on these in Elasticsearch, they're on the way:
 
 # Run it yourself
 
-<p class="repo-cta">github.com/simonhearne/milvus_es_lab</p>
+<p class="repo-cta"><a href="https://github.com/simonhearne/milvus_es_lab">github.com/simonhearne/milvus_es_lab</a></p>
 
 ```bash
 docker compose up -d
@@ -354,9 +354,15 @@ Everything I showed you is reproducible on your laptop.
 
 ---
 
+{.small-title}
+
 # Next up!
 
 Join me in two weeks to walk through the migration process to Milvus 3.0.
+
+[zilliz.com/event/migrating-from-elasticsearch-opensearch-to-milvus](https://zilliz.com/event/migrating-from-elasticsearch-opensearch-to-milvus)
+
+![next webinar image](next_webinar.jpg)
 
 You could be running a proof of concept in under an hour!
 
