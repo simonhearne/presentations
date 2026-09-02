@@ -486,12 +486,14 @@ export function renderThree(entries, slug) {
   }).join('\n');
 }
 
+const IFRAME_FALLBACK_KEYS = new Set(['id', 'url', 'still', 'still-alt', 'fallback-offset']);
+
 export function renderIframe(entries, slug) {
   if (!entries || entries.length === 0) return '';
   return entries.map((e, i) => {
     const id = e.id || (entries.length === 1 ? `iframe-${slug}` : `iframe-${slug}-${i + 1}`);
     const dataAttrs = Object.entries(e)
-      .filter(([k]) => k !== 'id' && k !== 'url' && k !== 'still' && k !== 'still-alt')
+      .filter(([k]) => !IFRAME_FALLBACK_KEYS.has(k))
       .map(([k, v]) => ` data-${escapeHtml(k)}="${escapeHtml(v)}"`)
       .join('');
     // data-src, not src: the runtime only loads the frame once it has probed
@@ -536,12 +538,13 @@ export function copyLocalImages(talkDir, distDir) {
   }
 }
 
-export function renderIframeFallback(md, still = '', stillAlt = '') {
+export function renderIframeFallback(md, still = '', stillAlt = '', offset = '') {
   const source = md && md.trim() ? md : IFRAME_FALLBACK_DEFAULT;
   const body = `<div class="iframe-fallback-body">\n${applyFragmentAttrs(marked.parse(source))}\n</div>`;
-  if (!still) return `<div class="iframe-fallback">\n${body}\n</div>`;
+  const style = offset ? ` style="--iframe-fallback-offset: ${escapeHtml(offset)}"` : '';
+  if (!still) return `<div class="iframe-fallback"${style}>\n${body}\n</div>`;
   const img = `<img class="iframe-still" src="${escapeHtml(still)}" alt="${escapeHtml(stillAlt)}">`;
-  return `<div class="iframe-fallback has-still">\n${img}\n${body}\n</div>`;
+  return `<div class="iframe-fallback has-still"${style}>\n${img}\n${body}\n</div>`;
 }
 
 export function extractDeckConfig(md) {
@@ -603,7 +606,8 @@ export function renderSlide({ chunk, index, total, currentTitle = '', nextTitle 
   const iframe = renderIframe(iframeEntries, slug);
   if (iframe) {
     const withStill = iframeEntries.find(e => e.still) || {};
-    const fallback = renderIframeFallback(iframeFallback, withStill.still, withStill['still-alt']);
+    const withOffset = iframeEntries.find(e => e['fallback-offset']) || {};
+    const fallback = renderIframeFallback(iframeFallback, withStill.still, withStill['still-alt'], withOffset['fallback-offset']);
     const block = `${fallback}\n${iframe}`;
     html = html.includes(IFRAME_PLACEHOLDER)
       ? html.replace(IFRAME_PLACEHOLDER, block)

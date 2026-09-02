@@ -390,6 +390,14 @@ Add a screenshot behind it with `still` on the `iframe` block, and the fallback 
 
 The still is copied into `dist/` at build time (so reference it by name, relative to the talk directory — a remote `https://` URL is passed through untouched) and inlined by the bundle step. It's drawn at full strength in exactly the frame's geometry, with the fallback text floated over it on a frosted-glass card (`backdrop-filter`), so the slide reads as the demo slide rather than a different slide. `still-alt` is optional and defaults to empty — the still is a backdrop, and the fallback body carries the description.
 
+The card is centred over the still by default. When that covers the part of the screenshot you want seen, `fallback-offset` pushes the card down by any CSS length (it becomes `margin-top` on the fallback wrapper, so the card re-centres within the space that remains below it):
+
+```iframe
+- url: http://localhost:8080
+  still: live_demo_static.png
+  fallback-offset: 210px
+```
+
 The card falls back to solid white where `backdrop-filter` isn't available, and in print — PDF engines drop the blur but still report supporting it, so a translucent card would otherwise export as a tint over a sharp screenshot.
 
 The probe is configured with keys on the `iframe` block:

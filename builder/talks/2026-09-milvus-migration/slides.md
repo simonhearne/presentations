@@ -275,17 +275,17 @@ All AWS eu-west-1, equivalent hardware specifications, lowest commercial tier. L
   nav: passthrough
   zoom: 2
   still: live_demo_static.png
+  fallback-offset: 210px
 ```
 
 ```iframe-fallback
-## Live walkthrough: a real migration
+## Live walkthrough: three real migrations
 
-A real Elasticsearch / OpenSearch to Milvus migration workflow, end to end:
-
-- **Connect**: point the migration at a live source cluster
-- **Map**: schema and analyzer translation
-- **Move**: bulk transfer and progress tracking
-- **Validate**: side-by-side query results on the migrated data
+Elasticsearch / OpenSearch to Milvus migration workflows, end to end:
+- We saw live walkthroughs and benchmarks of:
+  - Elasticsearch local -> Milvus Local (VTS)
+  - Elastic Cloud -> Zilliz Cloud (VTS)
+  - OpenSearch Service -> Zilliz Cloud (ZMS)
 ```
 
 ---

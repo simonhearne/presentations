@@ -1878,3 +1878,26 @@ test('renderSlide: a still on the iframe entry reaches the fallback', () => {
   assert.match(html, /<img class="iframe-still" src="demo\.png"/);
   assert.match(html, /has-still/);
 });
+
+test('renderIframeFallback: fallback-offset becomes a custom property on the wrapper', () => {
+  const html = renderIframeFallback('## Offline', 'demo.png', '', '210px');
+  assert.match(html, /<div class="iframe-fallback has-still" style="--iframe-fallback-offset: 210px">/);
+  const plain = renderIframeFallback('## Offline', '', '', '12%');
+  assert.match(plain, /<div class="iframe-fallback" style="--iframe-fallback-offset: 12%">/);
+});
+
+test('renderIframeFallback: no offset means no style attribute', () => {
+  assert.doesNotMatch(renderIframeFallback('## Offline', 'demo.png'), /style=/);
+  assert.doesNotMatch(renderIframeFallback('## Offline'), /style=/);
+});
+
+test('renderIframeFallback: escapes the offset', () => {
+  const html = renderIframeFallback('x', '', '', '1px" onload="x');
+  assert.match(html, /style="--iframe-fallback-offset: 1px&quot; onload=&quot;x"/);
+});
+
+test('renderIframe: fallback-offset does not leak through as a data attribute', () => {
+  const html = renderIframe([{ url: 'https://example.com', 'fallback-offset': '210px', label: 'keep' }], 'demo');
+  assert.doesNotMatch(html, /fallback-offset/);
+  assert.match(html, /data-label="keep"/);
+});

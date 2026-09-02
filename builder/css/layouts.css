@@ -607,12 +607,15 @@
 .slide.iframe-live .iframe-embed { display: block; }
 .slide.iframe-live .iframe-fallback { display: none; }
 
+/* --iframe-fallback-offset is set inline from the block's fallback-offset key
+   to push the card below whatever the still shows at the top of the frame. */
 .slide .iframe-fallback {
   display: flex;
   flex-direction: column;
   justify-content: center;
   flex: 1;
   min-height: 0;
+  margin-top: var(--iframe-fallback-offset, 0);
 }
 .slide .iframe-fallback-body > :first-child { margin-top: 0; }
 .slide .iframe-fallback-body > :last-child { margin-bottom: 0; }
