@@ -31,6 +31,8 @@ Defined in `css/layouts.css` under "Shared components".
 | Card grid | `.card-grid`, `.cols-2`, `.cols-4` | 3-up by default. Add `.fragment` to cards for reveals. |
 | Pill | `.pill` + `.navy` / `.gradient` / `.berry` / `.ghost` | Mono uppercase tag, equal `min-width` so pill columns align. `.ghost` is a bare label (no fill). |
 | Stat grid | `.stat-grid`, `.stat-card` (+`.is-warn`), `.stat-label`, `.stat-value`, `.stat-note` | 3-up metric tiles. |
+| Callout | `blockquote` (+`.blue` / `.bottom` / `.small`), `.label` | Stat-tile chrome (tint, `-20` border, card radius) with a mono eyebrow. Berry by default, `.blue` for the positive variant. |
+| Pull quote | `blockquote.case-quote`, `cite` | No panel: gradient quote glyph, navy text, mono grey attribution. |
 | Version eyebrow | `[3.0]{.eyebrow-new}`, `[2.5]{.eyebrow-ver}` | Inline, em-sized: scales with heading/cell/bullet context. `-new` gradient, `-ver` muted grey. |
 | Highlight | `mark` (plain markdown) | Brand-tinted emphasis. |
 | Big code | `.big-code` on the slide | Enlarges code blocks on sparse slides. |

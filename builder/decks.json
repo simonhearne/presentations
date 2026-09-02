@@ -5,6 +5,7 @@
     "baseUrl": "https://talks.simonhearne.com"
   },
   "decks": [
+    { "slug": "2026-09-milvus-migration", "source": "build", "title": "Migrating from Elasticsearch / OpenSearch to Milvus", "date": "2026-09", "description": "Tooling, deployment choices and lessons from real migrations: moving from Elasticsearch / OpenSearch to Milvus or Zilliz Cloud.", "published": false },
     { "slug": "2026-08-milvus-search-gap", "source": "build", "title": "Closing the Search Gap with Milvus 3.0", "date": "2026-08", "description": "Faster, cheaper and easier hybrid semantic / full-text search: how Milvus 3.0 closes the gap with Elasticsearch." },
     { "slug": "milvus-deep-dive", "source": "build", "title": "Milvus Deep Dive", "date": "2026-06", "description": "An operator's tour of Milvus: architecture, deployment, schema, filtering, indexing, quantisation, HA and benchmarking — pinned to the v3.0 line.", "published": false },
     { "slug": "vector-search-visualised", "source": "build", "title": "Vector Search, Visualised", "date": "2026-06", "description": "A visual tour of how vector search works." },

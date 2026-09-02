@@ -103,6 +103,19 @@ html, body {
 .footer-right::before {
   content: 'Next: ';
 }
+/* Presenter cue: once every fragment on a slide is revealed the next advance
+   changes slide, so a brand dot sits centred on the footer rule. */
+.slide.fragments-done .footer::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 25px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--zilliz-blue);
+  transform: translateX(-50%);
+}
 
 .hero-text {
   background: linear-gradient(90deg, var(--zilliz-navy), var(--zilliz-berry));

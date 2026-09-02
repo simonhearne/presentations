@@ -108,6 +108,18 @@ version eyebrows (`[3.0]{.eyebrow-new}`, `[2.5]{.eyebrow-ver}`):
 </div>
 ```
 
+Blockquotes are callouts on the same card chrome as `.stat-grid` tiles: a
+markdown `>` block or a raw `<blockquote>` gets a berry-tinted panel, `.blue`
+swaps it to the blue tint, `.bottom` pins it above the footer and `.small`
+shrinks the body. A leading `<span class="label">` renders as the mono
+uppercase eyebrow. `.case-quote` drops the panel for a pull quote with a
+gradient quote glyph and a mono `<cite>`:
+
+```html
+<blockquote class="blue fragment bottom"><span class="label">Takeaway</span><p>One line the audience should keep.</p></blockquote>
+<blockquote class="case-quote">“What the customer said.” <cite>Name, Title, Company</cite></blockquote>
+```
+
 Before writing new CSS for a slide, read [docs/styleguide.md](docs/styleguide.md)
 — it covers the full component inventory, naming conventions, and where
 deck-specific styles belong.
@@ -273,6 +285,36 @@ On forward navigation (ArrowRight from the previous slide, or hash/Home/End
 jumps), fragments start hidden. On backward navigation (ArrowLeft from the
 next slide), fragments enter fully revealed so you can backtrack naturally.
 Fragments are revealed in DOM order before the slide advances.
+
+### Grouping and highlighting fragments
+
+Give several elements the same `data-fragment-index` and one keypress reveals
+them together, for example a diagram layer and the list item that explains
+it. Steps run in ascending index order; a fragment without an index takes the
+previous fragment's index plus one, so plain `{.fragment}` decks still step in
+document order. The markdown attribute grammar only carries classes, so write
+indexed fragments as raw HTML:
+
+```html
+<svg>
+  <g class="fragment" data-fragment-index="2">…</g>
+</svg>
+<ol>
+  <li class="fragment" data-fragment-index="2">Backfill: …</li>
+</ol>
+```
+
+The most recently revealed step also carries `is-current`, so deck CSS can
+paint the newest fragment differently from the ones already on screen (the
+migration deck uses it to draw the active phase in brand blue while earlier
+phases settle to navy). `is-current` moves back a step on ArrowLeft and sits
+on the last step when a slide is entered backward.
+
+Once the last step is on screen the slide gains `fragments-done` and a small
+brand-blue dot appears centred on the footer rule. It is a presenter cue: the
+next advance leaves the slide rather than revealing more. The dot clears when
+you step back and shows straight away on a slide entered backward, since those
+arrive fully revealed. Slides without fragments never show it.
 
 ### Auto-advancing reveals
 

@@ -43,19 +43,25 @@
 .slide pre .hljs-built_in, .slide pre .hljs-title, .slide pre .hljs-section { color: var(--zilliz-blue); }
 .slide pre .hljs-attr, .slide pre .hljs-attribute, .slide pre .hljs-variable, .slide pre .hljs-template-variable, .slide pre .hljs-params { color: var(--zilliz-ink); }
 .slide img { max-width: 100%; height: auto; }
+/* Blockquote — a labelled callout on the shared card chrome (same tint,
+   border, radius as .stat-card). Berry by default, .blue for the positive
+   variant; .bottom pins it above the footer; .small shrinks the body.
+   .case-quote turns it into a pull quote: no panel, a gradient quote glyph
+   and a mono cite. */
 .slide blockquote {
   margin: 0;
   background: var(--zilliz-berry-10);
-  border-left: 4px solid var(--zilliz-berry);
-  border-radius: 8px;
-  padding: var(--zilliz-s-2) var(--zilliz-s-3);
+  border: 2px solid var(--zilliz-berry-20);
+  border-radius: var(--zilliz-radius-card);
+  padding: var(--zilliz-s-3) var(--zilliz-s-4);
   color: var(--zilliz-ink);
+  box-sizing: border-box;
 }
-.slide blockquote + blockquote { margin-top: var(--zilliz-s-4); }
+.slide blockquote + blockquote { margin-top: var(--zilliz-s-3); }
 
 .slide blockquote.blue {
   background: var(--zilliz-blue-10);
-  border-left: 4px solid var(--zilliz-blue);
+  border-color: var(--zilliz-blue-20);
 }
 
 .slide blockquote.bottom {
@@ -63,18 +69,18 @@
   bottom: var(--zilliz-s-16);
   left: var(--zilliz-s-16);
   width: calc(100% - var(--zilliz-s-16) * 2);
-  box-sizing: border-box;
 }
 
 .slide blockquote .label {
-  font-family: var(--zilliz-font-mono);
-  font-size: 14px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: var(--zilliz-berry);
-  margin-bottom: 2px;
   display: block;
+  font-family: var(--zilliz-font-mono);
+  font-size: 19px;
+  font-weight: 700;
+  line-height: 1;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--zilliz-berry);
+  margin-bottom: var(--zilliz-s-1);
 }
 
 .slide blockquote.blue .label {
@@ -86,9 +92,47 @@
   line-height: 1.4;
   margin: 0;
 }
+/* The global .blue utility forces blue text; the panel variant keeps ink body copy */
+.slide blockquote.blue p { color: var(--zilliz-ink); }
 
 .slide blockquote.small p {
   font-size: 18px;
+}
+
+.slide blockquote.case-quote {
+  position: relative;
+  background: none;
+  border: 0;
+  border-radius: 0;
+  padding: var(--zilliz-s-1) 0 0 var(--zilliz-s-8);
+  font-size: 32px;
+  line-height: 1.4;
+  color: var(--zilliz-navy);
+}
+.slide blockquote.case-quote::before {
+  content: '\201C';
+  position: absolute;
+  left: 0;
+  top: -12px;
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 128px;
+  font-weight: 700;
+  line-height: 1;
+  background: linear-gradient(135deg, var(--zilliz-blue), var(--zilliz-berry));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.slide blockquote.case-quote cite {
+  display: block;
+  font-family: var(--zilliz-font-mono);
+  font-style: normal;
+  font-size: 17px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--zilliz-grey);
+  margin-top: var(--zilliz-s-1);
 }
 
 .release-badge {
@@ -858,3 +902,165 @@
 .blue {
   color: var(--zilliz-blue) !important;
 }
+/* ── Deck: talks/2026-09-milvus-migration ──
+   .recap — two resource cards on the opener recap; the slide is sparse, so
+   the shared card copy sizes read small. Lift them. */
+.slide .card-grid.recap .feature-cat { font-size: 24px; }
+.slide .card-grid.recap .case-proof { font-size: 28px; }
+
+/* Dense four-column mapping tables: shrink type and padding so ten rows
+   of field-type pairs fit one slide without wrapping the title off screen. */
+.slide.schema-map table {
+  font-size: 18px;
+  width: 100%;
+  margin: var(--zilliz-s-2) auto;
+}
+.slide.schema-map thead th,
+.slide.schema-map tbody td {
+  padding: 6px var(--zilliz-s-2);
+  line-height: 1.3;
+}
+.slide.schema-map thead th:first-child,
+.slide.schema-map tbody td:first-child {
+  font-weight: 700;
+  white-space: nowrap;
+  color: var(--zilliz-navy);
+}
+.slide.schema-map table code {
+  padding: 1px 5px;
+  font-size: 0.9em;
+  white-space: nowrap;
+}
+.slide.schema-map tbody td:last-child {
+  color: var(--zilliz-grey);
+}
+.slide.schema-map > p {
+  font-size: 22px;
+}
+
+/* .phases — two-col body pairing an inline-SVG migration diagram with a phase
+   list. Diagram groups and list items share data-fragment-index so one
+   keypress reveals both; .is-current paints the newest phase brand blue while
+   earlier phases settle to navy. :has() drives the later-phase side effects
+   (dual run lights both query paths, cut over fades them to rollback-only,
+   decommission greys out the old cluster). */
+.slide .two-col.phases { grid-template-columns: 1.9fr 1fr; align-items: center; }
+.slide .phase-diagram { display: block; width: 100%; height: auto; font-family: var(--zilliz-font-sans); }
+.phase-diagram .node { fill: var(--zilliz-white); stroke: var(--zilliz-navy); stroke-width: 2.5; }
+.phase-diagram .node-new { fill: var(--zilliz-blue); stroke: var(--zilliz-blue); }
+.phase-diagram .nlabel { font-size: 28px; font-weight: 600; fill: var(--zilliz-navy); }
+.phase-diagram .nsub { font-size: 21px; fill: var(--zilliz-ink); }
+.phase-diagram .nlabel-new, .phase-diagram .nsub-new { fill: var(--zilliz-white); }
+.phase-diagram .edge { fill: none; stroke: var(--zilliz-navy); stroke-width: 2.5; marker-end: url(#ph-arrow); transition: stroke 200ms ease, opacity 200ms ease; }
+.phase-diagram .edge.dashed { stroke-dasharray: 9 7; }
+.phase-diagram .elabel { font-size: 23px; fill: var(--zilliz-navy); transition: fill 200ms ease; }
+.phase-diagram .elabel.muted { fill: var(--zilliz-grey); font-style: italic; }
+.phase-diagram .tag { fill: var(--zilliz-grey); }
+.phase-diagram .tlabel { font-family: var(--zilliz-font-mono); font-size: 16px; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; fill: var(--zilliz-white); }
+.phase-diagram .phase.is-current .edge { stroke: var(--zilliz-blue); stroke-width: 4; }
+.phase-diagram .phase.is-current .elabel:not(.muted) { fill: var(--zilliz-blue); font-weight: 600; }
+.phase-diagram .phase.is-current .node-new { stroke: var(--zilliz-navy); stroke-width: 5; }
+.slide:has(.phase-3.is-current) .phase-diagram .edge-updates { stroke: var(--zilliz-blue); stroke-width: 4; }
+.slide:has(.phase-3.is-current) .phase-diagram .elabel-updates { fill: var(--zilliz-blue); font-weight: 600; }
+.slide:has(.phase-4.is-current) .phase-diagram .edge-q-old { stroke: var(--zilliz-blue); stroke-width: 4; }
+.slide:has(.phase-4.is-current) .phase-diagram .edge-q-old + .elabel { fill: var(--zilliz-blue); font-weight: 600; }
+.slide:has(.phase-5.is-revealed) .phase-diagram .edge-q-old { stroke-dasharray: 3 7; opacity: 0.45; }
+.slide:has(.phase-5.is-revealed) .phase-diagram .edge-q-new { stroke-dasharray: 3 7; opacity: 0.45; }
+.slide:has(.phase-5.is-revealed) .phase-diagram .edge-q-new ~ .elabel { opacity: 0.45; }
+.slide:has(.phase-6.is-revealed) .phase-diagram .node-old,
+.slide:has(.phase-6.is-revealed) .phase-diagram .node-old + .nlabel,
+.slide:has(.phase-6.is-revealed) .phase-diagram .node-old ~ .nsub,
+.slide:has(.phase-6.is-revealed) .phase-diagram .to-old,
+.slide:has(.phase-6.is-revealed) .phase-diagram .to-old + .elabel,
+.slide:has(.phase-6.is-revealed) .phase-diagram .to-old + .elabel + .elabel { opacity: 0.28; }
+.slide .phase-list { margin: 0; }
+.slide .phase-list li { font-size: 26px; }
+.slide .phase-list li { transition: color 200ms ease; }
+.slide .phase-list li.is-revealed:not(.is-current) { color: var(--zilliz-ink); }
+.slide .phase-list li.is-current { color: var(--zilliz-blue); }
+.slide .phase-list li.is-current::marker { font-weight: 700; }
+
+/* .path — the five-stage migration path: static outlined nodes with a
+   fragment overlay per stage, paired with the list below by
+   data-fragment-index. The current stage paints brand blue; the three middle
+   stages (the webinar's scope) settle to filled navy once revealed and gain a
+   "what we cover today" bracket, while Assess and Cut over drop back to
+   outlines once passed. */
+.slide .path-diagram { display: block; width: 100%; max-height: 300px; height: auto; margin: 0 auto 8px; font-family: var(--zilliz-font-sans); }
+.path-diagram .node { fill: var(--zilliz-white); stroke: var(--zilliz-navy); stroke-width: 2.5; }
+.path-diagram .nlabel { font-size: 30px; font-weight: 600; fill: var(--zilliz-navy); }
+.path-diagram .nsub { font-size: 20px; fill: var(--zilliz-ink); }
+.path-diagram .edge { fill: none; stroke: var(--zilliz-navy); stroke-width: 2.5; marker-end: url(#mp-arrow); }
+.path-diagram .step { transition: opacity 200ms ease; }
+.path-diagram .hl { fill: var(--zilliz-navy); stroke: var(--zilliz-navy); stroke-width: 2.5; transition: fill 200ms ease, stroke 200ms ease; }
+.path-diagram .hlabel { font-size: 30px; font-weight: 600; fill: var(--zilliz-white); }
+.path-diagram .hsub { font-size: 20px; fill: var(--zilliz-white); }
+.path-diagram .step.is-current .hl { fill: var(--zilliz-blue); stroke: var(--zilliz-blue); }
+.path-diagram .step.is-edge.is-revealed:not(.is-current) { opacity: 0; }
+.path-diagram .bracket { fill: none; stroke: var(--zilliz-blue); stroke-width: 3; }
+.path-diagram .flabel { font-family: var(--zilliz-font-mono); font-size: 18px; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; fill: var(--zilliz-blue); }
+.slide .path-list { margin: 0; }
+.slide .path-list li { font-size: 26px; transition: color 200ms ease; }
+.slide .path-list li.is-revealed:not(.is-current) { color: var(--zilliz-ink); }
+.slide .path-list li.is-current { color: var(--zilliz-blue); }
+.slide .path-list li.is-current::marker { color: var(--zilliz-blue); }
+
+/* .licensing — six product cards, three bullets each, on one slide: shrink
+   names and bullet type so two rows of three fit above the footer. */
+.slide .card-grid.licensing { gap: var(--zilliz-s-2) var(--zilliz-s-3); margin-top: var(--zilliz-s-3); }
+.slide .card-grid.licensing .card { padding: var(--zilliz-s-2) var(--zilliz-s-3); gap: var(--zilliz-s-1); }
+.slide .card-grid.licensing .case-name { font-size: 28px; }
+.slide .card-grid.licensing ul.case-proof { font-size: 19px; line-height: 1.3; padding-left: 20px; margin: 0; }
+.slide .card-grid.licensing ul.case-proof li { font-size: 19px; line-height: 1.3; margin: 0 0 4px; }
+
+/* .why-migrate — three benefit columns on the "Why migrate?" slide: eyebrow,
+   short headline, three proof bullets and a muted "seen in" pointer to the
+   customer stories at the end of the deck. */
+.slide .card-grid.why-migrate { gap: var(--zilliz-s-3); margin-top: var(--zilliz-s-3); align-items: stretch; }
+.slide .card-grid.why-migrate .card { padding: var(--zilliz-s-2) var(--zilliz-s-3); gap: var(--zilliz-s-1); }
+.slide .card-grid.why-migrate .case-name { font-size: 28px; line-height: 1.2; }
+.slide .card-grid.why-migrate ul.case-proof { font-size: 21px; line-height: 1.3; padding-left: 20px; margin: 0; }
+.slide .card-grid.why-migrate ul.case-proof li { font-size: 21px; line-height: 1.3; margin: 0 0 8px; }
+.slide .card-grid.why-migrate .seen-in { margin-top: auto; padding-top: var(--zilliz-s-1); border-top: 2px solid var(--zilliz-blue-20); font-size: 18px; line-height: 1.3; color: var(--zilliz-ink); opacity: 0.7; }
+.slide .why-migrate-close { margin: var(--zilliz-s-4) 0 0; font-size: 28px; font-weight: 700; color: var(--zilliz-navy); text-align: center; }
+
+/* .deploy — three deployment tiles (sky / navy / purple heads), each with a
+   coloured head, three definition rows and a platform strip, plus a full-width
+   "one API" banner. Tight so the whole set sits on one slide above the footer */
+.slide .card-grid.deploy { margin-top: var(--zilliz-s-3); gap: var(--zilliz-s-3); }
+.slide .deploy-card { padding: 0; gap: 0; overflow: hidden; }
+.slide .deploy-head { padding: var(--zilliz-s-3) var(--zilliz-s-3) var(--zilliz-s-3); text-align: center; color: var(--zilliz-white); display: flex; flex-direction: column; gap: 6px; min-height: 190px; justify-content: center; }
+.slide .deploy-card.sky .deploy-head { background: var(--zilliz-sky); }
+.slide .deploy-card.navy .deploy-head { background: var(--zilliz-navy); }
+.slide .deploy-card.purple .deploy-head { background: var(--zilliz-purple); }
+.slide .deploy-eyebrow { font-family: var(--zilliz-font-mono); font-size: 18px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; margin: 0; opacity: 0.9; }
+.slide .deploy-name { font-size: 40px; font-weight: 800; line-height: 1.1; margin: 0; }
+.slide .deploy-tag { font-size: 22px; line-height: 1.3; margin: 0; opacity: 0.95; }
+.slide .deploy-rows { display: grid; grid-template-columns: auto 1fr; column-gap: var(--zilliz-s-2); row-gap: 10px; margin: 0; padding: var(--zilliz-s-3); flex: 1; align-content: start; }
+.slide .deploy-rows dt { font-family: var(--zilliz-font-mono); font-size: 16px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; color: var(--zilliz-navy); align-self: baseline; padding-top: 3px; }
+.slide .deploy-rows dd { font-size: 21px; line-height: 1.3; color: var(--zilliz-ink); margin: 0; }
+.slide .deploy-runs { margin: 0; padding: 14px var(--zilliz-s-3); background: var(--zilliz-blue-10); font-size: 20px; font-weight: 600; color: var(--zilliz-navy); text-align: center; }
+.slide .deploy-runs span { color: var(--zilliz-grey); padding: 0 4px; }
+.slide .deploy-runs em { font-size: 15px; font-style: italic; font-weight: 400; color: var(--zilliz-grey); }
+.slide .deploy-banner { flex-direction: row; align-items: center; justify-content: center; gap: var(--zilliz-s-4); margin-top: var(--zilliz-s-3); padding: var(--zilliz-s-3) var(--zilliz-s-4); background: var(--zilliz-blue-10); border-color: transparent; box-shadow: none; }
+.slide .deploy-banner img { height: 76px; width: auto; flex: none; }
+.slide .deploy-banner p { font-size: 26px; font-weight: 600; line-height: 1.3; color: var(--zilliz-ink); margin: 0; }
+
+/* .deep-dive — customer story on one slide: journey eyebrow under the title,
+   a four-tile headline stat row, three bullet cards and a closing quote.
+   Everything is tightened so it sits above the footer at 1920×1080. */
+.slide.deep-dive h1 { margin-bottom: var(--zilliz-s-2); }
+.slide.deep-dive > .case-eyebrows { gap: var(--zilliz-s-2); margin-bottom: var(--zilliz-s-3); }
+.slide.deep-dive .case-source { margin-left: auto; font-size: 18px; color: var(--zilliz-grey); }
+.slide.deep-dive .stat-grid { grid-template-columns: repeat(4, 1fr); gap: var(--zilliz-s-3); margin: 0 0 var(--zilliz-s-3); }
+.slide.deep-dive .stat-card { padding: var(--zilliz-s-2) var(--zilliz-s-3); gap: 4px; }
+.slide.deep-dive .stat-card .stat-label { font-size: 16px; }
+.slide.deep-dive .stat-card .stat-value { font-size: 46px; }
+.slide.deep-dive .stat-card .stat-note { font-size: 18px; line-height: 1.25; }
+.slide.deep-dive .card-grid { gap: var(--zilliz-s-3); }
+.slide.deep-dive .card { padding: var(--zilliz-s-2) var(--zilliz-s-3); gap: var(--zilliz-s-1); }
+.slide.deep-dive ul.case-proof { font-size: 19px; line-height: 1.3; padding-left: 20px; margin: 0; }
+.slide.deep-dive ul.case-proof li { font-size: 19px; line-height: 1.3; margin: 0 0 4px; }
+.slide.deep-dive .case-quote { margin: var(--zilliz-s-3) 0 0; font-size: 30px; line-height: 1.35; }
+.slide.deep-dive .case-quote::before { font-size: 104px; top: -8px; }
+.slide.deep-dive .case-quote cite { font-size: 18px; margin-top: 4px; }

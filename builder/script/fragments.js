@@ -8,21 +8,55 @@
     return slide ? Array.from(slide.querySelectorAll('.fragment')) : [];
   }
 
+  // Group fragments into steps. A fragment with data-fragment-index joins the
+  // step of that number; one without takes the previous fragment's index + 1
+  // (so an all-unindexed slide steps in document order, 0, 1, 2...). Steps are
+  // revealed in ascending index order, every element of a step at once.
+  function stepsOn(slide) {
+    const byIndex = new Map();
+    let last = -1;
+    for (const el of fragmentsOn(slide)) {
+      const explicit = parseInt(el.dataset.fragmentIndex, 10);
+      const idx = Number.isInteger(explicit) ? explicit : last + 1;
+      last = idx;
+      if (!byIndex.has(idx)) byIndex.set(idx, []);
+      byIndex.get(idx).push(el);
+    }
+    return Array.from(byIndex.keys()).sort((a, b) => a - b).map(k => byIndex.get(k));
+  }
+
+  const isRevealed = el => el.classList.contains('is-revealed');
+
+  // .is-current marks the most recently revealed step so decks can highlight
+  // it differently from earlier, already-revealed fragments. .fragments-done
+  // on the slide means every step is on screen, so the next advance leaves
+  // the slide; the footer shows a dot so the presenter can see that coming.
+  function markCurrent(slide, steps) {
+    let current = null;
+    for (const step of steps) {
+      if (step.every(isRevealed)) current = step; else break;
+    }
+    for (const step of steps) {
+      for (const el of step) el.classList.toggle('is-current', step === current);
+    }
+    slide.classList.toggle('fragments-done', steps.length > 0 && current === steps[steps.length - 1]);
+  }
+
   function stepFragments(direction) {
     const slide = activeSlide();
     if (!slide) return false;
-    const frags = fragmentsOn(slide);
+    const steps = stepsOn(slide);
     if (direction > 0) {
-      const next = frags.find(el => !el.classList.contains('is-revealed'));
+      const next = steps.find(step => !step.every(isRevealed));
       if (!next) return false;
-      next.classList.add('is-revealed');
-      return true;
+      next.forEach(el => el.classList.add('is-revealed'));
     } else {
-      const revealed = frags.filter(el => el.classList.contains('is-revealed'));
+      const revealed = steps.filter(step => step.some(isRevealed));
       if (revealed.length === 0) return false;
-      revealed[revealed.length - 1].classList.remove('is-revealed');
-      return true;
+      revealed[revealed.length - 1].forEach(el => el.classList.remove('is-revealed'));
     }
+    markCurrent(slide, steps);
+    return true;
   }
 
   // Auto-reveal: a per-slide state machine drives timed fragment reveals.
@@ -61,9 +95,11 @@
     const frags = fragmentsOn(slide);
     if (direction === 'backward') {
       frags.forEach(el => el.classList.add('is-revealed'));
+      markCurrent(slide, stepsOn(slide));
       return;
     }
-    frags.forEach(el => el.classList.remove('is-revealed'));
+    frags.forEach(el => el.classList.remove('is-revealed', 'is-current'));
+    slide.classList.remove('fragments-done');
     if (slide.classList.contains('auto-reveal')) {
       if (slide.dataset.autorevealStart === 'immediate') {
         startAuto(slide);
