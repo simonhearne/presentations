@@ -1875,8 +1875,12 @@ Sources: data/ws5/break_even.csv filtered to workload=code, data/ws6a/summary.cs
 <!-- src: data/ws5/break_even_ws6c.csv (a filtered copy of break_even.csv workload=code_unseen live_arm=agentic regime=claude infra_mode=dedicated hit_rate_basis=measured footprint=pca_uc_384_sq8):break_even_qpd index_arm=indexed S,M,L=36.99,25.73,63.79; index_arm=indexed_topk3=54.81,23.71,82.52 -->
 
 <!-- notes
-No advance on this slide, and nothing on the chart but agentic-hil. The
-fastapi marks are gone on purpose: the control is the frame the room just
+No advance on this slide, and nothing on the chart but agentic-hil inside the
+pre-registered band. The band is the one from the memory frames, the same 9
+to 500 rectangle, brought back here because this is the frame where it can be
+judged: all six numbers land inside it. Its top edge is above this frame, so
+do not invite anyone to read the upper bound off the plot; the label carries
+it. The fastapi marks are gone on purpose: the control is the frame the room just
 came off, and carrying it here left six numbers competing with four other
 series for the same axis. Say the comparison instead of pointing at it, and
 let the chart hold one corpus.
@@ -1900,9 +1904,10 @@ the repo the better the index"; the pre-registered hypothesis that it would
 was not supported. And the two series cross at M, which was a registered
 outcome rather than a surprise: k=10 beats k=3 at L and loses to it at M. So
 the shipped default is not the cheaper setting at every size, and I am not
-going to claim it is. What survives all of that is the band, not the slope:
-every one of the six numbers is tens of queries a day, 24 to 83, and none of
-them is the hundreds the memory workload starts at.
+going to claim it is. What survives all of that is the band, not the slope,
+and it is the shape on the screen: every one of the six numbers is tens of
+queries a day, 24 to 83, inside the range I registered before I measured, and
+none of them is the hundreds the memory workload starts at.
 
 Four things to have ready if anyone pushes on these numbers. First, and this
 is the one I will not soften: every one of them is a ratio of two means, and
