@@ -1,0 +1,71 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "description": "The four WS6c paired prompt-token deltas across corpus size, with 95% bootstrap CIs. Source: data/ws6c/paired_ci_scaling.csv, branch A3, 10 questions per cell. Corpus spans are L/S = 24x (259k to 6.23M tokens) and L/M = 5.5x (1.14M to 6.23M). Every interval crosses zero; the right-hand label is how many of the ten questions grew.",
+  "data": { "url": "../data/ws6c/paired_ci_scaling.csv" },
+  "width": 1080,
+  "height": 300,
+  "transform": [
+    { "filter": "datum.metric === 'prompt_tokens'" },
+    { "calculate": "datum.arm + (datum.span === 'L-S' ? ', 24x corpus' : ', 5.5x corpus')", "as": "row_label" },
+    { "calculate": "toNumber(datum.median)", "as": "med" },
+    { "calculate": "toNumber(datum.ci_low)", "as": "lo" },
+    { "calculate": "toNumber(datum.ci_high)", "as": "hi" },
+    { "calculate": "datum.n_positive + ' of 10 grew'", "as": "grew_label" }
+  ],
+  "encoding": {
+    "y": {
+      "field": "row_label", "type": "nominal", "title": null,
+      "axis": { "labelLimit": 300 },
+      "sort": ["agentic, 24x corpus", "agentic, 5.5x corpus", "indexed, 24x corpus", "indexed, 5.5x corpus"]
+    },
+    "color": {
+      "field": "arm", "type": "nominal",
+      "scale": { "domain": ["indexed", "agentic"], "range": ["#175fff", "#7f47ff"] },
+      "legend": null
+    }
+  },
+  "layer": [
+    {
+      "data": { "values": [{}] },
+      "mark": { "type": "rule", "strokeWidth": 2, "strokeDash": [4, 4], "color": "#7d8a9e" },
+      "encoding": {
+        "y": null,
+        "color": null,
+        "x": { "datum": 0, "type": "quantitative" }
+      }
+    },
+    {
+      "mark": { "type": "rule", "strokeWidth": 5, "opacity": 0.45 },
+      "encoding": {
+        "x": {
+          "field": "lo", "type": "quantitative",
+          "axis": { "title": "paired median change in prompt tokens, larger corpus minus smaller", "format": "+,.0f" }
+        },
+        "x2": { "field": "hi" }
+      }
+    },
+    {
+      "mark": { "type": "point", "size": 300, "filled": true },
+      "encoding": {
+        "x": { "field": "med", "type": "quantitative" },
+        "tooltip": [
+          { "field": "arm" },
+          { "field": "span", "title": "corpus span" },
+          { "field": "med", "title": "paired median", "format": "+,.0f" },
+          { "field": "lo", "title": "CI low", "format": "+,.0f" },
+          { "field": "hi", "title": "CI high", "format": "+,.0f" },
+          { "field": "n_positive", "title": "of 10 that grew" },
+          { "field": "sign_p", "title": "sign test p" }
+        ]
+      }
+    },
+    {
+      "mark": { "type": "text", "align": "left", "dx": 14, "fontWeight": 600, "fontSize": 17, "color": "#475569" },
+      "encoding": {
+        "x": { "field": "hi", "type": "quantitative" },
+        "text": { "field": "grew_label", "type": "nominal" },
+        "color": null
+      }
+    }
+  ]
+}

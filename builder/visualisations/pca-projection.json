@@ -1,6 +1,6 @@
 {
   "$schema": "https://vega.github.io/schema/vega/v5.json",
-  "description": "PCA in four steps — raw two-class cloud, principal axes, rotate PC1 to horizontal, drop PC2. Step with ArrowRight/Left.",
+  "description": "PCA in four steps: raw two-class cloud, principal axes, rotate PC1 to horizontal, drop PC2. Step with ArrowRight/Left.",
   "width": 1200,
   "height": 640,
   "padding": 0,
@@ -135,7 +135,7 @@
           "x": { "value": 22 },
           "y": { "value": 30 },
           "text": {
-            "signal": "stage == 0 ? '2-D · full precision · two classes' : stage == 1 ? 'PC1 captures ≈ 94% of the variance' : stage == 2 ? 'Rotate onto the principal axes — PC1 horizontal' : 'Keep PC1 only → 1 number, 94% variance kept'"
+            "signal": "stage == 0 ? '2-D · full precision · two classes' : stage == 1 ? 'PC1 captures ≈ 94% of the variance' : stage == 2 ? 'Rotate onto the principal axes: PC1 horizontal' : 'Keep PC1 only → 1 number, 94% variance kept'"
           },
           "align": { "value": "left" },
           "font": { "value": "Inter, system-ui, sans-serif" },
@@ -151,7 +151,7 @@
         "update": {
           "x": { "value": 22 },
           "y": { "value": 58 },
-          "text": { "value": "…but the class split lived on PC2 — now gone" },
+          "text": { "value": "…but the class split lived on PC2: now gone" },
           "align": { "value": "left" },
           "font": { "value": "Inter, system-ui, sans-serif" },
           "fontSize": { "value": 16 },

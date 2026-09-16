@@ -1,0 +1,59 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "description": "Judge accuracy by arm, both corpora grouped. Source: data/ws6c/summary.csv.",
+  "data": { "url": "../data/ws6c/summary.csv" },
+  "width": 1000,
+  "height": 500,  "params": [{ "name": "stage", "value": 0 }],
+  "transform": [
+    { "calculate": "{'parametric':0,'agentic':1,'indexed':2,'indexed_topk3':3}[datum.arm]", "as": "armStage" },
+    { "calculate": "datum.corpus === 'fastapi' ? 'fastapi (in training data)' : 'agentic-hil (never seen)'", "as": "corpus_label" }
+  ],
+  "encoding": {
+    "y": {
+      "field": "arm", "type": "nominal",
+      "sort": ["parametric", "agentic", "indexed", "indexed_topk3"],
+      "title": null
+    },
+    "yOffset": {
+      "field": "corpus_label", "type": "nominal",
+      "sort": ["fastapi (in training data)", "agentic-hil (never seen)"]
+    },
+    "x": {
+      "field": "judge_accuracy", "type": "quantitative",
+      "scale": { "domain": [0, 1.08] },
+      "axis": { "title": "judge accuracy", "format": ".2f", "values": [0, 0.25, 0.5, 0.75, 1.0] }
+    },
+    "opacity": {
+      "condition": { "test": "datum.armStage <= stage", "value": 1 },
+      "value": 0
+    },
+    "tooltip": [
+      { "field": "corpus" },
+      { "field": "arm" },
+      { "field": "judge_accuracy", "format": ".3f" }
+    ]
+  },
+  "layer": [
+    {
+      "mark": { "type": "bar", "cornerRadiusEnd": 3, "height": { "band": 0.9 } },
+      "encoding": {
+        "color": {
+          "field": "corpus_label", "type": "nominal",
+          "scale": {
+            "domain": ["fastapi (in training data)", "agentic-hil (never seen)"],
+            "range": ["#7d8a9e", "#7f47ff"]
+          },
+          "title": null,
+          "legend": { "orient": "top-right", "labelLimit": 240 }
+        }
+      }
+    },
+    {
+      "mark": { "type": "text", "align": "left", "dx": 5, "fontSize": 14, "fontWeight": 600 },
+      "encoding": {
+        "text": { "field": "judge_accuracy", "type": "quantitative", "format": ".2f" },
+        "color": { "value": "#3a4252" }
+      }
+    }
+  ]
+}

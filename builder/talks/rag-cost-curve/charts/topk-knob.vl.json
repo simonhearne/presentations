@@ -1,0 +1,57 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "description": "WS6c Phase 1 on fastapi: median prompt tokens by arm at the measured default top-k and bound to 3, with judge accuracy annotated. Source: data/ws6c/summary.csv, corpus fastapi, columns median_prompt_tokens and judge_accuracy.",
+  "data": { "url": "../data/ws6c/summary.csv" },
+  "width": 1000,
+  "height": 240,
+  "params": [{ "name": "stage", "value": 0 }],
+  "transform": [
+    { "filter": "datum.corpus === 'fastapi' && datum.arm !== 'parametric'" },
+    { "calculate": "{'agentic':0,'indexed':1,'indexed_topk3':2}[datum.arm]", "as": "armStage" },
+    { "calculate": "datum.arm === 'indexed_topk3' ? 'indexed, top-k 3' : (datum.arm === 'indexed' ? 'indexed, top-k 10' : 'agentic')", "as": "arm_label" },
+    { "calculate": "'accuracy ' + format(toNumber(datum.judge_accuracy), '.3f')", "as": "acc_label" }
+  ],
+  "encoding": {
+    "y": {
+      "field": "arm_label", "type": "nominal",
+      "sort": ["agentic", "indexed, top-k 10", "indexed, top-k 3"],
+      "title": null
+    },
+    "opacity": {
+      "condition": { "test": "datum.armStage <= stage", "value": 1 },
+      "value": 0
+    }
+  },
+  "layer": [
+    {
+      "mark": { "type": "bar", "cornerRadiusEnd": 3 },
+      "encoding": {
+        "x": {
+          "field": "median_prompt_tokens", "type": "quantitative",
+          "axis": { "title": "median prompt tokens", "format": ",.0f" }
+        },
+        "color": {
+          "field": "arm", "type": "nominal",
+          "scale": {
+            "domain": ["agentic", "indexed", "indexed_topk3"],
+            "range": ["#175fff", "#7f47ff", "#b48cff"]
+          },
+          "legend": null
+        },
+        "tooltip": [
+          { "field": "arm" },
+          { "field": "median_prompt_tokens", "format": ",.0f" },
+          { "field": "judge_accuracy", "format": ".3f" },
+          { "field": "median_turns" }
+        ]
+      }
+    },
+    {
+      "mark": { "type": "text", "align": "left", "dx": 10, "fontWeight": 600, "fontSize": 18, "color": "#1e293b" },
+      "encoding": {
+        "x": { "field": "median_prompt_tokens", "type": "quantitative" },
+        "text": { "field": "acc_label", "type": "nominal" }
+      }
+    }
+  ]
+}

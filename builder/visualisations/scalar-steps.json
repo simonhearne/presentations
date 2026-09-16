@@ -18,21 +18,21 @@
     {"name": "midY", "update": "stripY + n * cellH / 2"},
     {
       "name": "headline",
-      "value": "512 float32 values",
+      "value": "3072 float32 values",
       "on": [
         {
           "events": {"signal": "stage"},
-          "update": "['512 float32 values', '256 evenly-spaced int8 levels', 'round each value to the nearest level', 'store one int8 per dimension'][stage]"
+          "update": "['3072 float32 values', '256 evenly-spaced int8 levels', 'round each value to the nearest level', 'store one int8 per dimension'][stage]"
         }
       ]
     },
     {
       "name": "narration",
-      "value": "One 512-D vector — 4 bytes per number, 2 KB total.",
+      "value": "One 3072-D vector: 4 bytes per number, 12.3 KB total.",
       "on": [
         {
           "events": {"signal": "stage"},
-          "update": "['One 512-D vector — 4 bytes per number, 2 KB total.', 'Carve the value range into 256 integer buckets — 8 shown here for clarity.', 'Each float jumps to its nearest bucket — the only information lost.', 'One byte per dimension: 4× smaller, recall barely moves.'][stage]"
+          "update": "['One 3072-D vector: 4 bytes per number, 12.3 KB total.', 'Carve the value range into 256 integer buckets, 8 shown here for clarity.', 'Each float jumps to its nearest bucket, the only information lost.', 'One byte per dimension: 4× smaller, recall barely moves.'][stage]"
         }
       ]
     }
@@ -88,7 +88,7 @@
         "update": {
           "x": {"signal": "colX + cellW / 2"},
           "y": {"signal": "stripY - 12"},
-          "text": {"value": "the vector · 512-D"},
+          "text": {"value": "the vector · 3072-D"},
           "align": {"value": "center"}, "baseline": {"value": "alphabetic"},
           "fontSize": {"value": 13}, "fontWeight": {"value": "bold"},
           "fill": {"value": "#64748b"}
@@ -270,8 +270,8 @@
       "encode": {
         "update": {
           "x": {"signal": "(colX + outX + cellW) / 2"},
-          "y": {"value": 82},
-          "text": {"value": "2 KB  →  512 bytes   ·   4× smaller"},
+          "y": {"value": 70},
+          "text": {"value": "12.3 KB  →  3.1 KB   ·   4× smaller"},
           "align": {"value": "center"}, "baseline": {"value": "alphabetic"},
           "fontSize": {"value": 18}, "fontWeight": {"value": "bold"},
           "fill": {"value": "#175fff"},

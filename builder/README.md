@@ -54,6 +54,7 @@ apply slide layout classes. Available layouts:
 | `.section` | Divider between sections: oversized number + name |
 | `.hero` | Full-bleed statement: dark gradient with one big claim |
 | `.center` (modifier) | Centers content horizontally and vertically |
+| `.placeholder` (modifier) | Marks an unfinished slide: hatched border, rotated "PLACEHOLDER" tag, dimmed body except `.placeholder-dep` — see [docs/styleguide.md](docs/styleguide.md#shared-components) |
 | `.dark` (modifier) | Inverts default content slide to white-on-navy |
 | `.no-chrome` (modifier) | Hides the bottom-right page indicator |
 | `.no-number` (modifier) | On a `.section` slide, hides the auto-incremented section number |
@@ -98,7 +99,9 @@ For layouts markdown can't express, raw HTML in a slide can compose the shared
 components from `css/layouts.css` — `.card` panels in a `.card-grid`
 (3 columns by default, `.cols-2`/`.cols-4` to change), `.pill` tags
 (`.navy`/`.gradient`/`.berry`/`.ghost`), `.stat-grid` metric tiles, and inline
-version eyebrows (`[3.0]{.eyebrow-new}`, `[2.5]{.eyebrow-ver}`):
+eyebrows (`[RAM]{.eyebrow-new}`, `[2.5]{.eyebrow-ver}`) that label a heading,
+cell or bullet without joining its text — trailing the title on a heading, and
+kept out of the footer, the next-link and the slide's anchor slug:
 
 ```html
 <div class="card-grid cols-2">
@@ -108,15 +111,29 @@ version eyebrows (`[3.0]{.eyebrow-new}`, `[2.5]{.eyebrow-ver}`):
 </div>
 ```
 
+Inside a `.card`, the three-part body is `.feature-cat` (mono uppercase
+eyebrow: what kind of thing this card is), `.case-name` (which one) and
+`.case-proof` (the sentence or `<ul>` that backs it, with `<strong>` in brand
+blue). Use any subset; the eyebrow alone over freeform content is common.
+
+`.closing-line` is the sentence that lands under a diagram, card grid or
+chart and says what it meant: bare centred text, no panel. Add `.is-emphatic`
+when that line, rather than the content above it, is the takeaway, and
+`.fragment` to hold it back until the build above it is finished.
+
 Blockquotes are callouts on the same card chrome as `.stat-grid` tiles: a
 markdown `>` block or a raw `<blockquote>` gets a berry-tinted panel, `.blue`
 swaps it to the blue tint, `.bottom` pins it above the footer and `.small`
 shrinks the body. A leading `<span class="label">` renders as the mono
-uppercase eyebrow. `.case-quote` drops the panel for a pull quote with a
-gradient quote glyph and a mono `<cite>`:
+uppercase eyebrow. A trailing `<p class="stamp-sub">` is the panel's small
+print: mono, grey, 22px against the 26px body. Put the claim in the body and
+the figures that back it in the sub, which is what mono is for; two lines of
+argument set in mono read as a terminal, not as prose. `.case-quote` drops the
+panel for a pull quote with a gradient quote glyph and a mono `<cite>`:
 
 ```html
 <blockquote class="blue fragment bottom"><span class="label">Takeaway</span><p>One line the audience should keep.</p></blockquote>
+<blockquote class="blue"><span class="label">How to read</span><p>What the picture means.</p><p class="stamp-sub">The numbers behind it.</p></blockquote>
 <blockquote class="case-quote">“What the customer said.” <cite>Name, Title, Company</cite></blockquote>
 ```
 
@@ -174,15 +191,34 @@ Any slide can declare one or more Vega/Vega-Lite charts via a fenced ` ```vega `
   id: my-chart             # optional — default is "vis-<slide-slug>"
   renderer: svg            # optional — any extra key becomes data-<key>
   actions: false           # …passed to vegaEmbed (booleans/numbers parsed)
+  fit: contain             # optional — scale the chart to the space it's given
 ```
 
-Any key prefixed with `signal-` seeds a same-named signal in the loaded spec with a static value. This is the static counterpart to `animate-<name>`: useful for showing the same chart across multiple slides with different fixed state. For example, on a stage-by-stage reveal the same spec is referenced with `signal-stage: 1`, `signal-stage: 2`, etc. Values are parsed as numbers, booleans, or JSON literals where possible. Unknown signal names log a console warning and the chart falls back to spec defaults.
+Any key prefixed with `signal-` seeds a same-named signal in the loaded spec with a static value. This is the static counterpart to `animate-<name>`: useful for showing the same chart across multiple slides with different fixed state. For example, on a stage-by-stage reveal the same spec is referenced with `signal-stage: 1`, `signal-stage: 2`, etc. Values are parsed as numbers, booleans, or JSON literals where possible. Quote a value that would otherwise be read as a number or a keyword - `signal-dataset: "10m"` seeds the string `10m`, where the bare form would still be a string but `signal-x: "1"` is how you ask for the string `1` rather than the number. Unknown signal names log a console warning and the chart falls back to spec defaults.
+
+A seeded signal can drive anything a Vega signal reaches, including `data.url` and an axis `title`, so one spec can serve two slides off two different files. Two caveats, both of which follow from the seed landing *after* the view is built: a signal-dependent expression in a mark's `enter` block is evaluated once, with the spec's default value, and never again - put it in `update`. And a transform that recycles its output tuples, `aggregate` among them, delivers an update pass rather than a second enter when the signal flips, so every data-driven encoding on a mark downstream of one has to be mirrored into `update` or it will keep rendering the previous dataset's values. See `talks/rag-cost-curve/charts/recall-vs-compression.vg.json`.
+
+### Sizing
+
+`width`, `height` and `padding` are vega-embed options, so they pass through like any other key and resize the chart's *view*: `width: 1100` gives the spec 1100px of plot area. That stretches a scale-driven spec (most Vega-Lite charts), but a hand-positioned Vega spec — one that places marks with absolute pixel signals — just gains blank canvas, and type stays the same size either way.
+
+To scale the drawing itself, use `fit: contain`. Vega's SVG renderer emits a `viewBox`, so the rendered `<svg>` is resolution-independent: sizing it to the box the slide leaves it scales marks, labels and strokes together, with no change to the spec. Aspect ratio is preserved, so the chart grows until its shorter axis runs out — on a slide with a heading and a line of body text, that is usually the height. Use it for a diagram-style chart authored smaller than the slide it lands on.
+
+Needs `renderer: svg` (vega-embed's default renderer is canvas, which blurs when scaled up). The chart also stops being centred at its natural width and takes the full content column, so a chart with visible bindings keeps them beside it at the column's right edge.
+
+On a slide that carries more than the chart — mechanism cards below it, a `.bottom` blockquote, fragment lines — wrap the ` ```vega ` block in `<div class="chart-band">`. The band takes the room the slide's other content leaves and nothing more, so the chart fills the width it is given and the trailing content keeps its own height. Pair it with `fit: contain`: without that the chart draws at the spec's pixel size and overflows the band, and with a hard-coded band height instead the chart letterboxes to whichever axis runs out first.
 
 Passing a JSON array (e.g. `signal-stage: [0, 1, 2]`) turns the signal into a click-through stepper: the first element seeds the signal at load time, and pressing ArrowRight/Space/n steps forward through the remaining values without advancing the slide. ArrowLeft/p steps back. Once the last value is reached, the next press advances the deck as normal; likewise stepping back past the first value retreats. Multiple stepped charts on the same slide advance in parallel.
+
+By default a stepped chart runs *after* every fragment on its slide, so a
+closing line lands before the stages that earn it. `fragment-index` puts the
+chart somewhere else in the order — see
+[Ordering a chart against fragments](#ordering-a-chart-against-fragments).
 
 Spec handling:
 
 - Local `.json` paths are read at build time and inlined as base64 `data:application/json` URIs directly in the rendered HTML (the file is not copied to `dist/`). This means the unbundled `dist/index.html` works when opened directly via `file://` — no local server needed for the chart spec to load.
+- A spec's own `data.url` is inlined too. Any relative `url` in the spec's `data`, `datasets`, or nested `layer` / `hconcat` / `vconcat` / `concat` / `spec` / `facet` blocks is resolved against the **spec's** directory, read at build time and replaced with `values`; the format is inferred from the extension unless the spec sets `format.type`. `http(s):` and `data:` urls pass through untouched, and a missing file is a build error naming the spec and the path. This keeps specs portable: the same file works standing alone in a Vega editor and inside a deck opened over `file://`.
 - `http://` and `https://` URLs pass through unchanged and are fetched at view time.
 
 Vega/vega-lite/vega-embed are loaded from jsDelivr at view time, but **only when at least one slide has a chart** — chart-free decks pay nothing. Bundled decks still need network for those CDN scripts (same as Google Fonts today).
@@ -199,6 +235,14 @@ The theme has light and dark variants. The runtime picks one from the slide's ba
 ```
 
 The theme lives in [script/vega.js](script/vega.js) (`brandConfig`); adjust palette or axis styling there and every chart updates.
+
+#### Type sizes
+
+The brand config sets the chart type scale — axis and legend labels at 16, their titles at 22, text marks at 20 — sized for a full-width slide chart, roughly 1000px and up. **Don't restate those sizes in a spec.** They used to be copied into every file and drifted apart; they now live in one place, so a spec that repeats them just hides the next change to the scale.
+
+A spec on a noticeably narrower canvas is the exception: below roughly 900px the full-size type crowds the plot, so those specs set their own smaller sizes and win over the default, as in [visualisations/hybrid-fusion.json](visualisations/hybrid-fusion.json) (760px wide, axis 12/13). Set `axis` and `legend` together when you do — sizing one and leaving the other to inherit is what produces a 12px legend label under a 22px legend title.
+
+Per-mark `fontSize` on an individual text mark is a separate thing and stays in the spec: those are annotation sizes, not the chart's type scale.
 
 ## Diagrams (Graphviz)
 
@@ -308,13 +352,56 @@ The most recently revealed step also carries `is-current`, so deck CSS can
 paint the newest fragment differently from the ones already on screen (the
 migration deck uses it to draw the active phase in brand blue while earlier
 phases settle to navy). `is-current` moves back a step on ArrowLeft and sits
-on the last step when a slide is entered backward.
+on the last step when a slide is entered backward, and on the last step of
+every slide in print (see [PDF export](#pdf-export)).
 
 Once the last step is on screen the slide gains `fragments-done` and a small
 brand-blue dot appears centred on the footer rule. It is a presenter cue: the
 next advance leaves the slide rather than revealing more. The dot clears when
 you step back and shows straight away on a slide entered backward, since those
-arrive fully revealed. Slides without fragments never show it.
+arrive fully revealed.
+
+The cue counts every advance a slide stages, not just its fragments: a slide
+whose chart carries a `signal-stage` list only shows the dot once the last
+stage is on screen, and a slide that has both waits for whichever finishes
+last. Slides that stage nothing never show it.
+
+### Ordering a chart against fragments
+
+Fragments consume arrow keys before a chart's `signal-stage` list does, so on a
+slide with both, every fragment reveals first and the chart steps afterwards.
+That is usually backwards: the closing line is the payoff the stages build to.
+
+`fragment-index` on the ` ```vega ` block gives the chart a slot in the same
+step order the fragments use. Its whole stage run occupies that one slot:
+fragments at a lower index reveal before it, fragments at that index or above
+wait for it to finish.
+
+````markdown
+# ANN Benefits
+
+```vega
+- spec: ../../visualisations/ann-vs-exact.json
+  signal-stage: [1, 2, 3]
+  fragment-index: 0
+```
+
+<p class="fragment">The line the stages earn.</p>
+````
+
+Here the two stages run first and the paragraph lands last. Put a setup line
+ahead of the chart by giving it a lower index than the chart's:
+
+```html
+<p class="fragment" data-fragment-index="0">Setup, before the chart moves.</p>
+<!-- chart at fragment-index: 1 -->
+<p class="fragment" data-fragment-index="2">Payoff, after the last stage.</p>
+```
+
+Ties go to the chart, so `fragment-index: 0` sits ahead of an unindexed
+fragment (which is index 0 too). Omit the key and the chart keeps its old
+position at the end. Stepping back unwinds the same order in reverse, and
+print is unaffected — every fragment prints revealed regardless.
 
 ### Auto-advancing reveals
 
@@ -427,6 +514,13 @@ Print and PDF export always show the fallback, even when the demo host is up.
 
 The print stylesheet ([css/print.css](css/print.css)) handles margins and
 background colours, so no print-dialog tweaks are needed.
+
+Every fragment prints revealed: a printed slide is a finished slide, so each
+page shows the state the slide ends on rather than the state it starts in.
+Anything a deck styles on `is-revealed` or `is-current` prints in its final
+look too, so a staged diagram exports fully built with its last stage lit.
+The deck you are presenting from is untouched by this: printing restores
+whatever step you were on when you opened the dialog.
 
 ## Bundling
 

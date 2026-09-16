@@ -1,6 +1,6 @@
 {
   "$schema": "https://vega.github.io/schema/vega/v5.json",
-  "description": "Stepped walkthrough of product quantisation as a vertical vector column: full vector -> split into 8 sub-vectors -> nearest centroid in a codebook -> 8 centroid-ID output column. Stepped via the stage signal.",
+  "description": "Stepped walkthrough of product quantisation as a vertical vector column: full vector -> split into 384 sub-vectors (8 drawn) -> nearest centroid in a codebook -> one-byte-per-slice output column. Stepped via the stage signal.",
   "width": 820,
   "height": 500,
   "padding": 5,
@@ -17,21 +17,21 @@
     {"name": "s3Y", "update": "stripY + 7.5 * cellH + 2 * gap"},
     {
       "name": "headline",
-      "value": "512 float32 values",
+      "value": "3072 float32 values",
       "on": [
         {
           "events": {"signal": "stage"},
-          "update": "['512 float32 values', 'split into 8 sub-vectors', 'match each slice to the codebook', 'keep 8 centroid IDs'][stage]"
+          "update": "['3072 float32 values', 'split into 384 sub-vectors', 'match each slice to the codebook', 'keep one centroid ID per slice'][stage]"
         }
       ]
     },
     {
       "name": "narration",
-      "value": "One 512-D vector — 2 KB of float32.",
+      "value": "One 3072-D vector: 12.3 KB of float32.",
       "on": [
         {
           "events": {"signal": "stage"},
-          "update": "['One 512-D vector — 2 KB of float32.', 'Split into 8 sub-vectors of 64 dimensions each.', 'Match each sub-vector to its nearest centroid in a 256-entry codebook.', 'Keep 8 centroid IDs — 8 bytes, a 256× smaller barcode.'][stage]"
+          "update": "['One 3072-D vector: 12.3 KB of float32.', 'Split into 384 sub-vectors of 8 dimensions each, 8 shown here for clarity.', 'Match each sub-vector to its nearest centroid in a 256-entry codebook.', 'Keep one byte per sub-vector: 384 bytes, a 32× smaller barcode.'][stage]"
         }
       ]
     }
@@ -98,7 +98,7 @@
         "update": {
           "x": {"signal": "colX + cellW / 2"},
           "y": {"signal": "stripY - 12"},
-          "text": {"value": "the vector · 512-D"},
+          "text": {"value": "the vector · 3072-D"},
           "align": {"value": "center"}, "baseline": {"value": "alphabetic"},
           "fontSize": {"value": 13}, "fontWeight": {"value": "bold"},
           "fill": {"value": "#64748b"}
@@ -286,7 +286,7 @@
         "update": {
           "x": {"signal": "outX + cellW / 2"},
           "y": {"signal": "stripY - 12"},
-          "text": {"value": "8 centroid IDs"},
+          "text": {"value": "1 byte / sub-vector"},
           "align": {"value": "center"}, "baseline": {"value": "alphabetic"},
           "fontSize": {"value": 13}, "fontWeight": {"value": "bold"},
           "fill": {"value": "#175fff"},
@@ -329,8 +329,8 @@
       "encode": {
         "update": {
           "x": {"signal": "(colX + outX + cellW) / 2"},
-          "y": {"value": 82},
-          "text": {"value": "2 KB  →  8 bytes   ·   256× smaller"},
+          "y": {"value": 70},
+          "text": {"value": "12.3 KB  →  384 bytes   ·   32× smaller"},
           "align": {"value": "center"}, "baseline": {"value": "alphabetic"},
           "fontSize": {"value": 18}, "fontWeight": {"value": "bold"},
           "fill": {"value": "#175fff"},

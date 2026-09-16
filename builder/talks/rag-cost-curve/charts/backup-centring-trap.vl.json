@@ -1,0 +1,69 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "description": "Backup 36: the centring trap. Source: data/ws3/transform_ceiling_1m.csv, columns transform, dim, recall_at_10, filtered to scale=1m. Three transforms compared at exact-search (ceiling) recall: mrl (truncation), pca (centred, the trap), pca_uc (uncentered). The flat ~0.83 centred-pca line from 896d to 384d is the exhibit: PCA's default centring step throws away recall that truncation alone does not cost.",
+  "data": { "url": "../data/ws3/transform_ceiling_1m.csv" },
+  "transform": [
+    { "filter": "datum.scale === '1m'" },
+    { "calculate": "datum.transform === 'mrl' ? 'MRL' : datum.transform === 'pca' ? 'PCA, centred' : 'PCA, uncentered'", "as": "series" }
+  ],
+  "width": 980,
+  "height": 380,
+  "padding": { "left": 10, "right": 90, "top": 10, "bottom": 10 },
+  "layer": [
+    {
+      "mark": { "type": "line", "strokeWidth": 2.5, "point": { "size": 55, "filled": true } },
+      "encoding": {
+        "x": {
+          "field": "dim", "type": "quantitative",
+          "scale": { "domain": [110, 1040], "zero": false, "nice": false },
+          "axis": { "title": "dimension kept" }
+        },
+        "y": {
+          "field": "recall_at_10", "type": "quantitative",
+          "scale": { "domain": [0.3, 1.01], "zero": false, "nice": false },
+          "axis": { "title": "recall@10 (exact-search ceiling)", "format": ".2f" }
+        },
+        "color": {
+          "field": "series", "type": "nominal",
+          "scale": {
+            "domain": ["MRL", "PCA, centred", "PCA, uncentered"],
+            "range": ["#175fff", "#c84cff", "#00dcc6"]
+          },
+          "legend": { "title": "transform", "orient": "right" }
+        },
+        "tooltip": [
+          { "field": "series", "title": "transform" },
+          { "field": "dim", "title": "dim" },
+          { "field": "recall_at_10", "format": ".4f" }
+        ]
+      }
+    },
+    {
+      "transform": [{ "filter": "datum.transform === 'pca' && datum.dim === 896" }],
+      "mark": { "type": "text", "align": "left", "dx": 10, "dy": -4, "fontSize": 13, "fontWeight": 600, "color": "#1e293b" },
+      "encoding": {
+        "x": { "field": "dim", "type": "quantitative" },
+        "y": { "field": "recall_at_10", "type": "quantitative" },
+        "text": { "field": "series" }
+      }
+    },
+    {
+      "data": { "values": [{ "x": 640, "y": 0.83 }] },
+      "mark": { "type": "text", "align": "center", "fontSize": 13, "fontWeight": 700, "color": "#1e293b", "dy": -12 },
+      "encoding": {
+        "x": { "field": "x", "type": "quantitative" },
+        "y": { "field": "y", "type": "quantitative" },
+        "text": { "value": "flat ~0.83, 896d down to 384d" }
+      }
+    },
+    {
+      "data": { "values": [{ "x": 850, "y": 0.905 }] },
+      "mark": { "type": "text", "align": "center", "fontSize": 12, "fontWeight": 600, "color": "#1e293b", "lineBreak": "\n", "lineHeight": 15 },
+      "encoding": {
+        "x": { "field": "x", "type": "quantitative" },
+        "y": { "field": "y", "type": "quantitative" },
+        "text": { "value": "MRL and PCA, uncentered\nconverge near 1.0 by 1024d" }
+      }
+    }
+  ]
+}

@@ -1,6 +1,6 @@
 {
   "$schema": "https://vega.github.io/schema/vega/v5.json",
-  "description": "Naive filtering on a graph index — masking non-matching nodes severs the edges that lead to the true nearest match, so greedy search stops short.",
+  "description": "Naive filtering on a graph index: masking non-matching nodes severs the edges that lead to the true nearest match, so greedy search stops short.",
   "width": 1000,
   "height": 300,
   "padding": 0,
@@ -13,7 +13,7 @@
     {"name": "queryY", "value": 5.0},
     {
       "name": "narration",
-      "update": "['The graph — every vector is a node, linked to its nearest neighbours. Green is the query true nearest match.', 'Filter applied — non-matching vectors are masked out and their edges vanish. The true match is now stranded on an island.', 'Greedy search walks only the surviving graph and stops at the orange node — the green match is never reached.'][stage]"
+      "update": "['The graph: every vector is a node, linked to its nearest neighbours. Green is the query true nearest match.', 'Filter applied: non-matching vectors are masked out and their edges vanish. The true match is now stranded on an island.', 'Greedy search walks only the surviving graph and stops at the orange node: the green match is never reached.'][stage]"
     }
   ],
 

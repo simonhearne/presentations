@@ -1,6 +1,6 @@
 {
   "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
-  "description": "PCA scree — cumulative variance explained vs number of components for a 512-D embedding. A handful of axes carry almost all the variance.",
+  "description": "PCA scree: cumulative variance explained vs number of components for a 512-D embedding. A handful of axes carry almost all the variance.",
   "usermeta": { "embedOptions": { "renderer": "svg", "actions": false } },
   "background": "transparent",
   "width": 1000,
@@ -50,7 +50,7 @@
       "encoding": {"text": {"value": "64 of 512 axes → 94%"}}
     },
     {
-      "data": {"values": [{"note": "Illustrative scree for a 512-D embedding — variance concentrates in the top components."}]},
+      "data": {"values": [{"note": "Illustrative scree for a 512-D embedding: variance concentrates in the top components."}]},
       "mark": {"type": "text", "align": "left", "baseline": "bottom", "fontSize": 11, "color": "#94a3b8"},
       "encoding": {"text": {"field": "note"}, "x": {"value": 4}, "y": {"value": "height"}, "yOffset": {"value": -6}}
     }

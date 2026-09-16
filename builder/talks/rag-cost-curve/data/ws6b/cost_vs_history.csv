@@ -1,0 +1,7 @@
+arm,size,corpus_tokens,cost_billed_usd,judge_accuracy,n
+memsearch,s,98134,0.01004,1.000,12
+memsearch,m,392116,0.01020,1.000,12
+memsearch,l,1221906,0.02318,1.000,12
+replay,s,98134,0.01994,1.000,12
+replay,m,392116,0.07890,1.000,12
+replay,l,1221906,0.19405,0.000,12

@@ -18,21 +18,21 @@
     {"name": "midX", "update": "(arrowX0 + arrowX1) / 2"},
     {
       "name": "headline",
-      "value": "768 float32 values",
+      "value": "3072 float32 values",
       "on": [
         {
           "events": {"signal": "stage"},
-          "update": "['768 float32 values', '↻  rotate by a random orthonormal R', 'keep the sign of each axis', 'pack signs into bits — 1 per dimension'][stage]"
+          "update": "['3072 float32 values', '↻  rotate by a random orthonormal R', 'keep the sign of each axis', 'pack signs into bits, 1 per dimension'][stage]"
         }
       ]
     },
     {
       "name": "narration",
-      "value": "One 768-D vector — 3 KB of float32.",
+      "value": "One 3072-D vector: 12.3 KB of float32.",
       "on": [
         {
           "events": {"signal": "stage"},
-          "update": "['One 768-D vector — 3 KB of float32.', 'A random rotation spreads magnitude evenly across every axis.', 'Keep only the sign of each dimension — discard all magnitude.', '1 bit per dimension — angles preserved within a provable error bound.'][stage]"
+          "update": "['One 3072-D vector: 12.3 KB of float32.', 'A random rotation spreads magnitude evenly across every axis.', 'Keep only the sign of each dimension, discarding all magnitude.', '1 bit per dimension, angles preserved within a provable error bound.'][stage]"
         }
       ]
     }
@@ -82,7 +82,7 @@
         "update": {
           "x": {"signal": "colX + cellW / 2"},
           "y": {"signal": "stripY - 12"},
-          "text": {"value": "the vector · 768-D"},
+          "text": {"value": "the vector · 3072-D"},
           "align": {"value": "center"}, "baseline": {"value": "alphabetic"},
           "fontSize": {"value": 13}, "fontWeight": {"value": "bold"},
           "fill": {"value": "#64748b"}
@@ -200,8 +200,8 @@
       "encode": {
         "update": {
           "x": {"signal": "(colX + outX + cellW) / 2"},
-          "y": {"value": 82},
-          "text": {"value": "3 KB  →  96 bytes   ·   32× smaller"},
+          "y": {"value": 70},
+          "text": {"value": "12.3 KB  →  384 bytes   ·   32× smaller"},
           "align": {"value": "center"}, "baseline": {"value": "alphabetic"},
           "fontSize": {"value": 18}, "fontWeight": {"value": "bold"},
           "fill": {"value": "#175fff"},

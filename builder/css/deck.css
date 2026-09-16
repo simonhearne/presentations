@@ -103,8 +103,9 @@ html, body {
 .footer-right::before {
   content: 'Next: ';
 }
-/* Presenter cue: once every fragment on a slide is revealed the next advance
-   changes slide, so a brand dot sits centred on the footer rule. */
+/* Presenter cue: once a slide has spent every advance it stages -- fragment
+   steps and vega signal stages alike -- the next advance changes slide, so a
+   brand dot sits centred on the footer rule. */
 .slide.fragments-done .footer::after {
   content: '';
   position: absolute;

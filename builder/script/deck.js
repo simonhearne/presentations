@@ -9,6 +9,33 @@
 
   let current = 0;
 
+  // Presenter cue: `.fragments-done` on the current slide means every staged
+  // advance it owes has been spent, so the next key press changes slide (see
+  // the footer dot in css/deck.css). A slide can stage content through more
+  // than one runtime -- fragment steps and vega signal stages both consume the
+  // arrow keys -- so each registers a counter here and the cue only lights once
+  // all of them are exhausted. A counter takes a slide and returns how many
+  // steps it stages in total and how many are still owed; anything else that
+  // steps a slide can join by registering the same shape.
+  const stepCounters = [];
+
+  function refreshCue(slide = slides[current]) {
+    if (!slide) return;
+    let total = 0;
+    let remaining = 0;
+    for (const count of stepCounters) {
+      const n = count(slide) || {};
+      total += n.total || 0;
+      remaining += n.remaining || 0;
+    }
+    slide.classList.toggle('fragments-done', total > 0 && remaining === 0);
+  }
+
+  window.deckSteps = {
+    register(counter) { stepCounters.push(counter); refreshCue(); },
+    refresh: refreshCue,
+  };
+
   function fit() {
     const scale = Math.min(window.innerWidth / SLIDE_W, window.innerHeight / SLIDE_H);
     deck.style.transform = `scale(${scale})`;
@@ -30,6 +57,7 @@
     document.dispatchEvent(new CustomEvent('slide:enter', {
       detail: { direction, index: current, slide }
     }));
+    refreshCue(slide);
   }
 
   function fromHash() {

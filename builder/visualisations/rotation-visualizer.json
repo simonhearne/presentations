@@ -1,6 +1,6 @@
 {
   "$schema": "https://vega.github.io/schema/vega/v5.json",
-  "description": "Rotation visualiser — drag the rotation slider; watch quantization cells light up.",
+  "description": "Rotation visualiser: drag the rotation slider; watch quantization cells light up.",
   "width": 800,
   "height": 520,
   "padding": 0,

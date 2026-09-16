@@ -1,12 +1,9 @@
 {
   "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
-  "description": "Distribution of ⟨ō, o⟩ — the cosine between a data vector and its RaBitQ-quantized version — across 2000 random unit vectors. As D grows, the distribution concentrates sharply around the expected value (≈ 0.798 = √(2/π)), which is why ⟨ō,o⟩ can be precomputed once per data vector and treated as a near-constant during query.",
+  "description": "Distribution of ⟨ō, o⟩, the cosine between a data vector and its RaBitQ-quantized version, across 2000 random unit vectors. As D grows, the distribution concentrates sharply around the expected value (≈ 0.798 = √(2/π)), which is why ⟨ō,o⟩ can be precomputed once per data vector and treated as a near-constant during query.",
   "width": 700,
   "height": 280,
   "background": "transparent",
-  "config": {
-    "axis": { "labelFontSize": 11, "titleFontSize": 12 }
-  },
   "params": [
     {
       "name": "D_pick",

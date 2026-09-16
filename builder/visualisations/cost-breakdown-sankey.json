@@ -1,6 +1,6 @@
 {
   "$schema": "https://vega.github.io/schema/vega/v5.json",
-  "description": "Vector DB cost breakdown — sankey of one source flowing to five spend categories.",
+  "description": "Vector DB cost breakdown: sankey of one source flowing to five spend categories.",
   "width": 800,
   "height": 440,
   "padding": 8,
@@ -106,7 +106,7 @@
         "enter": {
           "x": {"signal": "tgtX1 + 14"},
           "y": {"field": "tyMid"},
-          "text": {"signal": "datum.name + ' — ' + datum.pct + '%'"},
+          "text": {"signal": "datum.name + ': ' + datum.pct + '%'"},
           "align": {"value": "left"},
           "baseline": {"value": "middle"},
           "font": {"value": "Inter"},

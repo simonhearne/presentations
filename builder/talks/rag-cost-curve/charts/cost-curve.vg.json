@@ -1,0 +1,1617 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "description": "Break-even queries/day vs corpus size, from data/ws5/break_even.csv (and, at stage 6 only, data/ws5/break_even_ws6c.csv, a filtered copy of it), every filter hit_rate_basis==='measured'. 'stage' gates the layers and the x domain. Stages 1-2 draw the hand-authored 'assumed' curve (deliberately the wrong shape) inside the pre-registered band; stage 3 draws the measured Claude dedicated curve; stage 4 adds the OpenAI regime; stage 5 drops every memory layer and draws fastapi, code the model already knows, on an axis of its own; stage 6 does the same for the unseen repository. **One benchmark per frame is the rule this spec now enforces**: stages 1-4 are workload==='memory', stage 5 is workload==='code' and stage 6 is workload==='code_unseen', and no frame carries a series from another workload. That was not true until 2026-09-16, when the three were split across three slides after a reviewer could not tell what the solid blue line was measuring. The y domain is [5, 1000] through stage 4, where the memory curve starts at 334, and [5, 300] on both code frames, where nothing is drawn above 83 and the top two thirds of the plot would otherwise be empty. The floor stays at 5 everywhere, so the vertical distance from a mark to the bottom of the plot reads the same on all three slides; the tops do not, and the notes say so rather than inviting the room to read across. It used to widen to [0.0005, 1000] at a stage of its own, to reveal the marginal deployment four decades below; **both the marginal series and that zoom were removed on 2026-09-16**, because the marginal argument is made properly on the 'floor can go to zero' slide two on from here and a four-decade zoom to show break-even in thousandths of a query a day is not a crossover anyone can read off a log axis. Removing it took a whole stage with it; the run is contiguous, and splitting the code workload across two stages restored a sixth. Three slides run this spec in the cost-curve section: 'Break-even on conversation memory' at signal-stage [2, 3, 4], 'Code the model already knows' at a bare signal-stage 5, and 'Code it has never seen' at a bare signal-stage 6. Only the first advances. **Nothing after stage 4 is additive**: the memory series, the OpenAI series and its counterfactual and the pre-registered label all carry && stage < 5, the fastapi rings and the stuffed pair carry stage >= 5 && stage < 6, and each frame has its own x window, its own tick labels and its own footnote. The price-regime key stops at stage 5 as well, because no series on a code frame is drawn in a key colour and a blue swatch with no blue line on the plot reads as a missing series. Holding [5, 1000] is still the point: an earlier spec widened the domain at stage 3 and flattened the 334 -> 15 -> 10 collapse into the top sliver of the plot. Both scales set nice:false; log nicing was rounding [80000, 1500000] out to [10000, 10000000] and [5, 1000] to [1, 1000], which is where most of the old dead space came from. The right-hand key and the footnote are pinned in pixel space so the x-domain cut cannot move them; the key sits at ky 120-200, lifted there when it lost its open-weight and marginal rows and the unseen-corpus series moved into the band it used to occupy. Slide 'My intuition' reuses this spec at signal-stage [1,2] and so inherits the tightened x and the [5, 1000] floor. The floor was 8 until 2026-09-15; it was lowered to 5 to fit the OpenAI L counterfactual at 6.15/day, which costs about 10% vertical compression in log space. The two dotted-[2,4] layers draw that counterfactual: break_even_qpd_over_window is what OpenAI's own list price would charge for the L request on its >272k tier, and it is NOT a measurement and NOT an interpolation, because 959,282 live tokens exceed the regime's 922,000 input cap and the request cannot be made at all. It is drawn in a finer dash than the [7,5] modelled segments and terminated in a hollow ring for exactly that reason; the solid markers are the two sizes OpenAI can actually run. The third modelled regime, open-weight on a rented H100, is **not drawn**: at S its own cached replay is already cheaper per query than an indexed query, so break_even_qpd is the string 'inf' and there is no crossover to plot, and it is infeasible from M on the 128K window. It used to appear as a hollow ring pinned at the top of the plot with an '\u221e at S' label; that was removed on 2026-09-16 as a mark carrying no crossover. The regime is still in break_even.csv, in the method slide and in the WS5 sensitivity table. Each frame has its own x window, and the axis tick labels switch with it, so no frame ever labels a size that belongs to another corpus. Stages 1-4 hold [80000, 1500000] and label the memory sizes 98,134 / 392,116 / 1,221,906. Stage 5 opens to [200000, 9000000] and labels fastapi's own 259,429 / 1,138,485 / 6,232,509; the 9M ceiling is there because the stuffed mark at 6,232,509 needs its point, its dashed rule and its tick clear of the right edge. Stage 6 cuts to [700000, 7000000], the unseen corpus alone with room on the left for its two series labels. The tick values array holds all three sets and the labelExpr returns '' for the sets that do not belong to the current stage; that matters at 1,138,485 and 1,139,248, fastapi M and unseen S, which are 763 tokens apart and would collide if both were ever labelled at once. The three hollow amber rings pinned at y=48 are fastapi at S, M and L, where break_even_qpd is the string 'inf' because agentic grep is cheaper per query than an indexed query and no volume repays the index; they are pinned in pixel space because infinity has no y. Below the L ring, at the same 6,232,509 tokens, a filled amber circle at 12.4 queries a day is the stuffed arm: the whole repository re-sent as a cached prefix rather than grepped, live_arm==='stuffed' in the same file, and the only fastapi configuration the index outprices at any volume. A dashed amber rule runs from it up to the top of the y domain, so the pair reads as one corpus with two live arms rather than two findings. It was speaker-note-only until 2026-09-16; drawing it is what makes stage 5 a slide of its own, since 'the index never repays here' and 'unless you stuff' are the same frame. The x axis carries a tick at 6,232,509 labelled 'fastapi, L \u00b7 6.2M' from stage 5. At stage 6 the labelExpr switches wholesale: the memory and fastapi ticks go unlabelled and the three unseen sizes are labelled 'S \u00b7 1.1M', 'M \u00b7 2.0M' and 'L \u00b7 4.3M', which is why 1,139,248 and 2,017,476 are in the tick values at all. It reads the stage signal directly, as the domain exprs do. The purple series, from stage 6, are agentic-hil, a repository the model has never seen, at three measured sizes: 1,139,248, 2,017,476 and 4,307,363 claude-counted corpus tokens. Filled circles are the shipped top-k of 10 (37 / 26 / 64 queries a day at S / M / L) and hollow crosses are the bound top-k of 3 (55 / 24 / 83). There the ordering against grep reverses and break-even is finite at every size, but the curve is NOT monotone: L is the worst of the three, and the reports do not resolve whether that is the corpus or the panel, so this must not be drawn or read as 'the saving widens with size'. The two series cross at M, which is the pre-registered K2 outcome: the shipped default is not the cheaper setting at every size. Value labels are placed above the upper point of each pair and below the lower one, so the series carrying the upper label swaps at M by construction rather than by accident. Every number comes from data/ws5/break_even_ws6c.csv, which since WS9 is a plain filtered COPY of break_even.csv's workload==='code_unseen' dedicated rows rather than a deck-side re-derivation; derive.js adds only index_topk, corpus_label and the panel's n and judge accuracies, and recomputes no statistic. All three sizes are one frozen 37-question panel, decided once at S from gold paths alone. Dedicated only, which is now true of every series on the chart rather than of these alone. WS9 retired the old refusal (the marginal footprint is derived from the measured chunk count, not estimated), so the unseen corpus has marginal rows too, at 0.005 to 0.031 queries a day; they are one filter away in break_even.csv and are off the chart for the same reason the memory marginal line is. The amber and purple marks are deliberately absent from the right-hand key, which enumerates price regimes: a further key row would read as another price regime rather than a second workload, so both are captioned inline instead. **There are three footnote layers, one per frame**, because a single footnote cannot be true of all three: the memory footnote names the workload, its measured cache hit rates (1.00 / 0.92 / 0.97) and its mean-billed basis; the stage 5 footnote names fastapi, n = 40 a size, the uncached grep arm and the stuffed arm's measured 0.975; the stage 6 footnote names the footprint, the regime, the box and the price dates. The mean-billed basis is called out on the memory footnote on purpose, since the memory section's own cost chart (charts/cost-vs-history.vg.json) plots the median steady-state basis for the same runs and reads 0.0789 at M against this chart's 0.2030. The pre-registered band and its label both stop at stage 5, because it was a memory-workload registration and must not wash under the code marks.",
+  "params": [
+    {
+      "name": "stage",
+      "value": 0
+    }
+  ],
+  "width": 1600,
+  "height": 600,
+  "datasets": {
+    "assumed": [
+      {
+        "regime": "assumed",
+        "corpus_tokens": 99999,
+        "qpd": 400
+      },
+      {
+        "regime": "assumed",
+        "corpus_tokens": 400000,
+        "qpd": 60
+      },
+      {
+        "regime": "assumed",
+        "corpus_tokens": 1400000,
+        "qpd": 10
+      }
+    ]
+  },
+  "data": {
+    "url": "../data/ws5/break_even.csv"
+  },
+  "layer": [
+    {
+      "data": {
+        "values": [
+          {}
+        ]
+      },
+      "transform": [
+        {
+          "filter": "stage >= 2 && stage < 5"
+        }
+      ],
+      "mark": {
+        "type": "rect",
+        "color": "#e6f0ff",
+        "opacity": 0.5
+      },
+      "encoding": {
+        "y": {
+          "datum": 9,
+          "type": "quantitative",
+          "scale": {
+            "type": "log"
+          }
+        },
+        "y2": {
+          "datum": 500
+        }
+      }
+    },
+    {
+      "data": {
+        "name": "assumed"
+      },
+      "transform": [
+        {
+          "filter": "stage >= 1 && stage < 3"
+        }
+      ],
+      "mark": {
+        "type": "line",
+        "strokeDash": [
+          6,
+          4
+        ],
+        "color": "#8fb2ff",
+        "strokeWidth": 2.5,
+        "point": false
+      },
+      "encoding": {
+        "x": {
+          "field": "corpus_tokens",
+          "type": "quantitative",
+          "scale": {
+            "type": "log",
+            "domain": {
+              "expr": "stage >= 6 ? [700000, 7000000] : stage >= 5 ? [200000, 9000000] : [80000, 1500000]"
+            },
+            "nice": false
+          },
+          "axis": {
+            "title": "corpus size (tokens)",
+            "ticks": false,
+            "grid": false,
+            "values": [
+              98134,
+              259429,
+              392116,
+              1138485,
+              1139248,
+              1221906,
+              2017476,
+              4307363,
+              6232509
+            ],
+            "labelExpr": "stage >= 6 ? (datum.value === 1139248 ? 'S \u00b7 1.1M' : datum.value === 2017476 ? 'M \u00b7 2.0M' : datum.value === 4307363 ? 'L \u00b7 4.3M' : '') : stage >= 5 ? (datum.value === 259429 ? 'S \u00b7 259k' : datum.value === 1138485 ? 'M \u00b7 1.1M' : datum.value === 6232509 ? 'L \u00b7 6.2M' : '') : (datum.value === 98134 ? 'S \u00b7 98k' : datum.value === 392116 ? 'M \u00b7 392k' : datum.value === 1221906 ? 'L \u00b7 1.2M' : '')"
+          }
+        },
+        "y": {
+          "field": "qpd",
+          "type": "quantitative",
+          "scale": {
+            "type": "log",
+            "nice": false,
+            "domain": {
+              "expr": "stage >= 5 ? [5, 300] : [5, 1000]"
+            }
+          },
+          "axis": {
+            "title": "break-even queries / day",
+            "ticks": false,
+            "grid": false,
+            "tickCount": 3
+          }
+        }
+      }
+    },
+    {
+      "data": {
+        "values": [
+          {}
+        ]
+      },
+      "transform": [
+        {
+          "filter": "stage >= 2 && stage < 5"
+        }
+      ],
+      "mark": {
+        "type": "text",
+        "align": "left",
+        "fontSize": 15,
+        "color": "#4a6fa5",
+        "opacity": {
+          "expr": "stage >= 5 ? 0 : 1"
+        }
+      },
+      "encoding": {
+        "x": {
+          "value": 8
+        },
+        "y": {
+          "datum": 11,
+          "type": "quantitative",
+          "scale": {
+            "type": "log"
+          }
+        },
+        "text": {
+          "value": "pre-registered: tens to hundreds of queries a day"
+        }
+      }
+    },
+    {
+      "transform": [
+        {
+          "filter": "stage >= 3 && stage < 5"
+        },
+        {
+          "filter": "datum.hit_rate_basis === 'measured' && datum.workload === 'memory' && datum.footprint === 'pca_uc_384_sq8' && datum.regime === 'claude' && datum.infra_mode === 'dedicated'"
+        },
+        {
+          "calculate": "toNumber(datum.break_even_qpd)",
+          "as": "qpd"
+        },
+        {
+          "filter": "isValid(datum.qpd)"
+        }
+      ],
+      "mark": {
+        "type": "line",
+        "strokeWidth": 3,
+        "color": "#175fff"
+      },
+      "encoding": {
+        "x": {
+          "field": "corpus_tokens",
+          "type": "quantitative",
+          "scale": {
+            "type": "log"
+          }
+        },
+        "y": {
+          "field": "qpd",
+          "type": "quantitative",
+          "scale": {
+            "type": "log"
+          }
+        },
+        "order": {
+          "field": "corpus_tokens"
+        }
+      }
+    },
+    {
+      "transform": [
+        {
+          "filter": "stage >= 3 && stage < 5"
+        },
+        {
+          "filter": "datum.hit_rate_basis === 'measured' && datum.workload === 'memory' && datum.footprint === 'pca_uc_384_sq8' && datum.regime === 'claude' && datum.infra_mode === 'dedicated'"
+        },
+        {
+          "calculate": "toNumber(datum.break_even_qpd)",
+          "as": "qpd"
+        },
+        {
+          "filter": "isValid(datum.qpd)"
+        }
+      ],
+      "mark": {
+        "type": "point",
+        "filled": true,
+        "size": 110,
+        "color": "#175fff"
+      },
+      "encoding": {
+        "x": {
+          "field": "corpus_tokens",
+          "type": "quantitative",
+          "scale": {
+            "type": "log"
+          }
+        },
+        "y": {
+          "field": "qpd",
+          "type": "quantitative",
+          "scale": {
+            "type": "log"
+          }
+        },
+        "tooltip": [
+          {
+            "field": "regime",
+            "title": "regime"
+          },
+          {
+            "field": "infra_mode",
+            "title": "deployment"
+          },
+          {
+            "field": "size",
+            "title": "size"
+          },
+          {
+            "field": "corpus_tokens",
+            "title": "corpus tokens",
+            "format": ","
+          },
+          {
+            "field": "qpd",
+            "title": "break-even qpd",
+            "format": ",.2f"
+          }
+        ]
+      }
+    },
+    {
+      "transform": [
+        {
+          "filter": "stage >= 3 && stage < 5"
+        },
+        {
+          "filter": "datum.hit_rate_basis === 'measured' && datum.workload === 'memory' && datum.footprint === 'pca_uc_384_sq8' && datum.regime === 'claude' && datum.infra_mode === 'dedicated'"
+        },
+        {
+          "calculate": "toNumber(datum.break_even_qpd)",
+          "as": "qpd"
+        },
+        {
+          "filter": "isValid(datum.qpd)"
+        }
+      ],
+      "mark": {
+        "type": "text",
+        "align": {
+          "expr": "datum.size === 'S' ? 'right' : 'center'"
+        },
+        "dx": {
+          "expr": "datum.size === 'S' ? -14 : 0"
+        },
+        "dy": {
+          "expr": "datum.size === 'S' ? 4 : -16"
+        },
+        "fontWeight": 700,
+        "fontSize": 22,
+        "color": "#1e293b"
+      },
+      "encoding": {
+        "x": {
+          "field": "corpus_tokens",
+          "type": "quantitative",
+          "scale": {
+            "type": "log"
+          }
+        },
+        "y": {
+          "field": "qpd",
+          "type": "quantitative",
+          "scale": {
+            "type": "log"
+          }
+        },
+        "text": {
+          "field": "qpd",
+          "type": "quantitative",
+          "format": ".0f"
+        }
+      }
+    },
+    {
+      "transform": [
+        {
+          "filter": "stage >= 4 && stage < 5"
+        },
+        {
+          "filter": "datum.hit_rate_basis === 'measured' && datum.workload === 'memory' && datum.footprint === 'pca_uc_384_sq8' && datum.infra_mode === 'dedicated' && datum.regime === 'openai'"
+        },
+        {
+          "calculate": "toNumber(datum.break_even_qpd)",
+          "as": "qpd"
+        },
+        {
+          "filter": "isValid(datum.qpd)"
+        }
+      ],
+      "mark": {
+        "type": "line",
+        "strokeWidth": 2,
+        "strokeDash": [
+          7,
+          5
+        ],
+        "color": "#7d8a9e"
+      },
+      "encoding": {
+        "x": {
+          "field": "corpus_tokens",
+          "type": "quantitative",
+          "scale": {
+            "type": "log"
+          }
+        },
+        "y": {
+          "field": "qpd",
+          "type": "quantitative",
+          "scale": {
+            "type": "log"
+          }
+        },
+        "order": {
+          "field": "corpus_tokens"
+        }
+      }
+    },
+    {
+      "transform": [
+        {
+          "filter": "stage >= 4 && stage < 5"
+        },
+        {
+          "filter": "datum.hit_rate_basis === 'measured' && datum.workload === 'memory' && datum.footprint === 'pca_uc_384_sq8' && datum.infra_mode === 'dedicated' && datum.regime === 'openai'"
+        },
+        {
+          "calculate": "toNumber(datum.break_even_qpd)",
+          "as": "qpd"
+        },
+        {
+          "filter": "isValid(datum.qpd)"
+        }
+      ],
+      "mark": {
+        "type": "point",
+        "filled": true,
+        "size": 80,
+        "color": "#7d8a9e"
+      },
+      "encoding": {
+        "x": {
+          "field": "corpus_tokens",
+          "type": "quantitative",
+          "scale": {
+            "type": "log"
+          }
+        },
+        "y": {
+          "field": "qpd",
+          "type": "quantitative",
+          "scale": {
+            "type": "log"
+          }
+        },
+        "tooltip": [
+          {
+            "field": "regime",
+            "title": "regime"
+          },
+          {
+            "field": "infra_mode",
+            "title": "deployment"
+          },
+          {
+            "field": "size",
+            "title": "size"
+          },
+          {
+            "field": "corpus_tokens",
+            "title": "corpus tokens",
+            "format": ","
+          },
+          {
+            "field": "qpd",
+            "title": "break-even qpd",
+            "format": ",.2f"
+          },
+          {
+            "field": "live_window_exceeded",
+            "title": "window exceeded"
+          }
+        ]
+      }
+    },
+    {
+      "transform": [
+        {
+          "filter": "stage >= 4 && stage < 5"
+        },
+        {
+          "filter": "datum.hit_rate_basis === 'measured' && datum.workload === 'memory' && datum.footprint === 'pca_uc_384_sq8' && datum.infra_mode === 'dedicated' && datum.regime === 'openai' && (datum.size === 'M' || datum.size === 'L')"
+        },
+        {
+          "calculate": "isValid(toNumber(datum.break_even_qpd)) ? toNumber(datum.break_even_qpd) : toNumber(datum.break_even_qpd_over_window)",
+          "as": "qpd_ext"
+        },
+        {
+          "filter": "isValid(datum.qpd_ext)"
+        }
+      ],
+      "mark": {
+        "type": "line",
+        "strokeWidth": 2,
+        "strokeDash": [
+          2,
+          4
+        ],
+        "color": "#7d8a9e",
+        "opacity": 0.85
+      },
+      "encoding": {
+        "x": {
+          "field": "corpus_tokens",
+          "type": "quantitative",
+          "scale": {
+            "type": "log"
+          }
+        },
+        "y": {
+          "field": "qpd_ext",
+          "type": "quantitative",
+          "scale": {
+            "type": "log"
+          }
+        },
+        "order": {
+          "field": "corpus_tokens"
+        }
+      }
+    },
+    {
+      "transform": [
+        {
+          "filter": "stage >= 4 && stage < 5"
+        },
+        {
+          "filter": "datum.hit_rate_basis === 'measured' && datum.workload === 'memory' && datum.footprint === 'pca_uc_384_sq8' && datum.infra_mode === 'dedicated' && datum.regime === 'openai' && datum.size === 'L'"
+        },
+        {
+          "calculate": "toNumber(datum.break_even_qpd_over_window)",
+          "as": "qpd_ext"
+        },
+        {
+          "filter": "isValid(datum.qpd_ext)"
+        }
+      ],
+      "mark": {
+        "type": "point",
+        "shape": "circle",
+        "filled": false,
+        "fill": "#ffffff",
+        "stroke": "#7d8a9e",
+        "strokeWidth": 2.5,
+        "size": 110
+      },
+      "encoding": {
+        "x": {
+          "field": "corpus_tokens",
+          "type": "quantitative",
+          "scale": {
+            "type": "log"
+          }
+        },
+        "y": {
+          "field": "qpd_ext",
+          "type": "quantitative",
+          "scale": {
+            "type": "log"
+          }
+        },
+        "tooltip": {
+          "value": "OpenAI (gpt-5.6-terra), size L \u00b7 959,282 live tokens exceed the 922,000 input cap: this request cannot be made \u00b7 list price if it could: $0.4789/query on the >272k tier, break-even 6.2/day"
+        }
+      }
+    },
+    {
+      "data": {
+        "values": [
+          {}
+        ]
+      },
+      "transform": [
+        {
+          "filter": "stage >= 4 && stage < 5"
+        }
+      ],
+      "mark": {
+        "type": "rule",
+        "strokeWidth": 1.5,
+        "color": "#7d8a9e",
+        "opacity": 0.8
+      },
+      "encoding": {
+        "x": {
+          "datum": 272000,
+          "type": "quantitative",
+          "scale": {
+            "type": "log"
+          }
+        },
+        "y": {
+          "value": 600
+        },
+        "y2": {
+          "value": 572
+        }
+      }
+    },
+    {
+      "data": {
+        "values": [
+          {}
+        ]
+      },
+      "transform": [
+        {
+          "filter": "stage >= 4 && stage < 5"
+        }
+      ],
+      "mark": {
+        "type": "text",
+        "align": "center",
+        "fontSize": 14,
+        "color": "#64748b"
+      },
+      "encoding": {
+        "x": {
+          "datum": 272000,
+          "type": "quantitative",
+          "scale": {
+            "type": "log"
+          }
+        },
+        "y": {
+          "value": 558
+        },
+        "text": {
+          "value": "OpenAI list price steps here, at 272k input tokens"
+        }
+      }
+    },
+    {
+      "transform": [
+        {
+          "filter": "stage >= 5 && stage < 6"
+        },
+        {
+          "filter": "datum.hit_rate_basis === 'measured' && datum.workload === 'code' && datum.live_arm === 'agentic' && datum.footprint === 'pca_uc_384_sq8' && datum.regime === 'claude' && datum.infra_mode === 'dedicated' && datum.break_even_qpd === 'inf'"
+        }
+      ],
+      "mark": {
+        "type": "point",
+        "shape": "circle",
+        "filled": false,
+        "fill": null,
+        "stroke": "#f59e0b",
+        "strokeWidth": 3,
+        "size": 200
+      },
+      "encoding": {
+        "x": {
+          "field": "corpus_tokens",
+          "type": "quantitative",
+          "scale": {
+            "type": "log"
+          }
+        },
+        "y": {
+          "value": 48
+        },
+        "tooltip": [
+          {
+            "field": "size",
+            "title": "size"
+          },
+          {
+            "field": "corpus_tokens",
+            "title": "corpus tokens",
+            "format": ","
+          },
+          {
+            "field": "c_live",
+            "title": "agentic $/query"
+          },
+          {
+            "field": "c_index_query",
+            "title": "indexed $/query"
+          },
+          {
+            "value": "agentic grep is cheaper per query than the index: no volume repays it"
+          }
+        ]
+      }
+    },
+    {
+      "transform": [
+        {
+          "filter": "stage >= 5 && stage < 6"
+        },
+        {
+          "filter": "datum.hit_rate_basis === 'measured' && datum.workload === 'code' && datum.live_arm === 'agentic' && datum.footprint === 'pca_uc_384_sq8' && datum.regime === 'claude' && datum.infra_mode === 'dedicated' && datum.break_even_qpd === 'inf' && datum.size === 'S'"
+        }
+      ],
+      "mark": {
+        "type": "text",
+        "align": "left",
+        "dx": 18,
+        "dy": 1,
+        "fontWeight": 700,
+        "fontSize": 18,
+        "color": "#1e293b"
+      },
+      "encoding": {
+        "x": {
+          "field": "corpus_tokens",
+          "type": "quantitative",
+          "scale": {
+            "type": "log"
+          }
+        },
+        "y": {
+          "value": 48
+        },
+        "text": {
+          "value": "\u221e at every size on fastapi"
+        }
+      }
+    },
+    {
+      "transform": [
+        {
+          "filter": "stage >= 5 && stage < 6"
+        },
+        {
+          "filter": "datum.hit_rate_basis === 'measured' && datum.workload === 'code' && datum.live_arm === 'agentic' && datum.footprint === 'pca_uc_384_sq8' && datum.regime === 'claude' && datum.infra_mode === 'dedicated' && datum.break_even_qpd === 'inf' && datum.size === 'S'"
+        }
+      ],
+      "mark": {
+        "type": "text",
+        "align": "left",
+        "dx": 18,
+        "dy": 21,
+        "fontSize": 15,
+        "color": "#64748b"
+      },
+      "encoding": {
+        "x": {
+          "field": "corpus_tokens",
+          "type": "quantitative",
+          "scale": {
+            "type": "log"
+          }
+        },
+        "y": {
+          "value": 48
+        },
+        "text": {
+          "value": "fastapi \u00b7 40 questions a size"
+        }
+      }
+    },
+    {
+      "transform": [
+        {
+          "filter": "stage >= 5 && stage < 6"
+        },
+        {
+          "filter": "datum.hit_rate_basis === 'measured' && datum.workload === 'code' && datum.live_arm === 'stuffed' && datum.footprint === 'pca_uc_384_sq8' && datum.regime === 'claude' && datum.infra_mode === 'dedicated'"
+        },
+        {
+          "calculate": "toNumber(datum.break_even_qpd)",
+          "as": "qpd"
+        },
+        {
+          "filter": "isValid(datum.qpd)"
+        }
+      ],
+      "mark": {
+        "type": "rule",
+        "strokeWidth": 2,
+        "stroke": "#f59e0b",
+        "strokeDash": [
+          4,
+          4
+        ],
+        "opacity": 0.5
+      },
+      "encoding": {
+        "x": {
+          "field": "corpus_tokens",
+          "type": "quantitative",
+          "scale": {
+            "type": "log"
+          }
+        },
+        "y": {
+          "field": "qpd",
+          "type": "quantitative",
+          "scale": {
+            "type": "log"
+          }
+        },
+        "y2": {
+          "datum": 300
+        }
+      }
+    },
+    {
+      "transform": [
+        {
+          "filter": "stage >= 5 && stage < 6"
+        },
+        {
+          "filter": "datum.hit_rate_basis === 'measured' && datum.workload === 'code' && datum.live_arm === 'stuffed' && datum.footprint === 'pca_uc_384_sq8' && datum.regime === 'claude' && datum.infra_mode === 'dedicated'"
+        },
+        {
+          "calculate": "toNumber(datum.break_even_qpd)",
+          "as": "qpd"
+        },
+        {
+          "filter": "isValid(datum.qpd)"
+        }
+      ],
+      "mark": {
+        "type": "point",
+        "shape": "circle",
+        "filled": true,
+        "color": "#f59e0b",
+        "size": 200
+      },
+      "encoding": {
+        "x": {
+          "field": "corpus_tokens",
+          "type": "quantitative",
+          "scale": {
+            "type": "log"
+          }
+        },
+        "y": {
+          "field": "qpd",
+          "type": "quantitative",
+          "scale": {
+            "type": "log"
+          }
+        },
+        "tooltip": [
+          {
+            "field": "size",
+            "title": "size"
+          },
+          {
+            "field": "corpus_tokens",
+            "title": "corpus tokens",
+            "format": ","
+          },
+          {
+            "field": "c_live",
+            "title": "stuffed $/query"
+          },
+          {
+            "field": "c_index_query",
+            "title": "indexed $/query"
+          },
+          {
+            "field": "qpd",
+            "title": "break-even queries/day",
+            "format": ".1f"
+          },
+          {
+            "value": "the whole repo re-sent as a cached prefix: the only fastapi arm the index outprices"
+          }
+        ]
+      }
+    },
+    {
+      "transform": [
+        {
+          "filter": "stage >= 5 && stage < 6"
+        },
+        {
+          "filter": "datum.hit_rate_basis === 'measured' && datum.workload === 'code' && datum.live_arm === 'stuffed' && datum.footprint === 'pca_uc_384_sq8' && datum.regime === 'claude' && datum.infra_mode === 'dedicated'"
+        },
+        {
+          "calculate": "toNumber(datum.break_even_qpd)",
+          "as": "qpd"
+        },
+        {
+          "filter": "isValid(datum.qpd)"
+        }
+      ],
+      "mark": {
+        "type": "text",
+        "align": "right",
+        "dx": -20,
+        "dy": -9,
+        "fontWeight": 700,
+        "fontSize": 18,
+        "color": "#1e293b"
+      },
+      "encoding": {
+        "x": {
+          "field": "corpus_tokens",
+          "type": "quantitative",
+          "scale": {
+            "type": "log"
+          }
+        },
+        "y": {
+          "field": "qpd",
+          "type": "quantitative",
+          "scale": {
+            "type": "log"
+          }
+        },
+        "text": {
+          "value": "12 a day"
+        }
+      }
+    },
+    {
+      "transform": [
+        {
+          "filter": "stage >= 5 && stage < 6"
+        },
+        {
+          "filter": "datum.hit_rate_basis === 'measured' && datum.workload === 'code' && datum.live_arm === 'stuffed' && datum.footprint === 'pca_uc_384_sq8' && datum.regime === 'claude' && datum.infra_mode === 'dedicated'"
+        },
+        {
+          "calculate": "toNumber(datum.break_even_qpd)",
+          "as": "qpd"
+        },
+        {
+          "filter": "isValid(datum.qpd)"
+        }
+      ],
+      "mark": {
+        "type": "text",
+        "align": "right",
+        "dx": -20,
+        "dy": 13,
+        "fontSize": 15,
+        "color": "#64748b"
+      },
+      "encoding": {
+        "x": {
+          "field": "corpus_tokens",
+          "type": "quantitative",
+          "scale": {
+            "type": "log"
+          }
+        },
+        "y": {
+          "field": "qpd",
+          "type": "quantitative",
+          "scale": {
+            "type": "log"
+          }
+        },
+        "text": {
+          "value": "whole repo stuffed into context"
+        }
+      }
+    },
+    {
+      "data": {
+        "url": "../data/ws5/break_even_ws6c.csv"
+      },
+      "transform": [
+        {
+          "filter": "stage >= 6"
+        },
+        {
+          "filter": "datum.index_arm === 'indexed'"
+        },
+        {
+          "calculate": "toNumber(datum.break_even_qpd)",
+          "as": "qpd"
+        }
+      ],
+      "mark": {
+        "type": "line",
+        "stroke": "#7f47ff",
+        "strokeWidth": 2.5,
+        "strokeDash": [
+          7,
+          5
+        ],
+        "opacity": 0.75
+      },
+      "encoding": {
+        "x": {
+          "field": "corpus_tokens",
+          "type": "quantitative",
+          "scale": {
+            "type": "log"
+          }
+        },
+        "y": {
+          "field": "qpd",
+          "type": "quantitative",
+          "scale": {
+            "type": "log"
+          }
+        }
+      }
+    },
+    {
+      "data": {
+        "url": "../data/ws5/break_even_ws6c.csv"
+      },
+      "transform": [
+        {
+          "filter": "stage >= 6"
+        },
+        {
+          "filter": "datum.index_arm === 'indexed_topk3'"
+        },
+        {
+          "calculate": "toNumber(datum.break_even_qpd)",
+          "as": "qpd"
+        }
+      ],
+      "mark": {
+        "type": "line",
+        "stroke": "#7f47ff",
+        "strokeWidth": 2,
+        "strokeDash": [
+          2,
+          4
+        ],
+        "opacity": 0.7
+      },
+      "encoding": {
+        "x": {
+          "field": "corpus_tokens",
+          "type": "quantitative",
+          "scale": {
+            "type": "log"
+          }
+        },
+        "y": {
+          "field": "qpd",
+          "type": "quantitative",
+          "scale": {
+            "type": "log"
+          }
+        }
+      }
+    },
+    {
+      "data": {
+        "url": "../data/ws5/break_even_ws6c.csv"
+      },
+      "transform": [
+        {
+          "filter": "stage >= 6"
+        },
+        {
+          "filter": "datum.index_arm === 'indexed'"
+        },
+        {
+          "calculate": "toNumber(datum.break_even_qpd)",
+          "as": "qpd"
+        }
+      ],
+      "mark": {
+        "type": "point",
+        "shape": "circle",
+        "filled": true,
+        "color": "#7f47ff",
+        "size": 150
+      },
+      "encoding": {
+        "x": {
+          "field": "corpus_tokens",
+          "type": "quantitative",
+          "scale": {
+            "type": "log"
+          }
+        },
+        "y": {
+          "field": "qpd",
+          "type": "quantitative",
+          "scale": {
+            "type": "log"
+          }
+        },
+        "tooltip": [
+          {
+            "field": "corpus_label",
+            "title": "corpus"
+          },
+          {
+            "field": "size",
+            "title": "size"
+          },
+          {
+            "field": "index_topk",
+            "title": "index top-k"
+          },
+          {
+            "field": "corpus_tokens",
+            "title": "corpus tokens",
+            "format": ","
+          },
+          {
+            "field": "n",
+            "title": "questions"
+          },
+          {
+            "field": "c_live",
+            "title": "agentic $/query"
+          },
+          {
+            "field": "c_index_query",
+            "title": "indexed $/query"
+          },
+          {
+            "field": "qpd",
+            "title": "break-even qpd",
+            "format": ",.2f"
+          },
+          {
+            "field": "judge_accuracy_live",
+            "title": "accuracy, agentic"
+          },
+          {
+            "field": "judge_accuracy_index",
+            "title": "accuracy, indexed"
+          }
+        ]
+      }
+    },
+    {
+      "data": {
+        "url": "../data/ws5/break_even_ws6c.csv"
+      },
+      "transform": [
+        {
+          "filter": "stage >= 6"
+        },
+        {
+          "filter": "datum.index_arm === 'indexed_topk3'"
+        },
+        {
+          "calculate": "toNumber(datum.break_even_qpd)",
+          "as": "qpd"
+        }
+      ],
+      "mark": {
+        "type": "point",
+        "shape": "cross",
+        "filled": false,
+        "stroke": "#7f47ff",
+        "strokeWidth": 3,
+        "size": 170,
+        "angle": 45
+      },
+      "encoding": {
+        "x": {
+          "field": "corpus_tokens",
+          "type": "quantitative",
+          "scale": {
+            "type": "log"
+          }
+        },
+        "y": {
+          "field": "qpd",
+          "type": "quantitative",
+          "scale": {
+            "type": "log"
+          }
+        },
+        "tooltip": [
+          {
+            "field": "corpus_label",
+            "title": "corpus"
+          },
+          {
+            "field": "size",
+            "title": "size"
+          },
+          {
+            "field": "index_topk",
+            "title": "index top-k"
+          },
+          {
+            "field": "corpus_tokens",
+            "title": "corpus tokens",
+            "format": ","
+          },
+          {
+            "field": "n",
+            "title": "questions"
+          },
+          {
+            "field": "c_live",
+            "title": "agentic $/query"
+          },
+          {
+            "field": "c_index_query",
+            "title": "indexed $/query"
+          },
+          {
+            "field": "qpd",
+            "title": "break-even qpd",
+            "format": ",.2f"
+          },
+          {
+            "field": "judge_accuracy_live",
+            "title": "accuracy, agentic"
+          },
+          {
+            "field": "judge_accuracy_index",
+            "title": "accuracy, indexed"
+          }
+        ]
+      }
+    },
+    {
+      "data": {
+        "url": "../data/ws5/break_even_ws6c.csv"
+      },
+      "transform": [
+        {
+          "filter": "stage >= 6"
+        },
+        {
+          "filter": "(datum.index_arm === 'indexed_topk3' && datum.size !== 'M') || (datum.index_arm === 'indexed' && datum.size === 'M')"
+        },
+        {
+          "calculate": "toNumber(datum.break_even_qpd)",
+          "as": "qpd"
+        }
+      ],
+      "mark": {
+        "type": "text",
+        "align": "center",
+        "dy": -18,
+        "fontWeight": 700,
+        "fontSize": 20,
+        "color": "#1e293b"
+      },
+      "encoding": {
+        "x": {
+          "field": "corpus_tokens",
+          "type": "quantitative",
+          "scale": {
+            "type": "log"
+          }
+        },
+        "y": {
+          "field": "qpd",
+          "type": "quantitative",
+          "scale": {
+            "type": "log"
+          }
+        },
+        "text": {
+          "field": "qpd",
+          "type": "quantitative",
+          "format": ".0f"
+        }
+      }
+    },
+    {
+      "data": {
+        "url": "../data/ws5/break_even_ws6c.csv"
+      },
+      "transform": [
+        {
+          "filter": "stage >= 6"
+        },
+        {
+          "filter": "(datum.index_arm === 'indexed' && datum.size !== 'M') || (datum.index_arm === 'indexed_topk3' && datum.size === 'M')"
+        },
+        {
+          "calculate": "toNumber(datum.break_even_qpd)",
+          "as": "qpd"
+        }
+      ],
+      "mark": {
+        "type": "text",
+        "align": "right",
+        "dy": 24,
+        "fontWeight": 700,
+        "fontSize": 20,
+        "color": "#1e293b",
+        "dx": -10
+      },
+      "encoding": {
+        "x": {
+          "field": "corpus_tokens",
+          "type": "quantitative",
+          "scale": {
+            "type": "log"
+          }
+        },
+        "y": {
+          "field": "qpd",
+          "type": "quantitative",
+          "scale": {
+            "type": "log"
+          }
+        },
+        "text": {
+          "field": "qpd",
+          "type": "quantitative",
+          "format": ".0f"
+        }
+      }
+    },
+    {
+      "data": {
+        "url": "../data/ws5/break_even_ws6c.csv"
+      },
+      "transform": [
+        {
+          "filter": "stage >= 6"
+        },
+        {
+          "filter": "datum.index_arm === 'indexed' && datum.size === 'S'"
+        },
+        {
+          "calculate": "toNumber(datum.break_even_qpd)",
+          "as": "qpd"
+        }
+      ],
+      "mark": {
+        "type": "text",
+        "align": "right",
+        "dx": -16,
+        "dy": 1,
+        "fontSize": 15,
+        "fontWeight": 600,
+        "color": "#7f47ff"
+      },
+      "encoding": {
+        "x": {
+          "field": "corpus_tokens",
+          "type": "quantitative",
+          "scale": {
+            "type": "log"
+          }
+        },
+        "y": {
+          "field": "qpd",
+          "type": "quantitative",
+          "scale": {
+            "type": "log"
+          }
+        },
+        "text": {
+          "value": "top-k 10, shipped default"
+        }
+      }
+    },
+    {
+      "data": {
+        "url": "../data/ws5/break_even_ws6c.csv"
+      },
+      "transform": [
+        {
+          "filter": "stage >= 6"
+        },
+        {
+          "filter": "datum.index_arm === 'indexed_topk3' && datum.size === 'S'"
+        },
+        {
+          "calculate": "toNumber(datum.break_even_qpd)",
+          "as": "qpd"
+        }
+      ],
+      "mark": {
+        "type": "text",
+        "align": "right",
+        "dx": -16,
+        "dy": 1,
+        "fontSize": 15,
+        "fontWeight": 600,
+        "color": "#7f47ff"
+      },
+      "encoding": {
+        "x": {
+          "field": "corpus_tokens",
+          "type": "quantitative",
+          "scale": {
+            "type": "log"
+          }
+        },
+        "y": {
+          "field": "qpd",
+          "type": "quantitative",
+          "scale": {
+            "type": "log"
+          }
+        },
+        "text": {
+          "value": "top-k 3, the bound knob"
+        }
+      }
+    },
+    {
+      "data": {
+        "url": "../data/ws5/break_even_ws6c.csv"
+      },
+      "transform": [
+        {
+          "filter": "stage >= 6"
+        },
+        {
+          "filter": "datum.index_arm === 'indexed_topk3' && datum.size === 'M'"
+        },
+        {
+          "calculate": "toNumber(datum.break_even_qpd)",
+          "as": "qpd"
+        }
+      ],
+      "mark": {
+        "type": "text",
+        "align": "center",
+        "dy": 50,
+        "fontSize": 15,
+        "color": "#64748b"
+      },
+      "encoding": {
+        "x": {
+          "field": "corpus_tokens",
+          "type": "quantitative",
+          "scale": {
+            "type": "log"
+          }
+        },
+        "y": {
+          "field": "qpd",
+          "type": "quantitative",
+          "scale": {
+            "type": "log"
+          }
+        },
+        "text": {
+          "value": "code it has never seen \u00b7 37 questions a size"
+        }
+      }
+    },
+    {
+      "data": {
+        "values": [
+          {
+            "ky": 120,
+            "sw": "#175fff",
+            "from": 3,
+            "to": 5
+          },
+          {
+            "ky": 176,
+            "sw": "#7d8a9e",
+            "from": 4,
+            "to": 5
+          }
+        ]
+      },
+      "transform": [
+        {
+          "filter": "stage >= datum.from && stage < datum.to"
+        }
+      ],
+      "mark": {
+        "type": "point",
+        "shape": "square",
+        "filled": true,
+        "size": 90,
+        "color": {
+          "expr": "datum.sw"
+        }
+      },
+      "encoding": {
+        "x": {
+          "value": 1046
+        },
+        "y": {
+          "field": "ky",
+          "type": "quantitative",
+          "scale": null
+        }
+      }
+    },
+    {
+      "data": {
+        "values": [
+          {
+            "ky": 120,
+            "t": "Claude, dedicated",
+            "from": 3,
+            "to": 5
+          },
+          {
+            "ky": 176,
+            "t": "OpenAI, dedicated",
+            "from": 4,
+            "to": 5
+          }
+        ]
+      },
+      "transform": [
+        {
+          "filter": "stage >= datum.from && stage < datum.to"
+        }
+      ],
+      "mark": {
+        "type": "text",
+        "align": "left",
+        "baseline": "middle",
+        "fontSize": 18,
+        "fontWeight": 700,
+        "color": "#1e293b"
+      },
+      "encoding": {
+        "x": {
+          "value": 1064
+        },
+        "y": {
+          "field": "ky",
+          "type": "quantitative",
+          "scale": null
+        },
+        "text": {
+          "field": "t"
+        }
+      }
+    },
+    {
+      "data": {
+        "values": [
+          {
+            "ky": 144,
+            "t": "one r8g.large, 16 GiB, $86.07 a month",
+            "from": 3,
+            "to": 5
+          },
+          {
+            "ky": 200,
+            "t": "over a 922k input cap at L; dotted = list price if it fit",
+            "from": 4,
+            "to": 5
+          }
+        ]
+      },
+      "transform": [
+        {
+          "filter": "stage >= datum.from && stage < datum.to"
+        }
+      ],
+      "mark": {
+        "type": "text",
+        "align": "left",
+        "baseline": "middle",
+        "fontSize": 15,
+        "color": "#64748b"
+      },
+      "encoding": {
+        "x": {
+          "value": 1064
+        },
+        "y": {
+          "field": "ky",
+          "type": "quantitative",
+          "scale": null
+        },
+        "text": {
+          "field": "t"
+        }
+      }
+    },
+    {
+      "data": {
+        "values": [
+          {}
+        ]
+      },
+      "transform": [
+        {
+          "filter": "stage >= 3 && stage < 5"
+        }
+      ],
+      "mark": {
+        "type": "text",
+        "align": "right",
+        "baseline": "middle",
+        "fontSize": 14,
+        "color": "#94a3b8"
+      },
+      "encoding": {
+        "x": {
+          "value": 1596
+        },
+        "y": {
+          "value": 14
+        },
+        "text": {
+          "value": "conversation memory \u00b7 replay against the index \u00b7 measured hit rates 1.00 / 0.92 / 0.97 \u00b7 mean billed per query \u00b7 prices 2026-09-07 \u00b7 model reproduces the bill to 0.09%"
+        }
+      }
+    },
+    {
+      "data": {
+        "values": [
+          {}
+        ]
+      },
+      "transform": [
+        {
+          "filter": "stage >= 5 && stage < 6"
+        }
+      ],
+      "mark": {
+        "type": "text",
+        "align": "right",
+        "baseline": "middle",
+        "fontSize": 14,
+        "color": "#94a3b8"
+      },
+      "encoding": {
+        "x": {
+          "value": 1596
+        },
+        "y": {
+          "value": 14
+        },
+        "text": {
+          "value": "fastapi \u00b7 agentic grep against the index, n = 40 a size \u00b7 grep uncached, stuffed arm at a measured 0.975 \u00b7 PCA-384 + SQ8 on one r8g.large, $86.07 a month \u00b7 prices 2026-09-07"
+        }
+      }
+    },
+    {
+      "data": {
+        "values": [
+          {}
+        ]
+      },
+      "transform": [
+        {
+          "filter": "stage >= 6"
+        }
+      ],
+      "mark": {
+        "type": "text",
+        "align": "right",
+        "baseline": "middle",
+        "fontSize": 14,
+        "color": "#94a3b8"
+      },
+      "encoding": {
+        "x": {
+          "value": 1596
+        },
+        "y": {
+          "value": 14
+        },
+        "text": {
+          "value": "agentic-hil \u00b7 agentic grep against the index, n = 37 a size \u00b7 PCA-384 + SQ8 on one r8g.large, $86.07 a month \u00b7 Claude, dedicated \u00b7 prices 2026-09-07, instance 2026-09-15"
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,55 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "description": "Contamination spectrum: parametric judge accuracy and any-file-hit rate across five corpora. Source: data/ws6c/contamination.csv, derived from ws6c/summary.csv, ws6c/nonmemorization_gate.csv and ws6b/parametric_gate_summary.csv.",
+  "data": { "url": "../data/ws6c/contamination.csv" },
+  "width": 900,
+  "height": 300,
+  "params": [{ "name": "stage", "value": 0 }],
+  "transform": [
+    { "calculate": "datum.slug === 'fastapi' ? 0 : 1", "as": "rowStage" }
+  ],
+  "encoding": {
+    "y": {
+      "field": "label", "type": "nominal",
+      "sort": ["fastapi (well-known OSS)", "agentic-hil", "kicad-mcp-pro", "mixle", "synthetic history (WS6b)"],
+      "title": null
+    },
+    "opacity": {
+      "condition": { "test": "datum.rowStage <= stage", "value": 1 },
+      "value": 0
+    }
+  },
+  "layer": [
+    {
+      "mark": { "type": "bar", "cornerRadiusEnd": 3, "color": "#7d8a9e" },
+      "encoding": {
+        "x": {
+          "field": "judge_accuracy", "type": "quantitative",
+          "scale": { "domain": [0, 1] },
+          "axis": { "title": "judge accuracy with no repository access", "format": ".2f" }
+        },
+        "tooltip": [
+          { "field": "label" },
+          { "field": "judge_accuracy", "format": ".3f" },
+          { "field": "any_file_hit_rate" },
+          { "field": "n" },
+          { "field": "source" }
+        ]
+      }
+    },
+    {
+      "transform": [{ "filter": "datum.any_file_hit_rate !== ''" }],
+      "mark": { "type": "point", "size": 200, "filled": true, "color": "#c84cff", "shape": "diamond" },
+      "encoding": {
+        "x": { "field": "any_file_hit_rate", "type": "quantitative" }
+      }
+    },
+    {
+      "mark": { "type": "text", "align": "left", "dx": 10, "fontWeight": 600, "fontSize": 18, "color": "#1e293b" },
+      "encoding": {
+        "x": { "field": "judge_accuracy", "type": "quantitative" },
+        "text": { "field": "judge_accuracy", "type": "quantitative", "format": ".3f" }
+      }
+    }
+  ]
+}

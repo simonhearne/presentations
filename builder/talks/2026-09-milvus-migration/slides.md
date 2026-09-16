@@ -108,7 +108,7 @@ Milvus 3.0 brought full-text retrieval, sorting, aggregation and faceting into o
 </div>
 </div>
 
-<p class="why-migrate-close fragment">None of these are tuning problems. They are architecture problems.</p>
+<p class="closing-line is-emphatic fragment">None of these are tuning problems. They are architecture problems.</p>
 
 ---
 

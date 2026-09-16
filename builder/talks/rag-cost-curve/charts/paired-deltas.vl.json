@@ -1,0 +1,74 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "description": "The four pre-registered WS6c paired prompt-token deltas against the agentic arm, with 95% bootstrap CIs and branch labels. Source: data/ws6c/paired_grid.csv. Each row is paired within its own corpus; the two corpora are unpaired with respect to each other and no interval is computed across them.",
+  "data": { "url": "../data/ws6c/paired_grid.csv" },
+  "width": 1080,
+  "height": 300,
+  "params": [{ "name": "stage", "value": 0 }],
+  "transform": [
+    { "calculate": "(datum.corpus === 'fastapi' ? 'fastapi, in training data' : 'agentic-hil, never seen') + ' / ' + (datum.arm_a === 'indexed' ? 'default top-k 10' : 'top-k bound to 3')", "as": "row_label" },
+    { "calculate": "datum.corpus === 'fastapi' ? 1 : 2", "as": "rowStage" },
+    { "calculate": "toNumber(datum.median)", "as": "med" },
+    { "calculate": "toNumber(datum.ci_low)", "as": "lo" },
+    { "calculate": "toNumber(datum.ci_high)", "as": "hi" }
+  ],
+  "encoding": {
+    "y": {
+      "field": "row_label", "type": "nominal", "title": null,
+      "axis": { "labelLimit": 420 },
+      "sort": [
+        "fastapi, in training data / default top-k 10",
+        "fastapi, in training data / top-k bound to 3",
+        "agentic-hil, never seen / default top-k 10",
+        "agentic-hil, never seen / top-k bound to 3"
+      ]
+    },
+    "opacity": {
+      "condition": { "test": "datum.rowStage <= stage", "value": 1 },
+      "value": 0
+    }
+  },
+  "layer": [
+    {
+      "data": { "values": [{}] },
+      "mark": { "type": "rule", "strokeWidth": 2, "strokeDash": [4, 4], "color": "#7d8a9e" },
+      "encoding": {
+        "y": null,
+        "x": { "datum": 0, "type": "quantitative" },
+        "opacity": { "value": 1 }
+      }
+    },
+    {
+      "mark": { "type": "rule", "strokeWidth": 5, "color": "#7f47ff", "opacity": 0.45 },
+      "encoding": {
+        "x": {
+          "field": "lo", "type": "quantitative",
+          "axis": { "title": "paired median delta vs the grep loop, prompt tokens", "format": ",.0f" }
+        },
+        "x2": { "field": "hi" }
+      }
+    },
+    {
+      "mark": { "type": "point", "size": 300, "filled": true, "color": "#7f47ff" },
+      "encoding": {
+        "x": { "field": "med", "type": "quantitative" },
+        "tooltip": [
+          { "field": "corpus" },
+          { "field": "arm_a", "title": "indexed arm" },
+          { "field": "med", "title": "paired median", "format": ",.1f" },
+          { "field": "lo", "title": "CI low", "format": ",.1f" },
+          { "field": "hi", "title": "CI high", "format": ",.1f" },
+          { "field": "branch" },
+          { "field": "n_positive", "title": "of 40 positive" }
+        ]
+      }
+    },
+    {
+      "mark": { "type": "text", "align": "left", "dx": 12, "fontWeight": 700, "fontSize": 20, "color": "#1e293b" },
+      "encoding": {
+        "x": { "field": "hi", "type": "quantitative" },
+        "text": { "field": "branch", "type": "nominal" }
+      }
+    }
+  ]
+}

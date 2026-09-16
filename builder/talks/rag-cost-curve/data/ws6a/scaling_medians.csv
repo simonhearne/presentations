@@ -1,0 +1,7 @@
+arm,size,corpus_tokens,median_prompt_tokens,judge_accuracy,n
+agentic,S,259429,6040.5,1.000,10
+agentic,M,1138485,7873,1.000,10
+agentic,L,6232509,8150.5,1.000,10
+indexed,S,259429,10615,1.000,10
+indexed,M,1138485,16155,1.000,10
+indexed,L,6232509,13298,1.000,10

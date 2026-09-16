@@ -1,6 +1,6 @@
 {
   "$schema": "https://vega.github.io/schema/vega/v5.json",
-  "description": "RaBitQ stores each data vector as D bits — one bit per dimension, encoding the sign of each rotated coordinate. Pick a dimensionality and a precomputed sign pattern to see the stored artifact and the compression ratio against the raw fp32 vector.",
+  "description": "RaBitQ stores each data vector as D bits: one bit per dimension, encoding the sign of each rotated coordinate. Pick a dimensionality and a precomputed sign pattern to see the stored artifact and the compression ratio against the raw fp32 vector.",
   "width": 700,
   "height": 240,
   "padding": 12,
@@ -308,7 +308,7 @@
             "value": "#94a3b8"
           },
           "text": {
-            "value": "Distance estimation against this code is a few bitwise ops — no table lookups, no decompression."
+            "value": "Distance estimation against this code is a few bitwise ops: no table lookups, no decompression."
           }
         }
       }

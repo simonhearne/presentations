@@ -1,0 +1,1066 @@
+{
+  "$schema": "https://vega.github.io/schema/vega/v5.json",
+  "description": "WS2 recall vs footprint compression by family, at 1M or 10M depending on the `dataset` signal. Sources: data/ws2/curves_1m.csv and data/ws2/curves_10m.csv, columns recall_at_10, payload_compression, loaded_bytes and footprint_compression_vs_ivf_flat, which a formula normalises to `footprint_compression`. Both files are loaded up front and the signal filters on their own `scale` column, so switching is instant and neither slide re-fetches. Both scales share one denominator, the measured IVF_FLAT fp32 index (4.26 GB at 1M, 42.31 GB at 10M), so the index structure sits on both sides of every ratio and the two slides are comparable number-for-number. The x-axis title names the denominator at the scale in play. ivf_flat_fp32 and hnsw_fp32 are drawn from `baseline_points` as static grey rings with their own callout blocks (arm_label, baseline_stat, baseline_note) rather than joining the payload-to-footprint animation: their payload and footprint are both ~1x, so they have no gap to walk, and at 1M they land about 4px apart, which is why HNSW takes a dashed ring and the darker 'fp32 graph' colour. hnsw_fp32 exists only in the 1M run, so the 10M slide shows one baseline callout and the 1M slide two. flat_fp32 and ivf_pq_m512 stay filtered out so the compressed arms match across the two slides. Each filled marker is labelled in place with its arm and its two stats, so the legend is gone and the two PQ arms read as separate points. Label offsets (label_dx/label_dy/label_align in the other_points transform, label_dy in baseline_points) are hand-placed against the 1265x400 plot box, and RaBitQ's side flips at 1M because its stat line would otherwise land on the PQ m=128 label: change either dimension and they need re-checking. The aggregate transform recycles its output tuples when the `dataset` signal flips, so marks receive an update pass and never a second enter: every data-driven encoding on the agg-backed marks is mirrored into `update` or it renders the other dataset's values.",
+  "width": 1265,
+  "height": 400,
+  "padding": {
+    "left": 10,
+    "right": 30,
+    "top": 40,
+    "bottom": 10
+  },
+  "background": "transparent",
+  "signals": [
+    {
+      "name": "stage",
+      "value": 1
+    },
+    {
+      "name": "tween",
+      "value": 0
+    },
+    {
+      "name": "ease",
+      "update": "1 - pow(1 - min(tween, 1), 3)"
+    },
+    {
+      "name": "reveal",
+      "value": false,
+      "on": [
+        {
+          "events": {
+            "signal": "stage"
+          },
+          "update": "stage >= 2"
+        }
+      ]
+    },
+    {
+      "name": "dataset",
+      "value": "10m"
+    }
+  ],
+  "data": [
+    {
+      "name": "raw_1m",
+      "url": "../data/ws2/curves_1m.csv",
+      "format": {
+        "type": "csv",
+        "parse": {
+          "recall_at_10": "number",
+          "payload_compression": "number",
+          "footprint_compression_vs_ivf_flat": "number",
+          "loaded_bytes": "number"
+        }
+      },
+      "transform": [
+        {
+          "type": "formula",
+          "as": "footprint_compression",
+          "expr": "datum.footprint_compression_vs_ivf_flat"
+        },
+        {
+          "type": "formula",
+          "as": "aborted",
+          "expr": "false"
+        }
+      ]
+    },
+    {
+      "name": "raw_10m",
+      "url": "../data/ws2/curves_10m.csv",
+      "format": {
+        "type": "csv",
+        "parse": {
+          "recall_at_10": "number",
+          "payload_compression": "number",
+          "mmap": "boolean",
+          "footprint_compression_vs_ivf_flat": "number",
+          "loaded_bytes": "number"
+        }
+      },
+      "transform": [
+        {
+          "type": "formula",
+          "as": "footprint_compression",
+          "expr": "datum.footprint_compression_vs_ivf_flat"
+        },
+        {
+          "type": "formula",
+          "as": "aborted",
+          "expr": "datum.mmap"
+        }
+      ]
+    },
+    {
+      "name": "source",
+      "source": [
+        "raw_1m",
+        "raw_10m"
+      ],
+      "transform": [
+        {
+          "type": "filter",
+          "expr": "datum.scale === dataset"
+        }
+      ]
+    },
+    {
+      "name": "agg",
+      "source": "source",
+      "transform": [
+        {
+          "type": "filter",
+          "expr": "indexof(['ivf_flat_fp32','hnsw_fp32','ivf_sq8','rabitq','rabitq_refine_sq8_k2','ivf_pq_m128','ivf_pq_m256'], datum.arm) >= 0"
+        },
+        {
+          "type": "aggregate",
+          "groupby": [
+            "arm"
+          ],
+          "fields": [
+            "recall_at_10",
+            "payload_compression",
+            "footprint_compression",
+            "aborted",
+            "loaded_bytes"
+          ],
+          "ops": [
+            "max",
+            "max",
+            "max",
+            "max",
+            "max"
+          ],
+          "as": [
+            "recall_max",
+            "payload_compression",
+            "footprint_compression",
+            "aborted",
+            "loaded_bytes"
+          ]
+        },
+        {
+          "type": "formula",
+          "as": "family",
+          "expr": "datum.arm === 'ivf_flat_fp32' ? 'fp32' : datum.arm === 'hnsw_fp32' ? 'fp32 graph' : datum.arm === 'ivf_sq8' ? 'SQ8' : datum.arm === 'rabitq' ? 'RaBitQ bare' : datum.arm === 'rabitq_refine_sq8_k2' ? 'RaBitQ + refine (k=2)' : 'PQ'"
+        },
+        {
+          "type": "formula",
+          "as": "arm_label",
+          "expr": "datum.arm === 'ivf_flat_fp32' ? 'IVF_FLAT fp32' : datum.arm === 'hnsw_fp32' ? 'HNSW fp32' : datum.arm === 'ivf_sq8' ? 'SQ8' : datum.arm === 'rabitq' ? 'RaBitQ' : datum.arm === 'rabitq_refine_sq8_k2' ? 'RaBitQ + SQ8' : datum.arm === 'ivf_pq_m128' ? 'PQ m=128' : 'PQ m=256'"
+        },
+        {
+          "type": "formula",
+          "as": "arm_stat",
+          "expr": "format(datum.footprint_compression, '.1f') + 'x, recall ' + format(datum.recall_max, '.2f')"
+        }
+      ]
+    },
+    {
+      "name": "baseline_points",
+      "source": "agg",
+      "transform": [
+        {
+          "type": "filter",
+          "expr": "datum.arm === 'ivf_flat_fp32' || datum.arm === 'hnsw_fp32'"
+        },
+        {
+          "type": "formula",
+          "as": "baseline_stat",
+          "expr": "format(datum.footprint_compression, '.2f') + 'x' + (datum.arm === 'ivf_flat_fp32' ? ' baseline' : '') + ', ' + format(datum.loaded_bytes / 1e9, '.2f') + ' GB measured, recall ' + format(datum.recall_max, '.3f')"
+        },
+        {
+          "type": "formula",
+          "as": "baseline_note",
+          "expr": "datum.arm === 'hnsw_fp32' ? 'the graph costs about 1% more than IVF lists' : 'the fp32 index itself, lists and heap included'"
+        },
+        {
+          "type": "formula",
+          "as": "label_dy",
+          "expr": "datum.arm === 'ivf_flat_fp32' ? 96 : 178"
+        }
+      ]
+    },
+    {
+      "name": "other_points",
+      "source": "agg",
+      "transform": [
+        {
+          "type": "filter",
+          "expr": "datum.arm !== 'ivf_flat_fp32' && datum.arm !== 'hnsw_fp32'"
+        },
+        {
+          "type": "formula",
+          "as": "label_align",
+          "expr": "datum.arm === 'rabitq' ? (dataset === '1m' ? 'left' : 'right') : datum.arm === 'rabitq_refine_sq8_k2' || datum.arm === 'ivf_pq_m128' ? 'right' : 'left'"
+        },
+        {
+          "type": "formula",
+          "as": "label_dx",
+          "expr": "datum.arm === 'rabitq' ? (dataset === '1m' ? 22 : -22) : datum.arm === 'rabitq_refine_sq8_k2' ? -10 : datum.arm === 'ivf_pq_m128' ? -22 : datum.arm === 'ivf_sq8' ? 28 : 22"
+        },
+        {
+          "type": "formula",
+          "as": "label_dy",
+          "expr": "datum.arm === 'rabitq_refine_sq8_k2' || datum.arm === 'ivf_sq8' ? 34 : datum.arm === 'rabitq' ? 8 : -64"
+        }
+      ]
+    }
+  ],
+  "scales": [
+    {
+      "name": "xscale",
+      "type": "log",
+      "base": 2,
+      "domain": [
+        0.9,
+        40
+      ],
+      "range": "width"
+    },
+    {
+      "name": "yscale",
+      "type": "linear",
+      "domain": [
+        0.55,
+        1.02
+      ],
+      "range": "height",
+      "nice": false,
+      "zero": false
+    },
+    {
+      "name": "family",
+      "type": "ordinal",
+      "domain": [
+        "SQ8",
+        "RaBitQ + refine (k=2)",
+        "RaBitQ bare",
+        "PQ",
+        "fp32",
+        "fp32 graph"
+      ],
+      "range": [
+        "#175fff",
+        "#7f47ff",
+        "#c84cff",
+        "#00dcc6",
+        "#7d8a9e",
+        "#475569"
+      ]
+    }
+  ],
+  "axes": [
+    {
+      "orient": "bottom",
+      "scale": "xscale",
+      "title": {
+        "signal": "dataset === '10m' ? 'compression vs the 42.31 GB IVF_FLAT index' : 'compression vs the 4.26 GB IVF_FLAT index'"
+      },
+      "values": [
+        1,
+        2,
+        4,
+        8,
+        16,
+        32
+      ],
+      "encode": {
+        "labels": {
+          "update": {
+            "text": {
+              "signal": "datum.label + 'x'"
+            }
+          }
+        }
+      }
+    },
+    {
+      "orient": "left",
+      "scale": "yscale",
+      "title": "recall@10",
+      "values": [
+        0.6,
+        0.7,
+        0.8,
+        0.9,
+        1.0
+      ],
+      "format": ".1f",
+      "grid": true
+    }
+  ],
+  "marks": [
+    {
+      "type": "rule",
+      "encode": {
+        "enter": {
+          "x": {
+            "scale": "xscale",
+            "value": 1
+          },
+          "y": {
+            "value": 0
+          },
+          "y2": {
+            "scale": "yscale",
+            "value": 1
+          },
+          "strokeDash": {
+            "value": [
+              4,
+              3
+            ]
+          },
+          "stroke": {
+            "value": "#7d8a9e"
+          }
+        },
+        "update": {
+          "opacity": {
+            "value": 1
+          }
+        }
+      }
+    },
+    {
+      "type": "rule",
+      "encode": {
+        "enter": {
+          "x": {
+            "scale": "xscale",
+            "value": 1
+          },
+          "x2": {
+            "signal": "width"
+          },
+          "y": {
+            "scale": "yscale",
+            "value": 1
+          },
+          "strokeDash": {
+            "value": [
+              4,
+              3
+            ]
+          },
+          "stroke": {
+            "value": "#7d8a9e"
+          }
+        },
+        "update": {
+          "opacity": {
+            "value": 1
+          }
+        }
+      }
+    },
+    {
+      "type": "text",
+      "encode": {
+        "enter": {
+          "x": {
+            "signal": "width"
+          },
+          "y": {
+            "scale": "yscale",
+            "value": 1
+          },
+          "dx": {
+            "value": -4
+          },
+          "dy": {
+            "value": -12
+          },
+          "align": {
+            "value": "right"
+          },
+          "fill": {
+            "value": "#475569"
+          }
+        },
+        "update": {
+          "opacity": {
+            "value": 1
+          },
+          "text": {
+            "signal": "'1x = the measured IVF_FLAT fp32 index, recall 1.0 = exhaustive search'"
+          }
+        }
+      }
+    },
+    {
+      "type": "symbol",
+      "from": {
+        "data": "baseline_points"
+      },
+      "encode": {
+        "enter": {
+          "x": {
+            "scale": "xscale",
+            "field": "footprint_compression"
+          },
+          "y": {
+            "scale": "yscale",
+            "field": "recall_max"
+          },
+          "size": {
+            "value": 900
+          },
+          "fill": {
+            "value": "transparent"
+          },
+          "stroke": {
+            "scale": "family",
+            "field": "family"
+          },
+          "strokeWidth": {
+            "value": 3
+          },
+          "tooltip": {
+            "signal": "{'arm': datum.arm, 'recall@10': format(datum.recall_max, '.3f'), 'loaded': format(datum.loaded_bytes / 1e9, '.2f') + ' GB', 'footprint compression': format(datum.footprint_compression, '.2f') + 'x'}"
+          },
+          "strokeDash": {
+            "signal": "datum.arm === 'hnsw_fp32' ? [5, 4] : [1, 0]"
+          }
+        },
+        "update": {
+          "x": {
+            "scale": "xscale",
+            "field": "footprint_compression"
+          },
+          "y": {
+            "scale": "yscale",
+            "field": "recall_max"
+          },
+          "size": {
+            "value": 900
+          },
+          "fill": {
+            "value": "transparent"
+          },
+          "stroke": {
+            "scale": "family",
+            "field": "family"
+          },
+          "strokeWidth": {
+            "value": 3
+          },
+          "tooltip": {
+            "signal": "{'arm': datum.arm, 'recall@10': format(datum.recall_max, '.3f'), 'loaded': format(datum.loaded_bytes / 1e9, '.2f') + ' GB', 'footprint compression': format(datum.footprint_compression, '.2f') + 'x'}"
+          },
+          "opacity": {
+            "value": 1
+          },
+          "strokeDash": {
+            "signal": "datum.arm === 'hnsw_fp32' ? [5, 4] : [1, 0]"
+          }
+        }
+      },
+      "name": "baseline_markers"
+    },
+    {
+      "type": "text",
+      "name": "baseline_arm_label",
+      "from": {
+        "data": "baseline_points"
+      },
+      "encode": {
+        "enter": {
+          "x": {
+            "scale": "xscale",
+            "field": "footprint_compression"
+          },
+          "y": {
+            "scale": "yscale",
+            "field": "recall_max"
+          },
+          "dx": {
+            "value": 8
+          },
+          "dy": {
+            "signal": "datum.label_dy + 0"
+          },
+          "align": {
+            "value": "left"
+          },
+          "baseline": {
+            "value": "top"
+          },
+          "fontSize": {
+            "value": 20
+          },
+          "fontWeight": {
+            "value": 700
+          },
+          "fill": {
+            "scale": "family",
+            "field": "family"
+          },
+          "text": {
+            "field": "arm_label"
+          }
+        },
+        "update": {
+          "x": {
+            "scale": "xscale",
+            "field": "footprint_compression"
+          },
+          "y": {
+            "scale": "yscale",
+            "field": "recall_max"
+          },
+          "dx": {
+            "value": 8
+          },
+          "dy": {
+            "signal": "datum.label_dy + 0"
+          },
+          "align": {
+            "value": "left"
+          },
+          "baseline": {
+            "value": "top"
+          },
+          "fontSize": {
+            "value": 20
+          },
+          "fontWeight": {
+            "value": 700
+          },
+          "fill": {
+            "scale": "family",
+            "field": "family"
+          },
+          "text": {
+            "field": "arm_label"
+          },
+          "opacity": {
+            "value": 1
+          }
+        }
+      }
+    },
+    {
+      "type": "text",
+      "name": "baseline_baseline_stat",
+      "from": {
+        "data": "baseline_points"
+      },
+      "encode": {
+        "enter": {
+          "x": {
+            "scale": "xscale",
+            "field": "footprint_compression"
+          },
+          "y": {
+            "scale": "yscale",
+            "field": "recall_max"
+          },
+          "dx": {
+            "value": 8
+          },
+          "dy": {
+            "signal": "datum.label_dy + 24"
+          },
+          "align": {
+            "value": "left"
+          },
+          "baseline": {
+            "value": "top"
+          },
+          "fontSize": {
+            "value": 18
+          },
+          "fill": {
+            "value": "#475569"
+          },
+          "text": {
+            "field": "baseline_stat"
+          }
+        },
+        "update": {
+          "x": {
+            "scale": "xscale",
+            "field": "footprint_compression"
+          },
+          "y": {
+            "scale": "yscale",
+            "field": "recall_max"
+          },
+          "dx": {
+            "value": 8
+          },
+          "dy": {
+            "signal": "datum.label_dy + 24"
+          },
+          "align": {
+            "value": "left"
+          },
+          "baseline": {
+            "value": "top"
+          },
+          "fontSize": {
+            "value": 18
+          },
+          "fill": {
+            "value": "#475569"
+          },
+          "text": {
+            "field": "baseline_stat"
+          },
+          "opacity": {
+            "value": 1
+          }
+        }
+      }
+    },
+    {
+      "type": "text",
+      "name": "baseline_baseline_note",
+      "from": {
+        "data": "baseline_points"
+      },
+      "encode": {
+        "enter": {
+          "x": {
+            "scale": "xscale",
+            "field": "footprint_compression"
+          },
+          "y": {
+            "scale": "yscale",
+            "field": "recall_max"
+          },
+          "dx": {
+            "value": 8
+          },
+          "dy": {
+            "signal": "datum.label_dy + 46"
+          },
+          "align": {
+            "value": "left"
+          },
+          "baseline": {
+            "value": "top"
+          },
+          "fontSize": {
+            "value": 15
+          },
+          "fill": {
+            "value": "#7d8a9e"
+          },
+          "text": {
+            "field": "baseline_note"
+          }
+        },
+        "update": {
+          "x": {
+            "scale": "xscale",
+            "field": "footprint_compression"
+          },
+          "y": {
+            "scale": "yscale",
+            "field": "recall_max"
+          },
+          "dx": {
+            "value": 8
+          },
+          "dy": {
+            "signal": "datum.label_dy + 46"
+          },
+          "align": {
+            "value": "left"
+          },
+          "baseline": {
+            "value": "top"
+          },
+          "fontSize": {
+            "value": 15
+          },
+          "fill": {
+            "value": "#7d8a9e"
+          },
+          "text": {
+            "field": "baseline_note"
+          },
+          "opacity": {
+            "value": 1
+          }
+        }
+      }
+    },
+    {
+      "type": "symbol",
+      "name": "open_markers",
+      "from": {
+        "data": "other_points"
+      },
+      "encode": {
+        "enter": {
+          "x": {
+            "scale": "xscale",
+            "field": "payload_compression"
+          },
+          "y": {
+            "scale": "yscale",
+            "field": "recall_max"
+          },
+          "size": {
+            "value": 900
+          },
+          "fill": {
+            "value": "white"
+          },
+          "fillOpacity": {
+            "value": 0.9
+          },
+          "stroke": {
+            "scale": "family",
+            "field": "family"
+          },
+          "strokeWidth": {
+            "value": 3
+          },
+          "tooltip": {
+            "signal": "{'arm': datum.arm, 'family': datum.family, 'recall@10': format(datum.recall_max, '.3f'), 'payload compression (nominal)': format(datum.payload_compression, '.2f') + 'x'}"
+          }
+        },
+        "update": {
+          "x": {
+            "scale": "xscale",
+            "field": "payload_compression"
+          },
+          "y": {
+            "scale": "yscale",
+            "field": "recall_max"
+          },
+          "size": {
+            "value": 900
+          },
+          "fill": {
+            "value": "white"
+          },
+          "fillOpacity": {
+            "value": 0.9
+          },
+          "stroke": {
+            "scale": "family",
+            "field": "family"
+          },
+          "strokeWidth": {
+            "value": 3
+          },
+          "tooltip": {
+            "signal": "{'arm': datum.arm, 'family': datum.family, 'recall@10': format(datum.recall_max, '.3f'), 'payload compression (nominal)': format(datum.payload_compression, '.2f') + 'x'}"
+          },
+          "opacity": {
+            "value": 1
+          }
+        }
+      }
+    },
+    {
+      "type": "rule",
+      "from": {
+        "data": "other_points"
+      },
+      "encode": {
+        "enter": {
+          "x": {
+            "scale": "xscale",
+            "field": "payload_compression"
+          },
+          "x2": {
+            "scale": "xscale",
+            "field": "payload_compression"
+          },
+          "y": {
+            "scale": "yscale",
+            "field": "recall_max"
+          },
+          "stroke": {
+            "scale": "family",
+            "field": "family"
+          },
+          "strokeWidth": {
+            "value": 2
+          },
+          "strokeDash": {
+            "value": [
+              3,
+              3
+            ]
+          },
+          "tooltip": {
+            "signal": "{'arm': datum.arm, 'payload compression (nominal)': format(datum.payload_compression, '.2f') + 'x', 'footprint compression (measured)': format(datum.footprint_compression, '.2f') + 'x'}"
+          }
+        },
+        "update": {
+          "x": {
+            "scale": "xscale",
+            "field": "payload_compression"
+          },
+          "x2": {
+            "signal": "scale('xscale', datum.payload_compression) + (scale('xscale', datum.footprint_compression) - scale('xscale', datum.payload_compression)) * ease"
+          },
+          "y": {
+            "scale": "yscale",
+            "field": "recall_max"
+          },
+          "stroke": {
+            "scale": "family",
+            "field": "family"
+          },
+          "strokeWidth": {
+            "value": 2
+          },
+          "strokeDash": {
+            "value": [
+              3,
+              3
+            ]
+          },
+          "tooltip": {
+            "signal": "{'arm': datum.arm, 'payload compression (nominal)': format(datum.payload_compression, '.2f') + 'x', 'footprint compression (measured)': format(datum.footprint_compression, '.2f') + 'x'}"
+          },
+          "opacity": {
+            "signal": "stage >= 2 ? 1 : 0"
+          }
+        }
+      }
+    },
+    {
+      "type": "symbol",
+      "name": "filled_markers",
+      "from": {
+        "data": "other_points"
+      },
+      "encode": {
+        "enter": {
+          "x": {
+            "scale": "xscale",
+            "field": "payload_compression"
+          },
+          "y": {
+            "scale": "yscale",
+            "field": "recall_max"
+          },
+          "size": {
+            "value": 560
+          },
+          "fill": {
+            "scale": "family",
+            "field": "family"
+          },
+          "tooltip": {
+            "signal": "{'arm': datum.arm, 'family': datum.family, 'recall@10': format(datum.recall_max, '.3f'), 'footprint compression (measured)': format(datum.footprint_compression, '.2f') + 'x'}"
+          }
+        },
+        "update": {
+          "x": {
+            "signal": "scale('xscale', datum.payload_compression) + (scale('xscale', datum.footprint_compression) - scale('xscale', datum.payload_compression)) * ease"
+          },
+          "y": {
+            "scale": "yscale",
+            "field": "recall_max"
+          },
+          "size": {
+            "value": 560
+          },
+          "fill": {
+            "scale": "family",
+            "field": "family"
+          },
+          "tooltip": {
+            "signal": "{'arm': datum.arm, 'family': datum.family, 'recall@10': format(datum.recall_max, '.3f'), 'footprint compression (measured)': format(datum.footprint_compression, '.2f') + 'x'}"
+          },
+          "opacity": {
+            "signal": "stage >= 2 ? min(tween * 3, 1) : 0"
+          }
+        }
+      }
+    },
+    {
+      "type": "text",
+      "name": "filled_labels",
+      "from": {
+        "data": "other_points"
+      },
+      "encode": {
+        "enter": {
+          "x": {
+            "scale": "xscale",
+            "field": "payload_compression"
+          },
+          "y": {
+            "scale": "yscale",
+            "field": "recall_max"
+          },
+          "dx": {
+            "field": "label_dx"
+          },
+          "dy": {
+            "field": "label_dy"
+          },
+          "align": {
+            "field": "label_align"
+          },
+          "baseline": {
+            "value": "top"
+          },
+          "fontSize": {
+            "value": 20
+          },
+          "fontWeight": {
+            "value": 700
+          },
+          "fill": {
+            "scale": "family",
+            "field": "family"
+          },
+          "text": {
+            "field": "arm_label"
+          }
+        },
+        "update": {
+          "x": {
+            "signal": "scale('xscale', datum.payload_compression) + (scale('xscale', datum.footprint_compression) - scale('xscale', datum.payload_compression)) * ease"
+          },
+          "y": {
+            "scale": "yscale",
+            "field": "recall_max"
+          },
+          "dx": {
+            "field": "label_dx"
+          },
+          "dy": {
+            "field": "label_dy"
+          },
+          "align": {
+            "field": "label_align"
+          },
+          "baseline": {
+            "value": "top"
+          },
+          "fontSize": {
+            "value": 20
+          },
+          "fontWeight": {
+            "value": 700
+          },
+          "fill": {
+            "scale": "family",
+            "field": "family"
+          },
+          "text": {
+            "field": "arm_label"
+          },
+          "opacity": {
+            "value": 1
+          }
+        }
+      }
+    },
+    {
+      "type": "text",
+      "name": "filled_label_stats",
+      "from": {
+        "data": "other_points"
+      },
+      "encode": {
+        "enter": {
+          "x": {
+            "scale": "xscale",
+            "field": "payload_compression"
+          },
+          "y": {
+            "scale": "yscale",
+            "field": "recall_max"
+          },
+          "dx": {
+            "field": "label_dx"
+          },
+          "dy": {
+            "signal": "datum.label_dy + 24"
+          },
+          "align": {
+            "field": "label_align"
+          },
+          "baseline": {
+            "value": "top"
+          },
+          "fontSize": {
+            "value": 18
+          },
+          "fill": {
+            "value": "#475569"
+          },
+          "text": {
+            "field": "arm_stat"
+          }
+        },
+        "update": {
+          "x": {
+            "signal": "scale('xscale', datum.payload_compression) + (scale('xscale', datum.footprint_compression) - scale('xscale', datum.payload_compression)) * ease"
+          },
+          "y": {
+            "scale": "yscale",
+            "field": "recall_max"
+          },
+          "dx": {
+            "field": "label_dx"
+          },
+          "dy": {
+            "signal": "datum.label_dy + 24"
+          },
+          "align": {
+            "field": "label_align"
+          },
+          "baseline": {
+            "value": "top"
+          },
+          "fontSize": {
+            "value": 18
+          },
+          "fill": {
+            "value": "#475569"
+          },
+          "text": {
+            "field": "arm_stat"
+          },
+          "opacity": {
+            "signal": "stage >= 2 ? min(tween * 3, 1) : 0"
+          }
+        }
+      }
+    },
+    {
+      "type": "text",
+      "encode": {
+        "enter": {
+          "x": {
+            "value": 8
+          },
+          "y": {
+            "value": -22
+          },
+          "align": {
+            "value": "left"
+          },
+          "fill": {
+            "value": "#1e293b"
+          },
+          "text": {
+            "value": "open = payload compression (nominal), filled = footprint compression (measured)"
+          }
+        },
+        "update": {
+          "opacity": {
+            "value": 1
+          }
+        }
+      }
+    }
+  ]
+}

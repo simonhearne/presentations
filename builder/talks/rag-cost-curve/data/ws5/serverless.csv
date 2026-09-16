@@ -1,0 +1,42 @@
+kind,item,value,unit,note
+rate,vcu,4,usd_per_million_vcu,same price for reads and writes
+rate,storage,0.3,usd_per_gb_month,GCP us-west1; varies by region
+model,bytes_per_write_vcu,4096,bytes,write vCU = vector_bytes / 4096
+model,storage_multiplier_fp16,1.165,x,billed GB over raw FP16 vector bytes
+model,read_vcu_at_1m_entities_1536d,15,vcu_per_read,UPPER BOUND for any smaller collection; calculator floor is 1M entities
+model,read_vcu_at_10m_entities_1536d,50,vcu_per_read,shows reads grow sub-linearly with collection size
+free,storage,5,gb,stated on the pricing page
+free,compute,2500000,vcu_per_month,stated on the pricing page
+free,collections,5,collections,the deck indexed 8 corpora in total so not all at once on one free account
+rate,writes_1536d_fp16,3,usd_per_million_writes,the deck embedding: 3072 B per vector
+rate,writes_368d_fp16,0.7188,usd_per_million_writes,for contrast: a 368d vector is 4.17x cheaper to write than a 1536d one
+corpus,ws6b_l.n_vectors,2906,vectors,
+corpus,ws6b_l.vector_gb,0.0104,gb,n x 3072 B x 1.165 storage multiplier
+corpus,ws6b_l.payload_gb_upper,0,gb,chunk_chars not recorded; payload not modelled
+corpus,ws6b_l.billed_gb_upper,0.0104,gb,vector plus payload upper bound
+corpus,ws6b_l.pct_of_free_storage,0.208,percent,
+corpus,ws6b_l.ingest_vcu,2180,vcu,one-off; 0.75 vCU per 1536d FP16 entity
+corpus,ws6b_l.ingest_usd_if_paid,0.008718,usd,what the one-off ingest would cost outside the free tier
+corpus,ws6b_l.pct_of_free_vcu,0.0872,percent,
+corpus,ws6b_l.usd_per_query_max,0.00006,usd,UPPER BOUND: priced at the 1M-entity read; this corpus is far smaller
+corpus,ws6b_l.free_queries_per_day_min,5470,queries_per_day,LOWER BOUND: same 1M-entity read bound; after ingest in the loading month
+corpus,ws6c_agentic_hil.n_vectors,7441,vectors,
+corpus,ws6c_agentic_hil.vector_gb,0.02663,gb,n x 3072 B x 1.165 storage multiplier
+corpus,ws6c_agentic_hil.payload_gb_upper,0,gb,chunk_chars not recorded; payload not modelled
+corpus,ws6c_agentic_hil.billed_gb_upper,0.02663,gb,vector plus payload upper bound
+corpus,ws6c_agentic_hil.pct_of_free_storage,0.5326,percent,
+corpus,ws6c_agentic_hil.ingest_vcu,5581,vcu,one-off; 0.75 vCU per 1536d FP16 entity
+corpus,ws6c_agentic_hil.ingest_usd_if_paid,0.022323,usd,what the one-off ingest would cost outside the free tier
+corpus,ws6c_agentic_hil.pct_of_free_vcu,0.2232,percent,
+corpus,ws6c_agentic_hil.usd_per_query_max,0.00006,usd,UPPER BOUND: priced at the 1M-entity read; this corpus is far smaller
+corpus,ws6c_agentic_hil.free_queries_per_day_min,5463,queries_per_day,LOWER BOUND: same 1M-entity read bound; after ingest in the loading month
+corpus,ws8_issues.n_vectors,45888,vectors,
+corpus,ws8_issues.vector_gb,0.164228,gb,n x 3072 B x 1.165 storage multiplier
+corpus,ws8_issues.payload_gb_upper,0.082598,gb,n x 1800 chunk-char cap; upper bound
+corpus,ws8_issues.billed_gb_upper,0.246826,gb,vector plus payload upper bound
+corpus,ws8_issues.pct_of_free_storage,4.9365,percent,
+corpus,ws8_issues.ingest_vcu,34416,vcu,one-off; 0.75 vCU per 1536d FP16 entity
+corpus,ws8_issues.ingest_usd_if_paid,0.137664,usd,what the one-off ingest would cost outside the free tier
+corpus,ws8_issues.pct_of_free_vcu,1.3766,percent,
+corpus,ws8_issues.usd_per_query_max,0.00006,usd,UPPER BOUND: priced at the 1M-entity read; this corpus is far smaller
+corpus,ws8_issues.free_queries_per_day_min,5400,queries_per_day,LOWER BOUND: same 1M-entity read bound; after ingest in the loading month

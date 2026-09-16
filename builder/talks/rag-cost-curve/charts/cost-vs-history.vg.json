@@ -1,0 +1,240 @@
+{
+  "$schema": "https://vega.github.io/schema/vega/v5.json",
+  "description": "Cost billed vs corpus size (log x, corpus_tokens: 98,134 / 392,116 / 1,221,906), replay against memsearch, with the context-window cliff at L where full replay cannot run. Source: data/ws6b/cost_vs_history.csv, columns cost_billed_usd, corpus_tokens and judge_accuracy. `cost_billed_usd` is the MEDIAN billed cost per query, the steady-state basis; the break-even chart prices the same runs on the mean-billed basis (postdiction_gate.csv), which reads 0.2030 at M against this chart's 0.0789, so the two must not be quoted against each other. Drawn at 1400x460 since 2026-09-16, when the slide came out of the backups into the main deck and 1100x320 left the lower half of the frame empty.",
+  "width": 1400,
+  "height": 460,
+  "padding": { "left": 10, "right": 30, "top": 30, "bottom": 10 },
+  "background": "transparent",
+  "signals": [
+    { "name": "stage", "value": 0 }
+  ],
+  "data": [
+    {
+      "name": "cost",
+      "url": "../data/ws6b/cost_vs_history.csv",
+      "format": {
+        "type": "csv",
+        "parse": {
+          "corpus_tokens": "number",
+          "cost_billed_usd": "number",
+          "judge_accuracy": "number",
+          "n": "number"
+        }
+      }
+    },
+    {
+      "name": "replay",
+      "source": "cost",
+      "transform": [{ "type": "filter", "expr": "datum.arm === 'replay'" }]
+    },
+    {
+      "name": "memsearch",
+      "source": "cost",
+      "transform": [{ "type": "filter", "expr": "datum.arm === 'memsearch'" }]
+    },
+    {
+      "name": "ratios",
+      "source": "cost",
+      "transform": [
+        { "type": "pivot", "field": "arm", "value": "cost_billed_usd", "groupby": ["size", "corpus_tokens"] },
+        { "type": "formula", "as": "ratio", "expr": "datum.replay / datum.memsearch" },
+        { "type": "formula", "as": "ratio_label", "expr": "format(datum.ratio, '.1f') + 'x'" }
+      ]
+    },
+    {
+      "name": "replay_l",
+      "source": "cost",
+      "transform": [
+        { "type": "filter", "expr": "datum.arm === 'replay' && datum.size === 'l'" },
+        { "type": "formula", "as": "truncated_label", "expr": "'truncated to 78.5 %'" }
+      ]
+    },
+    {
+      "name": "cliff",
+      "source": "cost",
+      "transform": [
+        { "type": "filter", "expr": "datum.arm === 'replay' && datum.size === 'l'" },
+        { "type": "formula", "as": "cliff_label", "expr": "'1,221,932 tokens > 1,000,000 maximum: full replay cannot run'" }
+      ]
+    }
+  ],
+  "scales": [
+    {
+      "name": "xscale",
+      "type": "log",
+      "base": 10,
+      "domain": [80000, 1500000],
+      "range": "width"
+    },
+    {
+      "name": "yscale",
+      "type": "linear",
+      "domain": { "data": "cost", "field": "cost_billed_usd" },
+      "range": "height",
+      "nice": true,
+      "zero": true
+    },
+    {
+      "name": "color",
+      "type": "ordinal",
+      "domain": ["replay", "memsearch"],
+      "range": ["#c84cff", "#7f47ff"]
+    }
+  ],
+  "axes": [
+    {
+      "orient": "bottom",
+      "scale": "xscale",
+      "title": "corpus size (tokens)",
+      "values": [98134, 392116, 1221906],
+      "format": ","
+    },
+    {
+      "orient": "left",
+      "scale": "yscale",
+      "title": "cost billed (USD)",
+      "format": "$,.3f",
+      "grid": true
+    }
+  ],
+  "marks": [
+    {
+      "type": "line",
+      "from": { "data": "replay" },
+      "encode": {
+        "enter": {
+          "x": { "scale": "xscale", "field": "corpus_tokens" },
+          "y": { "scale": "yscale", "field": "cost_billed_usd" },
+          "stroke": { "scale": "color", "field": "arm" },
+          "strokeWidth": { "value": 3 }
+        },
+        "update": { "opacity": { "signal": "stage >= 1 ? 1 : 0" } }
+      }
+    },
+    {
+      "type": "symbol",
+      "from": { "data": "replay" },
+      "encode": {
+        "enter": {
+          "x": { "scale": "xscale", "field": "corpus_tokens" },
+          "y": { "scale": "yscale", "field": "cost_billed_usd" },
+          "size": { "value": 90 },
+          "fill": { "scale": "color", "field": "arm" },
+          "tooltip": {
+            "signal": "{'arm': 'replay', 'size': upper(datum.size), 'corpus tokens': format(datum.corpus_tokens, ','), 'cost billed (USD)': format(datum.cost_billed_usd, '$,.3f'), 'judge accuracy': format(datum.judge_accuracy, '.2f')}"
+          }
+        },
+        "update": { "opacity": { "signal": "stage >= 1 ? 1 : 0" } }
+      }
+    },
+    {
+      "type": "text",
+      "from": { "data": "replay_l" },
+      "encode": {
+        "enter": {
+          "x": { "scale": "xscale", "field": "corpus_tokens" },
+          "y": { "scale": "yscale", "field": "cost_billed_usd" },
+          "dx": { "value": 14 },
+          "dy": { "value": 4 },
+          "align": { "value": "left" },
+          "baseline": { "value": "middle" },
+          "fontWeight": { "value": 600 },
+          "fill": { "value": "#c84cff" },
+          "text": { "field": "truncated_label" }
+        },
+        "update": { "opacity": { "signal": "stage >= 1 ? 1 : 0" } }
+      }
+    },
+    {
+      "type": "line",
+      "from": { "data": "memsearch" },
+      "encode": {
+        "enter": {
+          "x": { "scale": "xscale", "field": "corpus_tokens" },
+          "y": { "scale": "yscale", "field": "cost_billed_usd" },
+          "stroke": { "scale": "color", "field": "arm" },
+          "strokeWidth": { "value": 3 }
+        },
+        "update": { "opacity": { "signal": "stage >= 2 ? 1 : 0" } }
+      }
+    },
+    {
+      "type": "symbol",
+      "from": { "data": "memsearch" },
+      "encode": {
+        "enter": {
+          "x": { "scale": "xscale", "field": "corpus_tokens" },
+          "y": { "scale": "yscale", "field": "cost_billed_usd" },
+          "size": { "value": 90 },
+          "fill": { "scale": "color", "field": "arm" },
+          "tooltip": {
+            "signal": "{'arm': 'memsearch', 'size': upper(datum.size), 'corpus tokens': format(datum.corpus_tokens, ','), 'cost billed (USD)': format(datum.cost_billed_usd, '$,.3f'), 'judge accuracy': format(datum.judge_accuracy, '.2f')}"
+          }
+        },
+        "update": { "opacity": { "signal": "stage >= 2 ? 1 : 0" } }
+      }
+    },
+    {
+      "type": "text",
+      "from": { "data": "ratios" },
+      "encode": {
+        "enter": {
+          "x": { "scale": "xscale", "field": "corpus_tokens" },
+          "y": { "scale": "yscale", "field": "replay" },
+          "dy": { "value": -12 },
+          "align": { "value": "center" },
+          "fontWeight": { "value": 600 },
+          "fill": { "value": "#1e293b" },
+          "text": { "field": "ratio_label" },
+          "tooltip": {
+            "signal": "{'size': upper(datum.size), 'replay ÷ memsearch': datum.ratio_label}"
+          }
+        },
+        "update": { "opacity": { "signal": "stage >= 2 ? 1 : 0" } }
+      }
+    },
+    {
+      "type": "symbol",
+      "from": { "data": "cliff" },
+      "encode": {
+        "enter": {
+          "x": { "scale": "xscale", "field": "corpus_tokens" },
+          "y": { "scale": "yscale", "field": "cost_billed_usd" },
+          "shape": { "value": "circle" },
+          "size": { "value": 320 },
+          "fill": { "value": "transparent" },
+          "stroke": { "value": "#f59e0b" },
+          "strokeWidth": { "value": 2.5 },
+          "tooltip": { "signal": "{'arm': 'replay', 'size': 'L', 'judge accuracy': format(datum.judge_accuracy, '.2f'), 'note': 'context window exceeded'}" }
+        },
+        "update": { "opacity": { "signal": "stage >= 3 ? 1 : 0" } }
+      }
+    },
+    {
+      "type": "text",
+      "from": { "data": "cliff" },
+      "encode": {
+        "enter": {
+          "x": { "value": 0 },
+          "y": { "value": 8 },
+          "align": { "value": "left" },
+          "baseline": { "value": "top" },
+          "fontWeight": { "value": 600 },
+          "fill": { "value": "#f59e0b" },
+          "text": { "field": "cliff_label" }
+        },
+        "update": { "opacity": { "signal": "stage >= 3 ? 1 : 0" } }
+      }
+    }
+  ],
+  "legends": [
+    {
+      "fill": "color",
+      "orient": "bottom-right",
+      "title": null,
+      "labelFontSize": 15,
+      "symbolSize": 120,
+      "offset": 8
+    }
+  ]
+}

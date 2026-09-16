@@ -1,0 +1,36 @@
+bucket,qid,arms_correct,question,golds,arm,answer,idk,judge_correct
+never,907,0,panic at the disco song about a wedding,"[""I Write Sins Not Tragedies""]",mrl_512_sq8_np512,"""Hallelujah""",False,False
+never,907,0,panic at the disco song about a wedding,"[""I Write Sins Not Tragedies""]",pca_uc_384_sq8_np512,"**""Hallelujah""**",False,False
+never,907,0,panic at the disco song about a wedding,"[""I Write Sins Not Tragedies""]",pca_uc_512_sq8_np512,"""Death of a Bachelor"" — specifically, the song ""Hallelujah"" or the album's title reflects a wedding/bachelor theme.
+
+Based on the passages, the most specific answer is: **""Death of a Bachelor""**",False,False
+never,907,0,panic at the disco song about a wedding,"[""I Write Sins Not Tragedies""]",pq_np256,"""Marry You""",False,False
+never,907,0,panic at the disco song about a wedding,"[""I Write Sins Not Tragedies""]",rabitq_np256,Death of a Bachelor,False,False
+never,907,0,panic at the disco song about a wedding,"[""I Write Sins Not Tragedies""]",refine_np64,Marry You,False,False
+never,907,0,panic at the disco song about a wedding,"[""I Write Sins Not Tragedies""]",sq8_np16,I don't know,True,False
+never,907,0,panic at the disco song about a wedding,"[""I Write Sins Not Tragedies""]",sq8_np4,I don't know,True,False
+never,907,0,panic at the disco song about a wedding,"[""I Write Sins Not Tragedies""]",sq8_np512,Marry You,False,False
+never,907,0,panic at the disco song about a wedding,"[""I Write Sins Not Tragedies""]",sq8_np64,Marry You,False,False
+never,907,0,panic at the disco song about a wedding,"[""I Write Sins Not Tragedies""]",sq8_np8,I don't know,True,False
+always,264,11,who was the viceroy when the simon commission visited india,"[""Lord Irwin""]",mrl_512_sq8_np512,Lord Irwin,False,True
+always,264,11,who was the viceroy when the simon commission visited india,"[""Lord Irwin""]",pca_uc_384_sq8_np512,Lord Irwin,False,True
+always,264,11,who was the viceroy when the simon commission visited india,"[""Lord Irwin""]",pca_uc_512_sq8_np512,Lord Irwin,False,True
+always,264,11,who was the viceroy when the simon commission visited india,"[""Lord Irwin""]",pq_np256,Lord Irwin,False,True
+always,264,11,who was the viceroy when the simon commission visited india,"[""Lord Irwin""]",rabitq_np256,Lord Irwin,False,True
+always,264,11,who was the viceroy when the simon commission visited india,"[""Lord Irwin""]",refine_np64,Lord Irwin,False,True
+always,264,11,who was the viceroy when the simon commission visited india,"[""Lord Irwin""]",sq8_np16,Lord Irwin,False,True
+always,264,11,who was the viceroy when the simon commission visited india,"[""Lord Irwin""]",sq8_np4,Lord Irwin,False,True
+always,264,11,who was the viceroy when the simon commission visited india,"[""Lord Irwin""]",sq8_np512,Lord Irwin,False,True
+always,264,11,who was the viceroy when the simon commission visited india,"[""Lord Irwin""]",sq8_np64,Lord Irwin,False,True
+always,264,11,who was the viceroy when the simon commission visited india,"[""Lord Irwin""]",sq8_np8,Lord Irwin,False,True
+split,3129,6,who wrote the theme song to law and order,"[""Mike Post""]",mrl_512_sq8_np512,Mike Post,False,True
+split,3129,6,who wrote the theme song to law and order,"[""Mike Post""]",pca_uc_384_sq8_np512,I don't know,True,False
+split,3129,6,who wrote the theme song to law and order,"[""Mike Post""]",pca_uc_512_sq8_np512,I don't know,True,False
+split,3129,6,who wrote the theme song to law and order,"[""Mike Post""]",pq_np256,Mike Post,False,True
+split,3129,6,who wrote the theme song to law and order,"[""Mike Post""]",rabitq_np256,Mike Post,False,True
+split,3129,6,who wrote the theme song to law and order,"[""Mike Post""]",refine_np64,Mike Post,False,True
+split,3129,6,who wrote the theme song to law and order,"[""Mike Post""]",sq8_np16,Mike Post,False,True
+split,3129,6,who wrote the theme song to law and order,"[""Mike Post""]",sq8_np4,I don't know,True,False
+split,3129,6,who wrote the theme song to law and order,"[""Mike Post""]",sq8_np512,Mike Post,False,True
+split,3129,6,who wrote the theme song to law and order,"[""Mike Post""]",sq8_np64,I don't know,True,False
+split,3129,6,who wrote the theme song to law and order,"[""Mike Post""]",sq8_np8,I don't know,True,False

@@ -1,6 +1,6 @@
 {
   "$schema": "https://vega.github.io/schema/vega/v5.json",
-  "description": "Recall vs latency — illustrative shapes for HNSW, IVF, DiskANN.",
+  "description": "Recall vs latency: illustrative shapes for HNSW, IVF, DiskANN.",
   "background": "transparent",
   "width": 1200,
   "height": 640,

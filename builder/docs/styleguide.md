@@ -29,13 +29,16 @@ Defined in `css/layouts.css` under "Shared components".
 |---|---|---|
 | Card | `.card` | White panel: brand border, `--zilliz-radius-card`, `--zilliz-shadow-card`, flex column. `.is-win` lifts one card as the answer. |
 | Card grid | `.card-grid`, `.cols-2`, `.cols-4` | 3-up by default. Add `.fragment` to cards for reveals. |
+| Labelled card | `.feature-cat`, `.case-name`, `.case-proof` | The three-part card body: mono uppercase eyebrow (what kind of thing this is), headline (which one), then the sentence or `<ul>` that backs it. `.case-proof strong` takes brand blue. Any part is optional. |
 | Pill | `.pill` + `.navy` / `.gradient` / `.berry` / `.ghost` | Mono uppercase tag, equal `min-width` so pill columns align. `.ghost` is a bare label (no fill). |
 | Stat grid | `.stat-grid`, `.stat-card` (+`.is-warn`), `.stat-label`, `.stat-value`, `.stat-note` | 3-up metric tiles. |
 | Callout | `blockquote` (+`.blue` / `.bottom` / `.small`), `.label` | Stat-tile chrome (tint, `-20` border, card radius) with a mono eyebrow. Berry by default, `.blue` for the positive variant. |
+| Closing line | `.closing-line` (+`.is-emphatic`) | The sentence under a diagram, grid or chart that says what it meant. Bare text, no panel. `.is-emphatic` makes it bold navy when the line is the takeaway rather than a caption. Use `blockquote` instead when it needs chrome, or `p.punchline` when the line *is* the slide. |
 | Pull quote | `blockquote.case-quote`, `cite` | No panel: gradient quote glyph, navy text, mono grey attribution. |
-| Version eyebrow | `[3.0]{.eyebrow-new}`, `[2.5]{.eyebrow-ver}` | Inline, em-sized: scales with heading/cell/bullet context. `-new` gradient, `-ver` muted grey. |
+| Eyebrow | `[RAM]{.eyebrow-new}`, `[2.5]{.eyebrow-ver}` | Inline label beside the text it marks — trails a heading, rides alongside a cell or bullet. Em-sized: scales with its context, stepping down again inside an `h1`. `-new` gradient for the headline mark, `-ver` muted grey for the quiet one (release version, memory tier). |
 | Highlight | `mark` (plain markdown) | Brand-tinted emphasis. |
 | Big code | `.big-code` on the slide | Enlarges code blocks on sparse slides. |
+| Placeholder | `.slide.placeholder`, `.placeholder-dep` | Unfinished-slide marker: hatched border, rotated "PLACEHOLDER" tag, dimmed body. `.placeholder-dep` is an undimmed "waiting on: " line naming the blocker. |
 
 Example — a 2-up grid of cards with pills:
 

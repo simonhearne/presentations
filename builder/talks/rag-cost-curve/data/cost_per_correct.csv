@@ -1,0 +1,12 @@
+corpus_order,corpus,corpus_label,arm,arm_label,n,n_correct,judge_accuracy,total_cost_agent_usd,cost_per_correct_usd
+0,fastapi,fastapi: code the model knows,parametric,no retrieval,40,25,0.625,0.3595,0.0144
+0,fastapi,fastapi: code the model knows,agentic,agentic (grep),40,39,0.975,2.1738,0.0557
+0,fastapi,fastapi: code the model knows,indexed_topk3,indexed top-k 3,40,37,0.925,2.2109,0.0598
+0,fastapi,fastapi: code the model knows,indexed,indexed top-k 10,40,40,1.000,2.6639,0.0666
+1,agentic_hil,agentic-hil: code it has never seen,parametric,no retrieval,40,0,0.000,0.1542,
+1,agentic_hil,agentic-hil: code it has never seen,agentic,agentic (grep),40,36,0.900,5.5462,0.1541
+1,agentic_hil,agentic-hil: code it has never seen,indexed_topk3,indexed top-k 3,40,38,0.950,3.9405,0.1037
+1,agentic_hil,agentic-hil: code it has never seen,indexed,indexed top-k 10,40,39,0.975,3.6271,0.0930
+2,ws8_issues,GitHub issues: prose (1 and 3+ hop),parametric,no retrieval,60,0,0.000,0.2690,
+2,ws8_issues,GitHub issues: prose (1 and 3+ hop),agentic,agentic (grep),60,38,0.633,4.6351,0.1220
+2,ws8_issues,GitHub issues: prose (1 and 3+ hop),indexed,indexed top-k 10,60,32,0.533,26.8577,0.8393
