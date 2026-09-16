@@ -30,7 +30,7 @@ Deploy is handled by Netlify ([`netlify.toml`](netlify.toml)):
 
 | Talk | Year | Format |
 | --- | --- | --- |
-| The RAG Cost Curve | 2026 | Markdown build |
+| [The RAG Cost Curve](https://talks.simonhearne.com/rag-cost-curve) | 2026 | Markdown build |
 | [Vector Search, Visualised](https://talks.simonhearne.com/vector-search-visualised) | 2026 | Markdown build |
 | Optimising Core Web Vitals on SPAs | 2022 | reveal.js |
 | An Inclusive Web is Fast by Default | 2021 | reveal.js |
