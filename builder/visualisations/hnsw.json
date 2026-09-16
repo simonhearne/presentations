@@ -1,6 +1,6 @@
 {
   "$schema": "https://vega.github.io/schema/vega/v5.json",
-  "description": "Interactive HNSW search explainer — 3-layer hierarchical graph traversal with live distance scores",
+  "description": "Interactive HNSW search explainer: 3-layer hierarchical graph traversal with live distance scores",
   "width": 1000,
   "height": 500,
   "padding": 0,
@@ -8,6 +8,10 @@
   "background": "rgba(0,0,0,0)",
 
   "signals": [
+    {
+      "name": "shownarration",
+      "value": true
+    },
     {
       "name": "panelHeight",
       "value": "(height / 3)",
@@ -43,7 +47,7 @@
     },
     {
       "name": "narration",
-      "update": "['Step 1 — LAYER 2: Enter at fixed entry point A. Distance to query: 7.16. Greedily check A neighbors on this layer.', 'Step 2 — LAYER 2: Neighbor B distance 3.20, closer than A (7.16). Move to B.', 'Step 3 — LAYER 2: Checked C (distance 3.35), farther than B. No closer neighbor of B. Drop to layer 1.', 'Step 4 — LAYER 1: Restart from B (best so far). Layer 1 is denser; new neighbors D, E now visible.', 'Step 5 — LAYER 1: E distance 1.12, much closer than B (3.20) and D (5.10). Move to E.', 'Step 6 — LAYER 1: Checked F (distance 1.58), farther than E. No closer neighbor. Drop to layer 0.', 'Step 7 — LAYER 0: Restart from E. Densest layer; new neighbors G, H, J now visible.', 'Step 8 — LAYER 0: Evaluated G=3.04, J=1.80, H=0.28 ← closest. Move to H.', 'Step 9 — LAYER 0: H remaining neighbor F (1.58) is farther. ★ CONVERGED: H is the nearest neighbor at distance 0.28.'][step]"
+      "update": "['Step 1: LAYER 2: Enter at fixed entry point A. Distance to query: 7.16. Greedily check A neighbors on this layer.', 'Step 2: LAYER 2: Neighbor B distance 3.20, closer than A (7.16). Move to B.', 'Step 3: LAYER 2: Checked C (distance 3.35), farther than B. No closer neighbor of B. Drop to layer 1.', 'Step 4: LAYER 1: Restart from B (best so far). Layer 1 is denser; new neighbors D, E now visible.', 'Step 5: LAYER 1: E distance 1.12, much closer than B (3.20) and D (5.10). Move to E.', 'Step 6: LAYER 1: Checked F (distance 1.58), farther than E. No closer neighbor. Drop to layer 0.', 'Step 7: LAYER 0: Restart from E. Densest layer; new neighbors G, H, J now visible.', 'Step 8: LAYER 0: Evaluated G=3.04, J=1.80, H=0.28 ← closest. Move to H.', 'Step 9: LAYER 0: H remaining neighbor F (1.58) is farther. ★ CONVERGED: H is the nearest neighbor at distance 0.28.'][step]"
     },
     {
       "name": "currentLayer",
@@ -312,9 +316,9 @@
           "type": "text",
           "encode": {
             "enter": {
-              "x": {"value": 12}, "y": {"value": 16},
-              "text": {"value": "Layer 2  —  sparse  (entry layer)"},
-              "fontSize": {"value": 12}, "fontWeight": {"value": "bold"}
+              "x": {"value": 12}, "y": {"value": 20},
+              "text": {"value": "Layer 2: sparse (entry layer)"},
+              "fontWeight": {"value": "bold"}
             },
             "update": {
               "fill": {"signal": "currentLayer === 2 ? '#4c78a8' : '#999'"}
@@ -342,9 +346,9 @@
           "type": "text",
           "encode": {
             "enter": {
-              "x": {"value": 12}, "y": {"value": 16},
-              "text": {"value": "Layer 1  —  medium density"},
-              "fontSize": {"value": 12}, "fontWeight": {"value": "bold"}
+              "x": {"value": 12}, "y": {"value": 20},
+              "text": {"value": "Layer 1: medium density"},
+              "fontWeight": {"value": "bold"}
             },
             "update": {
               "fill": {"signal": "currentLayer === 1 ? '#4c78a8' : '#999'"}
@@ -372,9 +376,9 @@
           "type": "text",
           "encode": {
             "enter": {
-              "x": {"value": 12}, "y": {"value": 16},
-              "text": {"value": "Layer 0  —  dense  (contains all vectors)"},
-              "fontSize": {"value": 12}, "fontWeight": {"value": "bold"}
+              "x": {"value": 12}, "y": {"value": 20},
+              "text": {"value": "Layer 0: dense (contains all vectors)"},
+              "fontWeight": {"value": "bold"}
             },
             "update": {
               "fill": {"signal": "currentLayer === 0 ? '#4c78a8' : '#999'"}
@@ -497,10 +501,10 @@
           "x": {"value": 360},
           "y": {"value": 12},
           "text": {"signal": "narration"},
-          "fontSize": {"value": 12},
           "align": {"value": "center"},
           "fill": {"value": "#1a1a1a"},
-          "limit": {"value": 720}
+          "limit": {"value": 720},
+          "opacity": {"signal": "shownarration ? 1 : 0"}
         }
       }
     }

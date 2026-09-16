@@ -1,12 +1,13 @@
 {
   "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
-  "description": "One query, four columns — BM25, dense, fused, reranked.",
+  "description": "One query, four columns: BM25, dense, fused, reranked.",
   "width": 760,
   "height": 360,
   "padding": 24,
   "background": "transparent",
   "config": {
-    "axis": { "labelFontSize": 12, "titleFontSize": 13 }
+    "axis": { "labelFontSize": 12, "titleFontSize": 13 },
+    "legend": { "labelFontSize": 13, "titleFontSize": 14 }
   },
   "params": [
     {

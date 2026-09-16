@@ -2,8 +2,8 @@
   "$schema": "https://vega.github.io/schema/vega/v5.json",
   "description": "Trade-off triangle: Speed / Accuracy / Cheap. One section per stage: 1 = exact (FLAT), 2 = ANN index family (IVF_FLAT, HNSW, DISKANN, SCANN, AISAQ), 3 = quantisation arrows for valid Milvus index+quant combos (IVF_SQ8/PQ/RABITQ, HNSW_SQ/PQ/PRQ), 4 = dimensionality reduction (one global PCA/MRL arrow toward Fast/Cheap), 5 = refinement / rescoring (one arrow toward Accurate, anti-parallel to the PCA/MRL arrow). Reveal is cumulative: stage < current is dimmed, stage === current is highlighted, stage > current is hidden. GPU_* index variants are intentionally excluded (not covered in the talk).",
   "width": 600,
-  "height": 600,
-  "padding": 32,
+  "height": 500,
+  "padding": 12,
   "signals": [
     { "name": "stage", "value": 0 },
     {
@@ -40,17 +40,17 @@
       "name": "techniques",
       "values": [
         {"name": "FLAT",       "stage": 1, "kind": "base",  "ws": 0.10, "wa": 1.00, "wc": 0.10},
-        {"name": "IVF_FLAT",   "stage": 2, "kind": "base",  "ws": 0.70, "wa": 0.55, "wc": 0.45},
+        {"name": "IVF",        "stage": 2, "kind": "base",  "ws": 0.70, "wa": 0.55, "wc": 0.45},
         {"name": "HNSW",       "stage": 2, "kind": "base",  "ws": 1.00, "wa": 0.95, "wc": 0.20},
         {"name": "DISKANN",    "stage": 2, "kind": "base",  "ws": 0.50, "wa": 0.80, "wc": 0.90},
         {"name": "SCANN",      "stage": 2, "kind": "base",  "ws": 0.95, "wa": 0.45, "wc": 0.75},
-        {"name": "AISAQ",      "stage": 2, "kind": "base",  "ws": 0.35, "wa": 0.70, "wc": 1.10},
-        {"name": "IVF_SQ8",    "stage": 3, "kind": "quant", "ws": 0.75, "wa": 0.48, "wc": 0.65, "bws": 0.70, "bwa": 0.55, "bwc": 0.45, "ldx": 4,   "ldy": 15, "lalign": "left",  "lbaseline": "top"},
-        {"name": "IVF_PQ",     "stage": 3, "kind": "quant", "ws": 0.78, "wa": 0.32, "wc": 0.85, "bws": 0.70, "bwa": 0.55, "bwc": 0.45, "ldx": 11,  "ldy": 0,  "lalign": "left",  "lbaseline": "middle"},
-        {"name": "IVF_RABITQ", "stage": 3, "kind": "quant", "ws": 0.80, "wa": 0.45, "wc": 0.95, "bws": 0.70, "bwa": 0.55, "bwc": 0.45, "ldx": 8,   "ldy": 19, "lalign": "left",  "lbaseline": "top"},
-        {"name": "HNSW_SQ",    "stage": 3, "kind": "quant", "ws": 1.00, "wa": 0.88, "wc": 0.42, "bws": 1.00, "bwa": 0.95, "bwc": 0.20, "ldx": -11, "ldy": 0,  "lalign": "right", "lbaseline": "middle"},
-        {"name": "HNSW_PQ",    "stage": 3, "kind": "quant", "ws": 1.00, "wa": 0.64, "wc": 0.68, "bws": 1.00, "bwa": 0.95, "bwc": 0.20, "ldx": 0,   "ldy": -15, "lalign": "center", "lbaseline": "bottom"},
-        {"name": "HNSW_PRQ",   "stage": 3, "kind": "quant", "ws": 1.00, "wa": 0.80, "wc": 0.78, "bws": 1.00, "bwa": 0.95, "bwc": 0.20, "ldx": -8,  "ldy": 13, "lalign": "right", "lbaseline": "top"}
+        {"name": "AISAQ",      "stage": 2, "kind": "base",  "ws": 0.25, "wa": 0.70, "wc": 1.20},
+        {"name": "IVF_SQ8",    "stage": 3, "kind": "quant", "ws": 0.85, "wa": 0.48, "wc": 0.65, "bws": 0.70, "bwa": 0.55, "bwc": 0.45, "ldx": 4,   "ldy": 10, "lalign": "left",  "lbaseline": "bottom"},
+        {"name": "IVF_PQ",     "stage": 3, "kind": "quant", "ws": 0.88, "wa": 0.32, "wc": 0.85, "bws": 0.70, "bwa": 0.55, "bwc": 0.45, "ldx": 11,  "ldy": 0,  "lalign": "left",  "lbaseline": "bottom"},
+        {"name": "IVF_RABITQ", "stage": 3, "kind": "quant", "ws": 0.95, "wa": 0.45, "wc": 0.95, "bws": 0.70, "bwa": 0.55, "bwc": 0.45, "ldx": 8,   "ldy": 10, "lalign": "left",  "lbaseline": "bottom"},
+        {"name": "HNSW_SQ",    "stage": 3, "kind": "quant", "ws": 1.00, "wa": 0.68, "wc": 0.42, "bws": 1.00, "bwa": 0.95, "bwc": 0.20, "ldx": -11, "ldy": 0,  "lalign": "right", "lbaseline": "bottom"},
+        {"name": "HNSW_PQ",    "stage": 3, "kind": "quant", "ws": 0.80, "wa": 0.44, "wc": 0.48, "bws": 1.00, "bwa": 0.95, "bwc": 0.20, "ldx": 0,   "ldy": -15, "lalign": "center", "lbaseline": "bottom"},
+        {"name": "HNSW_PRQ",    "stage": 3, "kind": "quant", "ws": 0.70, "wa": 0.44, "wc": 0.48, "bws": 1.00, "bwa": 0.95, "bwc": 0.20, "ldx": 0,   "ldy": -15, "lalign": "center", "lbaseline": "bottom"}
       ],
       "transform": [
         {"type": "formula", "expr": "datum.ws + datum.wa + datum.wc", "as": "wsum"},

@@ -1,0 +1,106 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "description": "WS4e: judge accuracy against measured recall@10, at four retrieval depths. Source: data/ws4e/mediator_by_k.csv, rows k in {1,3,5,10}, columns arm, k, recall_at_10, judge_accuracy, judge_accuracy_ci_lo/hi. Same axes as charts/quality-vs-recall.vg.json but on WS4e's 264-question stratum and four SQ8 arms (nprobe 1/4/48/512) instead of WS4's 450 questions and eleven arms; the two are NOT interchangeable. k=3 is drawn so the slide can hold WS4e's depth result against WS6c's, where k=3 beat the shipped limit of 10 on code search; it is monotone between k=1 and k=5 at every arm, and at sq8_np1 its judge accuracy equals k=1's exactly (0.473485), so those two points coincide at the left edge by data, not by error. Judge accuracy from nprobe 1 to nprobe 512 widens with depth (k=1 0.064394, k=3 0.113636, k=5 0.125, k=10 0.143939), the same ordering as data/ws4e/slope_by_k.csv (0.149496, 0.280227, 0.362966, 0.375069). Note this is the np1-to-np512 endpoint range, not max-minus-min: at k=5 the peak arm is np48 (0.651515), so max-min there is 0.159091. Error bars are drawn on k=10 only, the series the slide's guidance rests on. Series colours pass lightness, chroma, CVD separation, normal-vision and contrast checks against the light slide surface, and every series is direct-labelled, so identity is never colour alone. Stage 2's cost band spans np48 (recall 0.958712) to np512 (0.991288): nprobe is the search-cost knob, and 512/48 = 10.7x the IVF cells scanned. The >=4.3x throughput figure is WS2's own measurement (data/ws2/curves_10m.csv, arm ivf_sq8: 8.769665 qps at nprobe 512 against 37.878102 at nprobe 64) and is a bound, not an interpolation, because np48 is cheaper than the measured np64. WS2 and WS4e agree on the index: ivf_sq8 at nprobe 512 reads recall 0.99166 there against 0.991288 here. Every annotation layer carries its own data using the SAME field names as the series data (recall_at_10, judge_accuracy), so all layers share one x and one y definition and the axes resolve once.",
+  "data": { "url": "../data/ws4e/mediator_by_k.csv" },
+  "transform": [
+    { "filter": "datum.k === '1' || datum.k === '3' || datum.k === '10'" },
+    { "calculate": "'k = ' + datum.k", "as": "depth" },
+    { "calculate": "datum.arm === 'sq8_np1' ? 'nprobe 1' : replace(datum.arm, 'sq8_np', '')", "as": "nprobe" }
+  ],
+  "width": 1060,
+  "height": 320,
+  "padding": { "top": 10, "left": 5, "right": 92, "bottom": 5 },
+  "params": [{ "name": "stage", "value": 0 }],
+  "encoding": {
+    "x": {
+      "field": "recall_at_10",
+      "type": "quantitative",
+      "scale": { "domain": [0.55, 1.02], "zero": false, "nice": false },
+      "axis": { "title": "measured recall@10", "format": ".2f" }
+    },
+    "y": {
+      "field": "judge_accuracy",
+      "type": "quantitative",
+      "scale": { "domain": [0.44, 0.72], "zero": false, "nice": false },
+      "axis": { "title": "judge accuracy", "format": ".2f" }
+    }
+  },
+  "layer": [
+    {
+      "data": { "values": [{ "recall_at_10": 0.958712, "x1": 0.991288 }] },
+      "transform": [{ "filter": "stage >= 2" }],
+      "mark": { "type": "rect", "color": "#fbe9d2" },
+      "encoding": { "x2": { "field": "x1" }, "y": null }
+    },
+    {
+      "data": { "values": [{ "recall_at_10": 0.9545, "judge_accuracy": 0.501 }] },
+      "transform": [{ "filter": "stage >= 2" }],
+      "mark": { "type": "text", "align": "right", "baseline": "top", "fontSize": 16, "fontWeight": 600, "color": "#8a4f07", "lineBreak": "\n", "lineHeight": 20 },
+      "encoding": {
+        "text": { "value": "the last step: 10.7x the cells\nscanned, at least 4.3x slower,\nand +0.4 accuracy points" }
+      }
+    },
+    {
+      "data": { "values": [{ "recall_at_10": 0.958712 }] },
+      "transform": [{ "filter": "stage >= 3" }],
+      "mark": { "type": "rule", "strokeDash": [5, 4], "size": 2, "color": "#1e293b" },
+      "encoding": {
+        "y": { "datum": 0.464, "type": "quantitative" },
+        "y2": { "datum": 0.72 }
+      }
+    },
+    {
+      "transform": [{ "filter": "datum.k === '10'" }],
+      "mark": { "type": "errorbar", "ticks": true, "size": 9 },
+      "encoding": {
+        "y": { "field": "judge_accuracy_ci_lo", "type": "quantitative" },
+        "y2": { "field": "judge_accuracy_ci_hi" },
+        "color": { "value": "#175fff" }
+      }
+    },
+    {
+      "transform": [{ "filter": "datum.k === '10' || stage >= 1" }],
+      "mark": { "type": "line", "strokeWidth": 3, "point": { "filled": true, "size": 130 } },
+      "encoding": {
+        "color": {
+          "field": "depth",
+          "type": "nominal",
+          "scale": { "domain": ["k = 1", "k = 3", "k = 5", "k = 10"], "range": ["#c2710a", "#c84cff", "#009e8c", "#175fff"] },
+          "legend": null
+        },
+        "tooltip": [
+          { "field": "arm" },
+          { "field": "depth", "title": "depth" },
+          { "field": "recall_at_10", "format": ".4f", "title": "recall@10" },
+          { "field": "judge_accuracy", "format": ".4f", "title": "judge accuracy" },
+          { "field": "judge_accuracy_ci_lo", "format": ".4f", "title": "CI lo" },
+          { "field": "judge_accuracy_ci_hi", "format": ".4f", "title": "CI hi" }
+        ]
+      }
+    },
+    {
+      "transform": [
+        { "filter": "datum.arm === 'sq8_np512'" },
+        { "filter": "datum.k === '10' || stage >= 1" }
+      ],
+      "mark": { "type": "text", "align": "left", "dx": 16, "fontWeight": 700, "fontSize": 19 },
+      "encoding": {
+        "text": { "field": "depth", "type": "nominal" },
+        "color": {
+          "field": "depth",
+          "type": "nominal",
+          "scale": { "domain": ["k = 1", "k = 3", "k = 5", "k = 10"], "range": ["#c2710a", "#c84cff", "#009e8c", "#175fff"] },
+          "legend": null
+        }
+      }
+    },
+    {
+      "transform": [{ "filter": "datum.k === '10'" }],
+      "mark": { "type": "text", "align": "center", "fontSize": 15, "fontWeight": 600, "color": "#475569" },
+      "encoding": {
+        "y": { "datum": 0.452, "type": "quantitative" },
+        "text": { "field": "nprobe", "type": "nominal" }
+      }
+    }
+  ]
+}

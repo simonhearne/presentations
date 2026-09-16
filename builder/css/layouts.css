@@ -396,10 +396,36 @@
 /* Center the chart horizontally when there are no (or hidden) bindings.
    vega-embed always emits a <form class="vega-bindings">, empty when the spec
    has no bound inputs — so test for a non-empty form, not just its presence. */
-.slide .vega-chart:not(:has(.vega-bindings:not(:empty))),
-.slide.no-vega-bindings .vega-chart {
+.slide .vega-chart:not([data-fit="contain"]):not(:has(.vega-bindings:not(:empty))),
+.slide.no-vega-bindings .vega-chart:not([data-fit="contain"]) {
   grid-template-columns: auto;
   justify-content: center;
+}
+/* …and zero the gap in the same case. With one column the empty bindings form
+   becomes a second grid row, and a row gap is painted between rows whether or
+   not the second one has any height — so an unbound chart otherwise loses a
+   gap's worth of space off its bottom edge. */
+.slide .vega-chart:not(:has(.vega-bindings:not(:empty))),
+.slide.no-vega-bindings .vega-chart {
+  gap: 0;
+}
+/* fit: contain — scale a chart to the space the slide leaves it instead of
+   drawing it at the spec's pixel size. Vega's SVG renderer emits a viewBox, so
+   sizing the <svg> to its box scales the whole drawing — marks, labels and
+   strokes together — where vega-embed's own `width` option only widens the plot
+   area. The auto margins go because they stop the flex item stretching; the svg
+   keeps its aspect ratio (default preserveAspectRatio), so it grows until the
+   shorter axis runs out. Set `fit: contain` in the slide's `vega` block. */
+.slide .vega-chart[data-fit="contain"] {
+  grid-template-columns: minmax(0, 1fr);
+  margin-inline: 0;
+  min-height: 0;
+}
+.slide .vega-chart[data-fit="contain"] svg {
+  width: 100%;
+  max-width: none;
+  height: 100%;
+  max-height: 100%;
 }
 .slide .vega-chart .vega-embed {
   width: 100%;
@@ -652,6 +678,14 @@
   }
 }
 
+/* Closing line — the sentence that lands under a diagram, card grid or chart
+   and says what it meant. Plain by default; `.is-emphatic` gives it the weight
+   a slide needs when that line, not the content above it, is the takeaway.
+   Note `blockquote` is this file's panelled callout: this is the bare closing
+   sentence, no chrome. */
+.slide .closing-line { margin: var(--zilliz-s-3) 0 0; font-size: 28px; text-align: center; }
+.slide .closing-line.is-emphatic { margin-top: var(--zilliz-s-4); font-weight: 700; color: var(--zilliz-navy); }
+
 /* custom per-deck styles */
 .search-demo .header { display: flex; justify-content: center; align-items: center; gap: var(--zilliz-s-4); margin-bottom: var(--zilliz-s-4); }
 .search-demo .header .query {
@@ -717,7 +751,7 @@
 
 .search-demo .equation { display: flex; align-items: center; justify-content: center; gap: var(--zilliz-s-2); margin: var(--zilliz-s-2) 0; font-family: var(--zilliz-font-mono); }
 .search-demo .fraction { display: inline-flex; flex-direction: column; align-items: stretch; text-align: center; min-width: 60px; }
-.search-demo .num, .search-demo .den { font-size: 17px; padding: 4px 8px; line-height: 1.2; }
+.search-demo .num, .search-demo .den { font-size: 26px; padding: 4px 8px; line-height: 1.2; }
 .search-demo .num.hit-num { color: var(--zilliz-blue); font-weight: 700; }
 .search-demo .bar { border-top: 2px solid var(--zilliz-ink); }
 .search-demo .equals { font-size: 26px; opacity: 0.5; font-weight: 300; }
@@ -749,41 +783,144 @@
 .slide .card { background: var(--zilliz-white); border: 2px solid var(--zilliz-blue-20); border-radius: var(--zilliz-radius-card); padding: var(--zilliz-s-3); display: flex; flex-direction: column; gap: var(--zilliz-s-2); box-shadow: var(--zilliz-shadow-card); }
 .slide .card.is-win { border-color: var(--zilliz-blue); box-shadow: var(--zilliz-shadow-pop); }
 
-/* .card-grid — grid of cards, 3-up by default; .cols-2/.cols-4 change the count */
+/* .card-grid — grid of cards, 3-up by default; .cols-2/.cols-4/.cols-5 change
+   the count. Five columns tighten the gap: at that width the gap costs more
+   than the cards can spare. */
 .slide .card-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--zilliz-s-3) var(--zilliz-s-4); margin-top: var(--zilliz-s-4); }
 .slide .card-grid.cols-2 { grid-template-columns: repeat(2, 1fr); }
 .slide .card-grid.cols-4 { grid-template-columns: repeat(4, 1fr); gap: var(--zilliz-s-3); }
+.slide .card-grid.cols-5 { grid-template-columns: repeat(5, 1fr); gap: var(--zilliz-s-2); }
 
-/* .pill — mono uppercase tag; equal-width so pill columns align.
-   Color modifiers: .navy (solid), .gradient (brand), .berry (soft warn),
-   .ghost (bare label, no fill) */
-.slide .pill { font-family: var(--zilliz-font-mono); font-size: 18px; font-weight: 700; line-height: 1; text-transform: uppercase; letter-spacing: 0.04em; padding: 6px 11px; border-radius: 999px; white-space: nowrap; min-width: 94px; text-align: center; }
-.slide .pill.navy { background: var(--zilliz-navy); color: var(--zilliz-white); }
-.slide .pill.gradient { background: var(--zilliz-gradient); color: var(--zilliz-white); }
-.slide .pill.berry { background: var(--zilliz-berry-10); color: var(--zilliz-berry); }
-.slide .pill.ghost { padding: 0; min-width: 0; color: var(--zilliz-navy); }
+/* .feature-cat — mono uppercase category eyebrow that names what a card is
+   an instance of. Sits above the card's body, whatever shape that body takes:
+   query-pair rows, a feature list, or a claim. Unlike .pill it has no fill,
+   so it labels without competing with the content under it. */
+.slide .feature-cat { font-family: var(--zilliz-font-mono); font-size: 20px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; color: var(--zilliz-navy); }
 
-/* ── Deck: talks/2026-08-milvus-search-gap ──
-   Delete this block when the deck retires; check consumers first with
-   grep -rl --include=slides.md <class> talks/ */
-
-/* Case-study cards — migration proof points on .card/.card-grid. Pills encode
-   the journey: berry = engine left behind, gradient = landed on */
-.slide .case-eyebrows { display: flex; flex-wrap: wrap; align-items: center; gap: var(--zilliz-s-1); margin: 0; }
-.slide .case-journey { display: inline-flex; align-items: center; gap: 6px; }
-.slide .case-arrow { font-family: var(--zilliz-font-mono); font-size: 18px; font-weight: 700; color: var(--zilliz-navy); }
+/* .case-name / .case-proof — a card's headline and the sentence or list that
+   backs it. Pairs with .feature-cat above it; the eyebrow says what kind of
+   thing the card is, the name says which one, the proof says why it matters.
+   .case-proof works as a <p> or a <ul>; its <strong> takes brand blue. */
 .slide .case-name { font-size: 40px; font-weight: 800; line-height: 1.1; color: var(--zilliz-black); margin: 0; }
 .slide .case-name:has(.pill) { display: flex; align-items: center; gap: var(--zilliz-s-2); }
 .slide .case-name .pill { margin-left: auto; }
 .slide .case-proof { font-size: 23px; line-height: 1.35; color: var(--zilliz-ink); margin: 0; }
 .slide .case-proof strong { color: var(--zilliz-blue); }
+
+/* .pill — mono uppercase tag; equal-width so pill columns align.
+   Color modifiers: .navy (solid), .gradient (brand), .berry (soft warn),
+   .ghost (bare label, no fill) */
+.slide .pill { font-family: var(--zilliz-font-mono); font-size: 18px; font-weight: 700; line-height: 1; text-transform: uppercase; letter-spacing: 0.04em; padding: 6px 11px; border-radius: 999px; white-space: nowrap; min-width: 115px; text-align: center; display: inline-block; }
+.slide .pill.big { font-size: 32px; padding: 12px 22px; }
+.slide .pill.navy { background: var(--zilliz-navy); color: var(--zilliz-white); }
+.slide .pill.gradient { background: var(--zilliz-gradient); color: var(--zilliz-white); }
+.slide .pill.berry { background: var(--zilliz-berry-10); color: var(--zilliz-berry); }
+.slide .pill.ghost { background: var(--zilliz-blue-10); color: var(--zilliz-navy); }
+
+/* Placeholder: an unfinished slide, unmistakable on screen and in print.
+   The base .slide rule already sets position: absolute, which is a valid
+   containing block for the ::before/::after below; overriding it to
+   position: relative here (as an earlier version of this rule did) breaks
+   as soon as a second .placeholder slide exists in the same deck, since two
+   relatively-positioned slides then stack in normal flow instead of both
+   overlapping at inset: 0. */
+.slide.placeholder::before {
+  content: '';
+  position: absolute;
+  inset: 1.5rem;
+  pointer-events: none;
+  border: 2px solid color-mix(in srgb, var(--zilliz-berry) 45%, transparent);
+  background: repeating-linear-gradient(
+    45deg,
+    color-mix(in srgb, var(--zilliz-berry) 7%, transparent) 0 12px,
+    transparent 12px 26px
+  );
+}
+
+.slide.placeholder::after {
+  content: 'PLACEHOLDER';
+  position: absolute;
+  top: 5.5rem;
+  right: 2.25rem;
+  transform: rotate(-6deg);
+  font-family: var(--zilliz-font-mono);
+  font-size: 1.1rem;
+  letter-spacing: 0.18em;
+  padding: 0.35rem 0.9rem;
+  border: 2px solid var(--zilliz-berry);
+  border-radius: 4px;
+  color: var(--zilliz-berry);
+  pointer-events: none;
+}
+
+.slide.placeholder > *:not(.placeholder-dep) {
+  opacity: 0.6;
+}
+
+.placeholder-dep {
+  font-family: var(--zilliz-font-mono);
+  font-size: 0.85rem;
+  color: var(--zilliz-berry);
+  opacity: 1;
+}
+
+.placeholder-dep::before {
+  content: 'waiting on: ';
+  opacity: 0.7;
+}
+
+/* .eyebrow-new / .eyebrow-ver — an inline eyebrow that rides alongside the text
+   it labels: [3.0]{.eyebrow-new} for the headline mark, [2.5]{.eyebrow-ver} for
+   the muted one (release a feature landed in, the memory tier an index runs on).
+   Em-sized so they scale with their context (table cells, bullets, headings). */
+.slide .eyebrow-new,
+.slide .eyebrow-ver {
+  display: inline-block;
+  font-family: var(--zilliz-font-mono);
+  font-size: 0.62em;
+  font-weight: 700;
+  line-height: 1.1;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--zilliz-white);
+  background: var(--zilliz-gradient);
+  padding: 8px 14px;
+  border-radius: 999px;
+  vertical-align: 0.22em;
+  white-space: nowrap;
+}
+
+.slide .eyebrow-ver {
+  background: var(--zilliz-grey);
+}
+
+/* Heading context: 0.62em of an h1 is big enough that the pill crowds its own
+   fixed px padding and competes with the title. Shrink it to ~60% and lift it
+   to sit against the cap height rather than the baseline. */
+.slide h1 .eyebrow-new,
+.slide h1 .eyebrow-ver {
+  font-size: 0.4em;
+  vertical-align: 0.45em;
+  padding: 10px 16px;
+  margin-left: 20px;
+}
+
+/* ── Deck: talks/2026-08-milvus-search-gap ──
+   Delete this block when the deck retires; check consumers first with
+   grep -rl --include=slides.md <class> talks/ */
+
+/* Case-study cards — migration proof points on the shared .case-name/.case-proof
+   grammar. Pills encode
+   the journey: berry = engine left behind, gradient = landed on */
+.slide .case-eyebrows { display: flex; flex-wrap: wrap; align-items: center; gap: var(--zilliz-s-1); margin: 0; }
+.slide .case-journey { display: inline-flex; align-items: center; gap: 6px; }
+.slide .case-arrow { font-family: var(--zilliz-font-mono); font-size: 18px; font-weight: 700; color: var(--zilliz-navy); }
 .slide .case-note { font-size: 20px; opacity: 0.7; margin: var(--zilliz-s-3) 0 0; }
 
-/* Feature cards — category eyebrow + panel list on .card.
+/* Feature cards — the shared .feature-cat eyebrow over a panel list on .card.
    .feature-grid top-aligns so short cards size to content instead of stretching */
 .slide .feature-grid { align-items: start; margin-top: var(--zilliz-s-6); }
 .slide .feature-grid .card { padding: var(--zilliz-s-2) var(--zilliz-s-3); }
-.slide .feature-cat { font-family: var(--zilliz-font-mono); font-size: 20px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; color: var(--zilliz-navy); }
 .slide .feature-list { list-style: none; padding: 0; margin: 0; }
 .slide .feature-list li { font-size: 32px; line-height: 1.3; margin: 0; padding: 18px 0; border-bottom: 2px solid var(--zilliz-blue-20); }
 .slide .feature-list li:first-child { padding-top: 6px; }
@@ -869,31 +1006,6 @@
   font-weight: 400 !important;
   color: #ffffff !important;
   text-shadow: 0px 0px 20px black, -1px -1px #000000, 0 0 3px #fff, 0 0 20px #000000, 0 0 20px #000000 !important;
-}
-
-/* Version eyebrows — inline [3.0]{.eyebrow-new} marks features launched in 3.0;
-   [2.5]{.eyebrow-ver} marks the release an older feature landed in, muted so 3.0
-   still reads as the headline. Em-sized so they scale with their context
-   (table cells, bullets, headings). */
-.slide .eyebrow-new,
-.slide .eyebrow-ver {
-  display: inline-block;
-  font-family: var(--zilliz-font-mono);
-  font-size: 0.62em;
-  font-weight: 700;
-  line-height: 1.1;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: var(--zilliz-white);
-  background: var(--zilliz-gradient);
-  padding: 4px 10px;
-  border-radius: 999px;
-  vertical-align: 0.22em;
-  white-space: nowrap;
-}
-
-.slide .eyebrow-ver {
-  background: var(--zilliz-grey);
 }
 
 .align-right {
@@ -1025,7 +1137,6 @@
 .slide .card-grid.why-migrate ul.case-proof { font-size: 21px; line-height: 1.3; padding-left: 20px; margin: 0; }
 .slide .card-grid.why-migrate ul.case-proof li { font-size: 21px; line-height: 1.3; margin: 0 0 8px; }
 .slide .card-grid.why-migrate .seen-in { margin-top: auto; padding-top: var(--zilliz-s-1); border-top: 2px solid var(--zilliz-blue-20); font-size: 18px; line-height: 1.3; color: var(--zilliz-ink); opacity: 0.7; }
-.slide .why-migrate-close { margin: var(--zilliz-s-4) 0 0; font-size: 28px; font-weight: 700; color: var(--zilliz-navy); text-align: center; }
 
 /* .deploy — three deployment tiles (sky / navy / purple heads), each with a
    coloured head, three definition rows and a platform strip, plus a full-width
@@ -1067,3 +1178,730 @@
 .slide.deep-dive .case-quote { margin: var(--zilliz-s-3) 0 0; font-size: 30px; line-height: 1.35; }
 .slide.deep-dive .case-quote::before { font-size: 104px; top: -8px; }
 .slide.deep-dive .case-quote cite { font-size: 18px; margin-top: 4px; }
+
+/* ── Deck: talks/rag-cost-curve ── */
+
+.stamp {
+  display: inline-block;
+  font-family: var(--zilliz-font-mono);
+  font-size: 0.75em;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  padding: 0.2em 0.6em;
+  border: 2px solid currentColor;
+  border-radius: 4px;
+  transform: rotate(-3deg);
+  white-space: nowrap;
+}
+
+/* No --zilliz-green-ink token and no darkened-green literal exists anywhere
+   under builder/ (talks/vectordb-301-rabitq has neither) — derive a legible
+   dark teal from tokens instead of adding a new hex literal. */
+.stamp.is-held { color: color-mix(in srgb, var(--zilliz-green) 55%, var(--zilliz-navy)); }
+.stamp.is-reframed { color: var(--zilliz-blue); }
+.stamp.is-inverted { color: var(--zilliz-berry); }
+.stamp.is-split { color: var(--zilliz-grey); }
+
+/* A stamp that holds but carries a marked exception inline (slide 33's C15):
+   the inversion clause nests inside the same badge rather than a column of
+   its own, so it needs its own colour without becoming a whole new stamp. */
+.stamp .is-inverted { color: var(--zilliz-berry); }
+
+.stamp.is-pending {
+  color: var(--zilliz-grey);
+  border-style: dashed;
+  background: repeating-linear-gradient(
+    45deg,
+    color-mix(in srgb, var(--zilliz-grey) 10%, transparent) 0 5px,
+    transparent 5px 11px
+  );
+}
+
+.stamp-sub {
+  display: block;
+  font-family: var(--zilliz-font-mono);
+  font-size: 0.6em;
+  color: var(--zilliz-grey);
+  opacity: 0.85;
+}
+
+/* .stamp-sub sits inside a <p>, where .slide p's 32px wins on specificity
+   over the 0.6em above: raise specificity so stamp-sub actually renders small. */
+.slide .stamp-sub { font-size: 22px; }
+
+.scorecard {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 2rem;
+  align-items: start;
+}
+
+.scorecard-held {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.4rem 1.5rem;
+}
+
+.scorecard-rail {
+  display: grid;
+  gap: 0.6rem;
+  padding-left: 1.5rem;
+  border-left: 2px solid color-mix(in srgb, var(--zilliz-grey) 30%, transparent);
+}
+
+/* Fifteen lines don't fit at the deck's default 32px paragraph size (slide
+   33): shrink and tighten so all fifteen clear the footer rule without
+   wrapping to three lines each. */
+.slide .scorecard p { font-size: 21px; line-height: 1.35; margin: 0; }
+.slide:has(.scorecard) h1 { margin-bottom: var(--zilliz-s-3); }
+
+/* .chart-band — gives a vega chart the space the slide's other content leaves
+   it, rather than a hard-coded height. The band takes the free room in the
+   slide's flex column (min-height:0 so trailing content — mechanism cards, a
+   blockquote.bottom, fragment lines — keeps its own height and the band gives
+   way), and the chart inside must carry `fit: contain` so it scales to the
+   band instead of drawing at the spec's pixel size. A fixed height here
+   letterboxes any chart whose aspect ratio is wider than the band's. */
+.slide .chart-band { flex: 1; min-height: 0; }
+.slide .chart-band ~ p.fragment { margin: var(--zilliz-s-2) 0 0; }
+
+/* .chart-overlay / .chart-callouts — a stat row laid *over* a chart instead of
+   under it, for the band of plot a scatter leaves empty. The recall slide's
+   three numbers used to be rect-and-text marks inside the vega spec, drawn at
+   hard-coded plot pixels and styled by hand; a chart that can claim a fragment
+   slot (`fragment-index`) can hold the reveal until its own stages are done,
+   so they come out as real .stat-cards and the spec stops carrying typography.
+
+   The offsets are percentages of the wrapper, which is stable rather than
+   eyeballed: the deck is a fixed 1920x1080 canvas and `.vega-chart svg` has
+   max-width:100%, so a spec wider than the column fills it and viewBox units
+   scale with it. They track the rects they replaced (plot x 35..1065,
+   y 210..310 of a 1500x550 spec), dropped a little and given room to breathe,
+   which lands them under the shaded range and clear of the no-retrieval floor.
+   A hidden fragment keeps its space, and an absolute one takes none either
+   way, so the chart never shifts under the reveal. */
+.slide .chart-overlay { position: relative; }
+.slide .chart-callouts {
+  position: absolute;
+  left: 6.5%;
+  width: 60%;
+  top: 40%;
+  margin: 0;
+  gap: var(--zilliz-s-3);
+}
+.slide .chart-callouts .stat-card { box-shadow: var(--zilliz-shadow-card); }
+.slide .chart-callouts .stat-value { font-size: 52px; }
+.slide .chart-callouts .stat-note { font-size: 20px; }
+
+/* The interval belongs to the number above it, not to the sentence below, so
+   it rides inside .stat-value at the size the note uses. */
+.slide .stat-ci { display: block; font-size: 20px; font-weight: 500; color: var(--zilliz-grey); margin-top: 4px; }
+
+/* .mechanism-cards — a tighter card-grid for a chart-plus-cards slide that
+   also carries a blockquote.bottom; the default .card padding and paragraph
+   margins are too tall to leave the blockquote clear. */
+.slide .mechanism-cards { margin-top: 12px; }
+.slide .mechanism-cards .card { padding: 12px 24px; }
+.slide .mechanism-cards .card p:first-child { margin: 0 0 4px; }
+.slide .mechanism-cards .card p:last-child { margin: 0; }
+
+/* .stats-4 — a four-tile stat row (mirrors .deep-dive's stat-grid rule);
+   the shared .stat-grid defaults to three columns. */
+.slide.stats-4 .stat-grid { grid-template-columns: repeat(4, 1fr); }
+
+/* .stats-2 — a two-tile stat row, for a slide that only earns two numbers
+   rather than padding out to three empty columns. The smaller value size
+   keeps a long slash-separated triple (e.g. "99.97 % / 99.97 % / 99.83 %")
+   on one line instead of wrapping inside the tile. */
+.slide.stats-2 .stat-grid { grid-template-columns: repeat(2, 1fr); }
+.slide.stats-2 .stat-card .stat-value { font-size: 40px; }
+
+/* .mega-stat — a single headline number bigger than any default heading,
+   for a slide whose entire content is one number landing per fragment
+   (slide 21's two-numbers reveal). .mega-note is its small caption line. */
+.slide .mega-stat { display: block; font-family: var(--zilliz-font-mono); font-size: 150px; font-weight: 800; line-height: 1; color: var(--zilliz-blue); }
+.slide .mega-note { display: block; font-family: var(--zilliz-font-sans); font-size: 0.2em; font-weight: 500; letter-spacing: 0.01em; color: var(--zilliz-grey); margin-top: 0.15em; }
+
+/* .mega-question — the deployment question, which now owns its slide rather
+   than sharing one with a .card-grid row, so the squeeze the old rules applied
+   (84px stat, 20px trailing paragraph) is gone and the block takes the full
+   .mega-stat size from above. The question itself is the slide's h1 now; what
+   is left in the block is the number and the two lines that qualify it. The
+   measure is held narrow so the two lines centre under the stat rather than
+   running the full 1920px. */
+.slide .mega-question { margin-top: var(--zilliz-s-6); }
+.slide .mega-question .mega-stat { margin-bottom: var(--zilliz-s-6); }
+.slide .mega-question > p { max-width: 46ch; margin-left: auto; margin-right: auto; margin-bottom: var(--zilliz-s-4); }
+.slide .mega-question > p:has(.mega-stat) { max-width: none; }
+
+/* .index-heuristics — the five index families collapsed onto one slide as a
+   decision table (the HNSW/IVF/DiskANN animations that used to carry this are
+   backup slides now). Four of the eight columns are 1-to-5 ratings, sized alike
+   so they read as bars down the table rather than as text. */
+.slide.index-heuristics table { font-size: 24px; width: 100%; margin: var(--zilliz-s-4) auto; table-layout: fixed; }
+/* border-box, or the percentages below are read against the content box and the
+   one column left unsized absorbs all six cells' horizontal padding. */
+.slide.index-heuristics thead th,
+.slide.index-heuristics tbody td { box-sizing: border-box; padding: var(--zilliz-s-2) var(--zilliz-s-3); line-height: 1.35; }
+.slide.index-heuristics thead th:nth-child(1),
+.slide.index-heuristics tbody td:nth-child(1) { width: 11%; white-space: nowrap; }
+.slide.index-heuristics thead th:nth-child(2),
+.slide.index-heuristics tbody td:nth-child(2) { width: 9%; white-space: nowrap; }
+.slide.index-heuristics thead th:nth-child(3),
+.slide.index-heuristics tbody td:nth-child(3) { width: 14%; }
+.slide.index-heuristics thead th:nth-child(4),
+.slide.index-heuristics tbody td:nth-child(4),
+.slide.index-heuristics thead th:nth-child(5),
+.slide.index-heuristics tbody td:nth-child(5),
+.slide.index-heuristics thead th:nth-child(6),
+.slide.index-heuristics tbody td:nth-child(6),
+.slide.index-heuristics thead th:nth-child(7),
+.slide.index-heuristics tbody td:nth-child(7) { width: 10.5%; }
+.slide.index-heuristics thead th:nth-child(8),
+.slide.index-heuristics tbody td:nth-child(8) { width: 24%; }
+.slide.index-heuristics tbody td:nth-child(1) strong { color: var(--zilliz-navy); }
+.slide.index-heuristics table code { white-space: nowrap; }
+
+/* .rate — a 1-to-5 pip rating. All five pips are always drawn and the unearned
+   ones dimmed, because five identical emoji cannot be told from four at a
+   glance: the eye reads the length of the solid run instead of counting. The
+   slight negative tracking closes the wide sidebearings emoji carry without
+   letting the glyphs touch, which reads as a smudge rather than a count. Keep
+   every pip a glyph with real colour in it: a near-monochrome one (the ⏱
+   stopwatch was the first try for build time) is too faint when filled for the
+   dimming below to separate it from the unearned pips. */
+.slide .rate {
+  display: inline-block;
+  letter-spacing: -0.04em;
+  white-space: nowrap;
+  font-size: 1.05em;
+}
+.slide .rate i { font-style: normal; opacity: 0.16; }
+
+/* The key has to be read before the table, so it sits between lede and table
+   at caption size: present where the eye already is, without competing with
+   the body line above it. */
+.slide .rate-key {
+  font-size: 20px;
+  color: var(--zilliz-grey);
+  letter-spacing: 0.01em;
+  margin-top: var(--zilliz-s-3);
+}
+/* The pip needs its own right margin: a space between an emoji and the word it
+   labels disappears into the glyph's advance width. */
+.slide .rate-key span { margin-right: 0.35em; }
+.slide .rate-key em { font-style: normal; margin: 0 var(--zilliz-s-2); opacity: 0.5; }
+
+/* .backup-table — the backup slides (35-45) are Q&A material: several carry
+   an eleven-row table of long arm names that the shared table's 24px default
+   wraps or runs past the footer rule. Shrinks type and padding, same
+   approach as talks/2026-09-milvus-migration's .schema-map, scoped
+   generically here since several backups reuse it. */
+.slide.backup-table table { font-size: 18px; width: 100%; margin: var(--zilliz-s-2) auto; }
+.slide.backup-table thead th,
+.slide.backup-table tbody td { padding: 6px var(--zilliz-s-2); line-height: 1.3; }
+.slide.backup-table mark { padding: 0 4px; border-radius: 3px; }
+
+/* .refine — two-pass refinement drawn as a staged funnel, same construction as
+   talks/2026-09-milvus-migration's .phases: inline SVG paired with a list, the
+   two joined by data-fragment-index so one keypress moves both, and .is-current
+   painting the live stage brand blue. Inline SVG rather than a vega spec
+   because there is no data here, only mechanism — boxes, a narrowing funnel and
+   two precisions. The compressed corpus and the shortlist share one code
+   pattern (sky, cheap); stage 2 overlays the shortlist with a denser navy
+   pattern, so the precision swap is a redraw of the same block. */
+/* flex:1 + align-content:center because the diagram is wide and short: it
+   leaves ~300px of slack under the lede, and without this the whole block
+   hangs off the top of the slide. */
+.slide .two-col.refine { grid-template-columns: 1.7fr 1fr; align-items: center; align-content: center; flex: 1; }
+.slide .refine-diagram { display: block; width: 100%; height: auto; font-family: var(--zilliz-font-sans); }
+.refine-diagram .node { fill: var(--zilliz-white); stroke: var(--zilliz-navy); stroke-width: 2.5; transition: stroke 200ms ease; }
+.refine-diagram .band { fill: url(#rf-codes); }
+.refine-diagram .band-exact { fill: url(#rf-exact); }
+.refine-diagram .node-out { fill: url(#rf-exact); stroke: var(--zilliz-blue); stroke-width: 4; }
+.refine-diagram .node-source { fill: var(--zilliz-navy); stroke: var(--zilliz-navy); }
+/* The re-ranker is drawn deliberately outside the recall rail: it reorders the
+   top-k rather than retrieving more of it, so it gets a dashed grey outline, no
+   recall pill, and keeps that outline even while it is the current stage. */
+.refine-diagram .node-off { stroke: var(--zilliz-grey); stroke-dasharray: 8 6; }
+.refine-diagram .stage.is-current .node.node-off { stroke: var(--zilliz-grey); stroke-width: 2.5; }
+.slide .refine-list code { font-size: 0.85em; }
+.refine-diagram .code { fill: var(--zilliz-sky); }
+.refine-diagram .code-exact { fill: var(--zilliz-navy); }
+.refine-diagram .funnel { fill: var(--zilliz-blue-10); transition: fill 200ms ease; }
+.refine-diagram .nlabel { font-size: 28px; font-weight: 600; fill: var(--zilliz-navy); }
+.refine-diagram .nsub { font-size: 21px; fill: var(--zilliz-ink); }
+.refine-diagram .nlabel-source, .refine-diagram .nsub-source { fill: var(--zilliz-white); }
+.refine-diagram .edge { fill: none; stroke: var(--zilliz-navy); stroke-width: 2.5; marker-end: url(#rf-arrow); transition: stroke 200ms ease; }
+.refine-diagram .edge.dashed { stroke-dasharray: 9 7; }
+.refine-diagram .elabel { font-family: var(--zilliz-font-mono); font-size: 20px; font-weight: 600; letter-spacing: 0.03em; fill: var(--zilliz-navy); transition: fill 200ms ease; }
+.refine-diagram .stage.is-current .node { stroke: var(--zilliz-blue); stroke-width: 4; }
+.refine-diagram .stage.is-current .edge { stroke: var(--zilliz-blue); stroke-width: 4; }
+.refine-diagram .elabel.muted { fill: var(--zilliz-grey); font-style: italic; }
+.refine-diagram .rail path { fill: none; stroke: var(--zilliz-blue-20); stroke-width: 2; stroke-dasharray: 6 8; }
+/* The recall pills read as one row along the bottom, so the number for the
+   live stage is the only one that should pop. */
+.refine-diagram .tag { fill: var(--zilliz-blue-10); stroke: var(--zilliz-blue-20); stroke-width: 2; transition: fill 200ms ease, stroke 200ms ease; }
+.refine-diagram .tlabel { font-family: var(--zilliz-font-mono); font-size: 24px; font-weight: 700; fill: var(--zilliz-navy); transition: fill 200ms ease; }
+.refine-diagram .stage.is-current .elabel:not(.muted) { fill: var(--zilliz-blue); }
+.refine-diagram .stage.is-current .tag { fill: var(--zilliz-blue); stroke: var(--zilliz-blue); }
+.refine-diagram .stage.is-current .tlabel { fill: var(--zilliz-white); }
+.refine-diagram .stage.is-current .funnel { fill: var(--zilliz-blue-20); }
+/* The corpus block is always on screen, so it can't live inside stage 1 and
+   pick up .is-current with it; light it from the slide instead, so the "bulk
+   scan every code" beat reads on the block actually being scanned. */
+.slide:has(.stage-1.is-current) .refine-diagram .nodes .band { stroke: var(--zilliz-blue); stroke-width: 4; }
+.slide .refine-list { margin: 0; }
+.slide .refine-list li { font-size: 26px; transition: color 200ms ease; }
+.slide .refine-list li.is-revealed:not(.is-current) { color: var(--zilliz-ink); }
+.slide .refine-list li.is-current { color: var(--zilliz-blue); }
+.slide .refine-list li.is-current::marker { color: var(--zilliz-blue); font-weight: 700; }
+
+/* "The size problem" build. Same staged-SVG vocabulary as .refine-diagram, but
+   the rail carries bytes rather than recall, so the dollar figure steps off the
+   scale into its own node instead of riding it as a fourth pill. */
+.slide .size-diagram { display: block; width: 100%; height: auto; max-height: 480px; margin: var(--zilliz-s-4) auto 0; font-family: var(--zilliz-font-sans); }
+.size-diagram .node { fill: var(--zilliz-white); stroke: var(--zilliz-navy); stroke-width: 2.5; transition: stroke 200ms ease; }
+.size-diagram .strip { fill: url(#sz-cells); }
+.size-diagram .block { fill: url(#sz-block); }
+.size-diagram .cell { fill: var(--zilliz-sky); }
+.size-diagram .cell-focus { fill: none; stroke: var(--zilliz-blue); stroke-width: 3; }
+.size-diagram .cone { fill: var(--zilliz-blue-10); }
+.size-diagram .cell-zoom { stroke: var(--zilliz-blue); stroke-width: 3; }
+.size-diagram .bytes rect { fill: var(--zilliz-sky); stroke: var(--zilliz-navy); stroke-width: 1.5; }
+/* RAM is the number that hurts, so it is the filled box; SSD sits under it
+   outlined, cheaper on the page as well as on the bill. */
+.size-diagram .node-cost { fill: var(--zilliz-navy); stroke: var(--zilliz-navy); }
+.size-diagram .node-cost-alt { fill: var(--zilliz-white); stroke: var(--zilliz-navy); }
+.size-diagram .cost-num { font-size: 46px; font-weight: 800; fill: var(--zilliz-white); }
+.size-diagram .cost-num-alt { fill: var(--zilliz-navy); }
+.size-diagram .nlabel { font-size: 28px; font-weight: 600; fill: var(--zilliz-navy); }
+.size-diagram .nsub { font-size: 21px; fill: var(--zilliz-ink); }
+.size-diagram .nsub-source { fill: var(--zilliz-white); }
+/* The SSD caption is the longest string in a fixed-width box; 19px keeps a
+   gutter inside the 260-unit card. */
+.size-diagram .nsub-tight { font-size: 19px; }
+.size-diagram .nsub.muted { fill: var(--zilliz-grey); font-style: italic; }
+.size-diagram .edge { fill: none; stroke: var(--zilliz-navy); stroke-width: 2.5; marker-end: url(#sz-arrow); transition: stroke 200ms ease; }
+/* The trunk of the fork into the two cost boxes; only the branches get heads. */
+.size-diagram .edge.plain { marker-end: none; }
+.size-diagram .elabel { font-family: var(--zilliz-font-mono); font-size: 20px; font-weight: 600; letter-spacing: 0.03em; fill: var(--zilliz-navy); transition: fill 200ms ease; }
+.size-diagram .elabel.muted { fill: var(--zilliz-grey); font-style: italic; }
+.size-diagram .rail path { fill: none; stroke: var(--zilliz-blue-20); stroke-width: 2; stroke-dasharray: 6 8; }
+.size-diagram .tag { fill: var(--zilliz-blue-10); stroke: var(--zilliz-blue-20); stroke-width: 2; transition: fill 200ms ease, stroke 200ms ease; }
+.size-diagram .tlabel { font-family: var(--zilliz-font-mono); font-size: 24px; font-weight: 700; fill: var(--zilliz-navy); transition: fill 200ms ease; }
+.size-diagram .stage.is-current .node { stroke: var(--zilliz-blue); stroke-width: 4; }
+.size-diagram .stage.is-current .edge { stroke: var(--zilliz-blue); stroke-width: 4; }
+.size-diagram .stage.is-current .elabel:not(.muted) { fill: var(--zilliz-blue); }
+.size-diagram .stage.is-current .tag { fill: var(--zilliz-blue); stroke: var(--zilliz-blue); }
+.size-diagram .stage.is-current .tlabel { fill: var(--zilliz-white); }
+/* The chunk node is always on screen, so it can't pick up .is-current with
+   stage 1; light it from the slide instead. */
+.slide:has(.size-diagram .stage-1.is-current) .size-diagram .nodes .node { stroke: var(--zilliz-blue); stroke-width: 4; }
+
+/* "Where the cost lands" build. Same staged-SVG vocabulary as .refine-diagram
+   and .size-diagram, but the rail runs the other way: one spine (question,
+   model, answer) drawn once, and four stations below it feeding the same
+   model. Nothing here is a measured value, so stroke weight on the .flow
+   edges is ordinal rather than proportional: thin for agentic's many small
+   turns, fat for indexed's chunk payload, huge for stuffing a whole corpus.
+   Per-query charges are purple coins, and the single per-day charge (the box
+   the index runs on) is the one navy coin, because that contrast IS the
+   numerator-over-denominator of Q* on the slide before. */
+.slide .cost-anatomy { display: block; flex: 0 0 auto; width: 100%; height: auto; margin: var(--zilliz-s-2) auto 0; font-family: var(--zilliz-font-sans); }
+/* The per-station captions are HTML rather than <text>, because an SVG this
+   wide letterboxes down to whatever height the flex column leaves it, and
+   prose scaled by that factor stops being readable. The column geometry
+   mirrors the viewBox exactly: four 300-wide stations with 40-wide gutters in
+   a 1400-wide box is 21.43% columns with 2.857% gaps and side padding. */
+.slide .cost-notes { display: grid; grid-template-columns: repeat(4, 1fr); gap: 2.857%; padding: 0 2.857%; margin: var(--zilliz-s-1) 0 0; }
+.slide .cost-notes p { margin: 0; font-size: 23px; line-height: 1.35; text-align: center; color: var(--zilliz-ink); }
+/* The diagram plus four caption columns plus a closing line is the tallest
+   stack in the deck; the default .is-emphatic top margin tips it past the
+   slide's bottom padding by a few pixels. */
+.slide:has(.cost-notes) .closing-line.is-emphatic { margin-top: var(--zilliz-s-3); }
+.cost-anatomy .node { fill: var(--zilliz-white); stroke: var(--zilliz-navy); stroke-width: 2.5; transition: stroke 200ms ease; }
+.cost-anatomy .node-model { fill: var(--zilliz-navy); stroke: var(--zilliz-navy); }
+.cost-anatomy .node-cache { fill: var(--zilliz-blue-10); stroke: var(--zilliz-blue); }
+/* Parametric's station is an absence, not a component: dashed and grey, and it
+   keeps that outline even while it is the current stage. */
+.cost-anatomy .node-none { fill: none; stroke: var(--zilliz-grey); stroke-dasharray: 10 8; }
+.cost-anatomy .stage.is-current .node.node-none { stroke: var(--zilliz-grey); stroke-width: 2.5; }
+.cost-anatomy .mlabel { font-size: 38px; font-weight: 800; letter-spacing: 0.04em; fill: var(--zilliz-white); }
+.cost-anatomy .nlabel { font-size: 27px; font-weight: 600; fill: var(--zilliz-navy); }
+.cost-anatomy .nlabel-none { fill: var(--zilliz-grey); font-style: italic; }
+.cost-anatomy .nsub { font-size: 21px; fill: var(--zilliz-ink); }
+.cost-anatomy .nsub-source { fill: var(--zilliz-white); }
+.cost-anatomy .nsub.muted { fill: var(--zilliz-grey); font-size: 18px; font-style: italic; }
+.cost-anatomy .edge { fill: none; stroke: var(--zilliz-navy); stroke-width: 2.5; stroke-linejoin: round; marker-end: url(#ca-arrow); transition: stroke 200ms ease; }
+.cost-anatomy .edge.spine { stroke: var(--zilliz-navy); }
+/* The call leg is the model reaching for a tool; it carries no payload, so it
+   is dashed and stays thin even when its stage is current. */
+.cost-anatomy .edge.call { stroke-dasharray: 9 7; }
+/* A trunk segment: only the leg that lands on the model carries a head. */
+.cost-anatomy .edge.plain { marker-end: none; }
+.cost-anatomy .stage.is-current .edge.call { stroke-width: 2.5; }
+/* Each weight needs its own arrowhead: the marker is sized in user units, so a
+   single 18-unit head is narrower than its own line once the stroke passes
+   ~14 and vanishes into it. */
+.cost-anatomy .flow-fat { marker-end: url(#ca-arrow-fat); }
+.cost-anatomy .flow-huge { marker-end: url(#ca-arrow-huge); }
+.cost-anatomy .flow-thin { stroke-width: 3.5; }
+.cost-anatomy .flow-fat { stroke-width: 10; }
+.cost-anatomy .flow-huge { stroke-width: 16; }
+.cost-anatomy .stage.is-current .edge.flow-thin { stroke-width: 3.5; }
+.cost-anatomy .stage.is-current .edge.flow-fat { stroke-width: 10; }
+.cost-anatomy .stage.is-current .edge.flow-huge { stroke-width: 16; }
+.cost-anatomy .elabel { font-family: var(--zilliz-font-mono); font-size: 19px; font-weight: 600; letter-spacing: 0.03em; fill: var(--zilliz-navy); transition: fill 200ms ease; }
+.cost-anatomy .cap { font-size: 19px; fill: var(--zilliz-ink); }
+/* The per-day charge is not a coin on an edge, because it is not incurred on
+   any edge: the index bills for existing. It is a footer band inside the
+   station's own border instead, which is also the only navy money on the
+   slide. The path is inset by half the resting stroke with its corner radius
+   reduced to match, so it meets the border exactly. It is deliberately
+   excluded from the .is-current recolour below: a standing charge does not
+   become the live one. */
+.cost-anatomy .plinth { fill: var(--zilliz-navy); }
+/* Stroke-only copy of the station outline, drawn over the band so the border
+   reads full-width in both the resting and the current stroke weight. Must
+   follow the .node fill rule to win on source order. */
+.cost-anatomy .node-edge { fill: none; }
+.cost-anatomy .plabel { font-family: var(--zilliz-font-mono); font-size: 19px; font-weight: 700; letter-spacing: 0.02em; fill: var(--zilliz-white); }
+/* The coin is the whole point of the diagram: it marks the exact place a
+   charge is incurred. Purple so it reads against both the navy spine and the
+   arm pills, which reuse the slide-1028 colours for the callback. */
+.cost-anatomy .coin { fill: var(--zilliz-purple); stroke: var(--zilliz-white); stroke-width: 3; }
+.cost-anatomy .coin-mark { font-family: var(--zilliz-font-mono); font-size: 22px; font-weight: 700; fill: var(--zilliz-white); }
+/* Arm pills mirror .pill ghost / navy / gradient / berry on `The study`, so the
+   colour is already learned by the time that slide names the arms. */
+.cost-anatomy .tag { stroke-width: 2; }
+.cost-anatomy .tag-ghost { fill: var(--zilliz-white); stroke: var(--zilliz-grey); }
+.cost-anatomy .tag-navy { fill: var(--zilliz-navy); stroke: var(--zilliz-navy); }
+.cost-anatomy .tag-gradient { fill: url(#ca-grad); stroke: none; }
+.cost-anatomy .tag-berry { fill: var(--zilliz-berry-10); stroke: var(--zilliz-berry-20); }
+.cost-anatomy .tlabel { font-family: var(--zilliz-font-mono); font-size: 22px; font-weight: 700; fill: var(--zilliz-navy); }
+.cost-anatomy .tlabel-ghost { fill: var(--zilliz-grey); }
+.cost-anatomy .tlabel-navy, .cost-anatomy .tlabel-gradient { fill: var(--zilliz-white); }
+.cost-anatomy .tlabel-berry { fill: var(--zilliz-purple); }
+.cost-anatomy .stage.is-current .node:not(.node-none):not(.node-cache) { stroke: var(--zilliz-blue); stroke-width: 4; }
+.cost-anatomy .stage.is-current .edge:not(.call) { stroke: var(--zilliz-blue); }
+.cost-anatomy .stage.is-current .elabel { fill: var(--zilliz-blue); }
+
+/* .study-rig — the harness, drawn natively rather than through Graphviz so the
+   diagram can carry the slide's own sentence: only the tool changes. Two
+   slides use it. `How an answer is scored` runs a stripped copy (spine,
+   bracket, one socket, no fan and no arm cards) as the second slide of
+   `Does recall even matter?`, because that section puts judge accuracy on an
+   axis six times and had never drawn the judge. `The study` runs the full rig
+   with the five arms fanning out of the socket. The dot version drew five equal boxes and said nothing about which
+   one varies. Here the whole spine is bracketed as held constant and there is
+   exactly one dashed opening in the rig, directly under the agent, which the
+   five arm pills below drop into. The vocabulary is `.cost-anatomy`'s, nine
+   slides earlier: navy-filled box for the model, dashed edge for a tool call
+   against a solid one for the result it returns, mono `.elabel` for anything
+   annotating an edge. A viewer who read that slide reads this one for free. */
+.slide .study-rig { display: block; flex: 0 0 auto; width: 100%; height: auto; margin: var(--zilliz-s-1) auto; font-family: var(--zilliz-font-sans); }
+.study-rig .node { fill: var(--zilliz-white); stroke: var(--zilliz-navy); stroke-width: 2.5; transition: stroke 200ms ease; }
+.study-rig .node-model { fill: var(--zilliz-navy); stroke: var(--zilliz-navy); }
+/* The judge is a model too, but it sits off the pipeline: it scores what the
+   rig produced and feeds nothing back into it. Berry outline over a white fill
+   rather than a second navy block, which keeps the one heavy box on the slide
+   the one the arms actually plug into. Berry is the colour the dot version
+   gave both models, so the change is legible against the old drawing. */
+.study-rig .node-judge { fill: var(--zilliz-berry-10); stroke: var(--zilliz-berry); }
+/* The socket is an absence until an arm fills it: dashed, and stroked with the
+   brand gradient because two of the five things that go in it are the indexed
+   arms the gradient already marks in the pill list below. */
+.study-rig .socket { fill: var(--zilliz-white); stroke: url(#sr-grad); stroke-width: 3.5; stroke-dasharray: 12 9; }
+.study-rig .mlabel { font-size: 38px; font-weight: 800; letter-spacing: 0.04em; fill: var(--zilliz-white); }
+.study-rig .mlabel-judge { fill: var(--zilliz-berry); }
+.study-rig .mlabel-socket { font-size: 34px; fill: var(--zilliz-navy); }
+.study-rig .nlabel { font-size: 27px; font-weight: 600; fill: var(--zilliz-navy); }
+.study-rig .nsub { font-size: 21px; fill: var(--zilliz-ink); }
+.study-rig .nsub-source { fill: var(--zilliz-white); }
+.study-rig .nsub.muted { fill: var(--zilliz-grey); font-size: 20px; font-style: italic; }
+.study-rig .edge { fill: none; stroke: var(--zilliz-navy); stroke-width: 2.5; stroke-linejoin: round; marker-end: url(#sr-arrow); transition: stroke 200ms ease; }
+/* Same convention as `Where the cost lands`: the call leg carries no payload,
+   so it is dashed; the result leg comes back solid. */
+.study-rig .edge.call { stroke-dasharray: 9 7; }
+.study-rig .elabel { font-family: var(--zilliz-font-mono); font-size: 19px; font-weight: 600; letter-spacing: 0.03em; fill: var(--zilliz-navy); transition: fill 200ms ease; }
+/* The bracket is the only new device on the slide. It holds the entire spine,
+   so the one thing outside it reads as the experiment's single degree of
+   freedom without a word of explanation. Broken around its own label rather
+   than drawn under it, so the rule and the text share a line. */
+.study-rig .clamp-rule { fill: none; stroke: var(--zilliz-blue-20); stroke-width: 2.5; }
+.study-rig .clamp-label { font-family: var(--zilliz-font-mono); font-size: 17px; font-weight: 600; letter-spacing: 0.06em; fill: var(--zilliz-grey); }
+/* Leaves the socket and points into the `.arm-cards`, which are HTML: the five
+   arms are the socket's contents, not a legend beside it. The trunk drops to a
+   bus spanning the card row and the bus fans one arrow into each card, so the
+   five stubs all keep the length of the call and result edges and the four
+   edges read as one family. Each stub is a fragment sharing an index with the
+   card it lands on, so an arm and its arrow arrive together and the room sees
+   the socket filled five times rather than once. The trunk and the bus carry
+   no arrowhead; they are routing, not a step, and they ride the first arm's
+   index so the rail never hangs on the slide with nothing plugged into it.
+   Round caps close the two corners where the bus meets its outermost stubs. */
+.study-rig .edge.feed { stroke-linecap: butt; }
+.study-rig .edge.feed-trunk { marker-end: none; stroke-linecap: round; }
+.study-rig .stage.is-current .node { stroke-width: 4; }
+.study-rig .stage.is-current .socket { stroke-width: 4.5; }
+.study-rig .stage.is-current .edge { stroke: var(--zilliz-blue); }
+.study-rig .stage.is-current .elabel { fill: var(--zilliz-blue); }
+
+/* .memory-rig — the two arms of the memory benchmark on `A second workload:
+   conversation memory`, drawn natively rather than through the two `dot`
+   fences it used to carry. Graphviz drew memsearch's sync pipeline and its
+   L1/L2/L3 search path, which is how the tool is built; the slide needs what
+   the benchmark actually contrasts, which is what reaches the model's context
+   per query. One history, two lanes, one model, and the stroke weight carries
+   the argument exactly as it does on `Where the cost lands`: ordinal, not
+   measured, huge for re-sending the whole transcript and thin for a handful of
+   chunks. The vocabulary is `.cost-anatomy`'s and `.study-rig`'s: navy-filled
+   box for the model, mono `.elabel` on anything annotating an edge, and the
+   arm names in the same navy and gradient pills the arms wear on `The study`,
+   so live and indexed keep one colour across the deck. Nothing on it is
+   staged: both arms are the subject of the slide, so neither is a reveal. */
+.slide .memory-rig { display: block; flex: 0 0 auto; width: 100%; height: auto; margin: var(--zilliz-s-2) auto; font-family: var(--zilliz-font-sans); }
+.memory-rig .node { fill: var(--zilliz-white); stroke: var(--zilliz-navy); stroke-width: 2.5; }
+.memory-rig .node-model { fill: var(--zilliz-navy); stroke: var(--zilliz-navy); }
+/* Berry for the store, which is the colour the `dot` version filled Milvus
+   with, so the drawing that replaced it is legible against the old one. */
+.memory-rig .node-index { fill: var(--zilliz-berry-10); stroke: var(--zilliz-berry); }
+.memory-rig .mlabel { font-size: 38px; font-weight: 800; letter-spacing: 0.04em; fill: var(--zilliz-white); }
+.memory-rig .nlabel { font-size: 27px; font-weight: 600; fill: var(--zilliz-navy); }
+.memory-rig .nsub { font-size: 21px; fill: var(--zilliz-ink); }
+.memory-rig .nsub-source { fill: var(--zilliz-white); }
+.memory-rig .nsub.muted { fill: var(--zilliz-grey); font-size: 18px; font-style: italic; }
+.memory-rig .edge { fill: none; stroke: var(--zilliz-navy); stroke-width: 2.5; stroke-linejoin: round; marker-end: url(#mr-arrow); }
+/* Each weight needs its own head, for the reason `.cost-anatomy` documents:
+   an 18-unit marker disappears into its own line once the stroke passes ~14. */
+.memory-rig .flow-thin { stroke-width: 3.5; }
+.memory-rig .flow-huge { stroke-width: 16; marker-end: url(#mr-arrow-huge); }
+.memory-rig .elabel { font-family: var(--zilliz-font-mono); font-size: 19px; font-weight: 600; letter-spacing: 0.03em; fill: var(--zilliz-navy); }
+.memory-rig .tag { stroke-width: 2; }
+.memory-rig .tag-navy { fill: var(--zilliz-navy); stroke: var(--zilliz-navy); }
+.memory-rig .tag-gradient { fill: url(#mr-grad); stroke: none; }
+.memory-rig .tlabel { font-family: var(--zilliz-font-mono); font-size: 22px; font-weight: 700; fill: var(--zilliz-white); }
+
+/* .promise-cards — the opening promise/verdict cards. The verdict is the
+   rhetorical event of this slide (it bookends the scorecard on slide 33), so
+   it heads the card as a full-bleed strip rather than sitting under the claim
+   as a small badge. Padding moves off .card and onto .promise-body so the
+   strip can reach the card edges without negative margins.
+
+   .verdict-cards — the six corners on `Where each side wins.` — shares the
+   whole strip grammar, so the structural and strip rules below are grouped
+   rather than duplicated. It differs only in what the strip says (which side
+   won, not whether the promise held), in carrying a stat where the opener
+   carries a numeral, and in running two rows instead of one. */
+.slide .promise-cards .card,
+.slide .verdict-cards .card { padding: 0; overflow: hidden; gap: 0; text-align: left; min-height: 500px; }
+.slide .promise-cards .promise-body,
+.slide .verdict-cards .promise-body { flex: 1; display: flex; flex-direction: column; padding: var(--zilliz-s-4); }
+.slide .promise-cards .promise-body p,
+.slide .verdict-cards .promise-body p { margin: 0; }
+
+/* Resting state is the hatch borrowed from .stamp.is-pending: before the
+   reveal every card reads as verdict pending, which is the beat the fragment
+   index is already playing. */
+.slide .promise-cards .promise-verdict,
+.slide .verdict-cards .promise-verdict {
+  margin: 0;
+  padding: var(--zilliz-s-2) 0;
+  font-family: var(--zilliz-font-mono);
+  font-size: 30px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  text-align: center;
+  color: var(--zilliz-grey);
+  border-bottom: 2px solid var(--zilliz-blue-20);
+  background: repeating-linear-gradient(
+    45deg,
+    color-mix(in srgb, var(--zilliz-grey) 10%, transparent) 0 5px,
+    transparent 5px 11px
+  );
+  transition: background 220ms ease, color 220ms ease;
+}
+/* Fills once the verdict fragment lands, in the same two hues .stamp uses so
+   the opener and the scorecard agree on what reframed and held look like.
+   Held is mixed one step darker than the stamp's 55% text colour: as a fill
+   behind white type it has to clear 4.5:1, which 55% does not. */
+.slide .promise-cards .card:has(.promise-verdict .is-revealed) .promise-verdict,
+.slide .verdict-cards .card:has(.promise-verdict .is-revealed) .promise-verdict { color: var(--zilliz-white); border-bottom-color: transparent; }
+.slide .promise-cards .card:has(.promise-verdict .is-revealed.is-reframed) .promise-verdict { background: var(--zilliz-blue); }
+.slide .promise-cards .card:has(.promise-verdict .is-revealed.is-held) .promise-verdict { background: color-mix(in srgb, var(--zilliz-green) 45%, var(--zilliz-navy)); }
+
+/* The two sides of `Where each side wins.`, on the same two hues the opener
+   and the scorecard already use: blue for the result that reframes what the
+   room expected, green for the one that holds. Green is mixed with navy for
+   the same contrast reason as .is-held above. */
+.slide .verdict-cards .card:has(.promise-verdict .is-revealed.is-live) .promise-verdict { background: var(--zilliz-blue); }
+.slide .verdict-cards .card:has(.promise-verdict .is-revealed.is-index) .promise-verdict { background: color-mix(in srgb, var(--zilliz-green) 45%, var(--zilliz-navy)); }
+
+.slide .promise-cards .promise-claim { font-size: 34px; line-height: 1.35; color: var(--zilliz-navy); }
+
+/* A quiet counter that makes "Three things" literal without competing with the
+   claim. margin-top:auto drops it to the card floor, which both fills the slack
+   a short claim leaves and lines the three numerals up as a row; centring the
+   body instead leaves them ragged, since the claims are different heights. */
+.slide .promise-cards .promise-body p.promise-n { margin-top: auto; font-family: var(--zilliz-font-mono); font-size: 64px; font-weight: 800; line-height: 1; color: var(--zilliz-blue-20); }
+
+/* The closing line is the slide's last beat, not a tag in a row of tags: the
+   shared .pill's 18px disappears under 34px card text at this scale. */
+.slide .promise-cards + p .pill { font-size: 22px; padding: 10px 22px; letter-spacing: 0.06em; }
+
+/* Six corners over two rows, so the opener's 500px floor has to come off. The
+   slide is already a flex column, so flex:1 hands the grid every pixel left
+   under the title and grid-auto-rows:1fr then splits it into two equal bands.
+   Without the flex the grid sizes to its content, the second row runs under
+   the footer rule and margin-top:auto on the stat has no slack to work with.
+   min-height:0 is the usual flex-child escape so a tall card can shrink rather
+   than push the grid past the slide. */
+.slide .verdict-cards { flex: 1; min-height: 0; grid-auto-rows: 1fr; gap: var(--zilliz-s-3); margin-top: 0; }
+.slide .verdict-cards .card { min-height: 0; }
+.slide .verdict-cards .promise-body { padding: var(--zilliz-s-3); }
+
+/* Six points down from the opener's 34px. Six claims share the slide where
+   three had it, and the two rows have roughly 360px each to hold a strip, a
+   three-line claim, a stat and its note. */
+.slide .verdict-cards .promise-claim { font-size: 28px; line-height: 1.3; color: var(--zilliz-navy); }
+
+/* The stat sits where .promise-n sits on the opener, on the same margin-top:auto
+   floor, and for the same reason: it lines the six numbers up as two rows
+   instead of letting them float under claims of different heights. Unlike the
+   numeral it is the card's payload, so it takes navy and the note under it
+   carries the qualifier the number is worthless without. */
+.slide .verdict-cards .promise-body p.verdict-stat {
+  margin-top: auto;
+  padding-top: var(--zilliz-s-2);
+  font-family: var(--zilliz-font-mono);
+  font-size: 48px;
+  font-weight: 800;
+  line-height: 1;
+  color: var(--zilliz-navy);
+}
+.slide .verdict-cards .verdict-note {
+  display: block;
+  margin-top: var(--zilliz-s-1);
+  font-family: var(--zilliz-font-sans);
+  font-size: 18px;
+  font-weight: 500;
+  line-height: 1.3;
+  letter-spacing: 0;
+  color: var(--zilliz-grey);
+}
+/* "never" is a word in the stat slot, not a numeral: at 52px mono it reads as
+   a heading rather than a measurement, which is the wrong weight for the one
+   card whose result is an infinity. */
+.slide .verdict-cards .promise-body p.verdict-stat.is-word { font-size: 38px; letter-spacing: 0.02em; }
+
+/* .next-cards — the six-up grid on `What I would run next`, two rows of three,
+   each card a category pill, a headline and one sentence. It is the one grid in
+   the deck that sets its own type scale: six bodies of prose at the deck's 32px
+   run past the slide, and unlike .verdict-cards there is no stat to hang the
+   card on, so the sentence has to stay readable at two rows. The pill drops its
+   115px min-width because at this width two of them would set the column. */
+.slide .next-cards { flex: 1; min-height: 0; grid-auto-rows: 1fr; gap: var(--zilliz-s-3); margin-top: var(--zilliz-s-3); }
+.slide .next-cards .card { min-height: 0; padding: var(--zilliz-s-2) var(--zilliz-s-3); gap: var(--zilliz-s-1); }
+.slide .next-cards .card .pill { min-width: 0; font-size: 15px; padding: 4px 11px; }
+.slide .next-cards .card p { margin: 0; font-size: 21px; line-height: 1.35; color: var(--zilliz-ink); }
+.slide .next-cards .card p strong { display: block; font-size: 26px; line-height: 1.15; font-weight: 800; color: var(--zilliz-navy); }
+.slide .next-cards + p { margin-top: var(--zilliz-s-3); }
+
+/* Break-even definition — the equation slide that names Q*. Reuses the
+   .equation/.fraction grammar the Recall@k cards taught the room earlier in
+   the deck, but at display scale: those live inside a card at 17px, this one
+   is the slide. Kept deck-scoped rather than promoted, since the two share
+   only structure and none of the type. */
+.slide .breakeven-def .equation { display: flex; align-items: center; justify-content: center; gap: var(--zilliz-s-3); margin: var(--zilliz-s-6) 0 var(--zilliz-s-8); font-family: var(--zilliz-font-mono); }
+.slide .breakeven-def .be-symbol { font-size: 72px; font-weight: 800; line-height: 1; color: var(--zilliz-blue); }
+.slide .breakeven-def .equals { font-size: 56px; font-weight: 300; opacity: 0.4; }
+.slide .breakeven-def .fraction { display: inline-flex; flex-direction: column; align-items: stretch; text-align: center; }
+.slide .breakeven-def .num, .slide .breakeven-def .den { font-size: 34px; line-height: 1.2; padding: var(--zilliz-s-2) var(--zilliz-s-3); }
+.slide .breakeven-def .num { color: var(--zilliz-blue); font-weight: 700; }
+.slide .breakeven-def .den { color: var(--zilliz-navy); font-weight: 700; }
+.slide .breakeven-def .bar { border-top: 3px solid var(--zilliz-ink); }
+
+/* The unit hangs off the equation rather than sitting under it: Q* is a rate,
+   and the whole closing line depends on the room reading it as one. */
+.slide .breakeven-def .be-unit { align-self: center; font-size: 22px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--zilliz-grey); max-width: 7em; line-height: 1.3; }
+
+/* The cards are flex columns, so the pill would stretch to the full card width
+   and stop reading as a tag. align-self pulls it back to hugging its label. */
+.slide .breakeven-def .be-terms .pill { align-self: flex-start; margin: 0 0 var(--zilliz-s-2); }
+.slide .breakeven-def .be-terms .card p:not(.pill) { font-size: 24px; line-height: 1.4; margin: 0; }
+
+/* The quality gate is a constraint on the subtraction, not a third input to
+   it, so it takes the berry the deck already uses for its cutoff rules. */
+.slide .breakeven-def .be-terms .card.is-gate { border-color: var(--zilliz-berry-20); background: var(--zilliz-berry-10); }
+.slide .breakeven-def .be-terms .card.is-gate .pill.ghost { background: var(--zilliz-berry-20); color: var(--zilliz-navy); }
+
+/* .domain-cards — the closing "Where an index wins" generalisation, six cards
+   3x2. The shared .card-grid is built for three cards on a slide that also
+   carries a chart or a paragraph; six of them with nothing else on the slide
+   want to sit to their own height and centre in what is left, rather than
+   stretch into two half-empty rows. */
+.slide .domain-cards { flex: 1; min-height: 0; grid-auto-rows: min-content; align-content: center; gap: var(--zilliz-s-4) var(--zilliz-s-3); margin-top: 0; }
+.slide .domain-cards .card { gap: 0; justify-content: flex-start; }
+/* .slide .domain-cards .card p { margin: 0; } */
+.slide .domain-cards .feature-cat { color: var(--zilliz-blue); margin-bottom: var(--zilliz-s-1); }
+.slide .domain-cards .case-name { font-size: 34px; color: var(--zilliz-navy); }
+.slide .domain-cards .case-proof { margin-top: var(--zilliz-s-2); }
+
+/* .methodology — the rig slide that opens every section carrying its own
+   measurements. The bands are always in this order: an italic setup line, the
+   arm cards, an optional blockquote defining a term the section's charts use
+   on their axes, a .rig pill strip, then one fragment caveat naming what may
+   not be claimed. Only the definition band is optional, and only the first
+   section carries one — a term is defined once, where it first reaches the
+   screen. The class exists so the five of them share one rhythm; each band is
+   a shared component already, so there is nothing here but spacing. */
+.slide.methodology > p em,
+.slide.methodology > em { color: var(--zilliz-grey); }
+.slide.methodology > .card-grid { margin: var(--zilliz-s-3) 0; }
+/* The shared blockquote carries margin:0, so the definition band would otherwise
+   sit flush against the .rig strip below it and read as part of the callout. */
+.slide.methodology > blockquote { margin-bottom: var(--zilliz-s-3); }
+.slide.methodology .card .pill { align-self: flex-start; margin: 0 0 var(--zilliz-s-2); }
+.slide.methodology .card p:not(.pill):last-child { font-size: 26px; line-height: 1.35; margin: 0; }
+.slide.methodology .rig { display: flex; flex-wrap: wrap; align-items: center; gap: var(--zilliz-s-1) var(--zilliz-s-2); margin: 0 0 var(--zilliz-s-3); }
+.slide.methodology .rig .pill { min-width: 0; }
+.slide.methodology > p.fragment:last-of-type { margin: 0; padding-top: var(--zilliz-s-2); border-top: 2px solid var(--zilliz-blue-20); }
+/* .arm-cards — the pill-led arm roll-call on a .methodology slide that also
+   carries a diagram. Five columns rather than the shared three, because the
+   rig above fans one arrow into each card and a second row would leave half
+   of them unfed. At that width the shared 26px body wraps the longest arm to
+   four lines and pushes the caveat band off the bottom, so it drops to 22px
+   and the card padding comes in one step. The pill keeps only the card's own
+   flex gap under it, where the three-up cards can afford a margin on top of
+   it. The top margin is the small one: the fan's arrowheads should land on
+   the cards, not near them. The grid itself is not a fragment, only the cards
+   in it, so the five slots are laid out from the first step and nothing under
+   the diagram shifts as the arms come in. */
+.slide.methodology .arm-cards { margin-top: var(--zilliz-s-1); }
+.slide.methodology .arm-cards .card { padding: var(--zilliz-s-2); }
+.slide.methodology .arm-cards .card .pill { margin-bottom: 0; }
+.slide.methodology .arm-cards .card p:not(.pill):last-child { font-size: 22px; }
+
+/* .floor-rungs — the serverless slide's three deployment rungs. Plain
+   .card-grid carries no bottom margin, which is right on every other slide
+   because a grid is the last thing on them. This one closes with a line of
+   prose under the cards, so give the grid the gap it would otherwise borrow
+   from the paragraph's own margin. */
+.slide.floor-rungs .card-grid { margin-bottom: var(--zilliz-s-4); }
+
+/* .answerability — the three worked questions under the answerability stat
+   row. The question is the card's headline, but it is a sentence rather than
+   a name, so it takes .case-name's job at a size that survives three to a row
+   and the wrapping that comes with it. The grid sits directly under a
+   .stat-grid, whose own generous vertical margin is the wrong spacing between
+   two rows the eye is meant to read column by column, so the stat row's
+   margin is pulled in to match the card gap. */
+.slide:has(.card-grid.answerability) .stat-grid { margin: var(--zilliz-s-4) 0 0; }
+.slide .card-grid.answerability { margin-top: var(--zilliz-s-3); }
+.slide .card-grid.answerability .card { padding: var(--zilliz-s-2) var(--zilliz-s-3); gap: var(--zilliz-s-1); }
+.slide .qa-q { font-size: 25px; font-weight: 600; font-style: italic; line-height: 1.25; color: var(--zilliz-navy); margin: 0; }
+.slide .qa-a { font-size: 20px; line-height: 1.35; color: var(--zilliz-ink); margin: 0; }
+.slide .qa-a strong { color: var(--zilliz-blue); }

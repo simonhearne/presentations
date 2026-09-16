@@ -1,0 +1,83 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "description": "WS6a median prompt tokens by arm (marginal), with the WS6c paired median delta and its 95% CI shown beside it. Sources: data/ws6c/summary.csv (corpus fastapi, column median_prompt_tokens) and data/ws6c/paired_ci.csv (indexed vs agentic, prompt_tokens).",
+  "width": 1100,
+  "height": 210,
+  "params": [{ "name": "stage", "value": 0 }],
+  "layer": [
+    {
+      "data": { "url": "../data/ws6c/summary.csv" },
+      "transform": [
+        { "filter": "datum.corpus === 'fastapi' && (datum.arm === 'parametric' || (stage > 0 && datum.arm === 'agentic') || (stage > 1 && datum.arm === 'indexed'))" }
+      ],
+      "mark": { "type": "bar", "cornerRadiusEnd": 3 },
+      "encoding": {
+        "y": {
+          "field": "arm", "type": "nominal",
+          "scale": { "domain": ["parametric", "agentic", "indexed"] },
+          "axis": { "labelExpr": "(datum.value === 'agentic' && stage < 1) || (datum.value === 'indexed' && stage < 2) ? '' : datum.value" },
+          "title": null
+        },
+        "x": {
+          "field": "median_prompt_tokens", "type": "quantitative",
+          "scale": { "domain": [0, 20000], "nice": false },
+          "axis": { "title": "median prompt tokens, marginal", "format": ",.0f" }
+        },
+        "color": {
+          "field": "arm", "type": "nominal",
+          "scale": {
+            "domain": ["parametric", "agentic", "indexed"],
+            "range": ["#7d8a9e", "#175fff", "#7f47ff"]
+          },
+          "legend": null
+        },
+        "tooltip": [
+          { "field": "arm" },
+          { "field": "median_prompt_tokens", "format": ",.0f" }
+        ]
+      }
+    },
+    {
+      "data": { "url": "../data/ws6c/summary.csv" },
+      "transform": [
+        { "filter": "datum.corpus === 'fastapi' && (datum.arm === 'parametric' || (stage > 0 && datum.arm === 'agentic') || (stage > 1 && datum.arm === 'indexed'))" }
+      ],
+      "mark": { "type": "text", "align": "left", "dx": 6, "fontSize": 16, "fontWeight": 600 },
+      "encoding": {
+        "y": {
+          "field": "arm", "type": "nominal",
+          "scale": { "domain": ["parametric", "agentic", "indexed"] }
+        },
+        "x": {
+          "field": "median_prompt_tokens", "type": "quantitative",
+          "scale": { "domain": [0, 20000], "nice": false }
+        },
+        "color": {
+          "field": "arm", "type": "nominal",
+          "scale": {
+            "domain": ["parametric", "agentic", "indexed"],
+            "range": ["#7d8a9e", "#175fff", "#7f47ff"]
+          },
+          "legend": null
+        },
+        "text": { "field": "median_prompt_tokens", "type": "quantitative", "format": ",.0f" }
+      }
+    },
+    {
+      "data": { "url": "../data/ws6c/paired_ci.csv" },
+      "transform": [
+        { "filter": "stage > 2 && datum.arm_a === 'indexed' && datum.arm_b === 'agentic' && datum.metric === 'prompt_tokens'" },
+        { "calculate": "'paired median +' + format(toNumber(datum.median), ',.0f') + '  CI [+' + format(toNumber(datum.ci_low), ',.0f') + ', +' + format(toNumber(datum.ci_high), ',.0f') + ']'", "as": "paired_label" }
+      ],
+      "mark": { "type": "text", "align": "left", "dx": 8, "fontWeight": 600, "fontSize": 19, "color": "#7f47ff" },
+      "encoding": {
+        "y": {
+          "datum": "parametric", "type": "nominal",
+          "scale": { "domain": ["parametric", "agentic", "indexed"] }
+        },
+        "x": { "datum": 500, "type": "quantitative" },
+        "text": { "field": "paired_label", "type": "nominal" }
+      }
+    }
+  ]
+}

@@ -1,0 +1,71 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "description": "WS4 M2 mediator: outcome share among the 368 of 450 questions where the reference arm retrieved the gold answer in its top-10. Source: data/ws4/mediator.csv, columns band, n, share. The narrowest band is drawn as 'other' because the full wording does not fit its 13 % width; the tooltip keeps the source label. Stage 4 draws the closing line as chart text, since page fragments fire before chart stages and this reveal must be last. Closing-line sources: data/ws4/summary.csv, column answer_presence_at_10, min 0.7378 (sq8_np4), max 0.8178 (sq8_np512, the reference arm); data/ws4/mediator.csv, 42 % = (106 + 48) / 368 (the idk and other-answer bands over the answer-in-context total).",
+  "data": { "url": "../data/ws4/mediator.csv" },
+  "params": [{ "name": "stage", "value": 0 }],
+  "transform": [
+    { "window": [{ "op": "row_number", "as": "rank" }] },
+    { "window": [{ "op": "sum", "field": "share", "as": "cum" }] },
+    { "calculate": "datum.cum - datum.share", "as": "x0" },
+    { "calculate": "datum.cum", "as": "x1" },
+    { "calculate": "(datum.x0 + datum.x1) / 2", "as": "xmid" },
+    { "calculate": "format(datum.share * 100, '.0f') + ' %'", "as": "pct_label" },
+    { "calculate": "datum.band === 'answered something else' ? 'other' : datum.band", "as": "band_label" }
+  ],
+  "width": 1040,
+  "height": 260,
+  "padding": { "left": 30, "right": 30, "top": 5, "bottom": 5 },
+  "layer": [
+    {
+      "transform": [{ "filter": "stage >= datum.rank" }],
+      "mark": { "type": "rect", "cornerRadius": 4 },
+      "encoding": {
+        "x": { "field": "x0", "type": "quantitative", "scale": { "domain": [0, 1] }, "axis": null },
+        "x2": { "field": "x1" },
+        "y": { "value": 60 },
+        "y2": { "value": 130 },
+        "color": {
+          "field": "band", "type": "nominal",
+          "scale": {
+            "domain": ["answered, judge marked correct", "replied I don't know", "answered something else"],
+            "range": ["#175fff", "#c84cff", "#7d8a9e"]
+          },
+          "legend": null
+        },
+        "tooltip": [
+          { "field": "band" },
+          { "field": "n" },
+          { "field": "share", "format": ".0%" }
+        ]
+      }
+    },
+    {
+      "transform": [{ "filter": "stage >= datum.rank" }],
+      "mark": { "type": "text", "fontSize": 22, "fontWeight": 700, "color": "white", "baseline": "middle" },
+      "encoding": {
+        "x": { "field": "xmid", "type": "quantitative" },
+        "y": { "value": 95 },
+        "text": { "field": "pct_label", "type": "nominal" }
+      }
+    },
+    {
+      "transform": [{ "filter": "stage >= datum.rank" }],
+      "mark": { "type": "text", "color": "#1e293b", "lineBreak": "\n", "lineHeight": 16 },
+      "encoding": {
+        "x": { "field": "xmid", "type": "quantitative" },
+        "y": { "value": 150 },
+        "text": { "field": "band_label", "type": "nominal" }
+      }
+    },
+    {
+      "data": { "values": [{}] },
+      "transform": [{ "filter": "stage >= 4" }],
+      "mark": { "type": "text", "align": "center", "fontWeight": 600, "color": "#1e293b", "lineBreak": "\n", "lineHeight": 26 },
+      "encoding": {
+        "x": { "value": 520 },
+        "y": { "value": 210 },
+        "text": { "value": "0.82 answer-presence@10 with PCA-384 SQ8.\nThe agent lost ~25%." }
+      }
+    }
+  ]
+}

@@ -1,13 +1,9 @@
 {
   "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
-  "description": "RaBitQ estimator error scales as O(1/√D) — the estimator gets BETTER as dimension grows, the inverse of the usual curse of dimensionality. PQ-style methods do not share this property; their error is set by the codebook learning step and is roughly flat in D.",
+  "description": "RaBitQ estimator error scales as O(1/√D): the estimator gets BETTER as dimension grows, the inverse of the usual curse of dimensionality. PQ-style methods do not share this property; their error is set by the codebook learning step and is roughly flat in D.",
   "width": 700,
   "height": 320,
   "background": "transparent",
-  "config": {
-    "axis": { "labelFontSize": 11, "titleFontSize": 12 },
-    "legend": { "labelFontSize": 11, "titleFontSize": 11 }
-  },
   "params": [
     {
       "name": "show_pq",
@@ -9018,7 +9014,7 @@
           {
             "D": 1900,
             "err": 0.045,
-            "label": "RaBitQ — empirical",
+            "label": "RaBitQ (empirical)",
             "color": "#00a884"
           },
           {

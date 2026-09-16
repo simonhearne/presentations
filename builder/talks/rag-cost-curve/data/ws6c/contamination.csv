@@ -1,0 +1,6 @@
+slug,label,n,judge_accuracy,any_file_hit_rate,source
+fastapi,fastapi (well-known OSS),40,0.625,0.675,ws6c/summary.csv
+agentic_hil,agentic-hil,25,0.000,0.000,ws6c/nonmemorization_gate.csv
+kicad_mcp_pro,kicad-mcp-pro,25,0.000,0.000,ws6c/nonmemorization_gate.csv
+mixle,mixle,25,0.000,0.000,ws6c/nonmemorization_gate.csv
+ws6b_synthetic,synthetic history (WS6b),38,0.000,,ws6b/parametric_gate_summary.csv

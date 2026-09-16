@@ -1,0 +1,130 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "description": "WS4 K1: judge accuracy vs measured recall@10. Source: data/ws4/summary.csv, columns recall, quality, quality_ci_lo, quality_ci_hi, class, family, filtered to metric=judge. No threshold is drawn: r* is retired (data/ws4e/rstar_final.csv, verdict row) and no knee on this ladder is locatable. The money stat that used to be stage 5 (the replacement slope, the delta to full precision, and a 9.22x footprint) is now an HTML .chart-callouts row overlaid on the slide, revealed as the fragment after this chart's stages; the spec stops at stage 4 and the slide carries the sources. Nothing in this file positions those numbers any more.",
+  "data": { "url": "../data/ws4/summary.csv" },
+  "width": 1500,
+  "height": 550,
+  "params": [{ "name": "stage", "value": 0 }],
+  "transform": [
+    { "filter": "datum.metric === 'judge'" },
+    { "calculate": "replace(datum.arm, /_np(\\d+)$/, '@$1')", "as": "arm_label" },
+    { "calculate": "datum.family === 'truncation' ? '#175fff' : datum.family === 'quantization' ? '#c84cff' : datum.family === 'pruning' ? '#00dcc6' : '#1e293b'", "as": "family_hex" },
+    { "calculate": "datum.family === 'reference' ? 'M0,-1L0.222,-0.309L0.951,-0.309L0.363,0.118L0.588,0.809L0,0.382L-0.588,0.809L-0.363,0.118L-0.951,-0.309L-0.222,-0.309Z' : 'circle'", "as": "point_shape" }
+  ],
+  "padding": { "top": 38, "left": 5, "right": 5, "bottom": 5 },
+  "resolve": { "legend": { "fill": "independent" } },
+  "layer": [
+    {
+      "transform": [{ "filter": "datum.class === 'floor'" }],
+      "mark": { "type": "rule", "strokeDash": [5, 4], "size": 2, "color": "#7d8a9e" },
+      "encoding": {
+        "y": { "field": "quality", "type": "quantitative" }
+      }
+    },
+    {
+      "transform": [{ "filter": "datum.class === 'floor'" }],
+      "mark": { "type": "text", "align": "left", "dx": 8, "dy": -8, "fontWeight": 600, "color": "#1e293b" },
+      "encoding": {
+        "x": { "datum": 0.75, "type": "quantitative" },
+        "y": { "field": "quality", "type": "quantitative" },
+        "text": { "value": "0.216, no retrieval at all" }
+      }
+    },
+    {
+      "transform": [
+        { "filter": "stage >= 2" },
+        { "filter": "datum.class !== 'floor'" },
+        { "aggregate": [
+            { "op": "min", "field": "quality", "as": "lo" },
+            { "op": "max", "field": "quality", "as": "hi" }
+          ] }
+      ],
+      "mark": { "type": "rect", "opacity": 0.08, "color": "#175fff" },
+      "encoding": {
+        "y": { "field": "lo", "type": "quantitative" },
+        "y2": { "field": "hi" }
+      }
+    },
+    {
+      "data": { "values": [{}] },
+      "transform": [{ "filter": "stage >= 2" }],
+      "mark": { "type": "text", "align": "left", "fontWeight": 600, "color": "#1e293b" },
+      "encoding": {
+        "x": { "value": 0 },
+        "y": { "value": -30 },
+        "text": { "value": "0.436 to 0.498" }
+      }
+    },
+    {
+      "data": { "values": [{}] },
+      "transform": [{ "filter": "stage >= 2" }],
+      "mark": { "type": "text", "align": "left", "color": "#1e293b", "lineBreak": "\n", "lineHeight": 13 },
+      "encoding": {
+        "x": { "value": 0 },
+        "y": { "value": -14 },
+        "text": { "value": "6.2 points of answer accuracy across 0.76 → 0.99 recall" }
+      }
+    },
+    {
+      "transform": [{ "filter": "stage >= 1 && datum.class !== 'floor'" }],
+      "mark": { "type": "errorbar", "ticks": true },
+      "encoding": {
+        "x": {
+          "field": "recall", "type": "quantitative",
+          "scale": { "domain": [0.74, 1.0], "zero": false, "nice": false },
+          "axis": { "title": "measured recall@10", "format": ".2f" }
+        },
+        "y": {
+          "field": "quality_ci_lo", "type": "quantitative",
+          "scale": { "domain": [0.15, 0.56], "zero": false, "nice": false },
+          "axis": { "title": "judge accuracy" }
+        },
+        "y2": { "field": "quality_ci_hi" },
+        "color": { "field": "family_hex", "type": "nominal", "scale": null }
+      }
+    },
+    {
+      "transform": [{ "filter": "stage >= 1 && datum.class !== 'floor'" }],
+      "mark": { "type": "point", "filled": true, "size": 110 },
+      "encoding": {
+        "x": { "field": "recall", "type": "quantitative" },
+        "y": { "field": "quality", "type": "quantitative" },
+        "shape": { "field": "point_shape", "type": "nominal", "scale": null },
+        "fill": {
+          "condition": { "test": "stage >= 3 && datum.class === 'DROP'", "value": "white" },
+          "field": "family", "type": "nominal",
+          "scale": {
+            "domain": ["truncation", "quantization", "pruning", "reference"],
+            "range": ["#175fff", "#c84cff", "#00dcc6", "#1e293b"]
+          },
+          "legend": { "title": "mechanism", "values": ["truncation", "quantization", "pruning"], "orient": "right" }
+        },
+        "stroke": { "field": "family_hex", "type": "nominal", "scale": null },
+        "strokeWidth": {
+          "condition": { "test": "stage >= 3 && datum.class === 'DROP'", "value": 2 },
+          "value": 0
+        },
+        "size": {
+          "condition": { "test": "stage >= 4 && datum.arm === 'pca_uc_384_sq8_np512'", "value": 320 },
+          "value": 110
+        },
+        "tooltip": [
+          { "field": "arm_label", "title": "arm" },
+          { "field": "recall", "format": ".4f" },
+          { "field": "quality", "format": ".4f" },
+          { "field": "delta_vs_ref", "format": "+.4f" },
+          { "field": "class" }
+        ]
+      }
+    },
+    {
+      "transform": [{ "filter": "stage >= 4 && datum.arm === 'pca_uc_384_sq8_np512'" }],
+      "mark": { "type": "text", "align": "left", "dx": 14, "dy": -14, "fontWeight": 700, "color": "#1e293b" },
+      "encoding": {
+        "x": { "field": "recall", "type": "quantitative" },
+        "y": { "field": "quality", "type": "quantitative" },
+        "text": { "field": "arm_label", "type": "nominal" }
+      }
+    }
+  ]
+}

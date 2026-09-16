@@ -1,0 +1,154 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "description": "WS3 dimension/quantizer tier ladder: best recall@10 vs footprint compression, vs the measured IVF_FLAT 1024d index. Source: data/ws3/dim_verdict_1m.csv, columns best_recall_at_10 and footprint_compression_vs_ivf_flat_1024. The denominator is the WS2 ivf_flat_fp32 load at 1M, so the index structure sits on both sides of the ratio.",
+  "data": {
+    "url": "../data/ws3/dim_verdict_1m.csv"
+  },
+  "width": 1500,
+  "height": 550,
+  "params": [
+    {
+      "name": "stage",
+      "value": 0
+    }
+  ],
+  "transform": [
+    {
+      "filter": {
+        "field": "arm",
+        "oneOf": [
+          "mrl_1024_sq8",
+          "pca_uc_768_sq8",
+          "pca_uc_512_sq8",
+          "pca_uc_448_sq8",
+          "pca_uc_384_sq8"
+        ]
+      }
+    },
+    {
+      "window": [
+        {
+          "op": "rank",
+          "as": "rung"
+        }
+      ],
+      "sort": [
+        {
+          "field": "footprint_compression_vs_ivf_flat_1024",
+          "order": "ascending"
+        }
+      ]
+    },
+    {
+      "filter": "stage >= datum.rung"
+    },
+    {
+      "calculate": "format(datum.footprint_compression_vs_ivf_flat_1024, '.1f') + 'x'",
+      "as": "compression_label"
+    }
+  ],
+  "layer": [
+    {
+      "mark": {
+        "type": "line",
+        "point": {
+          "size": 90,
+          "filled": true
+        },
+        "strokeWidth": 3,
+        "color": "#175fff"
+      },
+      "encoding": {
+        "x": {
+          "field": "footprint_compression_vs_ivf_flat_1024",
+          "type": "quantitative",
+          "scale": {
+            "domain": [
+              3.1,
+              9.7
+            ]
+          },
+          "axis": {
+            "title": "footprint compression vs the IVF_FLAT 1024d index",
+            "format": ".1f"
+          }
+        },
+        "y": {
+          "field": "best_recall_at_10",
+          "type": "quantitative",
+          "scale": {
+            "domain": [
+              0.85,
+              1.0
+            ]
+          },
+          "axis": {
+            "title": "best recall@10",
+            "format": ".2f"
+          }
+        },
+        "order": {
+          "field": "rung"
+        },
+        "tooltip": [
+          {
+            "field": "arm"
+          },
+          {
+            "field": "footprint_compression_vs_ivf_flat_1024",
+            "format": ".2f",
+            "title": "compression vs the IVF_FLAT 1024d index"
+          },
+          {
+            "field": "best_recall_at_10",
+            "format": ".3f"
+          }
+        ]
+      }
+    },
+    {
+      "mark": {
+        "type": "text",
+        "dy": -16,
+        "fontWeight": 600,
+        "color": "#1e293b"
+      },
+      "encoding": {
+        "x": {
+          "field": "footprint_compression_vs_ivf_flat_1024",
+          "type": "quantitative"
+        },
+        "y": {
+          "field": "best_recall_at_10",
+          "type": "quantitative"
+        },
+        "text": {
+          "field": "compression_label",
+          "type": "nominal"
+        }
+      }
+    },
+    {
+      "mark": {
+        "type": "text",
+        "dy": 16,
+        "color": "#1e293b"
+      },
+      "encoding": {
+        "x": {
+          "field": "footprint_compression_vs_ivf_flat_1024",
+          "type": "quantitative"
+        },
+        "y": {
+          "field": "best_recall_at_10",
+          "type": "quantitative"
+        },
+        "text": {
+          "field": "best_recall_at_10",
+          "type": "quantitative",
+          "format": ".2f"
+        }
+      }
+    }
+  ]
+}

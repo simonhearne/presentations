@@ -81,7 +81,24 @@ html, body {
   border-color: var(--zilliz-blue-20) !important;
 }
 
+/* Fragments print revealed: a printed slide is a finished slide. script/
+   fragments.js does the real work on beforeprint, adding .is-revealed so
+   anything a deck styles on that class prints in its final state too. This is
+   the fallback for the paths that never fire beforeprint -- a headless
+   page.pdf(), a print with JS disabled -- where content showing up at all
+   matters more than the state-driven styling being exact. */
+.fragment {
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
 @page {
   size: 1920px 1080px;
   margin: 0;
+}
+
+.slide.placeholder::before,
+.slide.placeholder::after {
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
 }

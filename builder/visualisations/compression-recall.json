@@ -12,7 +12,6 @@
         {"series": "FP32 (FLAT)", "compression": 1, "recall": 1},
         {"series": "FP16", "compression": 2, "recall": 0.995},
         {"series": "BF16", "compression": 2, "recall": 0.99},
-        {"series": "INT8", "compression": 4, "recall": 0.98},
         {"series": "SQ8", "compression": 4, "recall": 0.99},
         {"series": "PQ", "compression": 4, "recall": 0.97},
         {"series": "PQ", "compression": 8, "recall": 0.93},
@@ -29,7 +28,7 @@
       "name": "source_1",
       "values": [
         {
-          "note": "Illustrative — representative of Ada-002 / BGE-m3 style embeddings on Milvus 2.6+ (FLAT, FP16/BF16, INT8, IVF_SQ8, IVF_PQ, HNSW_PRQ, IVF_RABITQ)"
+          "note": "Illustrative, representative of Ada-002 / BGE-m3 style embeddings on Milvus 2.6+ (FLAT, FP16/BF16, INT8, IVF_SQ8, IVF_PQ, HNSW_PRQ, IVF_RABITQ). Points are authored at 768-D; the Embedding dim control scales the residual recall error of the dimension-sensitive families (PQ, PRQ, RaBitQ) by 1.10 / 1.00 / 0.90 / 0.82 at 384 / 768 / 1536 / 3072-D. Direction only, not measured. Scalar methods (FP16, BF16, SQ8) quantise each number independently and are held flat."
         }
       ]
     },
@@ -39,7 +38,7 @@
       "transform": [
         {
           "type": "formula",
-          "expr": "(datum.series == 'PQ' || datum.series == 'PRQ') ? datum.recall + (dim == '384' ? -0.02 : dim == '1536' ? 0.02 : 0) : datum.recall",
+          "expr": "(datum.series == 'PQ' || datum.series == 'PRQ' || indexof(datum.series, 'RaBitQ') >= 0) ? 1 - (1 - datum.recall) * (dim == '384' ? 1.10 : dim == '1536' ? 0.90 : dim == '3072' ? 0.82 : 1) : datum.recall",
           "as": "recall_adj"
         },
         {
@@ -52,10 +51,10 @@
   "signals": [
     {
       "name": "dim",
-      "value": "768",
+      "value": "3072",
       "bind": {
         "input": "select",
-        "options": ["384", "768", "1536"],
+        "options": ["384", "768", "1536", "3072"],
         "name": "Embedding dim "
       }
     },
@@ -84,7 +83,7 @@
           "size": {"value": 500},
           "fill": {"scale": "color", "field": "series"},
           "tooltip": {
-            "signal": "{\"Quantisation\": isValid(datum[\"series\"]) ? isArray(datum[\"series\"]) ? join(datum[\"series\"], '\\n') : datum[\"series\"] : \"\"+datum[\"series\"], \"Recall@10\": format(datum[\"recall_adj\"], \"\"), \"Compression\": format(datum[\"compression\"], \"\")}"
+            "signal": "{\"Quantisation\": isValid(datum[\"series\"]) ? isArray(datum[\"series\"]) ? join(datum[\"series\"], '\\n') : datum[\"series\"] : \"\"+datum[\"series\"], \"Recall@10\": format(datum[\"recall_adj\"], \".2f\"), \"Compression\": format(datum[\"compression\"], \"\")}"
           },
           "x": {"scale": "x", "field": "compression"},
           "y": {"scale": "y", "field": "recall_adj"}
@@ -146,7 +145,7 @@
     {
       "name": "y",
       "type": "linear",
-      "domain": {"signal": "[0.75 * tween, 1]"},
+      "domain": {"signal": "[(dim == '384' ? 0.70 : 0.75) * tween, 1]"},
       "range": [{"signal": "height"}, 0],
       "zero": false
     },

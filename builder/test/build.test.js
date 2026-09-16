@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { splitSlides, parseAttrs, slugify, extractTitle, renderSlide, parseAuthors, extractAuthors, renderAuthors, copyAuthorPhotos, parseVega, extractVega, renderVega, embedVegaSpecs, extractDot, DOT_DEFAULTS, renderDot, buildDeck, extractDeckConfig, renderAgendaChunk, parseThree, extractThree, THREE_PLACEHOLDER, embedThreeModules, renderThree, parseIframe, extractIframe, renderIframe, IFRAME_PLACEHOLDER, extractIframeFallback, renderIframeFallback, IFRAME_FALLBACK_DEFAULT, copyIframeStills, parseAttrList, applyFragmentAttrs, escapeHtml, copyLocalImages, stripComments } from '../bin/build.js';
+import { splitSlides, parseAttrs, slugify, extractTitle, renderSlide, parseAuthors, extractAuthors, renderAuthors, copyAuthorPhotos, parseVega, extractVega, renderVega, embedVegaData, embedVegaSpecs, extractDot, DOT_DEFAULTS, renderDot, buildDeck, extractDeckConfig, renderAgendaChunk, parseThree, extractThree, THREE_PLACEHOLDER, embedThreeModules, renderThree, parseIframe, extractIframe, renderIframe, IFRAME_PLACEHOLDER, extractIframeFallback, renderIframeFallback, IFRAME_FALLBACK_DEFAULT, copyIframeStills, parseAttrList, applyFragmentAttrs, escapeHtml, copyLocalImages, stripComments } from '../bin/build.js';
 import { mkdtempSync, writeFileSync, readFileSync, existsSync, rmSync, mkdirSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
@@ -85,6 +85,17 @@ test('slugify: empty input → "slide"', () => {
 
 test('extractTitle: returns first h1 text', () => {
   assert.equal(extractTitle('<h1>Hello <em>World</em></h1><p>x</p>'), 'Hello World');
+});
+
+test('extractTitle: drops a heading eyebrow, marker or rendered span', () => {
+  assert.equal(
+    extractTitle('<h1>[RAM]{.eyebrow-ver} HNSW: navigate a graph</h1>'),
+    'HNSW: navigate a graph'
+  );
+  assert.equal(
+    extractTitle('<h1><span class="eyebrow-new">3.0</span> Phrase matching</h1>'),
+    'Phrase matching'
+  );
 });
 
 test('extractTitle: falls back to first h2', () => {
@@ -553,6 +564,11 @@ test('renderVega: passes extra fields through as data-* attributes', () => {
   ], 'x');
   assert.match(html, /data-renderer="svg"/);
   assert.match(html, /data-actions="false"/);
+});
+
+test('renderVega: fragment-index reaches the DOM as data-fragment-index', () => {
+  const html = renderVega([{ spec: 's.json', 'fragment-index': 0 }], 'x');
+  assert.match(html, /data-fragment-index="0"/);
 });
 
 test('renderVega: explicit id overrides the default', () => {
@@ -1900,4 +1916,90 @@ test('renderIframe: fallback-offset does not leak through as a data attribute', 
   const html = renderIframe([{ url: 'https://example.com', 'fallback-offset': '210px', label: 'keep' }], 'demo');
   assert.doesNotMatch(html, /fallback-offset/);
   assert.match(html, /data-label="keep"/);
+});
+
+test('embedVegaData: inlines a relative csv url and infers the format', () => {
+  const dir = mkdtempSync(join(tmpdir(), 'vegadata-'));
+  try {
+    writeFileSync(join(dir, 'x.csv'), 'a,b\n1,2\n');
+    const spec = { data: { url: 'x.csv' } };
+    embedVegaData(spec, dir);
+    assert.equal(spec.data.values, 'a,b\n1,2\n');
+    assert.equal(spec.data.format.type, 'csv');
+    assert.ok(!('url' in spec.data));
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
+});
+
+test('embedVegaData: keeps an explicit format', () => {
+  const dir = mkdtempSync(join(tmpdir(), 'vegadata-'));
+  try {
+    writeFileSync(join(dir, 'x.csv'), 'a\n1\n');
+    const spec = { data: { url: 'x.csv', format: { type: 'csv', parse: { a: 'number' } } } };
+    embedVegaData(spec, dir);
+    assert.deepEqual(spec.data.format, { type: 'csv', parse: { a: 'number' } });
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
+});
+
+test('embedVegaData: walks layer, hconcat, vconcat, facet spec and datasets', () => {
+  const dir = mkdtempSync(join(tmpdir(), 'vegadata-'));
+  try {
+    writeFileSync(join(dir, 'a.csv'), 'a\n1\n');
+    writeFileSync(join(dir, 'b.json'), '[{"b":2}]');
+    const spec = {
+      layer: [{ data: { url: 'a.csv' } }],
+      hconcat: [{ vconcat: [{ spec: { data: { url: 'b.json' } } }] }],
+    };
+    embedVegaData(spec, dir);
+    assert.equal(spec.layer[0].data.values, 'a\n1\n');
+    assert.equal(spec.layer[0].data.format.type, 'csv');
+    assert.equal(spec.hconcat[0].vconcat[0].spec.data.format.type, 'json');
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
+});
+
+test('embedVegaData: leaves http and data urls alone', () => {
+  const spec = { data: [{ url: 'https://example.com/x.csv' }, { url: 'data:text/csv,a' }] };
+  embedVegaData(spec, '/nonexistent');
+  assert.equal(spec.data[0].url, 'https://example.com/x.csv');
+  assert.equal(spec.data[1].url, 'data:text/csv,a');
+});
+
+test('embedVegaData: a missing file throws with the path', () => {
+  const spec = { data: { url: 'nope.csv' } };
+  assert.throws(() => embedVegaData(spec, '/tmp'), /nope\.csv/);
+});
+
+test('embedVegaSpecs: inlines the spec data files too', () => {
+  const dir = mkdtempSync(join(tmpdir(), 'vegaspec-'));
+  try {
+    mkdirSync(join(dir, 'charts'));
+    writeFileSync(join(dir, 'charts', 'x.csv'), 'a\n1\n');
+    writeFileSync(join(dir, 'charts', 's.json'), JSON.stringify({ data: { url: 'x.csv' } }));
+    const charts = [{ spec: 'charts/s.json' }];
+    embedVegaSpecs(charts, dir);
+    const json = Buffer.from(charts[0].spec.split(',')[1], 'base64').toString('utf8');
+    assert.equal(JSON.parse(json).data.values, 'a\n1\n');
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
+});
+
+test('embedVegaSpecs: a missing data file names the spec and the path', () => {
+  const dir = mkdtempSync(join(tmpdir(), 'vegaspec-missing-data-'));
+  try {
+    mkdirSync(join(dir, 'charts'));
+    writeFileSync(join(dir, 'charts', 's.json'), JSON.stringify({ data: { url: 'nope.csv' } }));
+    const charts = [{ spec: 'charts/s.json' }];
+    assert.throws(
+      () => embedVegaSpecs(charts, dir),
+      /s\.json.*nope\.csv|nope\.csv.*s\.json/
+    );
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
 });

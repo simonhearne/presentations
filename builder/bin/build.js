@@ -4,7 +4,7 @@ import { marked } from 'marked';
 import hljs from 'highlight.js/lib/common';
 import { Graphviz } from '@hpcc-js/wasm-graphviz';
 import { readFileSync, writeFileSync, mkdirSync, realpathSync, copyFileSync, readdirSync } from 'node:fs';
-import { resolve, basename } from 'node:path';
+import { resolve, basename, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 marked.use({
@@ -98,10 +98,21 @@ export function slugify(text) {
   return s || 'slide';
 }
 
+// An eyebrow on a heading ([RAM]{.eyebrow-ver} and friends) labels the slide;
+// it isn't part of its title. Drop it before the footer, the next-link and the
+// slug are derived, so adding one never rewrites a slide's anchor id. Matches
+// both the source marker and the span it becomes, since extractTitle runs on
+// marked output either before or after applyFragmentAttrs.
+const HEADING_EYEBROW_RE = /\[[^\]\n]+\]\{[^}\n]*\.eyebrow-[\w-]+[^}\n]*\}|<span class="[^"]*\beyebrow-[\w-]+\b[^"]*">[\s\S]*?<\/span>/g;
+
 export function extractTitle(html) {
   const m = html.match(/<(h1|h2)[^>]*>([\s\S]*?)<\/\1>/i);
   if (!m) return null;
-  return m[2].replace(/<[^>]+>/g, '').trim();
+  return m[2]
+    .replace(HEADING_EYEBROW_RE, '')
+    .replace(/<[^>]+>/g, '')
+    .replace(/\s+/g, ' ')
+    .trim();
 }
 
 // const SPARK_INLINE = '<svg width="40" height="40" viewBox="0 0 50 50" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M22.2815 32.3162V47.5339H25.2524V29.3107L33.1523 42.9936C34.0462 42.5564 34.9052 42.0588 35.7238 41.5059L27.076 26.5275L36.5995 29.9938C37.0292 29.1099 37.3702 28.1749 37.6111 27.2004L32.2589 25.2524H47.5339V22.2815H29.3106L42.9937 14.3816C42.5565 13.4877 42.0588 12.6287 41.5059 11.8101L26.6162 20.4066L30.0532 10.9636C29.1712 10.5297 28.2378 10.1843 27.2646 9.93893L25.2524 15.4675V0H22.2815V18.2232L14.3816 4.54022C13.4877 4.9774 12.6287 5.4751 11.8101 6.02797L20.422 20.9441L10.9549 17.4984C10.5223 18.381 10.1782 19.3148 9.93411 20.2884L15.4103 22.2815H0V25.2524H18.2232L4.54024 33.1522C4.97743 34.0462 5.47512 34.9051 6.02799 35.7237L21.0328 27.0607L17.5579 36.6081C18.4423 37.0365 19.3778 37.3763 20.3526 37.6158L22.2815 32.3162Z" fill="currentColor"/></svg>';
@@ -438,7 +449,18 @@ export function embedVegaSpecs(charts, talkDir) {
     } catch (err) {
       throw new Error(`embedVegaSpecs: failed to read spec ${c.spec}: ${err.message}`);
     }
-    const b64 = Buffer.from(json, 'utf8').toString('base64');
+    let parsed;
+    try {
+      parsed = JSON.parse(json);
+    } catch (err) {
+      throw new Error(`embedVegaSpecs: spec ${c.spec} is not valid JSON: ${err.message}`);
+    }
+    try {
+      embedVegaData(parsed, dirname(src));
+    } catch (err) {
+      throw new Error(`embedVegaSpecs: spec ${c.spec}: ${err.message}`);
+    }
+    const b64 = Buffer.from(JSON.stringify(parsed), 'utf8').toString('base64');
     c.spec = `data:application/json;base64,${b64}`;
   }
   return charts;
@@ -585,6 +607,52 @@ function autoRevealAttrs(classes, attrs) {
   const safeDelay = Number.isInteger(delay) && delay > 0 ? delay : 1000;
   const start = attrs.start === 'immediate' ? 'immediate' : 'cue';
   return ` data-autoreveal-delay="${safeDelay}" data-autoreveal-start="${start}"`;
+}
+
+const VEGA_DATA_FORMATS = { csv: 'csv', tsv: 'tsv', json: 'json' };
+
+export function embedVegaData(spec, specDir) {
+  if (!spec || typeof spec !== 'object') return spec;
+
+  const inline = entry => {
+    if (!entry || typeof entry !== 'object' || typeof entry.url !== 'string') return;
+    if (/^https?:\/\//i.test(entry.url)) return;
+    if (entry.url.startsWith('data:')) return;
+    const src = resolve(specDir, entry.url);
+    let text;
+    try {
+      text = readFileSync(src, 'utf8');
+    } catch (err) {
+      throw new Error(`embedVegaData: failed to read data file ${entry.url}: ${err.message}`);
+    }
+    const ext = entry.url.split('.').pop().toLowerCase();
+    if (!entry.format || !entry.format.type) {
+      const type = VEGA_DATA_FORMATS[ext];
+      if (!type) throw new Error(`embedVegaData: cannot infer format for ${entry.url}; set data.format.type`);
+      entry.format = { ...(entry.format || {}), type };
+    }
+    entry.values = text;
+    delete entry.url;
+  };
+
+  const walk = node => {
+    if (Array.isArray(node)) {
+      for (const n of node) walk(n);
+      return;
+    }
+    if (!node || typeof node !== 'object') return;
+    if (node.data) {
+      if (Array.isArray(node.data)) for (const d of node.data) inline(d);
+      else inline(node.data);
+    }
+    if (node.datasets) for (const k of Object.keys(node.datasets)) inline(node.datasets[k]);
+    for (const key of ['layer', 'hconcat', 'vconcat', 'concat', 'spec', 'facet']) {
+      if (node[key]) walk(node[key]);
+    }
+  };
+
+  walk(spec);
+  return spec;
 }
 
 export function renderSlide({ chunk, index, total, currentTitle = '', nextTitle = '', authors = [], charts = [], dotFigures = [], threeEntries = [], iframeEntries = [], iframeFallback = '' }) {

@@ -4,10 +4,6 @@
   "width": 1200,
   "height": 600,
   "background": "transparent",
-  "config": {
-    "axis": { "labelFontSize": 16, "titleFontSize": 18 },
-    "legend": { "labelFontSize": 16, "titleFontSize": 18 }
-  },
   "data": {
     "values": [
       {"x": 1.2, "y": 2.1, "group": "A"},

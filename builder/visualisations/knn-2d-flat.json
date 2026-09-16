@@ -162,8 +162,8 @@
           "y": {"scale": "y", "field": "y"},
           "shape": {"value": "circle"},
           "size": {"value": 70},
-          "fill": {"value": "#dcdcdc"},
-          "opacity": {"value": 0.7}
+          "fill": {"value": "blue"},
+          "opacity": {"value": 1}
         }
       }
     },
@@ -180,8 +180,8 @@
             {"value": 90}
           ],
           "fill": [
-            {"test": "datum.scanRank <= k", "value": "#9d41ff"},
-            {"value": "#9bb5ff"}
+            {"test": "datum.scanRank <= k", "value": "green"},
+            {"value": "red"}
           ],
           "stroke": [
             {"test": "datum.scanRank <= k", "value": "#5f1f9c"},
@@ -244,7 +244,7 @@
         "enter": {
           "shape": {"value": "diamond"},
           "size": {"value": 420},
-          "fill": {"value": "#ff5757"},
+          "fill": {"value": "goldenrod"},
           "stroke": {"value": "#000"},
           "strokeWidth": {"value": 2}
         },

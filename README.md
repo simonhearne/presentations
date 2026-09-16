@@ -1,11 +1,11 @@
-# Simon Hearne — Talks
+# Simon Hearne | Talks
 
 Slides from talks and workshops, published at **[talks.simonhearne.com](https://talks.simonhearne.com)**.
 
 This repo holds two generations of decks side by side:
 
-- **Legacy decks** — self-contained [reveal.js](https://revealjs.com) presentations (2018–2022), each in its own top-level directory.
-- **New decks** — Markdown sources under [`builder/talks/`](builder/talks/), compiled to self-contained HTML by a small, dependency-light build system.
+- **Legacy decks**: self-contained [reveal.js](https://revealjs.com) presentations (2018–2022), each in its own top-level directory.
+- **New decks**: Markdown sources under [`builder/talks/`](builder/talks/), compiled to self-contained HTML by a small, dependency-light build system.
 
 The live site is assembled from both: new decks are rehosted with generated OpenGraph thumbnails, legacy decks are linked out in place.
 
@@ -30,6 +30,7 @@ Deploy is handled by Netlify ([`netlify.toml`](netlify.toml)):
 
 | Talk | Year | Format |
 | --- | --- | --- |
+| [The RAG Cost Curve](https://talks.simonhearne.com/rag-cost-curve) | 2026 | Markdown build |
 | [Vector Search, Visualised](https://talks.simonhearne.com/vector-search-visualised) | 2026 | Markdown build |
 | Optimising Core Web Vitals on SPAs | 2022 | reveal.js |
 | An Inclusive Web is Fast by Default | 2021 | reveal.js |

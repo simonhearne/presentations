@@ -1,10 +1,31 @@
 {
   "$schema": "https://vega.github.io/schema/vega/v5.json",
-  "description": "ANN vs exact search: comparisons required per query as the vector count grows. Stepped reveal via the `stage` signal.",
+  "description": "ANN vs exact search: comparisons required per query as the vector count grows. Stepped reveal via the `stage` signal; each line sweeps left-to-right as its stage is entered.",
   "width": 1200,
   "height": 600,
   "signals": [
-    {"name": "stage", "value": 0}
+    {"name": "stage", "value": 0},
+    {"name": "span", "value": 7},
+    {
+      "name": "drawExact",
+      "value": 0,
+      "on": [
+        {
+          "events": {"type": "timer", "throttle": 30},
+          "update": "stage >= 1 ? min(drawExact + 0.2, span) : 0"
+        }
+      ]
+    },
+    {
+      "name": "drawAnn",
+      "value": 0,
+      "on": [
+        {
+          "events": {"type": "timer", "throttle": 30},
+          "update": "stage >= 2 ? min(drawAnn + 0.2, span) : 0"
+        }
+      ]
+    }
   ],
 "data": [
     {
@@ -17,6 +38,7 @@
       "name": "exactLine",
       "source": "raw",
       "transform": [
+        {"type": "filter", "expr": "datum.e <= 2 + drawExact"},
         {"type": "formula", "expr": "pow(10, datum.e)", "as": "n"},
         {"type": "formula", "expr": "datum.n", "as": "comparisons"}
       ]
@@ -25,6 +47,7 @@
       "name": "annLine",
       "source": "raw",
       "transform": [
+        {"type": "filter", "expr": "datum.e <= 2 + drawAnn"},
         {"type": "formula", "expr": "pow(10, datum.e)", "as": "n"},
         {"type": "formula", "expr": "min(datum.n, 4000 + 150 * datum.e)", "as": "comparisons"}
       ]
@@ -54,7 +77,7 @@
     {
       "orient": "bottom",
       "scale": "x",
-      "title": "Vector count",
+      "title": "Embedding count",
       "values": [100, 1000, 10000, 100000, 1000000, 10000000, 100000000, 1000000000],
       "format": "~s",
       "grid": true,
@@ -86,6 +109,9 @@
           "strokeWidth": {"value": 4},
           "strokeCap": {"value": "round"},
           "interpolate": {"value": "monotone"}
+        },
+        "update": {
+          "opacity": {"signal": "stage >= 1 ? 1 : 0"}
         }
       }
     },
@@ -102,7 +128,7 @@
           "interpolate": {"value": "monotone"}
         },
         "update": {
-          "opacity": {"signal": "stage >= 1 ? 1 : 0"}
+          "opacity": {"signal": "stage >= 2 ? 1 : 0"}
         }
       }
     },
@@ -116,6 +142,9 @@
           "fill": {"value": "#175fff"},
           "stroke": {"value": "#ffffff"},
           "strokeWidth": {"value": 2}
+        },
+        "update": {
+          "opacity": {"signal": "drawExact >= span ? 1 : 0"}
         }
       }
     },
@@ -131,7 +160,7 @@
           "strokeWidth": {"value": 2}
         },
         "update": {
-          "opacity": {"signal": "stage >= 1 ? 1 : 0"}
+          "opacity": {"signal": "drawAnn >= span ? 1 : 0"}
         }
       }
     },
@@ -147,8 +176,10 @@
           "baseline": {"value": "bottom"},
           "text": {"value": "Exact search"},
           "fill": {"value": "#175fff"},
-          "fontSize": {"value": 17},
           "fontWeight": {"value": 600}
+        },
+        "update": {
+          "opacity": {"signal": "drawExact >= span ? 1 : 0"}
         }
       }
     },
@@ -162,11 +193,10 @@
           "baseline": {"value": "bottom"},
           "text": {"value": "ANN search"},
           "fill": {"value": "#b45309"},
-          "fontSize": {"value": 17},
           "fontWeight": {"value": 600}
         },
         "update": {
-          "opacity": {"signal": "stage >= 1 ? 1 : 0"}
+          "opacity": {"signal": "drawAnn >= span ? 1 : 0"}
         }
       }
     },
@@ -182,7 +212,7 @@
           "strokeDash": {"value": [5, 4]}
         },
         "update": {
-          "opacity": {"signal": "stage >= 2 ? 1 : 0"}
+          "opacity": {"signal": "stage >= 3 ? 1 : 0"}
         }
       }
     },
@@ -198,7 +228,7 @@
           "strokeWidth": {"value": 1.5}
         },
         "update": {
-          "opacity": {"signal": "stage >= 2 ? 1 : 0"}
+          "opacity": {"signal": "stage >= 3 ? 1 : 0"}
         }
       }
     },
@@ -214,7 +244,7 @@
           "strokeWidth": {"value": 1.5}
         },
         "update": {
-          "opacity": {"signal": "stage >= 2 ? 1 : 0"}
+          "opacity": {"signal": "stage >= 3 ? 1 : 0"}
         }
       }
     },
@@ -229,11 +259,10 @@
           "lineHeight": {"value": 21},
           "text": {"value": ["> 5 orders of magnitude", "fewer comparisons"]},
           "fill": {"value": "#1a1f4d"},
-          "fontSize": {"value": 17},
           "fontWeight": {"value": 700}
         },
         "update": {
-          "opacity": {"signal": "stage >= 2 ? 1 : 0"}
+          "opacity": {"signal": "stage >= 3 ? 1 : 0"}
         }
       }
     }

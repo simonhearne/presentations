@@ -1,0 +1,266 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "description": "Cost per correct answer, agent-billed, two code corpora on one log axis. The ws8_issues (prose) rows are still derived into the CSV but the slide drives `stage` only to 1, so they are filtered out here; the prose run moved to the backup deck. Lollipop rather than bar because a log axis has no zero baseline and a bar length would imply a ratio the scale does not carry. A census over the whole run rather than an estimate, so no interval is drawn. Source: data/cost_per_correct.csv, derived in data/derive.js from data/ws6c/summary.csv (total_cost_agent_billed) and the WS8 per-run files restricted to the two powered strata.",
+  "data": {
+    "url": "../data/cost_per_correct.csv",
+    "format": {
+      "parse": {
+        "cost_per_correct_usd": "number",
+        "total_cost_agent_usd": "number",
+        "corpus_order": "number",
+        "n_correct": "number"
+      }
+    }
+  },
+  "width": 1060,
+  "height": 300,
+  "params": [
+    {
+      "name": "stage",
+      "value": 0
+    }
+  ],
+  "transform": [
+    {
+      "filter": "datum.corpus_order <= stage"
+    },
+    {
+      "calculate": "{'parametric':0,'agentic':1,'indexed_topk3':2,'indexed':3}[datum.arm]",
+      "as": "arm_order"
+    },
+    {
+      "calculate": "'$' + format(datum.cost_per_correct_usd, '.4f')",
+      "as": "cost_label"
+    }
+  ],
+  "encoding": {
+    "y": {
+      "field": "corpus_label",
+      "type": "nominal",
+      "sort": {
+        "field": "corpus_order"
+      },
+      "title": null,
+      "axis": {
+        "labelFontSize": 15,
+        "labelLimit": 320,
+        "labelPadding": 10,
+        "domain": false,
+        "ticks": false
+      }
+    },
+    "yOffset": {
+      "field": "arm_order",
+      "type": "nominal",
+      "sort": "ascending"
+    },
+    "color": {
+      "field": "arm",
+      "type": "nominal",
+      "scale": {
+        "domain": [
+          "parametric",
+          "agentic",
+          "indexed_topk3",
+          "indexed"
+        ],
+        "range": [
+          "#7d8a9e",
+          "#175fff",
+          "#b48cff",
+          "#7f47ff"
+        ]
+      },
+      "legend": {
+        "title": null,
+        "orient": "top",
+        "direction": "horizontal",
+        "labelFontSize": 15,
+        "labelExpr": "{'parametric':'no retrieval','agentic':'agentic','indexed_topk3':'indexed top-k 3','indexed':'indexed top-k 10'}[datum.label]",
+        "symbolType": "circle",
+        "symbolSize": 130,
+        "symbolOpacity": 1
+      }
+    }
+  },
+  "layer": [
+    {
+      "transform": [
+        {
+          "filter": "datum.n_correct > 0"
+        }
+      ],
+      "mark": {
+        "type": "rule",
+        "strokeWidth": 3,
+        "opacity": 0.45
+      },
+      "encoding": {
+        "x": {
+          "field": "cost_per_correct_usd",
+          "type": "quantitative",
+          "scale": {
+            "type": "log",
+            "domain": [
+              0.01,
+              0.25
+            ],
+            "nice": false
+          },
+          "axis": {
+            "title": "billed cost per correct answer, agent only, log scale",
+            "titleFontSize": 15,
+            "format": "$.3f",
+            "values": [
+              0.01,
+              0.02,
+              0.05,
+              0.1,
+              0.2
+            ],
+            "grid": true
+          }
+        },
+        "x2": {
+          "datum": 0.01
+        }
+      }
+    },
+    {
+      "transform": [
+        {
+          "filter": "datum.n_correct > 0"
+        }
+      ],
+      "mark": {
+        "type": "point",
+        "filled": true,
+        "size": 230,
+        "opacity": 1
+      },
+      "encoding": {
+        "x": {
+          "field": "cost_per_correct_usd",
+          "type": "quantitative",
+          "scale": {
+            "type": "log",
+            "domain": [
+              0.01,
+              0.25
+            ],
+            "nice": false
+          },
+          "axis": {
+            "title": "billed cost per correct answer, agent only, log scale",
+            "titleFontSize": 15,
+            "format": "$.3f",
+            "values": [
+              0.01,
+              0.02,
+              0.05,
+              0.1,
+              0.2
+            ],
+            "grid": true
+          }
+        },
+        "tooltip": [
+          {
+            "field": "corpus_label",
+            "title": "corpus"
+          },
+          {
+            "field": "arm_label",
+            "title": "arm"
+          },
+          {
+            "field": "n",
+            "title": "questions"
+          },
+          {
+            "field": "n_correct",
+            "title": "correct"
+          },
+          {
+            "field": "judge_accuracy",
+            "title": "accuracy"
+          },
+          {
+            "field": "total_cost_agent_usd",
+            "title": "total agent $",
+            "format": "$.4f"
+          },
+          {
+            "field": "cost_per_correct_usd",
+            "title": "$ per correct",
+            "format": "$.4f"
+          }
+        ]
+      }
+    },
+    {
+      "transform": [
+        {
+          "filter": "datum.n_correct > 0"
+        }
+      ],
+      "mark": {
+        "type": "text",
+        "align": "left",
+        "dx": 11,
+        "fontSize": 14,
+        "fontWeight": 600
+      },
+      "encoding": {
+        "x": {
+          "field": "cost_per_correct_usd",
+          "type": "quantitative",
+          "scale": {
+            "type": "log",
+            "domain": [
+              0.01,
+              0.25
+            ],
+            "nice": false
+          }
+        },
+        "text": {
+          "field": "cost_label",
+          "type": "nominal"
+        }
+      }
+    },
+    {
+      "transform": [
+        {
+          "filter": "datum.n_correct === 0"
+        }
+      ],
+      "mark": {
+        "type": "text",
+        "align": "left",
+        "dx": 2,
+        "fontSize": 14,
+        "fontStyle": "italic",
+        "color": "#7d8a9e"
+      },
+      "encoding": {
+        "x": {
+          "datum": 0.0102,
+          "type": "quantitative",
+          "scale": {
+            "type": "log",
+            "domain": [
+              0.01,
+              0.25
+            ],
+            "nice": false
+          }
+        },
+        "text": {
+          "value": "undefined: 0 correct"
+        }
+      }
+    }
+  ]
+}

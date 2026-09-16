@@ -1,0 +1,68 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "description": "WS8 paired indexed-minus-agentic prompt-token deltas for the three hop strata, plus the pre-registered contrast between them. Positive means the index spent more. Source: data/ws8/forest.csv, derived from results/ws8/paired_ci.csv and results/ws8/branches.csv at variant='all'. hop2 is drawn muted because the CSV carries powered=False: n=15 by design, and it cannot carry a claim. The contrast is the primary outcome and is the only row that spans zero.",
+  "data": { "url": "../data/ws8/forest.csv" },
+  "width": 1000,
+  "height": 300,
+  "params": [{ "name": "stage", "value": 0 }],
+  "transform": [
+    { "calculate": "toNumber(datum.row_order)", "as": "ord" },
+    { "calculate": "toNumber(datum.median)", "as": "med" },
+    { "calculate": "toNumber(datum.ci_low)", "as": "lo" },
+    { "calculate": "toNumber(datum.ci_high)", "as": "hi" },
+    { "calculate": "datum.powered === 'True' ? 1 : 0.42", "as": "weight" },
+    { "calculate": "datum.kind === 'contrast' ? '#c84cff' : '#7f47ff'", "as": "hue" },
+    { "calculate": "datum.kind === 'contrast' ? 3 : (datum.powered === 'True' ? 1 : 2)", "as": "rowStage" }
+  ],
+  "encoding": {
+    "y": {
+      "field": "label", "type": "nominal", "title": null,
+      "axis": { "labelLimit": 420 },
+      "sort": { "field": "ord" }
+    },
+    "opacity": {
+      "condition": { "test": "datum.rowStage <= stage", "field": "weight", "type": "quantitative", "scale": null },
+      "value": 0
+    }
+  },
+  "layer": [
+    {
+      "data": { "values": [{}] },
+      "mark": { "type": "rule", "strokeWidth": 2, "strokeDash": [4, 4], "color": "#7d8a9e" },
+      "encoding": {
+        "y": null,
+        "x": { "datum": 0, "type": "quantitative" },
+        "opacity": { "value": 1 }
+      }
+    },
+    {
+      "mark": { "type": "rule", "strokeWidth": 5, "opacity": 0.45 },
+      "encoding": {
+        "x": {
+          "field": "lo", "type": "quantitative",
+          "axis": { "title": "paired median delta vs the grep loop, prompt tokens", "format": ",.0f" }
+        },
+        "x2": { "field": "hi" },
+        "color": { "field": "hue", "type": "nominal", "scale": null, "legend": null }
+      }
+    },
+    {
+      "mark": { "type": "point", "size": 300, "filled": true },
+      "encoding": {
+        "x": { "field": "med", "type": "quantitative" },
+        "color": { "field": "hue", "type": "nominal", "scale": null, "legend": null },
+        "tooltip": [
+          { "field": "label", "title": "row" },
+          { "field": "n" },
+          { "field": "powered" },
+          { "field": "med", "title": "paired median", "format": ",.1f" },
+          { "field": "lo", "title": "CI low", "format": ",.1f" },
+          { "field": "hi", "title": "CI high", "format": ",.1f" },
+          { "field": "excludes_zero", "title": "excludes zero" },
+          { "field": "n_indexed_dearer", "title": "index dearer on" },
+          { "field": "branch" }
+        ]
+      }
+    }
+  ]
+}

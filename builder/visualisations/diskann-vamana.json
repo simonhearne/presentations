@@ -1,11 +1,44 @@
 {
   "$schema": "https://vega.github.io/schema/vega/v5.json",
-  "description": "DiskANN/Vamana graph-build walkthrough — 8 stages from empty point cloud to queried graph.",
+  "description": "DiskANN/Vamana graph-build walkthrough: 8 stages from empty point cloud to queried graph.",
   "width": 1200,
   "height": 640,
   "signals": [
-    { "name": "stage", "value": 0, "bind": { "input": "range", "min": 0, "max": 8, "step": 1, "name": "stage " } },
-    { "name": "narration", "update": "['60 vectors. Pick a medoid as the entry point.', 'Start from a random graph. Each node has ≤3 edges.', 'Greedy search from the medoid collects candidates near the new node.', 'RobustPrune α=1: keep an edge only if no kept neighbour is already closer.', 'RobustPrune α=1.2: spare a long-range shortcut. Diversity → fewer hops at query time.', 'Built graph: near-neighbour links only. Easy to follow, but many hops to cross.', 'Add the α>1 shortcuts woven through the graph. They collapse hop counts.', 'A query arrives. Vectors + graph live on SSD — only a tiny PQ summary sits in RAM.', 'Greedy walk to the answer: 4 hops = 4 SSD reads. A flat scan would read all 60.'][stage]" }
+    { "name": "stage", "value": 0 },
+    { "name": "narration", "update": "['60 vectors. Pick a medoid as the entry point.', 'Start from a random graph. Each node has ≤3 edges.', 'Greedy search from the medoid collects candidates near the new node.', 'RobustPrune α=1: keep an edge only if no kept neighbour is already closer.', 'RobustPrune α=1.2: spare a long-range shortcut. Diversity → fewer hops at query time.', 'Built graph: near-neighbour links only. Easy to follow, but many hops to cross.', 'Add the α>1 shortcuts woven through the graph. They collapse hop counts.', 'A query arrives. Vectors + graph live on SSD, only a tiny PQ summary sits in RAM.', 'Greedy walk to the answer: 4 hops = 4 SSD reads. A flat scan would read all 60.'][stage]" },
+    {
+      "name": "panelHeight",
+      "value": "(height / 3)",
+      "update": "(height / 3)"
+    },
+    {
+      "name": "step",
+      "value": 0
+    },
+    {
+      "name": "max_degree",
+      "value": 56,
+      "bind": {
+        "input": "range", "min": 4, "max": 128, "step": 1,
+        "name": "max_degree:  "
+      }
+    },
+    {
+      "name": "search_list_size",
+      "value": 24,
+      "bind": {
+        "input": "range", "min": 16, "max": 400, "step": 1,
+        "name": "search_list_size:  "
+      }
+    },
+    {
+      "name": "search_list",
+      "value": 64,
+      "bind": {
+        "input": "range", "min": 8, "max": 128, "step": 1,
+        "name": "search_list:  "
+      }
+    }
   ],
   "data": [
     {
@@ -677,7 +710,7 @@
           "cornerRadius": { "value": 8 },
           "x": { "value": 14 },
           "y": { "value": 14 },
-          "width": { "value": 720 },
+          "width": { "value": 880 },
           "height": { "value": 44 }
         }
       }
@@ -686,7 +719,6 @@
       "type": "text",
       "encode": {
         "enter": {
-          "fontSize": { "value": 14 },
           "fontWeight": { "value": "bold" },
           "fill": { "value": "#0a2540" },
           "align": { "value": "left" },
@@ -708,9 +740,9 @@
           "stroke": { "value": "#d1d5db" },
           "strokeWidth": { "value": 1 },
           "cornerRadius": { "value": 8 },
-          "x": { "signal": "width - 254" },
+          "x": { "signal": "width - 260" },
           "y": { "value": 14 },
-          "width": { "value": 240 },
+          "width": { "value": 250 },
           "height": { "value": 62 }
         },
         "update": {
@@ -722,12 +754,11 @@
       "type": "text",
       "encode": {
         "enter": {
-          "fontSize": { "value": 14 },
           "fontWeight": { "value": "bold" },
           "fill": { "value": "#175fff" },
           "align": { "value": "left" },
           "baseline": { "value": "top" },
-          "x": { "signal": "width - 242" },
+          "x": { "signal": "width - 252" },
           "y": { "value": 26 },
           "text": { "value": "DiskANN:  4 SSD reads" }
         },
@@ -740,12 +771,11 @@
       "type": "text",
       "encode": {
         "enter": {
-          "fontSize": { "value": 14 },
           "fontWeight": { "value": "bold" },
           "fill": { "value": "#6b7280" },
           "align": { "value": "left" },
           "baseline": { "value": "top" },
-          "x": { "signal": "width - 242" },
+          "x": { "signal": "width - 252" },
           "y": { "value": 48 },
           "text": { "value": "Flat scan:  60 SSD reads" }
         },

@@ -33,7 +33,7 @@
       "on": [
         {
           "events": {"signal": "stage"},
-          "update": "['One vector. MRL training orders the dimensions so the most informative come first.', 'Most of the signal sits in the early dimensions — the tail adds only diminishing detail.', 'Slice off a prefix and discard the rest — no re-embedding, no second model.', 'The prefix is itself a valid, normalised vector — 12× smaller, ranks almost as well. (cells shown for clarity)'][stage]"
+          "update": "['One vector. MRL training orders the dimensions so the most informative come first.', 'Most of the signal sits in the early dimensions: the tail adds only diminishing detail.', 'Slice off a prefix and discard the rest: no re-embedding, no second model.', 'The prefix is itself a valid, normalised vector: 12× smaller, ranks almost as well. (cells shown for clarity)'][stage]"
         }
       ]
     }
@@ -79,7 +79,7 @@
       "encode": {
         "update": {
           "x": {"signal": "(colX + outX + cellW) / 2"},
-          "y": {"value": 82},
+          "y": {"value": 70},
           "text": {"value": "3072-D  →  256-D   ·   12× smaller"},
           "align": {"value": "center"}, "baseline": {"value": "alphabetic"},
           "fontSize": {"value": 18}, "fontWeight": {"value": "bold"},

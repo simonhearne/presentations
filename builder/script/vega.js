@@ -17,6 +17,12 @@
   // without per-spec theme blocks. The spec's own config takes precedence, so
   // explicit colours/ranges in a spec are preserved. isDark swaps text/axis
   // colours for charts on dark slides (.dark/.title/.hero/.bg).
+  //
+  // The type scale (axis/legend 16/22, text 20) is sized for a full-width
+  // slide chart, roughly 1000px and up — that is what most specs want, so it
+  // lives here rather than being restated in each one. Specs on a narrower
+  // canvas (vectordb-101, and the ~700-800px charts in visualisations/) still
+  // set their own smaller sizes locally, which win over these defaults.
   function brandConfig(isDark) {
     const ink = isDark ? '#ffffff' : BRAND.ink;
     const axisLabel = isDark ? '#cbd5e1' : '#475569';
@@ -39,14 +45,14 @@
       axis: {
         labelFont: BRAND.font, titleFont: BRAND.font,
         labelColor: axisLabel, titleColor: axisTitle,
-        labelFontSize: 15, titleFontSize: 17, titleFontWeight: 600,
+        labelFontSize: 16, titleFontSize: 22, titleFontWeight: 600,
         domainColor: domain, tickColor: domain, gridColor: grid,
         labelPadding: 4, tickSize: 5,
       },
       legend: {
         labelFont: BRAND.font, titleFont: BRAND.font,
         labelColor: axisLabel, titleColor: axisTitle,
-        labelFontSize: 13, titleFontSize: 14, titleFontWeight: 600,
+        labelFontSize: 16, titleFontSize: 22, titleFontWeight: 600,
         symbolType: 'circle',
       },
       range: {
@@ -61,7 +67,7 @@
       point: { fill: BRAND.blue, filled: true, size: 80 },
       circle: { fill: BRAND.blue },
       line: { stroke: BRAND.blue, strokeWidth: 3, strokeCap: 'round', strokeJoin: 'round' },
-      text: { font: BRAND.font, fill: ink },
+      text: { font: BRAND.font, fill: ink, fontSize: 20 },
       rule: { stroke: domain },
     };
   }
@@ -90,6 +96,12 @@
     if (v === 'false') return false;
     if (v === 'null') return null;
     if (/^-?\d+(\.\d+)?$/.test(v)) return Number(v);
+    // A quoted scalar is how you write a string that would otherwise be read as
+    // a number or a keyword (signal-dataset: "10m" is a string, not 10). Unwrap
+    // it, or the signal is seeded with the quotes still attached.
+    if (v.length > 1 && v.startsWith('"') && v.endsWith('"')) {
+      try { return JSON.parse(v); } catch { /* fall through */ }
+    }
     if ((v.startsWith('{') && v.endsWith('}')) || (v.startsWith('[') && v.endsWith(']'))) {
       try { return JSON.parse(v); } catch { /* fall through */ }
     }
@@ -101,6 +113,7 @@
     for (const [key, raw] of Object.entries(el.dataset)) {
       if (key === 'spec') continue;
       if (key === 'theme') continue;
+      if (key === 'fragmentIndex') continue;
       if (key.startsWith(ANIMATE_PREFIX)) continue;
       if (key.startsWith(SIGNAL_PREFIX)) continue;
       opts[key] = parseValue(raw);
@@ -135,6 +148,48 @@
     }
     if (touched) view.runAsync();
   }
+
+  // Signal step lists are advances the slide owes the presenter, exactly like
+  // fragment steps, so they feed the footer cue too (see window.deckSteps in
+  // script/deck.js). The first value of a list is seeded on embed rather than
+  // stepped into, so a list of n values is n - 1 advances.
+  window.deckSteps?.register(slide => {
+    let total = 0;
+    let remaining = 0;
+    for (const el of slide.querySelectorAll('.vega-chart')) {
+      for (const s of el.__vegaSteps || []) {
+        total += s.values.length - 1;
+        remaining += s.values.length - 1 - s.index;
+      }
+    }
+    return { total, remaining };
+  });
+
+  // Where the charts sit in the slide's step order. A chart's whole stage run
+  // takes one slot in the fragment index space, named by data-fragment-index
+  // (vega frontmatter `fragment-index`); script/fragments.js asks before
+  // revealing a step, and holds the keypress back for the chart when its own
+  // step is at or after that slot. A chart without one answers Infinity, so
+  // every fragment outranks it — which is where charts have always run.
+  window.deckCharts = {
+    index(slide) {
+      let earliest = Infinity;
+      for (const el of slide.querySelectorAll('.vega-chart')) {
+        const idx = parseInt(el.dataset.fragmentIndex, 10);
+        if (Number.isInteger(idx) && idx < earliest) earliest = idx;
+      }
+      return earliest;
+    },
+    pending(slide, direction) {
+      for (const el of slide.querySelectorAll('.vega-chart')) {
+        for (const s of el.__vegaSteps || []) {
+          const next = s.index + direction;
+          if (next >= 0 && next < s.values.length) return true;
+        }
+      }
+      return false;
+    },
+  };
 
   function activeSlideCharts() {
     const slide = document.querySelector('.slide.is-current');
@@ -178,6 +233,7 @@
       default: return;
     }
     if (stepCharts(direction)) {
+      window.deckSteps?.refresh();
       e.preventDefault();
       e.stopPropagation();
     }
@@ -278,6 +334,9 @@
         el.__vegaView = result.view;
         // applySignals must run before applyAnimator so trigger-value checks see seeded state.
         try { applySignals(el, result.view); } catch (err) { console.error('vega signals failed for', el.id || el, err); }
+        // Step lists only exist once the chart has embedded, so the cue has to
+        // be recomputed for a slide that stages nothing else.
+        window.deckSteps?.refresh();
         try { applyAnimator(el, result.view); } catch (err) { console.error('vega animator failed for', el.id || el, err); }
         // const svgRect = el.querySelector('svg')?.getBoundingClientRect();
         // const containerRect = el.getBoundingClientRect();

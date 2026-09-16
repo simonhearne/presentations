@@ -1,0 +1,121 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "description": "WS4e depth sweep on the reference arm sq8_np512. Source: data/ws4e/mediator_by_k.csv, rows arm=sq8_np512, columns k, presence_at_k, presence_at_k_ci_lo/hi, judge_accuracy, judge_accuracy_ci_lo/hi. Both series are shares of the same 264-question eligible stratum, so they share one axis. Retrieval depth k is drawn on a point scale: four swept values, equally weighted, not a continuous sweep. Series colours are brand blue and a darkened brand green (#009e8c, from --zilliz-green #00dcc6, darkened to clear the 3:1 contrast floor against the light slide surface); the pair passes lightness, chroma, CVD separation, normal-vision and contrast checks, and both series are direct-labelled so identity is never colour alone. Stage 0 shows gold-answer presence alone; stage 1 reveals the judged-correct series, its CIs and its value labels. The colour scale domain is a stage expression so the legend carries only the drawn series; the range stays a static pair because an expression there makes Vega-Lite resolve the shared scale against layer datasets it has already pruned (\"Undefined data set name: layer_0_layer_0_main\"). Conversion (P(correct | gold present)) is deliberately NOT plotted: RESULTS-WS4e section 10 shows its apparent fall with depth is a composition artifact.",
+  "data": { "url": "../data/ws4e/mediator_by_k.csv" },
+  "transform": [{ "filter": "datum.arm === 'sq8_np512'" }],
+  "params": [{ "name": "stage", "value": 0 }],
+  "width": 1060,
+  "height": 475,
+  "padding": { "top": 10, "left": 5, "right": 110, "bottom": 5 },
+  "config": {
+    "legend": { "symbolStrokeWidth": 3, "labelLimit": 320 }
+  },
+  "encoding": {
+    "x": {
+      "field": "k",
+      "type": "ordinal",
+      "sort": ["1", "3", "5", "10"],
+      "axis": { "title": "retrieval depth k", "labelAngle": 0 }
+    },
+    "y": {
+      "type": "quantitative",
+      "scale": { "domain": [0.4, 1.04], "zero": false, "nice": false },
+      "axis": { "title": "share of the 264-question stratum", "format": ".2f" }
+    },
+    "color": {
+      "type": "nominal",
+      "scale": {
+        "domain": { "expr": "stage >= 1 ? ['gold answer in context', 'judged correct'] : ['gold answer in context']" },
+        "range": ["#175fff", "#009e8c"]
+      },
+      "legend": { "title": null, "orient": "top-left", "offset": 4 }
+    }
+  },
+  "layer": [
+    {
+      "mark": { "type": "errorbar", "ticks": true, "size": 10 },
+      "encoding": {
+        "y": { "field": "presence_at_k_ci_lo", "type": "quantitative" },
+        "y2": { "field": "presence_at_k_ci_hi" },
+        "color": { "datum": "gold answer in context" }
+      }
+    },
+    {
+      "mark": { "type": "line", "strokeWidth": 3, "point": { "filled": true, "size": 140 } },
+      "encoding": {
+        "y": { "field": "presence_at_k", "type": "quantitative" },
+        "color": { "datum": "gold answer in context" },
+        "tooltip": [
+          { "field": "k", "title": "depth k" },
+          { "field": "presence_at_k", "format": ".3f", "title": "gold in top-k" },
+          { "field": "presence_at_k_ci_lo", "format": ".3f", "title": "CI lo" },
+          { "field": "presence_at_k_ci_hi", "format": ".3f", "title": "CI hi" }
+        ]
+      }
+    },
+    {
+      "transform": [{ "filter": "stage >= 1" }],
+      "mark": { "type": "errorbar", "ticks": true, "size": 10 },
+      "encoding": {
+        "y": { "field": "judge_accuracy_ci_lo", "type": "quantitative" },
+        "y2": { "field": "judge_accuracy_ci_hi" },
+        "color": { "datum": "judged correct" }
+      }
+    },
+    {
+      "transform": [{ "filter": "stage >= 1" }],
+      "mark": {
+        "type": "line",
+        "strokeWidth": 3,
+        "strokeDash": [7, 4],
+        "point": { "filled": false, "fill": "white", "strokeWidth": 3, "size": 140 }
+      },
+      "encoding": {
+        "y": { "field": "judge_accuracy", "type": "quantitative" },
+        "color": { "datum": "judged correct" },
+        "tooltip": [
+          { "field": "k", "title": "depth k" },
+          { "field": "judge_accuracy", "format": ".3f", "title": "judge accuracy" },
+          { "field": "judge_accuracy_ci_lo", "format": ".3f", "title": "CI lo" },
+          { "field": "judge_accuracy_ci_hi", "format": ".3f", "title": "CI hi" }
+        ]
+      }
+    },
+    {
+      "transform": [{ "filter": "+datum.k === 10" }],
+      "mark": { "type": "text", "align": "left", "dx": 16, "dy": -4, "fontWeight": 700, "fontSize": 19 },
+      "encoding": {
+        "y": { "field": "presence_at_k", "type": "quantitative" },
+        "text": { "value": "1.000" },
+        "color": { "datum": "gold answer in context" }
+      }
+    },
+    {
+      "transform": [{ "filter": "+datum.k === 1" }],
+      "mark": { "type": "text", "align": "right", "dx": -14, "dy": -16, "fontWeight": 700, "fontSize": 19 },
+      "encoding": {
+        "y": { "field": "presence_at_k", "type": "quantitative" },
+        "text": { "value": "0.530" },
+        "color": { "datum": "gold answer in context" }
+      }
+    },
+    {
+      "transform": [{ "filter": "+datum.k === 10 && stage >= 1" }],
+      "mark": { "type": "text", "align": "left", "dx": 16, "dy": 6, "fontWeight": 700, "fontSize": 19 },
+      "encoding": {
+        "y": { "field": "judge_accuracy", "type": "quantitative" },
+        "text": { "value": "0.674" },
+        "color": { "datum": "judged correct" }
+      }
+    },
+    {
+      "transform": [{ "filter": "+datum.k === 1 && stage >= 1" }],
+      "mark": { "type": "text", "align": "right", "dx": -14, "dy": 20, "fontWeight": 700, "fontSize": 19 },
+      "encoding": {
+        "y": { "field": "judge_accuracy", "type": "quantitative" },
+        "text": { "value": "0.538" },
+        "color": { "datum": "judged correct" }
+      }
+    }
+  ]
+}

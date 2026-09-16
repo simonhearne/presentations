@@ -1,13 +1,10 @@
 {
   "$schema": "https://vega.github.io/schema/vega/v5.json",
-  "description": "IVF intuition — pick a query point, see which nprobe cells it searches.",
+  "description": "IVF intuition: pick a query point, see which nprobe cells it searches.",
   "width": 1200,
   "height": 640,
   "padding": 0,
   "background": "transparent",
-  "config": {
-    "axis": { "labelFontSize": 12, "titleFontSize": 14 }
-  },
   "signals": [
     { "name": "nlist", "value": 24, "bind": { "input": "range", "min": 8, "max": 64, "step": 8, "name": "nlist " } },
     { "name": "stage", "value": 2, "bind": { "input": "range", "min": 1, "max": 16, "step": 1, "name": "nprobe " } },
@@ -204,7 +201,7 @@
         "update": {
           "x": { "value": 14 },
           "y": { "value": 14 },
-          "width": { "value": 500 },
+          "width": { "value": 700 },
           "height": { "value": 66 }
         }
       }
@@ -213,7 +210,6 @@
       "type": "text",
       "encode": {
         "enter": {
-          "fontSize": { "value": 14 },
           "fontWeight": { "value": "bold" },
           "fill": { "value": "#0a2540" },
           "align": { "value": "left" },
@@ -230,7 +226,6 @@
       "type": "text",
       "encode": {
         "enter": {
-          "fontSize": { "value": 11 },
           "fill": { "value": "#475569" },
           "align": { "value": "left" },
           "baseline": { "value": "top" }

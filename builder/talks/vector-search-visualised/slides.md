@@ -211,7 +211,7 @@ Compare the query to every entity in the database. Exact, simple, **O(N)**.
 ```vega
 - spec: ../../visualisations/ann-vs-exact.json
   renderer: svg
-  signal-stage: [0]
+  signal-stage: [0, 1]
   actions: false
 ```
 
@@ -498,7 +498,7 @@ Stage 8 - Graph traversal. [→]
 ```vega
 - spec: ../../visualisations/ann-vs-exact.json
   renderer: svg
-  signal-stage: [0,1,2]
+  signal-stage: [0, 1, 2, 3]
   actions: false
 ```
 
@@ -845,7 +845,7 @@ MRL tunes the model so the **dimensions are ordered by importance**. OpenAI's `t
 
 <blockquote class="blue small"><span class="label">Benefit</span><p>One model, <span class="hit-text">pick the length per query</span> - short prefix to shortlist fast, full vector to re-rank. Degrades gracefully.</p></blockquote>
 
-<blockquote class="small"><span class="label">Drawback</span><p>Only works if the model was <em>trained</em> this way - truncate an ordinary embedding and recall falls off a cliff (the berry line).</p></blockquote>
+<blockquote class="small"><span class="label">Drawback</span><p>Only works if the model was <em>trained</em> this way - an ordinary embedding survives a light trim, then falls off a cliff once you cut hard (the berry line).</p></blockquote>
 
 </div>
 </div>

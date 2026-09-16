@@ -1,0 +1,5 @@
+row_order,kind,stratum,label,n,powered,median,ci_low,ci_high,excludes_zero,sign_p,n_indexed_dearer,branch
+0,stratum,hop1,1 hop: the answer is in one thread,30,True,82678.0,17402.0,195848.5,True,0.016124801710247993,22,
+1,stratum,hop2,2 hops: underpowered (n=15 by design),15,False,171479.0,8402.0,524495.0,True,0.00738525390625,13,
+2,stratum,hop3plus,3+ hops: the answer spans three or more threads,30,True,40061.5,5297.0,75281.0,True,0.016124801710247993,22,
+3,contrast,hop3plus_minus_hop1,3+ hops minus 1 hop: the pre-registered contrast,,True,-42616.5,-162312.5,39690.0,False,,,H4-confounded

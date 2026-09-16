@@ -1,0 +1,148 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "description": "Backup 43: the mediator, three panels, a faithful rebuild of results/ws4/chart_mediator.png. Source: data/ws4/summary.csv, columns recall, quality, quality_ci_lo, quality_ci_hi, class, family, filtered per panel to metric in {answer_presence_at_10, em, judge}. Panel order (retrieval into the reader): answer-presence@10, EM, judge accuracy, each against measured recall@10, so the first panel's slope against the other two's flatness is the argument slide 28 compresses into one stacked bar.",
+  "data": { "url": "../data/ws4/summary.csv" },
+  "transform": [
+    { "calculate": "replace(datum.arm, /_np(\\d+)$/, '@$1')", "as": "arm_label" },
+    {
+      "calculate": "datum.family === 'truncation' ? '#175fff' : datum.family === 'quantization' ? '#c84cff' : datum.family === 'pruning' ? '#00dcc6' : '#1e293b'",
+      "as": "family_hex"
+    }
+  ],
+  "hconcat": [
+    {
+      "title": "answer-presence@10",
+      "width": 460,
+      "height": 300,
+      "transform": [{ "filter": "datum.metric === 'answer_presence_at_10' && datum.class !== 'floor'" }],
+      "layer": [
+        {
+          "mark": { "type": "errorbar", "ticks": true },
+          "encoding": {
+            "x": { "field": "recall", "type": "quantitative", "scale": { "domain": [0.74, 1.0], "zero": false, "nice": false }, "axis": { "title": "recall@10" } },
+            "y": { "field": "quality_ci_lo", "type": "quantitative", "scale": { "domain": [0.70, 0.85], "zero": false, "nice": false }, "axis": { "title": "answer-presence@10" } },
+            "y2": { "field": "quality_ci_hi" },
+            "color": { "field": "family_hex", "type": "nominal", "scale": null }
+          }
+        },
+        {
+          "mark": { "type": "point", "filled": true, "size": 90 },
+          "encoding": {
+            "x": { "field": "recall", "type": "quantitative" },
+            "y": { "field": "quality", "type": "quantitative" },
+            "shape": { "condition": { "test": "datum.class === 'reference'", "value": "diamond" }, "value": "circle" },
+            "color": {
+              "field": "family", "type": "nominal",
+              "scale": { "domain": ["truncation", "quantization", "pruning", "reference"], "range": ["#175fff", "#c84cff", "#00dcc6", "#1e293b"] },
+              "legend": null
+            },
+            "tooltip": [{ "field": "arm_label", "title": "arm" }, { "field": "recall", "format": ".4f" }, { "field": "quality", "format": ".4f" }]
+          }
+        },
+        {
+          "mark": { "type": "text", "align": "left", "dx": 6, "dy": -6, "fontSize": 9, "color": "#1e293b" },
+          "encoding": {
+            "x": { "field": "recall", "type": "quantitative" },
+            "y": { "field": "quality", "type": "quantitative" },
+            "text": { "field": "arm_label" }
+          }
+        }
+      ]
+    },
+    {
+      "title": "EM",
+      "width": 460,
+      "height": 300,
+      "transform": [{ "filter": "datum.metric === 'em'" }],
+      "layer": [
+        {
+          "transform": [{ "filter": "datum.class === 'floor'" }],
+          "mark": { "type": "rule", "strokeDash": [5, 4], "size": 2, "color": "#7d8a9e" },
+          "encoding": { "y": { "field": "quality", "type": "quantitative" } }
+        },
+        {
+          "transform": [{ "filter": "datum.class !== 'floor'" }],
+          "mark": { "type": "errorbar", "ticks": true },
+          "encoding": {
+            "x": { "field": "recall", "type": "quantitative", "scale": { "domain": [0.74, 1.0], "zero": false, "nice": false }, "axis": { "title": "recall@10" } },
+            "y": { "field": "quality_ci_lo", "type": "quantitative", "scale": { "domain": [0.10, 0.30], "zero": false, "nice": false }, "axis": { "title": "EM" } },
+            "y2": { "field": "quality_ci_hi" },
+            "color": { "field": "family_hex", "type": "nominal", "scale": null }
+          }
+        },
+        {
+          "transform": [{ "filter": "datum.class !== 'floor'" }],
+          "mark": { "type": "point", "filled": true, "size": 90 },
+          "encoding": {
+            "x": { "field": "recall", "type": "quantitative" },
+            "y": { "field": "quality", "type": "quantitative" },
+            "shape": { "condition": { "test": "datum.class === 'reference'", "value": "diamond" }, "value": "circle" },
+            "color": {
+              "field": "family", "type": "nominal",
+              "scale": { "domain": ["truncation", "quantization", "pruning", "reference"], "range": ["#175fff", "#c84cff", "#00dcc6", "#1e293b"] },
+              "legend": null
+            },
+            "tooltip": [{ "field": "arm_label", "title": "arm" }, { "field": "recall", "format": ".4f" }, { "field": "quality", "format": ".4f" }]
+          }
+        },
+        {
+          "transform": [{ "filter": "datum.class !== 'floor'" }],
+          "mark": { "type": "text", "align": "left", "dx": 6, "dy": -6, "fontSize": 9, "color": "#1e293b" },
+          "encoding": {
+            "x": { "field": "recall", "type": "quantitative" },
+            "y": { "field": "quality", "type": "quantitative" },
+            "text": { "field": "arm_label" }
+          }
+        }
+      ]
+    },
+    {
+      "title": "judge accuracy",
+      "width": 460,
+      "height": 300,
+      "transform": [{ "filter": "datum.metric === 'judge'" }],
+      "layer": [
+        {
+          "transform": [{ "filter": "datum.class === 'floor'" }],
+          "mark": { "type": "rule", "strokeDash": [5, 4], "size": 2, "color": "#7d8a9e" },
+          "encoding": { "y": { "field": "quality", "type": "quantitative" } }
+        },
+        {
+          "transform": [{ "filter": "datum.class !== 'floor'" }],
+          "mark": { "type": "errorbar", "ticks": true },
+          "encoding": {
+            "x": { "field": "recall", "type": "quantitative", "scale": { "domain": [0.74, 1.0], "zero": false, "nice": false }, "axis": { "title": "recall@10" } },
+            "y": { "field": "quality_ci_lo", "type": "quantitative", "scale": { "domain": [0.15, 0.56], "zero": false, "nice": false }, "axis": { "title": "judge accuracy" } },
+            "y2": { "field": "quality_ci_hi" },
+            "color": { "field": "family_hex", "type": "nominal", "scale": null }
+          }
+        },
+        {
+          "transform": [{ "filter": "datum.class !== 'floor'" }],
+          "mark": { "type": "point", "filled": true, "size": 90 },
+          "encoding": {
+            "x": { "field": "recall", "type": "quantitative" },
+            "y": { "field": "quality", "type": "quantitative" },
+            "shape": { "condition": { "test": "datum.class === 'reference'", "value": "diamond" }, "value": "circle" },
+            "color": {
+              "field": "family", "type": "nominal",
+              "scale": { "domain": ["truncation", "quantization", "pruning", "reference"], "range": ["#175fff", "#c84cff", "#00dcc6", "#1e293b"] },
+              "legend": { "title": "mechanism", "orient": "right", "values": ["truncation", "quantization", "pruning"] }
+            },
+            "tooltip": [{ "field": "arm_label", "title": "arm" }, { "field": "recall", "format": ".4f" }, { "field": "quality", "format": ".4f" }]
+          }
+        },
+        {
+          "transform": [{ "filter": "datum.class !== 'floor'" }],
+          "mark": { "type": "text", "align": "left", "dx": 6, "dy": -6, "fontSize": 9, "color": "#1e293b" },
+          "encoding": {
+            "x": { "field": "recall", "type": "quantitative" },
+            "y": { "field": "quality", "type": "quantitative" },
+            "text": { "field": "arm_label" }
+          }
+        }
+      ]
+    }
+  ],
+  "resolve": { "scale": { "color": "independent" } }
+}
