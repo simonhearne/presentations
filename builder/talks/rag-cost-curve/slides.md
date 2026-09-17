@@ -2133,6 +2133,27 @@ contamination spectrum drawn rather than stated.
 
 ---
 
+{.small-title}
+
+# Try it yourself
+
+<div class="card-grid cols-2">
+<div class="card">
+<p class="case-name">memsearch</p>
+<p class="case-proof">Install the plugin, and memsearch captures conversations automatically and provides semantic recall with zero configuration.</p>
+<img style="box-shadow: 0px 0px 8px var(--zilliz-grey);border-radius: 8px;" src="./memsearch.jpg" alt="memsearch repository screenshot"/>
+<a href="https://github.com/zilliztech/memsearch">github.com/zilliztech/memsearch</a>
+</div>
+<div class="card">
+<p class="case-name">claude-context</p>
+<p class="case-proof">MCP plugin that adds semantic code search to AI coding agents, giving them deep context from your entire codebase.</p>
+<img style="box-shadow: 0px 0px 8px var(--zilliz-grey);border-radius: 8px;" src="./claude-context.png" alt="claude-context repository screenshot"/>
+<a href="https://github.com/zilliztech/claude-context">github.com/zilliztech/claude-context</a>
+</div>
+</div>
+
+---
+
 {.big-code}
 
 # Reproduce any number
@@ -2149,27 +2170,6 @@ jupyter lab        # notebooks 01 to 06b in order
 *Requires Docker with 16 GB RAM or more*
 
 Everything I showed you is reproducible on your laptop.
-
----
-
-{.small-title}
-
-# Try it yourself
-
-<div class="card-grid cols-2">
-<div class="card">
-<p class="case-name">memsearch</p>
-<p class="case-proof">Install the plugin, and memsearch captures conversations automatically and provides semantic recall with zero configuration.</p>
-<img style="box-shadow: 0px 0px 8px var(--zilliz-grey);border-radius: 8px;" src="./memsearch.jpg" alt="memsearch repository screenshot"/>
-<a href="https://github.com/zilliztech/memsearch">/zilliztech/memsearch</a>
-</div>
-<div class="card">
-<p class="case-name">claude-context</p>
-<p class="case-proof">MCP plugin that adds semantic code search to AI coding agents, giving them deep context from your entire codebase.</p>
-<img style="box-shadow: 0px 0px 8px var(--zilliz-grey);border-radius: 8px;" src="./claude-context.png" alt="claude-context repository screenshot"/>
-<a href="https://github.com/zilliztech/claude-context">/zilliztech/claude-context</a>
-</div>
-</div>
 
 ---
 
