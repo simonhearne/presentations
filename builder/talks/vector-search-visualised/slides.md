@@ -7,8 +7,6 @@
 <style>
   .q-grid { display: grid; grid-template-columns: repeat(8, 1fr); gap: 0.7vw; margin: 1.6vh 0; }
   .q-grid img { width: 100%; aspect-ratio: 2 / 1; object-fit: contain; border-radius: 5px; image-rendering: pixelated; }
-  .slide.quant-steps .vega-chart svg { width: 1050px; max-width: 100%; height: auto; }
-  .slide.filter-demo .vega-chart svg { width: 1080px; max-width: 100%; height: auto; }
   .source-ref { font-family: var(--zilliz-font-mono, monospace); font-size: 0.55em; opacity: 0.5; margin-top: 1.5vh; }
   .source-ref a { color: inherit; }
 </style>
@@ -331,9 +329,9 @@ Every technique trades **speed**, **accuracy** & **cost**.
 </style>
 
 <div class="big-idea">
-  <div class="bi-cell give"><span class="bi-num">~1%</span><span class="bi-lab">recall you give up</span></div>
+  <div class="bi-cell give"><span class="bi-num">&lt;10%</span><span class="bi-lab">recall you give up</span></div>
   <div class="bi-arrow">→</div>
-  <div class="bi-cell get"><span class="bi-num">100-1000×</span><span class="bi-lab">faster, cheaper search</span></div>
+  <div class="bi-cell get"><span class="bi-num">&gt;100×</span><span class="bi-lab">faster, cheaper search</span></div>
 </div>
 
 ---
@@ -688,20 +686,23 @@ A float32 vector becomes one byte per dimension - step through the moves.
   signal-stage: [0,1,2,3]
   renderer: svg
   actions: false
+  fit: contain
 ```
 
 ---
 
 # RaBitQ: one bit per dimension
 
-The recent breakthrough: rotate the space, then keep just the **sign** of each dimension - one bit. The bit-vector preserves angles with a _provable_ error bound, and a cheap correction term sharpens the estimate. Paired with the **RaBitQ index in Milvus**: up to **32× compression**.
+The recent breakthrough: rotate the space, then keep just the **sign** of each dimension - one bit. The bit-vector preserves angles with a _provable_ error bound, and a cheap correction term sharpens the estimate. Paired with the **RaBitQ index in Milvus**: up to **32× smaller payload**, ~14× once the index is resident.
 
 <div class="q-grid">
   <img loading="lazy" src="../data/fingerprints-rabitq/003983.png" alt=""><img loading="lazy" src="../data/fingerprints-rabitq/016605.png" alt=""><img loading="lazy" src="../data/fingerprints-rabitq/016709.png" alt=""><img loading="lazy" src="../data/fingerprints-rabitq/020172.png" alt=""><img loading="lazy" src="../data/fingerprints-rabitq/030754.png" alt=""><img loading="lazy" src="../data/fingerprints-rabitq/032437.png" alt=""><img loading="lazy" src="../data/fingerprints-rabitq/038300.png" alt=""><img loading="lazy" src="../data/fingerprints-rabitq/042926.png" alt="">
   <img loading="lazy" src="../data/fingerprints-rabitq/054550.png" alt=""><img loading="lazy" src="../data/fingerprints-rabitq/063886.png" alt=""><img loading="lazy" src="../data/fingerprints-rabitq/081746.png" alt=""><img loading="lazy" src="../data/fingerprints-rabitq/105328.png" alt=""><img loading="lazy" src="../data/fingerprints-rabitq/119244.png" alt=""><img loading="lazy" src="../data/fingerprints-rabitq/139091.png" alt=""><img loading="lazy" src="../data/fingerprints-rabitq/183263.png" alt=""><img loading="lazy" src="../data/fingerprints-rabitq/187076.png" alt="">
 </div>
 
-<blockquote class="blue fragment bottom"><span class="label">Milvus 2.6 · 1M × 768-D</span><p>1-bit alone: <span class="hit-text">32× smaller</span>, recall 0.76. Refine / rescore and recall recovers to <span class="hit-text">0.95</span> - at ~4× the throughput of full-precision flat.</p></blockquote>
+<blockquote class="blue fragment bottom"><span class="label">Milvus 2.6 · 1M × 1024-D</span><p>1-bit alone: <span class="hit-text">14× smaller</span> resident (32× payload), recall 0.74. An SQ8 refine pass recovers recall to <span class="hit-text">0.95</span> - but the footprint saving falls to ~3×, at roughly the throughput of full-precision flat.</p></blockquote>
+
+<!-- src: rag-cost-curve/data/ws2/curves_1m.csv (1024-D) - rabitq best recall_at_10 0.74109, footprint_compression_vs_ivf_flat 13.98; rabitq_refine_sq8_k1 first >=0.95 at 0.95457, 27.81 qps, footprint 3.19x; flat_fp32 27.83 qps -->
 
 ---
 
@@ -716,6 +717,7 @@ Rotate the space, then keep one bit per dimension - step through the moves.
   signal-stage: [0,1,2,3]
   renderer: svg
   actions: false
+  fit: contain
 ```
 
 ---
@@ -751,13 +753,14 @@ A 512-D vector becomes eight centroid IDs - step through the four moves.
   signal-stage: [0,1,2,3]
   renderer: svg
   actions: false
+  fit: contain
 ```
 
 ---
 
 {.small-title}
 
-# What it costs you
+# What it costs you (in theory)
 
 Every lost bit risks recall, but the curve is surprisingly forgiving.
 
@@ -767,6 +770,8 @@ Every lost bit risks recall, but the curve is surprisingly forgiving.
   signal-stage: [0,1]
   actions: false
 ```
+
+<!-- src: compression-recall.json:source_1 (illustrative, authored at 768-D; the Embedding dim control scales residual error for PQ/PRQ/RaBitQ only, direction not measurement) -->
 
 ---
 
@@ -867,15 +872,16 @@ The dimensions are ordered by importance, so a prefix is a complete vector - ste
   signal-stage: [0,1,2,3]
   renderer: svg
   actions: false
+  fit: contain
 ```
 
 ---
 
 {.chart-animate .small-title}
 
-# Fewer dimensions, same precision
+# Fewer dimensions, small accuracy hit
 
-Dimensionality reduction nudges any index toward fast and cheap at once.
+Dimensionality reduction nudges any index toward fast and cheap.
 
 ```vega
 - spec: ../../visualisations/trade-off-triangle.json
@@ -886,7 +892,7 @@ Dimensionality reduction nudges any index toward fast and cheap at once.
 
 ---
 
-# Refine: search cheap, re-rank precise
+# Refine: scan cheap, rescore precise
 
 Build time compression and dimensionality reduction both trade _accuracy to buy speed and scale_. **Refinement** wins accuracy back at query time.
 
@@ -894,13 +900,14 @@ Build time compression and dimensionality reduction both trade _accuracy to buy 
 <div>
 
 1. **Coarse pass** - bulk scan the 1-bit / PQ codes, over-fetch a wider candidate set.
-2. **Refine pass** - re-rank that shortlist with retained higher-precision vectors.
-3. **Return top-_k_** - recall recovers, latency barely moves.
+2. **Refine pass** - _rescore_ that shortlist against retained higher-precision vectors. Same candidates, better distances.
+3. **Return top-_k_** - recall recovers, latency barely moves. Past that it is `nprobe` that buys the last points, not `refine_k`.
+4. **Re-ranking is a different axis** - a cross-encoder reorders the _k_ you already retrieved. Better ordering, identical recall.
 
 </div>
 <div>
 
-<blockquote class="blue"><span class="label">Milvus built-in</span><p>Set <code>refine: true</code> at build, tune <code>refine_k</code> at query. Supported on RaBitQ, PQ and SQ indexes.</p></blockquote>
+<blockquote class="blue"><span class="label">Milvus built-in</span><p>Set <code>refine: true</code> at build, tune <code>refine_k</code> at query - a multiplier on the search limit, not a candidate count: <code>limit</code> 10 at <code>refine_k</code> 2 rescores 20 rows. Supported on RaBitQ, PQ and SQ indexes.</p></blockquote>
 
 </div>
 </div>
@@ -953,6 +960,7 @@ Trivial in SQL. On a graph index, the obvious fix quietly backfires 😞{.fragme
   renderer: svg
   actions: false
   signal-stage: [0, 1, 2]
+  fit: contain
 ```
 
 <blockquote class="blue fragment bottom"><span class="label">The catch</span><p>The harder you filter, the more of the graph you destroy. So there's no single fix - <span class="hit-text">the right technique depends on how much survives the filter</span>.</p></blockquote>
