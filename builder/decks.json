@@ -5,6 +5,7 @@
     "baseUrl": "https://talks.simonhearne.com"
   },
   "decks": [
+    { "slug": "2026-10-milvus-meetup", "source": "build", "title": "Vector Search, Visualised", "date": "2026-10", "description": "Milvus Meetup Paris: a visual crash course in vector search, from exact search through ANN indexes, quantisation and the filters that quietly wreck your recall.", "published": false },
     { "slug": "rag-cost-curve", "source": "build", "title": "The RAG Cost Curve", "date": "2026-09", "description": "When a retrieval index beats live search: measured cost, recall and quality across quantization, dimensionality and two agent case studies.", "published": true },
     { "slug": "2026-09-milvus-migration", "source": "build", "title": "Migrating from Elasticsearch / OpenSearch to Milvus", "date": "2026-09", "description": "Tooling, deployment choices and lessons from real migrations: moving from Elasticsearch / OpenSearch to Milvus or Zilliz Cloud.", "published": true },
     { "slug": "2026-08-milvus-search-gap", "source": "build", "title": "Closing the Search Gap with Milvus 3.0", "date": "2026-08", "description": "Faster, cheaper and easier hybrid semantic / full-text search: how Milvus 3.0 closes the gap with Elasticsearch." },
