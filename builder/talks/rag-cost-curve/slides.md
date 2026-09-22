@@ -627,7 +627,7 @@ PCA finds the _directions_ of greatest variance and keeps the top _k_. Fewer dim
   renderer: svg
   signal-stage: [0, 1, 2, 3]
   actions: false
-  contain: fit
+  fit: contain
 ```
 
 </div>
@@ -760,7 +760,7 @@ Build time compression and dimensionality reduction both trade _accuracy to buy 
 <g class="nodes">
 <rect class="node" x="4" y="155" width="130" height="70" rx="35"/><text class="nlabel" x="69" y="199" text-anchor="middle">Query</text>
 <rect class="node band" x="190" y="55" width="180" height="270" rx="12"/>
-<text class="nlabel" x="280" y="362" text-anchor="middle">100M vectors</text>
+<text class="nlabel" x="280" y="362" text-anchor="middle">10M vectors</text>
 <text class="nsub" x="280" y="390" text-anchor="middle">1-bit RaBitQ codes</text>
 <text class="elabel muted" x="186" y="448" text-anchor="end">recall@10</text>
 </g>
