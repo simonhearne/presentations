@@ -1931,3 +1931,5 @@
 .levers-diagram .stage.is-current .elabel:not(.muted) { fill: var(--zilliz-blue); }
 .levers-diagram .stage.is-current .tag { fill: var(--zilliz-blue); stroke: var(--zilliz-blue); }
 .levers-diagram .stage.is-current .tlabel { fill: var(--zilliz-white); }
+.slide .search-demo .body:has(> .section:nth-child(3)) { grid-template-columns: repeat(3, 1fr); gap: var(--zilliz-s-4); }
+.slide .search-demo .pill.near { background: #fff4dc; color: #8a5a00; }

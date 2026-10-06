@@ -32,54 +32,64 @@
 
 # Why vector search exists...
 
-<br><br>
-
 <div class="search-demo">
   <div class="header fragment">
     <div>
-      <div class="query">comfortable red trainers</div>
+      <div class="query">comfortable red AirGlide 3 trainers</div>
     </div>
   </div>
-
-  <br>
 
   <div class="body">
 
   <div class="section fragment">
-    <div class="section-title">
-      <span>Keyword search</span>
-      <span class="tag">matches <em>intent</em>?</span>
-    </div>
+    <div class="section-title"><span>Keyword</span><span class="tag">BM25</span></div>
     <ol class="results">
-      <li class="result is-hit"><span class="rank">01</span><span class="title"><span class="hit-text">Comfortable Red Trainers</span> <span class="year">exact phrase</span></span><span class="pill hit">Match</span></li>
-      <li class="result"><span class="rank">03</span><span class="title"><span class="hit-text">Comfortable Red</span> Sweater <span class="year">wrong product</span></span><span class="pill miss">Wrong</span></li>
-      <li class="result"><span class="rank">04</span><span class="title"><span class="hit-text">Comfortable</span> Pillow <span class="year">one word matched</span></span><span class="pill miss">Wrong</span></li>
-      <li class="result"><span class="rank">02</span><span class="title">Personal <span class="hit-text">Trainers</span> Course <span class="year">same word, wrong sense</span></span><span class="pill miss">Wrong</span></li>
-      <li class="result"><span class="rank">05</span><span class="title"><span class="hit-text">Red</span> Wine Glasses <span class="year">one word matched</span></span><span class="pill miss">Wrong</span></li>
+      <li class="result is-hit"><span class="rank">01</span><span class="title"><span class="hit-text">AirGlide 3</span> Red</span><span class="pill hit">Match</span></li>
+      <li class="result"><span class="rank">02</span><span class="title"><span class="hit-text">AirGlide 3</span> Blue</span><span class="pill miss">Wrong</span></li>
+      <li class="result"><span class="rank">03</span><span class="title"><span class="hit-text">AirGlide 3</span> Laces</span><span class="pill miss">Wrong</span></li>
+      <li class="result"><span class="rank">04</span><span class="title"><span class="hit-text">Comfortable Red</span> Sweater</span><span class="pill miss">Wrong</span></li>
+      <li class="result"><span class="rank">05</span><span class="title">Personal <span class="hit-text">Trainers</span> Course</span><span class="pill miss">Wrong</span></li>
     </ol>
-    <p class="below-note">Shares <strong>words</strong> with the query - but not <strong>meaning</strong>.</p>
+    <p class="below-note">Finds the <strong>model</strong>, misses the <strong>intent</strong>.</p>
   </div>
 
   <div class="section fragment">
-    <div class="section-title">
-      <span>Vector search</span>
-      <span class="tag">matches <em>intent</em>?</span>
-    </div>
+    <div class="section-title"><span>Vector</span><span class="tag">dense</span></div>
     <ol class="results">
-      <li class="result is-hit"><span class="rank">01</span><span class="title"><span class="hit-text">Comfortable Red Trainers</span></span><span class="pill hit">Match</span></li>
-      <li class="result is-hit"><span class="rank">02</span><span class="title">Cosy Crimson Sneakers</span><span class="pill hit">Match</span></li>
-      <li class="result is-hit"><span class="rank">03</span><span class="title">Snug Burgundy Running Shoes</span><span class="pill hit">Match</span></li>
-      <li class="result is-hit"><span class="rank">04</span><span class="title">Soft Scarlet Sneakers</span><span class="pill hit">Match</span></li>
-      <li class="result is-hit"><span class="rank">05</span><span class="title">Cushioned Cherry-Red Trainers</span><span class="pill hit">Match</span></li>
+      <li class="result"><span class="rank">01</span><span class="title">Cosy Crimson Sneakers</span><span class="pill near">Close</span></li>
+      <li class="result"><span class="rank">02</span><span class="title">AirGlide 2 Cherry Red</span><span class="pill near">Close</span></li>
+      <li class="result is-hit"><span class="rank">03</span><span class="title"><span class="hit-text">AirGlide 3</span> Red</span><span class="pill hit">Match</span></li>
+      <li class="result"><span class="rank">04</span><span class="title">Soft Scarlet Runners</span><span class="pill near">Close</span></li>
+      <li class="result"><span class="rank">05</span><span class="title">Cushioned Burgundy Trainers</span><span class="pill near">Close</span></li>
     </ol>
-    <p class="below-note">Few shared words. Same <strong>meaning</strong>.</p>
+    <p class="below-note">Gets the <strong>meaning</strong>, blurs the <strong>model</strong>.</p>
+  </div>
+
+  <div class="section fragment">
+    <div class="section-title"><span>Hybrid</span><span class="tag">BM25 + dense</span></div>
+    <ol class="results">
+      <li class="result is-hit"><span class="rank">01</span><span class="title"><span class="hit-text">AirGlide 3</span> Red</span><span class="pill hit">Match</span></li>
+      <li class="result is-hit"><span class="rank">02</span><span class="title"><span class="hit-text">AirGlide 3</span> Crimson</span><span class="pill hit">Match</span></li>
+      <li class="result is-hit"><span class="rank">03</span><span class="title"><span class="hit-text">AirGlide 3</span> Cherry, wide fit</span><span class="pill hit">Match</span></li>
+      <li class="result is-hit"><span class="rank">04</span><span class="title"><span class="hit-text">AirGlide 3</span> Scarlet Trail</span><span class="pill hit">Match</span></li>
+      <li class="result"><span class="rank">05</span><span class="title">AirGlide 2 Cherry Red</span><span class="pill near">Close</span></li>
+    </ol>
+    <p class="below-note">The <strong>model</strong> and the <strong>meaning</strong>.</p>
   </div>
 
   </div>
 </div>
 <br><br>
 
-<blockquote class="fragment bottom"><span class="label">Takeaway</span><p>Traditional search matches <span class="hit-text">tokens</span>. Vector search matches <span class="hit-text">meaning</span>.</p></blockquote>
+<blockquote class="fragment bottom"><span class="label">Takeaway</span><p>Keyword matches <span class="hit-text">tokens</span>, vectors match <span class="hit-text">meaning</span>. In production you run <span class="hit-text">both</span>: Milvus does BM25 and dense in one query.</p></blockquote>
+
+<!-- notes
+Keyword finds the model name and nothing else. Vector finds the feeling,
+red comfy trainers, but treats "AirGlide 3" as just more meaning, so last
+year's model and other brands crowd in. Hybrid fuses both ranked lists and
+gets the exact model in the right colours. Built into Milvus: BM25 full-text
+plus dense in one hybrid search, fused with RRF or weighted ranking.
+-->
 
 ---
 
