@@ -1,11 +1,15 @@
 {
   "$schema": "https://vega.github.io/schema/vega/v5.json",
-  "description": "ANN vs exact search: comparisons required per query as the vector count grows. Stepped reveal via the `stage` signal; each line sweeps left-to-right as its stage is entered.",
+  "description": "ANN vs exact search: comparisons required per query as the vector count grows. The right axis estimates query latency as `overheadMs` of fixed overhead plus `nsPerCmp` per comparison: 768-d float32 vectors (~3 KB read per comparison) on a mid-range server CPU with ~60 GB/s of memory bandwidth, so ~50 ns each. Stepped reveal via the `stage` signal; each line sweeps left-to-right as its stage is entered.",
   "width": 1200,
   "height": 600,
   "signals": [
     {"name": "stage", "value": 0},
     {"name": "span", "value": 7},
+    {"name": "overheadMs", "value": 4},
+    {"name": "nsPerCmp", "value": 50},
+    {"name": "exactMs", "update": "overheadMs + 1e9 * nsPerCmp / 1e6"},
+    {"name": "annMs", "update": "overheadMs + 5350 * nsPerCmp / 1e6"},
     {
       "name": "drawExact",
       "value": 0,
@@ -95,6 +99,22 @@
       "tickSize": 6,
       "labelPadding": 6,
       "titlePadding": 14
+    },
+    {
+      "orient": "right",
+      "scale": "y",
+      "title": "Estimated latency per query",
+      "values": {"signal": "[100, (5 - overheadMs) * 1e6 / nsPerCmp, (10 - overheadMs) * 1e6 / nsPerCmp, (100 - overheadMs) * 1e6 / nsPerCmp, (1000 - overheadMs) * 1e6 / nsPerCmp, (10000 - overheadMs) * 1e6 / nsPerCmp, (60000 - overheadMs) * 1e6 / nsPerCmp]"},
+      "tickSize": 6,
+      "labelPadding": 6,
+      "titlePadding": 14,
+      "encode": {
+        "labels": {
+          "update": {
+            "text": {"signal": "(overheadMs + datum.value * nsPerCmp / 1e6) < 1000 ? format(overheadMs + datum.value * nsPerCmp / 1e6, '.0f') + ' ms' : (overheadMs + datum.value * nsPerCmp / 1e6) < 60000 ? format((overheadMs + datum.value * nsPerCmp / 1e6) / 1000, '.0f') + ' s' : format((overheadMs + datum.value * nsPerCmp / 1e6) / 60000, '.0f') + ' min'"}
+          }
+        }
+      }
     }
   ],
   "marks": [
@@ -160,6 +180,40 @@
           "strokeWidth": {"value": 2}
         },
         "update": {
+          "opacity": {"signal": "drawAnn >= span ? 1 : 0"}
+        }
+      }
+    },
+    {
+      "type": "text",
+      "encode": {
+        "enter": {
+          "x": {"scale": "x", "value": 1000000000, "offset": -26},
+          "y": {"scale": "y", "value": 1000000000},
+          "align": {"value": "right"},
+          "baseline": {"value": "middle"},
+          "fill": {"value": "#175fff"},
+          "fontWeight": {"value": 700}
+        },
+        "update": {
+          "text": {"signal": "'Exact: 1Bn in ~' + format(exactMs / 1000, '.0f') + ' s'"},
+          "opacity": {"signal": "drawExact >= span ? 1 : 0"}
+        }
+      }
+    },
+    {
+      "type": "text",
+      "encode": {
+        "enter": {
+          "x": {"scale": "x", "value": 1000000000, "offset": 8},
+          "y": {"scale": "y", "value": 5350, "offset": 16},
+          "align": {"value": "right"},
+          "baseline": {"value": "top"},
+          "fill": {"value": "#b45309"},
+          "fontWeight": {"value": 700}
+        },
+        "update": {
+          "text": {"signal": "'ANN: 1Bn in ~' + format(annMs, '.1f') + ' ms'"},
           "opacity": {"signal": "drawAnn >= span ? 1 : 0"}
         }
       }
