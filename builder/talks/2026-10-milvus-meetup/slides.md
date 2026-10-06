@@ -1189,42 +1189,66 @@ Then turn: once you do index, here is how it quietly fails.
 
 {.small-title}
 
-# Three ways out, by selectivity
+# Three ways out
 
 <br>
 
-<p style="text-align: center">How much of your data survives the filter decides the strategy.<br><strong>High</strong> selectivity (few pass) &nbsp;→&nbsp; <strong>Medium</strong> &nbsp;→&nbsp; <strong>Low</strong> selectivity (most pass)</p>
+<p style="text-align: center">Two questions pick the strategy: <strong>how much survives</strong> the filter, and <strong>how much the filter costs</strong> to evaluate.</p>
 
 <br>
 
 <div class="three-col cards" style="align-items: stretch; margin: 1vh 0;">
 <div class="fragment">
 
-**High** · brute force
+**Very selective** · brute force
 
-The filter leaves only a handful of candidates. Skip the graph entirely and compute exact distances over the survivors - cheap because the set is tiny, and **100% recall**.
-
-</div>
-<div class="fragment">
-
-**Medium** · filter-aware graph
-
-Bake the filter labels into graph construction - the **_alpha_** pruning parameter keeps matching nodes reachable. You traverse only valid nodes without fragmenting the index.
+Under about 1% survives. The graph is mostly holes, so Milvus **skips it** and computes exact distances over the survivors: cheap because the set is tiny, and **100% recall**.
 
 </div>
 <div class="fragment">
 
-**Low** · post-filter
+**In between** · keep the graph walkable
 
-Almost everything passes, so search the full graph and drop the few non-matches afterward. Over-fetch a little to backfill your _k_.
+Milvus's **alpha strategy** still visits some filtered-out nodes, with a probability set by the filter ratio, so the search can step *through* them to reach matches instead of stranding.
+
+</div>
+<div class="fragment">
+
+**Expensive filters** · iterative
+
+JSON paths and string matches cost more than distance maths. **Iterative filtering** pulls nearest neighbours in batches and filters each batch, until _k_ survive. Turn it on with a search hint.
 
 </div>
 </div>
 
 <br>
 
-<blockquote class="blue fragment bottom"><span class="label">What modern engines do</span><p>Zilliz watches selectivity per query and <span class="hit-text">picks the strategy automatically</span> - optimising for recall and latency in all scenarios.</p></blockquote>
+<blockquote class="blue fragment bottom"><span class="label">In Milvus</span><p>The brute-force switch and alpha are <span class="hit-text">automatic</span>. Iterative filtering is a hint. Filter on the same field every time? Metadata-aware indexing builds a graph per field. Zilliz AUTOINDEX tunes all of it per query.</p></blockquote>
 
+<!-- src: milvus.io/blog/how-to-filter-efficiently-without-killing-recall.md (alpha strategy, brute-force fallback at ~99% filtered, metadata-aware column graphs, iterative filtering, external filtering, AUTOINDEX) -->
+<!-- src: milvus.io/docs/filtered-search.md (search_params={"hints": "iterative_filter"}) -->
+
+<!-- notes
+Source: milvus.io/blog/how-to-filter-efficiently-without-killing-recall.md.
+
+Very selective: when the filter removes about 99%, Milvus detects it and
+falls back to brute force over the survivors.
+
+In between: alpha. The graph traversal visits filtered-out nodes with a
+probability tied to the filter ratio, purely as stepping stones, so matches
+on the far side stay reachable. That is the "graph destroyed" picture on the
+previous slide, repaired.
+
+Expensive filters: iterative filtering, inspired by VBase. Search a batch,
+filter it, fetch more until k survive. Wins when evaluating the filter costs
+more than the vector maths. The hint is hints="iterative_filter" in the
+search params.
+
+If asked: metadata-aware indexing (column graphs per field) for repeated
+filter patterns; external filtering through the search iterator when the
+filter data lives in Postgres or Mongo. ACORN is the academic approach to
+the same problem.
+-->
 ---
 
 {.section}
