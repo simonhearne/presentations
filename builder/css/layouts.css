@@ -1619,6 +1619,10 @@
 .cost-anatomy .stage.is-current .node:not(.node-none):not(.node-cache) { stroke: var(--zilliz-blue); stroke-width: 4; }
 .cost-anatomy .stage.is-current .edge:not(.call) { stroke: var(--zilliz-blue); }
 .cost-anatomy .stage.is-current .elabel { fill: var(--zilliz-blue); }
+/* The judge sits off the pipeline and keeps `.study-rig`'s berry for it, even
+   while current, so it never reads as a fourth arm. */
+.cost-anatomy .node-judge, .cost-anatomy .stage.is-current .node.node-judge { fill: var(--zilliz-berry-10); stroke: var(--zilliz-berry); }
+.cost-anatomy .nlabel-judge { fill: var(--zilliz-berry); }
 
 /* .study-rig — the harness, drawn natively rather than through Graphviz so the
    diagram can carry the slide's own sentence: only the tool changes. Two

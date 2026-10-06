@@ -455,88 +455,6 @@ Approximate nearest-neighbour algorithms all trade perfection for reduced latenc
 
 ---
 
-{.small-title}
-
-# Sounds... complex?
-
-All those knobs. Can't the machine work it out?
-
-<!--
-TALK TRACK (~40s, 2 advances)
-
-Stage 0 - You tune.
-  On screen: one control panel, eight decisions across build, query, operate.
-  "Everything we just saw is yours to set in open-source Milvus. Pick the
-   metric, pick the index family, set its build knobs, pick quantisation.
-   Then at query time a different knob per family: nprobe for IVF, ef for
-   HNSW, search_list for DiskANN. And when the data shifts, you re-tune."
-
-Stage 1 - AUTOINDEX decides. [->]
-  On screen: build controls are replaced by AUTO pills, the three query knobs fold
-  into one level dial, the counter drops to 2.
-  "With AUTOINDEX you still choose the metric. Index type, build params and
-   quantisation are picked for you, per segment, and re-optimised as data
-   moves. At query time there is one dial, level 1 to 10: recall vs speed."
-
-Stage 2 - Trade-off. [->]
--->
-
-<svg class="tune-panel" viewBox="0 0 1700 570" role="img" aria-label="A control panel of index settings. Manually you set eight things: metric, index family, M, efConstruction and quantisation at build time, nprobe, ef or search_list per query, and re-tune by hand as the data shifts. With AUTOINDEX the build row is chosen automatically, the three query knobs collapse into a single level dial from 1 to 10, and only the metric and level remain yours.">
-<rect class="panel" x="10" y="80" width="1680" height="480" rx="16"/>
-<path class="divider" d="M30 270 H1670 M30 450 H1670"/>
-<g class="head manual"><text class="htitle" x="20" y="50">You tune <tspan class="hsub">· open-source Milvus / other vector DBs</tspan></text><text class="hcount" x="1690" y="50" text-anchor="end">8 decisions</text></g>
-<g class="rows">
-<text class="rlabel" x="40" y="170">BUILD</text><text class="rsub" x="40" y="197">per index</text>
-<text class="rlabel" x="40" y="355">QUERY</text><text class="rsub" x="40" y="382">per request</text>
-<text class="rlabel" x="40" y="500">OPERATE</text><text class="rsub" x="40" y="527">as data shifts</text>
-</g>
-<g class="switch">
-<rect class="sw" x="210" y="135" width="270" height="50" rx="25"/><rect class="sw-on" x="390" y="135" width="90" height="50" rx="25"/>
-<text class="swt" x="255" y="167" text-anchor="middle">L2</text><text class="swt" x="345" y="167" text-anchor="middle">IP</text><text class="swt on" x="435" y="167" text-anchor="middle">COSINE</text>
-<text class="klabel" x="345" y="232" text-anchor="middle">metric</text>
-</g>
-<g class="auto-dim">
-<g class="switch">
-<rect class="sw" x="510" y="135" width="400" height="50" rx="25"/><rect class="sw-on" x="610" y="135" width="100" height="50" rx="25"/>
-<text class="swt" x="560" y="167" text-anchor="middle">IVF</text><text class="swt on" x="660" y="167" text-anchor="middle">HNSW</text><text class="swt" x="760" y="167" text-anchor="middle">DiskANN</text><text class="swt" x="860" y="167" text-anchor="middle">GPU</text>
-<text class="klabel" x="710" y="232" text-anchor="middle">index</text>
-</g>
-<g class="knob" transform="translate(1060 160)"><circle r="32"/><path d="M0 0 V-24" transform="rotate(40)"/></g><text class="klabel" x="1060" y="232" text-anchor="middle">M</text>
-<g class="knob" transform="translate(1200 160)"><circle r="32"/><path d="M0 0 V-24" transform="rotate(115)"/></g><text class="klabel" x="1200" y="232" text-anchor="middle">efConstruction</text>
-<g class="switch">
-<rect class="sw" x="1350" y="135" width="285" height="50" rx="25"/><rect class="sw-on" x="1445" y="135" width="95" height="50" rx="25"/>
-<text class="swt" x="1397" y="167" text-anchor="middle">none</text><text class="swt on" x="1492" y="167" text-anchor="middle">SQ8</text><text class="swt" x="1587" y="167" text-anchor="middle">PQ</text>
-<text class="klabel" x="1492" y="232" text-anchor="middle">quantisation</text>
-</g>
-</g>
-<g class="collapse" style="--dx: 160px"><g class="knob" transform="translate(360 350)"><circle r="32"/><path d="M0 0 V-24" transform="rotate(20)"/></g><text class="klabel" x="360" y="420" text-anchor="middle">nprobe</text></g>
-<g class="collapse" style="--dx: 0px"><g class="knob" transform="translate(520 350)"><circle r="32"/><path d="M0 0 V-24" transform="rotate(-90)"/></g><text class="klabel" x="520" y="420" text-anchor="middle">ef</text></g>
-<g class="collapse" style="--dx: -160px"><g class="knob" transform="translate(680 350)"><circle r="32"/><path d="M0 0 V-24" transform="rotate(75)"/></g><text class="klabel" x="680" y="420" text-anchor="middle">search_list</text></g>
-<text class="note manual" x="800" y="358">a different knob for every index family</text>
-<text class="op manual" x="210" y="513">↻  watch recall drift, re-tune, rebuild</text>
-<g class="stage stage-1 fragment" data-fragment-index="1">
-<g class="head"><text class="htitle" x="20" y="50">AUTOINDEX decides <tspan class="hsub">· managed, on Zilliz Cloud</tspan></text><text class="hcount auto" x="1690" y="50" text-anchor="end">2 decisions</text></g>
-<rect class="ring" x="198" y="123" width="294" height="74" rx="37"/>
-<text class="klabel auto" x="345" y="262" text-anchor="middle">you choose</text>
-<rect class="auto-badge" x="506" y="126" width="408" height="68" rx="34"/><text class="auto-badge-t" x="710" y="169" text-anchor="middle">AUTO</text>
-<rect class="auto-badge" x="1010" y="126" width="240" height="68" rx="34"/><text class="auto-badge-t" x="1130" y="169" text-anchor="middle">AUTO</text>
-<rect class="auto-badge" x="1346" y="126" width="293" height="68" rx="34"/><text class="auto-badge-t" x="1492" y="169" text-anchor="middle">AUTO</text>
-<g class="dial" transform="translate(520 360)">
-<circle r="56"/>
-<g class="ticks"><path d="M0 -64 V-74" transform="rotate(-135)"/><path d="M0 -64 V-74" transform="rotate(-105)"/><path d="M0 -64 V-74" transform="rotate(-75)"/><path d="M0 -64 V-74" transform="rotate(-45)"/><path d="M0 -64 V-74" transform="rotate(-15)"/><path d="M0 -64 V-74" transform="rotate(15)"/><path d="M0 -64 V-74" transform="rotate(45)"/><path d="M0 -64 V-74" transform="rotate(75)"/><path d="M0 -64 V-74" transform="rotate(105)"/><path d="M0 -64 V-74" transform="rotate(135)"/></g>
-<path class="pointer" d="M0 0 V-42" transform="rotate(-15)"/>
-<text class="dnum" x="-68" y="80" text-anchor="middle">1</text><text class="dnum" x="68" y="80" text-anchor="middle">10</text>
-</g>
-<text class="dlabel" x="640" y="352">level</text>
-<text class="dsub" x="640" y="386">one dial: recall vs speed</text>
-<text class="op auto" x="210" y="513">↻  re-optimised per segment as the data moves</text>
-</g>
-</svg>
-
-<blockquote class="fragment bottom" data-fragment-index="2"><span class="label">Trade-off</span><p>Full control and full responsibility, or <span class="hit-text">one dial</span> and trust the engine.</p></blockquote>
-
----
-
 # The size problem
 
 No matter what algorithm you use, embeddings are big. In RAM or on disk, size matters.
@@ -726,6 +644,88 @@ Each algorithm can use quantisation to trade accuracy for significantly reduced 
   actions: false
   fit: contain
 ```
+
+---
+
+{.small-title}
+
+# Sounds... complex?
+
+All those knobs. Can't the machine work it out?
+
+<!--
+TALK TRACK (~40s, 2 advances)
+
+Stage 0 - You tune.
+  On screen: one control panel, eight decisions across build, query, operate.
+  "Everything we just saw is yours to set in open-source Milvus. Pick the
+   metric, pick the index family, set its build knobs, pick quantisation.
+   Then at query time a different knob per family: nprobe for IVF, ef for
+   HNSW, search_list for DiskANN. And when the data shifts, you re-tune."
+
+Stage 1 - AUTOINDEX decides. [->]
+  On screen: build controls are replaced by AUTO pills, the three query knobs fold
+  into one level dial, the counter drops to 2.
+  "With AUTOINDEX you still choose the metric. Index type, build params and
+   quantisation are picked for you, per segment, and re-optimised as data
+   moves. At query time there is one dial, level 1 to 10: recall vs speed."
+
+Stage 2 - Trade-off. [->]
+-->
+
+<svg class="tune-panel" viewBox="0 0 1700 570" role="img" aria-label="A control panel of index settings. Manually you set eight things: metric, index family, M, efConstruction and quantisation at build time, nprobe, ef or search_list per query, and re-tune by hand as the data shifts. With AUTOINDEX the build row is chosen automatically, the three query knobs collapse into a single level dial from 1 to 10, and only the metric and level remain yours.">
+<rect class="panel" x="10" y="80" width="1680" height="480" rx="16"/>
+<path class="divider" d="M30 270 H1670 M30 450 H1670"/>
+<g class="head manual"><text class="htitle" x="20" y="50">You tune <tspan class="hsub">· open-source Milvus / other vector DBs</tspan></text><text class="hcount" x="1690" y="50" text-anchor="end">8 decisions</text></g>
+<g class="rows">
+<text class="rlabel" x="40" y="170">BUILD</text><text class="rsub" x="40" y="197">per index</text>
+<text class="rlabel" x="40" y="355">QUERY</text><text class="rsub" x="40" y="382">per request</text>
+<text class="rlabel" x="40" y="500">OPERATE</text><text class="rsub" x="40" y="527">as data shifts</text>
+</g>
+<g class="switch">
+<rect class="sw" x="210" y="135" width="270" height="50" rx="25"/><rect class="sw-on" x="390" y="135" width="90" height="50" rx="25"/>
+<text class="swt" x="255" y="167" text-anchor="middle">L2</text><text class="swt" x="345" y="167" text-anchor="middle">IP</text><text class="swt on" x="435" y="167" text-anchor="middle">COSINE</text>
+<text class="klabel" x="345" y="232" text-anchor="middle">metric</text>
+</g>
+<g class="auto-dim">
+<g class="switch">
+<rect class="sw" x="510" y="135" width="400" height="50" rx="25"/><rect class="sw-on" x="610" y="135" width="100" height="50" rx="25"/>
+<text class="swt" x="560" y="167" text-anchor="middle">IVF</text><text class="swt on" x="660" y="167" text-anchor="middle">HNSW</text><text class="swt" x="760" y="167" text-anchor="middle">DiskANN</text><text class="swt" x="860" y="167" text-anchor="middle">GPU</text>
+<text class="klabel" x="710" y="232" text-anchor="middle">index</text>
+</g>
+<g class="knob" transform="translate(1060 160)"><circle r="32"/><path d="M0 0 V-24" transform="rotate(40)"/></g><text class="klabel" x="1060" y="232" text-anchor="middle">M</text>
+<g class="knob" transform="translate(1200 160)"><circle r="32"/><path d="M0 0 V-24" transform="rotate(115)"/></g><text class="klabel" x="1200" y="232" text-anchor="middle">efConstruction</text>
+<g class="switch">
+<rect class="sw" x="1350" y="135" width="285" height="50" rx="25"/><rect class="sw-on" x="1445" y="135" width="95" height="50" rx="25"/>
+<text class="swt" x="1397" y="167" text-anchor="middle">none</text><text class="swt on" x="1492" y="167" text-anchor="middle">SQ8</text><text class="swt" x="1587" y="167" text-anchor="middle">PQ</text>
+<text class="klabel" x="1492" y="232" text-anchor="middle">quantisation</text>
+</g>
+</g>
+<g class="collapse" style="--dx: 160px"><g class="knob" transform="translate(360 350)"><circle r="32"/><path d="M0 0 V-24" transform="rotate(20)"/></g><text class="klabel" x="360" y="420" text-anchor="middle">nprobe</text></g>
+<g class="collapse" style="--dx: 0px"><g class="knob" transform="translate(520 350)"><circle r="32"/><path d="M0 0 V-24" transform="rotate(-90)"/></g><text class="klabel" x="520" y="420" text-anchor="middle">ef</text></g>
+<g class="collapse" style="--dx: -160px"><g class="knob" transform="translate(680 350)"><circle r="32"/><path d="M0 0 V-24" transform="rotate(75)"/></g><text class="klabel" x="680" y="420" text-anchor="middle">search_list</text></g>
+<text class="note manual" x="800" y="358">a different knob for every index family</text>
+<text class="op manual" x="210" y="513">↻  watch recall drift, re-tune, rebuild</text>
+<g class="stage stage-1 fragment" data-fragment-index="1">
+<g class="head"><text class="htitle" x="20" y="50">AUTOINDEX decides <tspan class="hsub">· managed, on Zilliz Cloud</tspan></text><text class="hcount auto" x="1690" y="50" text-anchor="end">2 decisions</text></g>
+<rect class="ring" x="198" y="123" width="294" height="74" rx="37"/>
+<text class="klabel auto" x="345" y="262" text-anchor="middle">you choose</text>
+<rect class="auto-badge" x="506" y="126" width="408" height="68" rx="34"/><text class="auto-badge-t" x="710" y="169" text-anchor="middle">AUTO</text>
+<rect class="auto-badge" x="1010" y="126" width="240" height="68" rx="34"/><text class="auto-badge-t" x="1130" y="169" text-anchor="middle">AUTO</text>
+<rect class="auto-badge" x="1346" y="126" width="293" height="68" rx="34"/><text class="auto-badge-t" x="1492" y="169" text-anchor="middle">AUTO</text>
+<g class="dial" transform="translate(520 360)">
+<circle r="56"/>
+<g class="ticks"><path d="M0 -64 V-74" transform="rotate(-135)"/><path d="M0 -64 V-74" transform="rotate(-105)"/><path d="M0 -64 V-74" transform="rotate(-75)"/><path d="M0 -64 V-74" transform="rotate(-45)"/><path d="M0 -64 V-74" transform="rotate(-15)"/><path d="M0 -64 V-74" transform="rotate(15)"/><path d="M0 -64 V-74" transform="rotate(45)"/><path d="M0 -64 V-74" transform="rotate(75)"/><path d="M0 -64 V-74" transform="rotate(105)"/><path d="M0 -64 V-74" transform="rotate(135)"/></g>
+<path class="pointer" d="M0 0 V-42" transform="rotate(-15)"/>
+<text class="dnum" x="-68" y="80" text-anchor="middle">1</text><text class="dnum" x="68" y="80" text-anchor="middle">10</text>
+</g>
+<text class="dlabel" x="640" y="352">level</text>
+<text class="dsub" x="640" y="386">one dial: recall vs speed</text>
+<text class="op auto" x="210" y="513">↻  re-optimised per segment as the data moves</text>
+</g>
+</svg>
+
+<blockquote class="fragment bottom" data-fragment-index="2"><span class="label">Trade-off</span><p>Full control and full responsibility, or <span class="hit-text">one dial</span> and trust the engine.</p></blockquote>
 
 ---
 
@@ -1293,7 +1293,7 @@ embedding models against it before you touch the index.
 
 The same question, three ways to feed the model. The search itself is never the expensive part.
 
-<svg class="cost-anatomy" viewBox="0 0 1400 378" role="img" aria-label="One pipeline, three ways to feed it. A question goes into a model and the model returns an answer. Three stations sit below the model. Parametric has no retrieval at all and pays only for the answer it writes. Agentic loops three to four times through a grep, read and glob tool, each turn cheap on its own but re-sending the whole transcript. Indexed takes one or two fat payloads of chunks from a vector search, and carries a navy band across the foot of its own box marking the charge it incurs per day whether or not anything is asked. Every per-query charge is marked with a purple coin; the one per-day charge is the navy band inside the index's box.">
+<svg class="cost-anatomy" viewBox="0 0 1400 378" role="img" aria-label="One pipeline, three ways to feed it. A question goes into a model and the model returns an answer. Three stations sit below the model. Parametric has no retrieval at all and pays only for the answer it writes. Agentic loops three to four times through a grep, read and glob tool, each turn cheap on its own but re-sending the whole transcript. Indexed takes one or two fat payloads of chunks from a vector search, and carries a navy band across the foot of its own box marking the charge it incurs per day whether or not anything is asked. A fourth station hangs below the answer: an LLM-as-a-judge that grades every answer without knowing which arm produced it. Every per-query charge is marked with a purple coin; the one per-day charge is the navy band inside the index's box.">
 <defs>
 <marker id="ca-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="18" markerHeight="18" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="context-stroke"/></marker>
 <marker id="ca-arrow-fat" viewBox="0 0 10 10" refX="0" refY="5" markerWidth="26" markerHeight="28" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="context-stroke"/></marker>
@@ -1343,15 +1343,22 @@ The same question, three ways to feed the model. The search itself is never the 
 <text class="elabel" x="866" y="216" text-anchor="start">per query</text>
 <rect class="tag tag-gradient" x="775" y="336" width="190" height="38" rx="19"/><text class="tlabel tlabel-gradient" x="870" y="362" text-anchor="middle">indexed</text>
 </g>
+
+<g class="stage stage-4 fragment" data-fragment-index="4">
+<path class="edge" d="M1285 100 V224"/>
+<text class="elabel" x="1259" y="170" text-anchor="end">every answer</text>
+<rect class="node node-judge" x="1060" y="230" width="300" height="88" rx="10"/>
+<text class="nlabel nlabel-judge" x="1210" y="262" text-anchor="middle">LLM-as-a-judge</text>
+<text class="nsub muted" x="1210" y="294" text-anchor="middle">blind to the method</text>
+</g>
 </svg>
 
-<div class="cost-notes cols-3">
+<div class="cost-notes">
 <p class="fragment" data-fragment-index="1">No search, no payload. You pay for the answer, and nothing else.</p>
 <p class="fragment" data-fragment-index="2">Small results each time. But the whole transcript goes back every turn.</p>
 <p class="fragment" data-fragment-index="3">One fat payload of chunks, and a box that bills daily whether you ask or not.</p>
+<p class="fragment" data-fragment-index="4">A stronger model grades every answer, without knowing which method was used.</p>
 </div>
-
-<p class="closing-line is-emphatic fragment" data-fragment-index="4">Only the index has a fixed cost, everything else is per query or per embedding. The same logic applies for code search and agentic memory.</p>
 
 <!-- notes
 One click per arm. Nothing on this slide is a measured value; it is the
@@ -1367,6 +1374,10 @@ are the bill, not bytes off disk.
 Indexed inverts that: one or two turns with a fatter payload of chunks. The
 navy band is the point. The index also charges you for existing, a box every
 day whether anyone asks it anything. It is the only per-day charge here.
+
+Fourth click: how we score it. Every answer from every arm goes to an LLM
+judge, a stronger model (Opus) that never sees which arm wrote it. That is the "correct" in every
+accuracy and cost-per-correct number from here on.
 
 Land the closing line: one fixed cost, everything else per query. So the
 question is always how many queries a day repay the box.
@@ -1390,6 +1401,8 @@ A blind model answered 25 of 40 questions on fastapi, and
   signal-zoom: true
   fit: contain
 ```
+
+<p class="rig chart-rig"><span class="pill ghost">fastapi + agentic-hil</span><span class="pill ghost">40 questions each</span><span class="pill ghost">Sonnet 5 agent</span><span class="pill ghost">Opus 5 judges</span><span class="pill ghost">claude-context 0.1.15</span><span class="pill ghost">Milvus</span></p>
 
 <!-- notes
 0.625 with zero access to the repository is the contamination floor: the
@@ -1425,6 +1438,8 @@ arm, claude-context search_code over a Milvus index for the indexed arm.
 ```
 
 </div>
+
+<p class="rig chart-rig"><span class="pill ghost">fastapi + agentic-hil</span><span class="pill ghost">40 questions each</span><span class="pill ghost">Sonnet 5 agent</span><span class="pill ghost">Opus 5 judges</span><span class="pill ghost">claude-context 0.1.15</span><span class="pill ghost">Milvus</span></p>
 
 <table class="cost-latency fragment">
 <thead><tr><th></th><th>Code it knows</th><th>Code it has never seen</th></tr></thead>
@@ -1485,6 +1500,8 @@ Caveats to have ready, do not volunteer them all:
 
 <p class="table-note">Break-even is the box's $2.83 a day divided by the saving per query. Warm uses the measured cache hit rates, 100%, 92% and 97%; cold is a miss on every query, which is what a five-minute cache sees at 15 queries a day. Mean billed cost per query; bars share one scale.</p>
 <p class="table-note">* 1.2M tokens is past the context window: replay keeps 78.5% of the history and answers 47% of questions correctly, against 100% for the index.</p>
+
+<p class="rig chart-rig"><span class="pill ghost">synthetic history</span><span class="pill ghost">98k / 392k / 1.2M tokens</span><span class="pill ghost">memsearch, dense + BM25</span><span class="pill ghost">r8g.large, 16 GiB</span><span class="pill ghost">prices 2026-09-07</span></p>
 
 <!-- notes
 Second workload: agent memory. A synthetic conversation history in markdown
