@@ -1,0 +1,498 @@
+{
+  "$schema": "https://vega.github.io/schema/vega/v5.json",
+  "description": "DiskANN query: greedy walk over a Vamana graph, each hop one SSD block read, neighbours scored from PQ codes held in RAM.",
+  "width": 1200,
+  "height": 600,
+  "padding": 0,
+  "autosize": "fit",
+
+  "signals": [
+    {"name": "stage", "value": 0},
+    {"name": "path", "value": ["M", "n56", "n44", "n11", "n28"]},
+    {"name": "flatReads", "value": 60},
+    {
+      "name": "hop", "value": 0,
+      "on": [{"events": {"type": "timer", "throttle": 1100}, "update": "stage < 2 ? 0 : min(hop + 1, length(path))"}]
+    },
+    {"name": "current", "update": "hop > 0 ? path[hop - 1] : ''"},
+    {"name": "done", "update": "hop === length(path)"},
+    {"name": "nbrs", "update": "pluck(data('nbrEdges'), 'other')"},
+    {
+      "name": "narration",
+      "update": "stage === 0 ? 'The graph and full vectors live on SSD, one block per vector. RAM holds only compressed PQ codes.' : stage === 1 ? 'A query arrives. Every search starts at the same entry point, the medoid.' : done ? 'Converged: ' + hop + ' SSD reads to find the nearest neighbour. A flat scan reads all ' + flatReads + '.' : 'Each hop reads one block from SSD, then scores its neighbours using PQ codes in RAM.'"
+    },
+    {"name": "gx0", "value": 10},
+    {"name": "gx1", "value": 590},
+    {"name": "mx", "value": 660},
+    {"name": "ramY", "value": 110},
+    {"name": "ssdY", "value": 250}
+  ],
+
+  "data": [
+    {
+      "name": "coords",
+      "values": [
+        {"id":"M","x":5,"y":5},
+        {"id":"n0","x":2.47,"y":8.65},
+        {"id":"n1","x":6.46,"y":3.34},
+        {"id":"n2","x":6,"y":5},
+        {"id":"n3","x":9.74,"y":5.9},
+        {"id":"n4","x":2.06,"y":1.95},
+        {"id":"n5","x":5.58,"y":3.86},
+        {"id":"n6","x":0.91,"y":7.87},
+        {"id":"n7","x":0.67,"y":5.02},
+        {"id":"n8","x":6.48,"y":1.87},
+        {"id":"n9","x":1,"y":4.1},
+        {"id":"n10","x":8.09,"y":4.19},
+        {"id":"n11","x":8.01,"y":1.64},
+        {"id":"n12","x":8.92,"y":0.36},
+        {"id":"n13","x":3.13,"y":1.89},
+        {"id":"n14","x":3.3,"y":3.46},
+        {"id":"n15","x":3.71,"y":1.45},
+        {"id":"n16","x":4.5,"y":8.86},
+        {"id":"n17","x":2.23,"y":6.04},
+        {"id":"n18","x":7.83,"y":7.59},
+        {"id":"n19","x":0.72,"y":2.01},
+        {"id":"n20","x":6.48,"y":7.44},
+        {"id":"n21","x":2.13,"y":0.31},
+        {"id":"n22","x":7.89,"y":9.53},
+        {"id":"n23","x":4.74,"y":2.42},
+        {"id":"n24","x":3.34,"y":9.59},
+        {"id":"n25","x":3.15,"y":0.68},
+        {"id":"n26","x":3.94,"y":2.91},
+        {"id":"n27","x":9.29,"y":1.85},
+        {"id":"n28","x":7.3,"y":2.2},
+        {"id":"n29","x":4.21,"y":0.28},
+        {"id":"n30","x":6.28,"y":0.8},
+        {"id":"n31","x":0.53,"y":8.82},
+        {"id":"n32","x":5.07,"y":9.63},
+        {"id":"n33","x":5.29,"y":6.41},
+        {"id":"n34","x":1.52,"y":6.13},
+        {"id":"n35","x":9.78,"y":6.7},
+        {"id":"n36","x":1.44,"y":3.04},
+        {"id":"n37","x":9.04,"y":8.2},
+        {"id":"n38","x":6.36,"y":5.79},
+        {"id":"n39","x":7.11,"y":0.96},
+        {"id":"n40","x":8.97,"y":2.84},
+        {"id":"n41","x":6.22,"y":6.61},
+        {"id":"n42","x":8.9,"y":4.17},
+        {"id":"n43","x":3.84,"y":8.3},
+        {"id":"n44","x":8.69,"y":1.07},
+        {"id":"n45","x":8.62,"y":7.52},
+        {"id":"n46","x":6.88,"y":0.25},
+        {"id":"n47","x":2.31,"y":1.18},
+        {"id":"n48","x":7.73,"y":0.17},
+        {"id":"n49","x":2.06,"y":4.72},
+        {"id":"n50","x":5.3,"y":8.74},
+        {"id":"n51","x":3.43,"y":5.78},
+        {"id":"n52","x":4.22,"y":4.77},
+        {"id":"n53","x":4.47,"y":1.65},
+        {"id":"n54","x":1.52,"y":9.57},
+        {"id":"n55","x":7.79,"y":5.17},
+        {"id":"n56","x":9.89,"y":1.1},
+        {"id":"n57","x":5.55,"y":1.6},
+        {"id":"n58","x":5.59,"y":7.25}
+      ],
+      "transform": [
+        {"type": "window", "ops": ["row_number"], "as": ["rn"]},
+        {"type": "formula", "as": "idx", "expr": "datum.rn - 1"}
+      ]
+    },
+    {
+      "name": "points",
+      "source": "coords",
+      "transform": [
+        {"type": "formula", "as": "readOrder", "expr": "indexof(path, datum.id) + 1"},
+        {"type": "formula", "as": "isRead", "expr": "datum.readOrder > 0 && datum.readOrder <= hop"},
+        {"type": "formula", "as": "isCurrent", "expr": "datum.id === current"},
+        {"type": "formula", "as": "isNbr", "expr": "stage >= 2 && !done && indexof(nbrs, datum.id) >= 0 && !datum.isRead"}
+      ]
+    },
+    {
+      "name": "edges",
+      "values": [
+        {"a":"M","b":"n52","long":false},
+        {"a":"M","b":"n2","long":false},
+        {"a":"M","b":"n56","long":true},
+        {"a":"n0","b":"n24","long":false},
+        {"a":"n0","b":"n54","long":false},
+        {"a":"n1","b":"n5","long":false},
+        {"a":"n1","b":"n28","long":false},
+        {"a":"n2","b":"n38","long":false},
+        {"a":"n2","b":"M","long":false},
+        {"a":"n3","b":"n35","long":false},
+        {"a":"n3","b":"n42","long":false},
+        {"a":"n4","b":"n47","long":false},
+        {"a":"n4","b":"n13","long":false},
+        {"a":"n4","b":"n3","long":true},
+        {"a":"n5","b":"n1","long":false},
+        {"a":"n5","b":"n2","long":false},
+        {"a":"n6","b":"n31","long":false},
+        {"a":"n6","b":"n0","long":false},
+        {"a":"n7","b":"n9","long":false},
+        {"a":"n7","b":"n34","long":false},
+        {"a":"n8","b":"n28","long":false},
+        {"a":"n8","b":"n57","long":false},
+        {"a":"n9","b":"n7","long":false},
+        {"a":"n9","b":"n36","long":false},
+        {"a":"n10","b":"n42","long":false},
+        {"a":"n10","b":"n55","long":false},
+        {"a":"n10","b":"n19","long":true},
+        {"a":"n11","b":"n44","long":false},
+        {"a":"n11","b":"n28","long":false},
+        {"a":"n12","b":"n44","long":false},
+        {"a":"n12","b":"n48","long":false},
+        {"a":"n13","b":"n15","long":false},
+        {"a":"n13","b":"n4","long":false},
+        {"a":"n14","b":"n26","long":false},
+        {"a":"n14","b":"n13","long":false},
+        {"a":"n15","b":"n13","long":false},
+        {"a":"n15","b":"n53","long":false},
+        {"a":"n16","b":"n50","long":false},
+        {"a":"n16","b":"n43","long":false},
+        {"a":"n16","b":"n48","long":true},
+        {"a":"n17","b":"n34","long":false},
+        {"a":"n17","b":"n51","long":false},
+        {"a":"n18","b":"n45","long":false},
+        {"a":"n18","b":"n37","long":false},
+        {"a":"n19","b":"n36","long":false},
+        {"a":"n19","b":"n4","long":false},
+        {"a":"n20","b":"n41","long":false},
+        {"a":"n20","b":"n58","long":false},
+        {"a":"n21","b":"n47","long":false},
+        {"a":"n21","b":"n25","long":false},
+        {"a":"n22","b":"n37","long":false},
+        {"a":"n22","b":"n18","long":false},
+        {"a":"n22","b":"n47","long":true},
+        {"a":"n23","b":"n53","long":false},
+        {"a":"n23","b":"n26","long":false},
+        {"a":"n24","b":"n0","long":false},
+        {"a":"n24","b":"n16","long":false},
+        {"a":"n25","b":"n15","long":false},
+        {"a":"n25","b":"n47","long":false},
+        {"a":"n26","b":"n14","long":false},
+        {"a":"n26","b":"n23","long":false},
+        {"a":"n27","b":"n56","long":false},
+        {"a":"n27","b":"n44","long":false},
+        {"a":"n28","b":"n8","long":false},
+        {"a":"n28","b":"n11","long":false},
+        {"a":"n28","b":"n31","long":true},
+        {"a":"n29","b":"n25","long":false},
+        {"a":"n29","b":"n15","long":false},
+        {"a":"n30","b":"n46","long":false},
+        {"a":"n30","b":"n39","long":false},
+        {"a":"n31","b":"n6","long":false},
+        {"a":"n31","b":"n54","long":false},
+        {"a":"n32","b":"n50","long":false},
+        {"a":"n32","b":"n16","long":false},
+        {"a":"n33","b":"n58","long":false},
+        {"a":"n33","b":"n41","long":false},
+        {"a":"n34","b":"n17","long":false},
+        {"a":"n34","b":"n7","long":false},
+        {"a":"n34","b":"n27","long":true},
+        {"a":"n35","b":"n3","long":false},
+        {"a":"n35","b":"n45","long":false},
+        {"a":"n36","b":"n9","long":false},
+        {"a":"n36","b":"n4","long":false},
+        {"a":"n37","b":"n45","long":false},
+        {"a":"n37","b":"n18","long":false},
+        {"a":"n38","b":"n41","long":false},
+        {"a":"n38","b":"n2","long":false},
+        {"a":"n39","b":"n46","long":false},
+        {"a":"n39","b":"n30","long":false},
+        {"a":"n40","b":"n27","long":false},
+        {"a":"n40","b":"n42","long":false},
+        {"a":"n40","b":"n6","long":true},
+        {"a":"n41","b":"n38","long":false},
+        {"a":"n41","b":"n20","long":false},
+        {"a":"n42","b":"n10","long":false},
+        {"a":"n42","b":"n40","long":false},
+        {"a":"n43","b":"n16","long":false},
+        {"a":"n43","b":"n24","long":false},
+        {"a":"n44","b":"n12","long":false},
+        {"a":"n44","b":"n11","long":false},
+        {"a":"n45","b":"n18","long":false},
+        {"a":"n45","b":"n37","long":false},
+        {"a":"n46","b":"n39","long":false},
+        {"a":"n46","b":"n30","long":false},
+        {"a":"n46","b":"n24","long":true},
+        {"a":"n47","b":"n4","long":false},
+        {"a":"n47","b":"n21","long":false},
+        {"a":"n48","b":"n46","long":false},
+        {"a":"n48","b":"n39","long":false},
+        {"a":"n49","b":"n9","long":false},
+        {"a":"n49","b":"n17","long":false},
+        {"a":"n50","b":"n16","long":false},
+        {"a":"n50","b":"n32","long":false},
+        {"a":"n51","b":"n17","long":false},
+        {"a":"n51","b":"n52","long":false},
+        {"a":"n52","b":"M","long":false},
+        {"a":"n52","b":"n51","long":false},
+        {"a":"n52","b":"n35","long":true},
+        {"a":"n53","b":"n15","long":false},
+        {"a":"n53","b":"n23","long":false},
+        {"a":"n54","b":"n31","long":false},
+        {"a":"n54","b":"n0","long":false},
+        {"a":"n55","b":"n10","long":false},
+        {"a":"n55","b":"n42","long":false},
+        {"a":"n56","b":"n27","long":false},
+        {"a":"n56","b":"n44","long":false},
+        {"a":"n57","b":"n8","long":false},
+        {"a":"n57","b":"n53","long":false},
+        {"a":"n58","b":"n33","long":false},
+        {"a":"n58","b":"n41","long":false},
+        {"a":"n58","b":"n48","long":true}
+      ],
+      "transform": [
+        {"type": "lookup", "from": "coords", "key": "id", "fields": ["a", "b"], "as": ["pa", "pb"]},
+        {"type": "formula", "as": "x1", "expr": "datum.pa.x"},
+        {"type": "formula", "as": "y1", "expr": "datum.pa.y"},
+        {"type": "formula", "as": "x2", "expr": "datum.pb.x"},
+        {"type": "formula", "as": "y2", "expr": "datum.pb.y"}
+      ]
+    },
+    {
+      "name": "nbrEdges",
+      "source": "edges",
+      "transform": [
+        {"type": "filter", "expr": "datum.a === current || datum.b === current"},
+        {"type": "formula", "as": "other", "expr": "datum.a === current ? datum.b : datum.a"}
+      ]
+    },
+    {
+      "name": "pathEdges",
+      "source": "edges",
+      "transform": [
+        {"type": "formula", "as": "ia", "expr": "indexof(path, datum.a)"},
+        {"type": "formula", "as": "ib", "expr": "indexof(path, datum.b)"},
+        {"type": "filter", "expr": "datum.ia >= 0 && datum.ib >= 0 && abs(datum.ia - datum.ib) === 1"},
+        {"type": "formula", "as": "order", "expr": "max(datum.ia, datum.ib)"}
+      ]
+    },
+    {
+      "name": "query",
+      "values": [{"x": 7.7, "y": 2.2}]
+    }
+  ],
+
+  "scales": [
+    {"name": "xscale", "type": "linear", "domain": [0, 10], "range": {"signal": "[gx0 + 10, gx1 - 10]"}},
+    {"name": "yscale", "type": "linear", "domain": [0, 10], "range": {"signal": "[height - 20, 70]"}}
+  ],
+
+  "marks": [
+    {
+      "type": "text",
+      "encode": {
+        "update": {
+          "x": {"value": 0}, "y": {"value": 16},
+          "text": {"signal": "narration"},
+          "fontSize": {"value": 22}, "fontWeight": {"value": 600},
+          "limit": {"signal": "width"}
+        }
+      }
+    },
+
+    {
+      "type": "rule",
+      "from": {"data": "edges"},
+      "encode": {
+        "update": {
+          "x": {"scale": "xscale", "field": "x1"}, "y": {"scale": "yscale", "field": "y1"},
+          "x2": {"scale": "xscale", "field": "x2"}, "y2": {"scale": "yscale", "field": "y2"},
+          "stroke": {"signal": "datum.long ? '#c84cff' : '#cbd5e1'"},
+          "strokeWidth": {"signal": "datum.long ? 1.4 : 1"},
+          "opacity": {"signal": "(datum.long ? 0.55 : 1) * (stage >= 2 ? 0.6 : 1)"}
+        }
+      }
+    },
+    {
+      "type": "rule",
+      "from": {"data": "nbrEdges"},
+      "encode": {
+        "update": {
+          "x": {"scale": "xscale", "field": "x1"}, "y": {"scale": "yscale", "field": "y1"},
+          "x2": {"scale": "xscale", "field": "x2"}, "y2": {"scale": "yscale", "field": "y2"},
+          "stroke": {"value": "#c84cff"}, "strokeWidth": {"value": 2}, "strokeDash": {"value": [5, 4]},
+          "opacity": {"signal": "stage >= 2 && !done ? 1 : 0"}
+        }
+      }
+    },
+    {
+      "type": "rule",
+      "from": {"data": "pathEdges"},
+      "encode": {
+        "update": {
+          "x": {"scale": "xscale", "field": "x1"}, "y": {"scale": "yscale", "field": "y1"},
+          "x2": {"scale": "xscale", "field": "x2"}, "y2": {"scale": "yscale", "field": "y2"},
+          "stroke": {"value": "#175fff"}, "strokeWidth": {"value": 4}, "strokeCap": {"value": "round"},
+          "opacity": {"signal": "hop > datum.order ? 1 : 0"}
+        }
+      }
+    },
+    {
+      "type": "symbol",
+      "from": {"data": "points"},
+      "encode": {
+        "update": {
+          "x": {"scale": "xscale", "field": "x"}, "y": {"scale": "yscale", "field": "y"},
+          "shape": {"signal": "datum.id === 'M' ? 'diamond' : 'circle'"},
+          "size": {"signal": "datum.id === 'M' ? 320 : datum.isRead ? 420 : datum.isNbr ? 170 : 70"},
+          "fill": {"signal": "datum.isRead ? '#175fff' : datum.id === 'M' ? '#c84cff' : '#6b7280'"},
+          "stroke": {"signal": "datum.isCurrent ? '#061982' : datum.isNbr ? '#c84cff' : '#ffffff'"},
+          "strokeWidth": {"signal": "datum.isCurrent || datum.isNbr ? 3 : 1"}
+        }
+      }
+    },
+    {
+      "type": "text",
+      "from": {"data": "points"},
+      "encode": {
+        "update": {
+          "x": {"scale": "xscale", "field": "x"}, "y": {"scale": "yscale", "field": "y"},
+          "text": {"signal": "datum.isRead ? '' + datum.readOrder : ''"},
+          "align": {"value": "center"}, "baseline": {"value": "middle"},
+          "fontSize": {"value": 14}, "fontWeight": {"value": "bold"}, "fill": {"value": "#ffffff"}
+        }
+      }
+    },
+    {
+      "type": "text",
+      "encode": {
+        "update": {
+          "x": {"scale": "xscale", "value": 5}, "y": {"scale": "yscale", "value": 5, "offset": -18},
+          "text": {"value": "entry (medoid)"},
+          "align": {"value": "center"}, "fontSize": {"value": 16}, "fill": {"value": "#c84cff"}, "fontWeight": {"value": 600},
+          "opacity": {"signal": "stage >= 1 ? 1 : 0"}
+        }
+      }
+    },
+    {
+      "type": "symbol",
+      "from": {"data": "query"},
+      "encode": {
+        "update": {
+          "x": {"scale": "xscale", "field": "x"}, "y": {"scale": "yscale", "field": "y"},
+          "shape": {"value": "M0,-1 L0.225,-0.309 L0.951,-0.309 L0.363,0.118 L0.588,0.809 L0,0.382 L-0.588,0.809 L-0.363,0.118 L-0.951,-0.309 L-0.225,-0.309 Z"},
+          "size": {"value": 800}, "fill": {"value": "#f59e0b"}, "stroke": {"value": "#ffffff"}, "strokeWidth": {"value": 1.5},
+          "opacity": {"signal": "stage >= 1 ? 1 : 0"}
+        }
+      }
+    },
+    {
+      "type": "text",
+      "from": {"data": "query"},
+      "encode": {
+        "update": {
+          "x": {"scale": "xscale", "field": "x", "offset": 14}, "y": {"scale": "yscale", "field": "y", "offset": -16},
+          "text": {"value": "query"},
+          "align": {"value": "left"}, "fontSize": {"value": 16}, "fill": {"value": "#b45309"}, "fontWeight": {"value": 600},
+          "opacity": {"signal": "stage >= 1 ? 1 : 0"}
+        }
+      }
+    },
+
+    {
+      "type": "text",
+      "encode": {
+        "update": {
+          "x": {"signal": "mx"}, "y": {"signal": "ramY - 14"},
+          "text": {"value": "RAM: PQ codes, ~32 bytes per vector"},
+          "fontSize": {"value": 18}, "fontWeight": {"value": "bold"}
+        }
+      }
+    },
+    {
+      "type": "rect",
+      "encode": {
+        "update": {
+          "x": {"signal": "mx"}, "y": {"signal": "ramY"}, "x2": {"signal": "width"}, "height": {"value": 66},
+          "fill": {"value": "#f8fafc"}, "stroke": {"value": "#cbd5e1"}, "cornerRadius": {"value": 6}
+        }
+      }
+    },
+    {
+      "type": "rect",
+      "from": {"data": "points"},
+      "encode": {
+        "update": {
+          "x": {"signal": "mx + 12 + (datum.idx % 30) * 17.4"}, "width": {"value": 13},
+          "y": {"signal": "ramY + 12 + floor(datum.idx / 30) * 22"}, "height": {"value": 16},
+          "fill": {"signal": "datum.isNbr ? '#c84cff' : '#c7d2fe'"},
+          "cornerRadius": {"value": 2}
+        }
+      }
+    },
+
+    {
+      "type": "text",
+      "encode": {
+        "update": {
+          "x": {"signal": "mx"}, "y": {"signal": "ssdY - 14"},
+          "text": {"value": "SSD: one block per vector (full vector + neighbour IDs)"},
+          "fontSize": {"value": 18}, "fontWeight": {"value": "bold"}
+        }
+      }
+    },
+    {
+      "type": "rect",
+      "encode": {
+        "update": {
+          "x": {"signal": "mx"}, "y": {"signal": "ssdY"}, "x2": {"signal": "width"}, "height": {"value": 258},
+          "fill": {"value": "#f8fafc"}, "stroke": {"value": "#cbd5e1"}, "cornerRadius": {"value": 6}
+        }
+      }
+    },
+    {
+      "type": "rect",
+      "from": {"data": "points"},
+      "encode": {
+        "update": {
+          "x": {"signal": "mx + 12 + (datum.idx % 10) * 52.5"}, "width": {"value": 46},
+          "y": {"signal": "ssdY + 12 + floor(datum.idx / 10) * 40"}, "height": {"value": 34},
+          "fill": {"signal": "datum.isRead ? '#175fff' : '#e2e8f0'"},
+          "stroke": {"signal": "datum.isCurrent ? '#061982' : '#ffffff'"},
+          "strokeWidth": {"signal": "datum.isCurrent ? 3 : 1"},
+          "cornerRadius": {"value": 3}
+        }
+      }
+    },
+    {
+      "type": "text",
+      "from": {"data": "points"},
+      "encode": {
+        "update": {
+          "x": {"signal": "mx + 12 + (datum.idx % 10) * 52.5 + 23"},
+          "y": {"signal": "ssdY + 12 + floor(datum.idx / 10) * 40 + 17"},
+          "text": {"signal": "datum.isRead ? '' + datum.readOrder : ''"},
+          "align": {"value": "center"}, "baseline": {"value": "middle"},
+          "fontSize": {"value": 16}, "fontWeight": {"value": "bold"}, "fill": {"value": "#ffffff"}
+        }
+      }
+    },
+
+    {
+      "type": "text",
+      "encode": {
+        "update": {
+          "x": {"signal": "mx"}, "y": {"signal": "ssdY + 300"},
+          "text": {"signal": "'SSD reads: ' + hop"},
+          "fontSize": {"value": 34}, "fontWeight": {"value": "bold"}, "fill": {"value": "#175fff"},
+          "opacity": {"signal": "stage >= 2 ? 1 : 0"}
+        }
+      }
+    },
+    {
+      "type": "text",
+      "encode": {
+        "update": {
+          "x": {"signal": "width"}, "y": {"signal": "ssdY + 300"},
+          "text": {"signal": "'flat scan: ' + flatReads + ' reads'"},
+          "align": {"value": "right"},
+          "fontSize": {"value": 26}, "fill": {"value": "#64748b"},
+          "opacity": {"signal": "done ? 1 : 0"}
+        }
+      }
+    }
+  ]
+}

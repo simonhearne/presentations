@@ -1,8 +1,8 @@
 {
   "$schema": "https://vega.github.io/schema/vega/v5.json",
   "description": "Interactive HNSW search explainer: 3-layer hierarchical graph traversal with live distance scores",
-  "width": 1000,
-  "height": 500,
+  "width": 900,
+  "height": 560,
   "padding": 0,
   "autosize": "fit",
   "background": "rgba(0,0,0,0)",
@@ -58,7 +58,14 @@
     },
     {
       "name": "queryY", "value": 5.0
-    }
+    },
+    {"name": "ux", "value": 50},
+    {"name": "uy", "value": 0},
+    {"name": "vx", "value": -15},
+    {"name": "vy", "value": 16},
+    {"name": "gap", "value": 165},
+    {"name": "ox", "update": "(width - 11 * ux - 10 * abs(vx)) / 2 - min(0, 10 * vx)"},
+    {"name": "base0", "update": "height - 15 - 11 * uy"}
   ],
 
   "data": [
@@ -183,7 +190,41 @@
         {
           "type": "formula", "as": "showByM",
           "expr": "datum.layer !== 0 || datum.isPath || datum.mRank <= M"
+        },
+        {"type": "formula", "as": "px1", "expr": "ox + datum.x1 * ux + datum.y1 * vx"},
+        {"type": "formula", "as": "py1", "expr": "base0 - datum.layer * gap + datum.x1 * uy - datum.y1 * vy"},
+        {"type": "formula", "as": "px2", "expr": "ox + datum.x2 * ux + datum.y2 * vx"},
+        {"type": "formula", "as": "py2", "expr": "base0 - datum.layer * gap + datum.x2 * uy - datum.y2 * vy"}
+      ]
+    },
+
+    {
+      "name": "layers",
+      "values": [
+        {"layer": 0, "label": "Layer 0: dense (contains all vectors)"},
+        {"layer": 1, "label": "Layer 1: medium density"},
+        {"layer": 2, "label": "Layer 2: sparse (entry layer)"}
+      ],
+      "transform": [
+        {"type": "formula", "as": "by", "expr": "base0 - datum.layer * gap"},
+        {
+          "type": "formula", "as": "outline",
+          "expr": "'M' + ox + ',' + datum.by + 'L' + (ox + 11 * ux) + ',' + (datum.by + 11 * uy) + 'L' + (ox + 11 * ux + 10 * vx) + ',' + (datum.by + 11 * uy - 10 * vy) + 'L' + (ox + 10 * vx) + ',' + (datum.by - 10 * vy) + 'Z'"
         }
+      ]
+    },
+
+    {
+      "name": "drops",
+      "values": [
+        {"id": "B", "from": 2, "step": 3},
+        {"id": "E", "from": 1, "step": 6}
+      ],
+      "transform": [
+        {"type": "lookup", "from": "nodes", "key": "id", "fields": ["id"], "as": ["node"]},
+        {"type": "formula", "as": "px", "expr": "ox + datum.node.x * ux + datum.node.y * vx"},
+        {"type": "formula", "as": "py1", "expr": "base0 - datum.from * gap + datum.node.x * uy - datum.node.y * vy"},
+        {"type": "formula", "as": "py2", "expr": "datum.py1 + gap"}
       ]
     },
 
@@ -241,7 +282,9 @@
         {
           "type": "formula", "as": "isActiveLayer",
           "expr": "datum.layer === data('currentState')[0].layer"
-        }
+        },
+        {"type": "formula", "as": "px", "expr": "ox + datum.x * ux + datum.y * vx"},
+        {"type": "formula", "as": "py", "expr": "base0 - datum.layer * gap + datum.x * uy - datum.y * vy"}
       ]
     },
 
@@ -259,30 +302,6 @@
 
   "scales": [
     {
-      "name": "xScale",
-      "type": "linear",
-      "domain": [0, 11],
-      "range": {"signal": "[40, width-30]"}
-    },
-    {
-      "name": "yScaleL2",
-      "type": "linear",
-      "domain": [0, 10],
-      "range": {"signal": "[panelHeight+20, 30]"}
-    },
-    {
-      "name": "yScaleL1",
-      "type": "linear",
-      "domain": [0, 10],
-      "range": {"signal": "[panelHeight*2+60, panelHeight+50]"}
-    },
-    {
-      "name": "yScaleL0",
-      "type": "linear",
-      "domain": [0, 10],
-      "range": {"signal": "[panelHeight*3+80, panelHeight*2+60]"}
-    },
-    {
       "name": "stateColor",
       "type": "ordinal",
       "domain": ["idle", "visited", "candidate", "current", "final"],
@@ -299,89 +318,93 @@
   "marks": [
     {
       "type": "group",
-      "name": "panelL2",
-      "encode": {
-        "enter": {
-          "x": {"value": 0}, "y": {"value": 20},
-          "width": {"signal": "width - 20"}, "height": {"signal": "panelHeight"}
-        },
-        "update": {
-          "fill": {"signal": "currentLayer === 2 ? '#fafbfd' : '#f7f7f7'"},
-          "stroke": {"signal": "currentLayer === 2 ? '#4c78a8' : '#dddddd'"},
-          "strokeWidth": {"signal": "currentLayer === 2 ? 1.5 : 1"}
-        }
-      },
+      "from": {"data": "layers"},
       "marks": [
         {
-          "type": "text",
+          "type": "path",
           "encode": {
-            "enter": {
-              "x": {"value": 12}, "y": {"value": 20},
-              "text": {"value": "Layer 2: sparse (entry layer)"},
-              "fontWeight": {"value": "bold"}
-            },
             "update": {
-              "fill": {"signal": "currentLayer === 2 ? '#4c78a8' : '#999'"}
+              "path": {"signal": "parent.outline"},
+              "fill": {"signal": "currentLayer === parent.layer ? '#eef3fa' : '#f5f5f5'"},
+              "fillOpacity": {"value": 0.92},
+              "stroke": {"signal": "currentLayer === parent.layer ? '#4c78a8' : '#d6d6d6'"},
+              "strokeWidth": {"signal": "currentLayer === parent.layer ? 1.5 : 1"}
             }
           }
-        }
-      ]
-    },
-    {
-      "type": "group",
-      "name": "panelL1",
-      "encode": {
-        "enter": {
-          "x": {"value": 0}, "y": {"signal": "panelHeight*1+40"},
-          "width": {"signal": "width - 20"}, "height": {"signal": "panelHeight"}
         },
-        "update": {
-          "fill": {"signal": "currentLayer === 1 ? '#fafbfd' : '#f7f7f7'"},
-          "stroke": {"signal": "currentLayer === 1 ? '#4c78a8' : '#dddddd'"},
-          "strokeWidth": {"signal": "currentLayer === 1 ? 1.5 : 1"}
-        }
-      },
-      "marks": [
         {
           "type": "text",
           "encode": {
-            "enter": {
-              "x": {"value": 12}, "y": {"value": 20},
-              "text": {"value": "Layer 1: medium density"},
-              "fontWeight": {"value": "bold"}
-            },
             "update": {
-              "fill": {"signal": "currentLayer === 1 ? '#4c78a8' : '#999'"}
+              "x": {"signal": "ox + 11 * ux - 24"},
+              "y": {"signal": "parent.by - 10"},
+              "align": {"value": "right"},
+              "angle": {"signal": "atan2(uy, ux) * 180 / PI"},
+              "text": {"signal": "parent.label"},
+              "fontSize": {"value": 16},
+              "fontWeight": {"value": "bold"},
+              "fill": {"signal": "currentLayer === parent.layer ? '#4c78a8' : '#999'"}
             }
           }
-        }
-      ]
-    },
-    {
-      "type": "group",
-      "name": "panelL0",
-      "encode": {
-        "enter": {
-          "x": {"value": 0}, "y": {"signal": "panelHeight*2+60"},
-          "width": {"signal": "width - 20"}, "height": {"signal": "panelHeight"}
         },
-        "update": {
-          "fill": {"signal": "currentLayer === 0 ? '#fafbfd' : '#f7f7f7'"},
-          "stroke": {"signal": "currentLayer === 0 ? '#4c78a8' : '#dddddd'"},
-          "strokeWidth": {"signal": "currentLayer === 0 ? 1.5 : 1"}
-        }
-      },
-      "marks": [
+        {
+          "type": "rule",
+          "from": {"data": "edges"},
+          "encode": {
+            "update": {
+              "x": {"field": "px1"}, "y": {"field": "py1"},
+              "x2": {"field": "px2"}, "y2": {"field": "py2"},
+              "stroke": {"signal": "datum.isPath ? '#4c78a8' : datum.isActiveLayer ? '#bbbbbb' : '#e0e0e0'"},
+              "strokeWidth": {"signal": "datum.isPath ? 2.5 : 1"},
+              "opacity": {"signal": "datum.layer !== parent.layer || !datum.showByM ? 0 : (datum.isActiveLayer ? 1 : 0.6)"}
+            }
+          }
+        },
+        {
+          "type": "symbol",
+          "from": {"data": "nodesByLayer"},
+          "encode": {
+            "update": {
+              "x": {"field": "px"}, "y": {"field": "py"},
+              "size": {"scale": "stateSize", "field": "state"},
+              "fill": {"scale": "stateColor", "field": "state"},
+              "stroke": {"value": "#222"},
+              "strokeWidth": {"value": 1},
+              "opacity": {"signal": "datum.layer !== parent.layer ? 0 : datum.isActiveLayer ? 1.0 : 0.45"},
+              "tooltip": {
+                "signal": "datum.layer === parent.layer ? {Node: datum.id, 'Distance to query': format(datum.dist, '.2f'), State: datum.state, Layer: datum.layer} : null"
+              }
+            }
+          }
+        },
+        {
+          "type": "symbol",
+          "from": {"data": "frontier"},
+          "encode": {
+            "update": {
+              "x": {"field": "px"}, "y": {"field": "py"},
+              "size": {"value": 900},
+              "fill": {"value": "transparent"},
+              "stroke": {"value": "#f5b76b"},
+              "strokeWidth": {"value": 2},
+              "strokeDash": {"value": [3, 3]},
+              "opacity": {"signal": "datum.layer === parent.layer ? 0.75 : 0"}
+            }
+          }
+        },
         {
           "type": "text",
+          "from": {"data": "nodesByLayer"},
           "encode": {
-            "enter": {
-              "x": {"value": 12}, "y": {"value": 20},
-              "text": {"value": "Layer 0: dense (contains all vectors)"},
-              "fontWeight": {"value": "bold"}
-            },
             "update": {
-              "fill": {"signal": "currentLayer === 0 ? '#4c78a8' : '#999'"}
+              "x": {"signal": "datum.px + 13"},
+              "y": {"signal": "datum.py - 9"},
+              "text": {"field": "id"},
+              "fontSize": {"value": 13},
+              "fontWeight": {"value": "bold"},
+              "align": {"value": "left"},
+              "fill": {"value": "#222"},
+              "opacity": {"signal": "datum.layer !== parent.layer ? 0 : datum.isActiveLayer ? 1 : 0.5"}
             }
           }
         }
@@ -390,88 +413,15 @@
 
     {
       "type": "rule",
-      "from": {"data": "edges"},
+      "from": {"data": "drops"},
       "encode": {
         "update": {
-          "x":  {"scale": "xScale", "field": "x1"},
-          "x2": {"scale": "xScale", "field": "x2"},
-          "y":  {
-            "signal": "datum.layer === 2 ? scale('yScaleL2', datum.y1) : datum.layer === 1 ? scale('yScaleL1', datum.y1) : scale('yScaleL0', datum.y1)"
-          },
-          "y2": {
-            "signal": "datum.layer === 2 ? scale('yScaleL2', datum.y2) : datum.layer === 1 ? scale('yScaleL1', datum.y2) : scale('yScaleL0', datum.y2)"
-          },
-          "stroke": {
-            "signal": "datum.isPath ? '#4c78a8' : datum.isActiveLayer ? '#bbbbbb' : '#e5e5e5'"
-          },
-          "strokeWidth": {
-            "signal": "datum.isPath ? 2.5 : 1"
-          },
-          "opacity": {
-            "signal": "!datum.showByM ? 0 : (datum.isActiveLayer ? 1 : 0.5)"
-          }
-        }
-      }
-    },
-
-    {
-      "type": "symbol",
-      "from": {"data": "nodesByLayer"},
-      "encode": {
-        "update": {
-          "x": {"scale": "xScale", "field": "x"},
-          "y": {
-            "signal": "datum.layer === 2 ? scale('yScaleL2', datum.y) : datum.layer === 1 ? scale('yScaleL1', datum.y) : scale('yScaleL0', datum.y)"
-          },
-          "size": {"scale": "stateSize", "field": "state"},
-          "fill": {"scale": "stateColor", "field": "state"},
-          "stroke": {"value": "#222"},
-          "strokeWidth": {"value": 1},
-          "opacity": {"signal": "datum.isActiveLayer ? 1.0 : 0.45"},
-          "tooltip": {
-            "signal": "{Node: datum.id, 'Distance to query': format(datum.dist, '.2f'), State: datum.state, Layer: datum.layer}"
-          }
-        }
-      }
-    },
-
-    {
-      "type": "symbol",
-      "from": {"data": "frontier"},
-      "encode": {
-        "update": {
-          "x": {"scale": "xScale", "field": "x"},
-          "y": {
-            "signal": "datum.layer === 2 ? scale('yScaleL2', datum.y) : datum.layer === 1 ? scale('yScaleL1', datum.y) : scale('yScaleL0', datum.y)"
-          },
-          "size": {"value": 900},
-          "fill": {"value": "transparent"},
-          "stroke": {"value": "#f5b76b"},
+          "x": {"field": "px"}, "y": {"field": "py1"},
+          "x2": {"field": "px"}, "y2": {"field": "py2"},
+          "stroke": {"value": "#4c78a8"},
           "strokeWidth": {"value": 2},
-          "strokeDash": {"value": [3, 3]},
-          "opacity": {"value": 0.75},
-          "tooltip": {
-            "signal": "{'ef frontier': 'within candidate-list width', Node: datum.id, 'Distance to query': format(datum.dist, '.2f')}"
-          }
-        }
-      }
-    },
-
-    {
-      "type": "text",
-      "from": {"data": "nodesByLayer"},
-      "encode": {
-        "update": {
-          "x": {"scale": "xScale", "field": "x"},
-          "y": {
-            "signal": "(datum.layer === 2 ? scale('yScaleL2', datum.y) : datum.layer === 1 ? scale('yScaleL1', datum.y) : scale('yScaleL0', datum.y)) - 14"
-          },
-          "text": {"field": "id"},
-          "fontSize": {"value": 10},
-          "fontWeight": {"value": "bold"},
-          "align": {"value": "center"},
-          "fill": {"value": "#222"},
-          "opacity": {"signal": "datum.isActiveLayer ? 1 : 0.5"}
+          "strokeDash": {"value": [6, 4]},
+          "opacity": {"signal": "step >= datum.step ? 1 : 0"}
         }
       }
     },
@@ -480,10 +430,8 @@
       "type": "symbol",
       "encode": {
         "update": {
-          "x": {"scale": "xScale", "signal": "queryX"},
-          "y": {
-            "signal": "currentLayer === 2 ? scale('yScaleL2', queryY) : currentLayer === 1 ? scale('yScaleL1', queryY) : scale('yScaleL0', queryY)"
-          },
+          "x": {"signal": "ox + queryX * ux + queryY * vx"},
+          "y": {"signal": "base0 - currentLayer * gap + queryX * uy - queryY * vy"},
           "shape": {"value": "M0,-1 L0.225,-0.309 L0.951,-0.309 L0.363,0.118 L0.588,0.809 L0,0.382 L-0.588,0.809 L-0.363,0.118 L-0.951,-0.309 L-0.225,-0.309 Z"},
           "size": {"value": 380},
           "fill": {"value": "#e45756"},
@@ -498,12 +446,14 @@
       "type": "text",
       "encode": {
         "update": {
-          "x": {"value": 360},
-          "y": {"value": 12},
-          "text": {"signal": "narration"},
-          "align": {"value": "center"},
+          "x": {"value": 0},
+          "y": {"value": 14},
+          "text": {"signal": "[slice(narration, 0, indexof(narration, 'LAYER') + 7), slice(narration, indexof(narration, 'LAYER') + 9)]"},
+          "lineHeight": {"value": 22},
+          "fontSize": {"value": 17},
+          "align": {"value": "left"},
           "fill": {"value": "#1a1a1a"},
-          "limit": {"value": 720},
+          "limit": {"signal": "width"},
           "opacity": {"signal": "shownarration ? 1 : 0"}
         }
       }
