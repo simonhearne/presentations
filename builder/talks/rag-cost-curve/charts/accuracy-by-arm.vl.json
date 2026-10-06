@@ -3,10 +3,12 @@
   "description": "Judge accuracy by arm, both corpora grouped. Source: data/ws6c/summary.csv.",
   "data": { "url": "../data/ws6c/summary.csv" },
   "width": 1000,
-  "height": 500,  "params": [{ "name": "stage", "value": 0 }],
+  "height": 500,  "params": [{ "name": "stage", "value": 0 }, { "name": "zoom", "value": false }],
   "transform": [
     { "calculate": "{'parametric':0,'agentic':1,'indexed':2,'indexed_topk3':3}[datum.arm]", "as": "armStage" },
-    { "calculate": "datum.corpus === 'fastapi' ? 'fastapi (in training data)' : 'agentic-hil (never seen)'", "as": "corpus_label" }
+    { "calculate": "datum.corpus === 'fastapi' ? 'fastapi (in training data)' : 'agentic-hil (never seen)'", "as": "corpus_label" },
+    { "calculate": "zoom && stage >= 1 ? 0.85 : 0", "as": "x_start" },
+    { "calculate": "max(datum.judge_accuracy, datum.x_start)", "as": "x_end" }
   ],
   "encoding": {
     "y": {
@@ -20,11 +22,11 @@
     },
     "x": {
       "field": "judge_accuracy", "type": "quantitative",
-      "scale": { "domain": [0, 1.08] },
-      "axis": { "title": "judge accuracy", "format": ".2f", "values": [0, 0.25, 0.5, 0.75, 1.0] }
+      "scale": { "domainMin": { "expr": "zoom && stage >= 1 ? 0.85 : 0" }, "domainMax": { "expr": "zoom && stage >= 1 ? 1.02 : 1.08" } },
+      "axis": { "title": "judge accuracy", "format": ".2f", "values": { "expr": "zoom && stage >= 1 ? [0.85, 0.9, 0.95, 1.0] : [0, 0.25, 0.5, 0.75, 1.0]" } }
     },
     "opacity": {
-      "condition": { "test": "datum.armStage <= stage", "value": 1 },
+      "condition": { "test": "datum.armStage <= stage && datum.judge_accuracy >= datum.x_start", "value": 1 },
       "value": 0
     },
     "tooltip": [
@@ -37,6 +39,8 @@
     {
       "mark": { "type": "bar", "cornerRadiusEnd": 3, "height": { "band": 0.9 } },
       "encoding": {
+        "x": { "field": "x_end", "type": "quantitative" },
+        "x2": { "field": "x_start" },
         "color": {
           "field": "corpus_label", "type": "nominal",
           "scale": {

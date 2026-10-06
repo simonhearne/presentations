@@ -1,0 +1,286 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "description": "Index recall@10 against answer-presence@10, 11 retrieval arms, NQ-Open over 10M Wikipedia chunks. Source: ../rag-cost-curve/data/ws4/summary.csv, metric=answer_presence_at_10.",
+  "data": {
+    "url": "../rag-cost-curve/data/ws4/summary.csv"
+  },
+  "width": 1000,
+  "height": 480,
+  "params": [
+    {
+      "name": "stage",
+      "value": 0
+    }
+  ],
+  "transform": [
+    {
+      "filter": "datum.metric === 'answer_presence_at_10' && datum.family !== 'none'"
+    },
+    {
+      "calculate": "toNumber(datum.recall)",
+      "as": "recall"
+    },
+    {
+      "calculate": "toNumber(datum.quality)",
+      "as": "presence"
+    }
+  ],
+  "encoding": {
+    "x": {
+      "field": "recall",
+      "type": "quantitative",
+      "scale": {
+        "domain": [
+          0.74,
+          1.0
+        ]
+      },
+      "axis": {
+        "title": "index recall@10 (vs exact search)",
+        "format": ".2f"
+      }
+    }
+  },
+  "layer": [
+    {
+      "data": {
+        "values": [
+          {
+            "a": 0.74
+          },
+          {
+            "a": 1.0
+          }
+        ]
+      },
+      "mark": {
+        "type": "line",
+        "strokeDash": [
+          6,
+          6
+        ],
+        "color": "#94a3b8"
+      },
+      "encoding": {
+        "x": {
+          "field": "a",
+          "type": "quantitative"
+        },
+        "y": {
+          "field": "a",
+          "type": "quantitative",
+          "scale": {
+            "domain": [
+              0.6,
+              1.0
+            ]
+          },
+          "axis": {
+            "title": null,
+            "format": ".2f"
+          }
+        }
+      }
+    },
+    {
+      "mark": {
+        "type": "circle",
+        "size": 180,
+        "color": "#175fff"
+      },
+      "encoding": {
+        "y": {
+          "field": "recall",
+          "type": "quantitative",
+          "scale": {
+            "domain": [
+              0.6,
+              1.0
+            ]
+          },
+          "axis": {
+            "title": null,
+            "format": ".2f"
+          }
+        },
+        "opacity": {
+          "condition": {
+            "test": "stage === 0",
+            "value": 1
+          },
+          "value": 0.15
+        },
+        "tooltip": [
+          {
+            "field": "arm"
+          },
+          {
+            "field": "recall",
+            "format": ".3f"
+          }
+        ]
+      }
+    },
+    {
+      "mark": {
+        "type": "circle",
+        "size": 180,
+        "color": "#c84cff"
+      },
+      "encoding": {
+        "y": {
+          "field": "presence",
+          "type": "quantitative"
+        },
+        "opacity": {
+          "condition": {
+            "test": "stage >= 1",
+            "value": 1
+          },
+          "value": 0
+        },
+        "tooltip": [
+          {
+            "field": "arm"
+          },
+          {
+            "field": "recall",
+            "format": ".3f"
+          },
+          {
+            "field": "presence",
+            "format": ".3f"
+          }
+        ]
+      }
+    },
+    {
+      "data": {
+        "values": [
+          {
+            "xa": 0.74,
+            "xb": 1.0,
+            "yc": 0.818
+          }
+        ]
+      },
+      "mark": {
+        "type": "rule",
+        "strokeDash": [
+          4,
+          4
+        ],
+        "strokeWidth": 2,
+        "color": "#c84cff"
+      },
+      "encoding": {
+        "y": {
+          "field": "yc",
+          "type": "quantitative"
+        },
+        "opacity": {
+          "condition": {
+            "test": "stage >= 2",
+            "value": 1
+          },
+          "value": 0
+        },
+        "x": {
+          "field": "xa",
+          "type": "quantitative"
+        },
+        "x2": {
+          "field": "xb"
+        }
+      }
+    },
+    {
+      "data": {
+        "values": [
+          {
+            "x": 0.845,
+            "y": 0.818,
+            "t": "0.82 ceiling: 1 in 5 answers missing, even at recall 0.99"
+          }
+        ]
+      },
+      "mark": {
+        "type": "text",
+        "align": "left",
+        "dy": -14,
+        "fontSize": 20,
+        "fontWeight": 600,
+        "color": "#c84cff"
+      },
+      "encoding": {
+        "x": {
+          "field": "x",
+          "type": "quantitative"
+        },
+        "y": {
+          "field": "y",
+          "type": "quantitative"
+        },
+        "text": {
+          "field": "t"
+        },
+        "opacity": {
+          "condition": {
+            "test": "stage >= 2",
+            "value": 1
+          },
+          "value": 0
+        }
+      }
+    },
+    {
+      "data": {
+        "values": [
+          {
+            "x": 0.76,
+            "y": 0.97,
+            "t": "index recall",
+            "c": "#175fff"
+          },
+          {
+            "x": 0.76,
+            "y": 0.93,
+            "t": "answer-presence@10",
+            "c": "#c84cff"
+          }
+        ]
+      },
+      "mark": {
+        "type": "text",
+        "align": "left",
+        "fontSize": 20,
+        "fontWeight": 600
+      },
+      "encoding": {
+        "x": {
+          "field": "x",
+          "type": "quantitative"
+        },
+        "y": {
+          "field": "y",
+          "type": "quantitative"
+        },
+        "text": {
+          "field": "t"
+        },
+        "color": {
+          "field": "c",
+          "type": "nominal",
+          "scale": null
+        },
+        "opacity": {
+          "condition": {
+            "test": "datum.t === 'index recall' || stage >= 1",
+            "value": 1
+          },
+          "value": 0
+        }
+      }
+    }
+  ]
+}

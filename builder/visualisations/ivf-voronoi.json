@@ -9,12 +9,15 @@
     { "name": "nlist", "value": 24, "bind": { "input": "range", "min": 8, "max": 64, "step": 8, "name": "nlist " } },
     { "name": "stage", "value": 2, "bind": { "input": "range", "min": 1, "max": 16, "step": 1, "name": "nprobe " } },
     { "name": "nprobe", "update": "stage" },
+    { "name": "k", "value": 10, "bind": { "input": "range", "min": 1, "max": 20, "step": 1, "name": "k " } },
     { "name": "probed_cells", "update": "min(nprobe, nlist)" },
-    { "name": "scanned", "update": "round(probed_cells / nlist * 500)"},
-    { "name": "skipped", "update": "500  - scanned"},
     { "name": "interactive", "value": true, "on": [{"events": "click", "update": "!interactive" }] },
     { "name": "qx", "value": 6, "on": [ { "events": "*:pointerover", "update": "interactive ? invert('xscale', x()) : qx" } ] },
-    { "name": "qy", "value": 5, "on": [ { "events": "*:pointerover", "update": "interactive ? invert('yscale', y()) : qy" } ] }
+    { "name": "qy", "value": 5, "on": [ { "events": "*:pointerover", "update": "interactive ? invert('yscale', y()) : qy" } ] },
+    { "name": "scanned", "update": "length(data('scanned_points'))" },
+    { "name": "skipped", "update": "500 - scanned" },
+    { "name": "found", "update": "length(data('topk_found'))" },
+    { "name": "recall", "update": "k > 0 ? found / k : 1" }
   ],
   "data": [
     {
@@ -36,7 +39,8 @@
       "source": "centroids",
       "transform": [
         { "type": "formula", "as": "dist", "expr": "sqrt(pow(datum.x - qx, 2) + pow(datum.y - qy, 2))" },
-        { "type": "window", "ops": ["row_number"], "as": ["rank"], "sort": { "field": "dist" } },
+        { "type": "formula", "as": "pdist", "expr": "sqrt(pow((datum.x - qx) * width / 10, 2) + pow((datum.y - qy) * height / 10, 2))" },
+        { "type": "window", "ops": ["row_number"], "as": ["rank"], "sort": { "field": "pdist" } },
         { "type": "formula", "as": "probed", "expr": "datum.rank <= nprobe" },
         { "type": "formula", "as": "px", "expr": "scale('xscale', datum.x)" },
         { "type": "formula", "as": "py", "expr": "scale('yscale', datum.y)" }
@@ -53,25 +57,37 @@
       "name": "background_points",
       "transform": [
         { "type": "sequence", "start": 0, "stop": 500, "as": "i" },
-        { "type": "formula", "as": "x", "expr": "random() * 10" },
-        { "type": "formula", "as": "y", "expr": "random() * 10" }
+        { "type": "formula", "as": "hx", "expr": "(sin(datum.i * 91.345 + 3.1) * 47453.5453) - floor(sin(datum.i * 91.345 + 3.1) * 47453.5453)" },
+        { "type": "formula", "as": "hy", "expr": "(sin(datum.i * 27.719 + 1.7) * 23421.6311) - floor(sin(datum.i * 27.719 + 1.7) * 23421.6311)" },
+        { "type": "formula", "as": "x", "expr": "datum.hx * 10" },
+        { "type": "formula", "as": "y", "expr": "datum.hy * 10" }
       ]
     },
     {
-      "name": "background_with_cell",
+      "name": "point_centroid_pairs",
       "source": "background_points",
       "transform": [
-        {
-          "type": "lookup",
-          "from": "centroids_with_dist",
-          "key": "id",
-          "fields": ["i"],
-          "values": ["x", "y"],
-          "as": ["cx0", "cy0"],
-          "default": null
-        }
+        { "type": "formula", "as": "cids", "expr": "sequence(0, nlist)" },
+        { "type": "flatten", "fields": ["cids"], "as": ["cid"] },
+        { "type": "lookup", "from": "centroids", "key": "id", "fields": ["cid"], "values": ["x", "y"], "as": ["cx", "cy"] },
+        { "type": "formula", "as": "cd", "expr": "pow((datum.x - datum.cx) * width / 10, 2) + pow((datum.y - datum.cy) * height / 10, 2)" },
+        { "type": "aggregate", "groupby": ["i", "x", "y"], "ops": ["argmin"], "fields": ["cd"], "as": ["nearest"] },
+        { "type": "formula", "as": "cell", "expr": "datum.nearest.cid" }
       ]
     },
+    {
+      "name": "points_ranked",
+      "source": "point_centroid_pairs",
+      "transform": [
+        { "type": "formula", "as": "qdist", "expr": "sqrt(pow((datum.x - qx) * width / 10, 2) + pow((datum.y - qy) * height / 10, 2))" },
+        { "type": "lookup", "from": "centroids_with_dist", "key": "id", "fields": ["cell"], "values": ["probed"], "as": ["probed"] },
+        { "type": "window", "ops": ["row_number"], "as": ["qrank"], "sort": { "field": "qdist" } },
+        { "type": "formula", "as": "topk", "expr": "datum.qrank <= k" }
+      ]
+    },
+    { "name": "scanned_points", "source": "points_ranked", "transform": [ { "type": "filter", "expr": "datum.probed" } ] },
+    { "name": "topk_found", "source": "points_ranked", "transform": [ { "type": "filter", "expr": "datum.topk && datum.probed" } ] },
+    { "name": "topk_missed", "source": "points_ranked", "transform": [ { "type": "filter", "expr": "datum.topk && !datum.probed" } ] },
     {
       "name": "query",
       "values": [ {"x": 5, "y": 5} ],
@@ -125,6 +141,33 @@
           "x": { "scale": "xscale", "field": "x" },
           "y": { "scale": "yscale", "field": "y" }
         }
+      }
+    },
+    {
+      "type": "rule",
+      "from": { "data": "topk_missed" },
+      "encode": {
+        "enter": { "stroke": { "value": "#c84cff" }, "strokeWidth": { "value": 1.5 }, "strokeDash": { "value": [2, 4] }, "strokeOpacity": { "value": 0.7 } },
+        "update": {
+          "x": { "scale": "xscale", "signal": "qx" }, "y": { "scale": "yscale", "signal": "qy" },
+          "x2": { "scale": "xscale", "field": "x" }, "y2": { "scale": "yscale", "field": "y" }
+        }
+      }
+    },
+    {
+      "type": "symbol",
+      "from": { "data": "topk_found" },
+      "encode": {
+        "enter": { "shape": { "value": "circle" }, "size": { "value": 170 }, "fill": { "value": "#175fff" }, "stroke": { "value": "#ffffff" }, "strokeWidth": { "value": 2 } },
+        "update": { "x": { "scale": "xscale", "field": "x" }, "y": { "scale": "yscale", "field": "y" } }
+      }
+    },
+    {
+      "type": "symbol",
+      "from": { "data": "topk_missed" },
+      "encode": {
+        "enter": { "shape": { "value": "circle" }, "size": { "value": 260 }, "fill": { "value": "#ffffff" }, "stroke": { "value": "#c84cff" }, "strokeWidth": { "value": 4 } },
+        "update": { "x": { "scale": "xscale", "field": "x" }, "y": { "scale": "yscale", "field": "y" } }
       }
     },
     {
@@ -202,7 +245,7 @@
           "x": { "value": 14 },
           "y": { "value": 14 },
           "width": { "value": 700 },
-          "height": { "value": 66 }
+          "height": { "value": 96 }
         }
       }
     },
@@ -234,6 +277,17 @@
           "x": { "value": 26 },
           "y": { "value": 50 },
           "text": { "signal": "'nprobe = ' + probed_cells + ' of ' + nlist + ' cells visited, the rest of the index is never touched.'" }
+        }
+      }
+    },
+    {
+      "type": "text",
+      "encode": {
+        "enter": { "fontWeight": { "value": "bold" }, "align": { "value": "left" }, "baseline": { "value": "top" } },
+        "update": {
+          "x": { "value": 26 }, "y": { "value": 74 },
+          "fill": [ { "test": "found == k", "value": "#061982" }, { "value": "#c84cff" } ],
+          "text": { "signal": "'recall@' + k + ' = ' + (recall == 1 ? '1.0' : format(recall, '.2~f')) + (found < k ? '  •  ' + (k - found) + (k - found == 1 ? ' true neighbour sits' : ' true neighbours sit') + ' in cells we never opened' : '  •  every true neighbour found')" }
         }
       }
     }

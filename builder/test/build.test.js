@@ -2003,3 +2003,8 @@ test('embedVegaSpecs: a missing data file names the spec and the path', () => {
     rmSync(dir, { recursive: true, force: true });
   }
 });
+
+test('extractTitle: keeps the text of an inline [text]{.class} span, drops the marker', () => {
+  assert.equal(extractTitle('<h1>What it costs you [(in theory)]{.reality-swap}</h1>'), 'What it costs you (in theory)');
+  assert.equal(extractTitle('<h1>What it costs you <span class="reality-swap">(in theory)</span></h1>'), 'What it costs you (in theory)');
+});

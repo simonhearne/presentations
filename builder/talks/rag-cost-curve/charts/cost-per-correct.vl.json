@@ -45,6 +45,8 @@
         "labelFontSize": 15,
         "labelLimit": 320,
         "labelPadding": 10,
+        "labelExpr": "split(datum.label, ': ')",
+        "labelLineHeight": 20,
         "domain": false,
         "ticks": false
       }

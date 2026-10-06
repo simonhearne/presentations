@@ -58,9 +58,11 @@ apply slide layout classes. Available layouts:
 | `.dark` (modifier) | Inverts default content slide to white-on-navy |
 | `.no-chrome` (modifier) | Hides the bottom-right page indicator |
 | `.no-number` (modifier) | On a `.section` slide, hides the auto-incremented section number |
+| `.section-byline` (block) | On a `.section` slide, a line under the heading: either a plain `<p>` subtitle, or a stat row of `.bi-cell.give` / `.bi-cell.get` cells (each a `.bi-num` + `.bi-lab`) separated by a `.bi-arrow` |
 | `.dot-fit` (modifier) | Disables the 1.25× scale-up on `dot` diagrams — for diagrams that already fill the slide width |
 | `.big-code` (modifier) | Enlarges code blocks on the slide for low-res replay legibility |
 | `.three-bg` (layout) | Renders a `three` block as a full-bleed background with slide text on top; pair with `.dark` and `.no-chrome` |
+| `.constellation` (modifier) | Title slide with an animated nearest-neighbour search on the right; pair with `.title` and a `three` block using `visualisations/constellation.js` |
 
 Example:
 
@@ -210,6 +212,8 @@ On a slide that carries more than the chart — mechanism cards below it, a `.bo
 
 Passing a JSON array (e.g. `signal-stage: [0, 1, 2]`) turns the signal into a click-through stepper: the first element seeds the signal at load time, and pressing ArrowRight/Space/n steps forward through the remaining values without advancing the slide. ArrowLeft/p steps back. Once the last value is reached, the next press advances the deck as normal; likewise stepping back past the first value retreats. Multiple stepped charts on the same slide advance in parallel.
 
+The current value of a stepped signal is mirrored onto the slide's `<section>` as `data-chart-<name>` (`data-chart-stage="2"`), so slide CSS can follow the chart: a heading can swap a word when the chart reaches a stage. Wrap the word in an inline span, `# What it costs you [(in theory)]{.reality-swap}`, and key the swap on `.slide[data-chart-stage="2"] .reality-swap`. The footer and slide anchor keep the span's text and drop the marker.
+
 By default a stepped chart runs *after* every fragment on its slide, so a
 closing line lands before the stages that earn it. `fragment-index` puts the
 chart somewhere else in the order — see
@@ -243,6 +247,24 @@ The brand config sets the chart type scale — axis and legend labels at 16, the
 A spec on a noticeably narrower canvas is the exception: below roughly 900px the full-size type crowds the plot, so those specs set their own smaller sizes and win over the default, as in [visualisations/hybrid-fusion.json](visualisations/hybrid-fusion.json) (760px wide, axis 12/13). Set `axis` and `legend` together when you do — sizing one and leaving the other to inherit is what produces a 12px legend label under a 22px legend title.
 
 Per-mark `fontSize` on an individual text mark is a separate thing and stays in the spec: those are annotation sizes, not the chart's type scale.
+
+### Checking a chart
+
+Two scripts render a chart to a PNG without opening a browser yourself:
+
+```bash
+# one spec on its own, with the brand theme, at a given stage
+node bin/render-spec.js visualisations/ann-vs-exact.json --signal stage=3 --wait 2500
+
+# one slide of a built deck, stepped forward like a presenter would
+node bin/render-slide.js talks/rag-cost-curve 11 --steps 2 --wait 2500
+```
+
+`render-spec.js` runs the deck's own [script/vega.js](script/vega.js), so the screenshot is themed exactly as on a slide. Add `--theme dark` for the dark variant. `--signal name=value` sets any signal (or Vega-Lite param) and can repeat.
+
+`render-slide.js` builds the deck, opens `dist/index.html` over `file://`, presses ArrowRight `--steps` times and screenshots at 1920x1080. The slide can be its number or heading text. It warns when slide content runs into the footer, and when `--steps` walked off the slide. Both scripts write to the system temp folder unless given `--out`, and fall back to an installed Chrome when Playwright's bundled Chromium is missing.
+
+The `editing-vega-specs` skill in `.claude/skills/` walks an agent through the full edit, render and rebuild loop.
 
 ## Diagrams (Graphviz)
 
@@ -291,6 +313,22 @@ See [talks/threejs-example/](talks/threejs-example/) for a working example — t
 ````
 
 The `.three-bg` layout class makes the canvas a full-bleed background and keeps slide text legible on top; the visual is purely ambient (no `advance`/`retreat`). Optional `opts`: `count` (neuron count), `lobes` (`1` or `2`), `accent` (colour), `background` (clear colour; `transparent` for no fill, which also drops the depth fade), `speed` (motion multiplier).
+
+### Shared constellation (animated kNN search)
+
+`visualisations/constellation.js` is an ambient 2D-canvas animation: a drifting point cloud with a glowing query point and live edges to its k nearest neighbours, re-ranked every frame. It needs no three.js; it just uses the `three` block's `init({ canvas, opts })` contract. Pair it with `.title .constellation` to fill the right of a title slide, faded out before the title text:
+
+````markdown
+{.title .no-chrome .constellation}
+
+```three
+- module: ../../visualisations/constellation.js
+  id: constellation
+  points: 90
+```
+````
+
+It animates only while its slide is current and the tab is visible. Positions come from a seeded PRNG so the OG screenshot is stable across builds. Optional `opts`: `points`, `k` (neighbours, default 5), `seed`, `speed` (motion multiplier), and colours `point`, `neighbour`, `query`.
 
 ### Shared UMAP modality-gap point cloud
 

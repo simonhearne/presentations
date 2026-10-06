@@ -105,11 +105,15 @@ export function slugify(text) {
 // marked output either before or after applyFragmentAttrs.
 const HEADING_EYEBROW_RE = /\[[^\]\n]+\]\{[^}\n]*\.eyebrow-[\w-]+[^}\n]*\}|<span class="[^"]*\beyebrow-[\w-]+\b[^"]*">[\s\S]*?<\/span>/g;
 
+// Any other [text]{.class} span keeps its text in the title, just not the marker.
+const INLINE_SPAN_MARKER_RE = /\[([^\]\n]+)\]\{\.[^}\n]*\}/g;
+
 export function extractTitle(html) {
   const m = html.match(/<(h1|h2)[^>]*>([\s\S]*?)<\/\1>/i);
   if (!m) return null;
   return m[2]
     .replace(HEADING_EYEBROW_RE, '')
+    .replace(INLINE_SPAN_MARKER_RE, '$1')
     .replace(/<[^>]+>/g, '')
     .replace(/\s+/g, ' ')
     .trim();

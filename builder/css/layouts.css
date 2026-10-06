@@ -205,6 +205,15 @@
 .slide.section.center h1 { margin-top: 0; }
 .slide.section.center h2 { align-self: center; }
 
+/* .section-byline — optional give/get stat row under a section heading */
+.slide.section .section-byline { display: flex; align-items: center; gap: var(--zilliz-s-4); margin: var(--zilliz-s-6) 0 auto; font-size: 28px; }
+.section-byline .bi-cell { display: flex; flex-direction: column; }
+.section-byline .bi-num { font-size: 2.6em; font-weight: 800; line-height: 1; }
+.section-byline .bi-lab { font-family: var(--zilliz-font-mono); font-size: 0.75em; opacity: 0.7; margin-top: 0.4em; }
+.section-byline .give .bi-num { color: var(--zilliz-grey); }
+.section-byline .get .bi-num { color: var(--zilliz-blue); }
+.section-byline .bi-arrow { font-size: 2em; opacity: 0.4; }
+
 /* .agenda — auto-generated TOC: numbered, hyperlinked section list */
 /* .slide.agenda h1 {
   font-size: 96px;
@@ -247,6 +256,26 @@
 .slide.title.automata {
   background: url(../img/automata.jpg) right no-repeat, linear-gradient(180deg, #050a0e 0%, #070c17 100%)
 }
+
+/* .constellation — title slide with an animated kNN search on the right
+   (visualisations/constellation.js via a `three` block). The mask fades the
+   canvas out before it reaches the title text. */
+.slide.title.constellation {
+  background: radial-gradient(circle at 75% 50%, rgba(23, 95, 255, 0.18) 0%, transparent 55%), linear-gradient(180deg, #050a0e 0%, #070c17 100%);
+}
+.slide.title.constellation .three-canvas {
+  left: auto;
+  width: 58%;
+  height: calc(100% - 80px);
+  z-index: 0;
+  -webkit-mask-image: linear-gradient(to right, transparent 0%, #000 35%);
+  mask-image: linear-gradient(to right, transparent 0%, #000 35%);
+}
+.slide.title.constellation > :not(.three-canvas):not(.chrome):not(.footer):not(.logo) {
+  position: relative;
+  z-index: 1;
+}
+.slide.title.constellation .logo { z-index: 1; }
 
 .slide.hero {
   color: var(--zilliz-white);
@@ -744,7 +773,9 @@
 .search-demo .below-note { font-size: 17px; line-height: 1.4; opacity: 0.75; margin: var(--zilliz-s-2) 0 0; font-style: italic; }
 
 .search-demo .formulas { display: flex; flex-direction: column; gap: var(--zilliz-s-3); }
-.search-demo .formula-card, .search-demo .section { border: 2px solid var(--zilliz-blue-20); border-radius: var(--zilliz-radius-node); padding: var(--zilliz-s-3); background: var(--zilliz-white); }
+.search-demo .formula-card, .search-demo .section { border: 2px solid var(--zilliz-blue-20); border-radius: var(--zilliz-radius-node); padding: var(--zilliz-s-2); background: var(--zilliz-white); }
+.search-demo .section.is-best { border-color: var(--zilliz-purple); background: color-mix(in srgb, var(--zilliz-purple-10) 40%, var(--zilliz-white)); }
+.search-demo .section.is-best .section-title { color: var(--zilliz-purple); border-bottom-color: var(--zilliz-purple); }
 .search-demo .formula-name { font-family: var(--zilliz-font-mono); font-size: 15px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--zilliz-navy); margin-bottom: 4px; }
 .search-demo .formula-q { font-size: 22px; font-weight: 500; margin: 0 0 var(--zilliz-s-2); line-height: 1.3; color: var(--zilliz-black); }
 .search-demo .formula-q em { font-style: italic; color: var(--zilliz-blue); font-weight: 600; }
@@ -1500,6 +1531,7 @@
    stage 1; light it from the slide instead. */
 .slide:has(.size-diagram .stage-1.is-current) .size-diagram .nodes .node { stroke: var(--zilliz-blue); stroke-width: 4; }
 
+
 /* "Where the cost lands" build. Same staged-SVG vocabulary as .refine-diagram
    and .size-diagram, but the rail runs the other way: one spine (question,
    model, answer) drawn once, and four stations below it feeding the same
@@ -1587,6 +1619,10 @@
 .cost-anatomy .stage.is-current .node:not(.node-none):not(.node-cache) { stroke: var(--zilliz-blue); stroke-width: 4; }
 .cost-anatomy .stage.is-current .edge:not(.call) { stroke: var(--zilliz-blue); }
 .cost-anatomy .stage.is-current .elabel { fill: var(--zilliz-blue); }
+/* The judge sits off the pipeline and keeps `.study-rig`'s berry for it, even
+   while current, so it never reads as a fourth arm. */
+.cost-anatomy .node-judge, .cost-anatomy .stage.is-current .node.node-judge { fill: var(--zilliz-berry-10); stroke: var(--zilliz-berry); }
+.cost-anatomy .nlabel-judge { fill: var(--zilliz-berry); }
 
 /* .study-rig — the harness, drawn natively rather than through Graphviz so the
    diagram can carry the slide's own sentence: only the tool changes. Two
@@ -1905,3 +1941,209 @@
 .slide .qa-q { font-size: 25px; font-weight: 600; font-style: italic; line-height: 1.25; color: var(--zilliz-navy); margin: 0; }
 .slide .qa-a { font-size: 20px; line-height: 1.35; color: var(--zilliz-ink); margin: 0; }
 .slide .qa-a strong { color: var(--zilliz-blue); }
+
+/* ── Deck: talks/2026-10-milvus-meetup ── */
+
+/* "Spend recall on purpose" closer. Same staged-SVG vocabulary as
+   .size-diagram: one node per lever the talk covered, the rail is a recall
+   ledger (spend, buy back, protect, audit), and the last stage draws the
+   dashed loop from measurement back to the index choice. */
+.slide .levers-diagram { display: block; width: 100%; height: auto; max-height: 480px; margin: var(--zilliz-s-4) auto 0; font-family: var(--zilliz-font-sans); }
+.levers-diagram .node { fill: var(--zilliz-white); stroke: var(--zilliz-navy); stroke-width: 2.5; transition: stroke 200ms ease; }
+.levers-diagram .node-measure { fill: var(--zilliz-navy); }
+.levers-diagram .nlabel { font-size: 28px; font-weight: 600; fill: var(--zilliz-navy); }
+.levers-diagram .nsub { font-size: 17px; fill: var(--zilliz-ink); }
+.levers-diagram .nlabel-measure, .levers-diagram .nsub-measure { fill: var(--zilliz-white); }
+.levers-diagram .edge { fill: none; stroke: var(--zilliz-navy); stroke-width: 2.5; marker-end: url(#lv-arrow); transition: stroke 200ms ease; }
+.levers-diagram .edge.dashed { stroke-dasharray: 9 7; }
+.levers-diagram .elabel { font-family: var(--zilliz-font-mono); font-size: 20px; font-weight: 600; letter-spacing: 0.03em; fill: var(--zilliz-navy); transition: fill 200ms ease; }
+.levers-diagram .elabel.muted { fill: var(--zilliz-grey); font-style: italic; }
+.levers-diagram .rail path { fill: none; stroke: var(--zilliz-blue-20); stroke-width: 2; stroke-dasharray: 6 8; }
+.levers-diagram .tag { fill: var(--zilliz-blue-10); stroke: var(--zilliz-blue-20); stroke-width: 2; transition: fill 200ms ease, stroke 200ms ease; }
+.levers-diagram .tlabel { font-family: var(--zilliz-font-mono); font-size: 24px; font-weight: 700; fill: var(--zilliz-navy); transition: fill 200ms ease; }
+.levers-diagram .stage.is-current .node { stroke: var(--zilliz-blue); stroke-width: 4; }
+.levers-diagram .stage.is-current .edge { stroke: var(--zilliz-blue); stroke-width: 4; }
+.levers-diagram .stage.is-current .elabel:not(.muted) { fill: var(--zilliz-blue); }
+.levers-diagram .stage.is-current .tag { fill: var(--zilliz-blue); stroke: var(--zilliz-blue); }
+.levers-diagram .stage.is-current .tlabel { fill: var(--zilliz-white); }
+.slide .search-demo .body:has(> .section:nth-child(3)) { grid-template-columns: repeat(3, 1fr); gap: var(--zilliz-s-4); }
+.slide .search-demo .pill.near { background: #fff4dc; color: #8a5a00; }
+/* Three-station variant: the stations sit at x 40 to 1020 so the two retrieval
+   arms straddle the model; this padding puts each caption under its own box. */
+.slide .cost-notes.cols-3 { grid-template-columns: repeat(3, 1fr); padding: 0 27.143% 0 2.857%; }
+/* Break-even on agentic memory: the money table replaces the cost-curve chart.
+   Numbers right-aligned in fixed columns so the rows read as comparisons; the
+   two break-even rows sit apart from the per-query costs above them. */
+.slide.memory-break-even table { width: 100%; table-layout: fixed; font-size: 26px; margin: var(--zilliz-s-3) auto var(--zilliz-s-2); }
+.slide.memory-break-even thead th:first-child { width: 34%; }
+.slide.memory-break-even thead th:not(:first-child),
+.slide.memory-break-even tbody td:not(:first-child) { text-align: right; font-variant-numeric: tabular-nums; }
+.slide.memory-break-even tbody tr:nth-child(4) td { border-top: 2px solid var(--zilliz-navy); }
+.slide.memory-break-even tbody td strong { color: var(--zilliz-navy); }
+.slide.memory-break-even .table-note { font-size: 19px; line-height: 1.4; color: var(--zilliz-ink); margin: var(--zilliz-s-1) 0 0; }
+/* Data bars beside the cost figures. One linear scale across all nine cells
+   (--v is the cost over the largest, cold replay at 1.2M), so the index row
+   reads as flat and cold replay as the whole bill. Each bar grows leftwards
+   and stops just short of its right-aligned figure, a bar chart with direct
+   labels; 120px is held back for the figure itself, and a 4px floor keeps the
+   smallest values visible as a mark rather than nothing. */
+.slide.memory-break-even .bar { display: flex; align-items: center; justify-content: flex-end; gap: 12px; }
+.slide.memory-break-even .bar::before { content: ""; flex: 0 0 auto; height: 30px; width: max(4px, calc(var(--v) * (100% - 120px))); border-radius: 4px 0 0 4px; }
+.slide.memory-break-even .bar-replay::before { background: var(--zilliz-blue); }
+.slide.memory-break-even .bar-index::before { background: var(--zilliz-purple); }
+/* "Sounds... complex?" control panel. One panel drawn twice over: stage 0 is
+   every knob you set by hand, stage 1 swaps each build control for an AUTO pill
+   and folds the three query knobs (--dx to the middle one) into the level
+   dial, so the delta between the two modes is the animation itself. */
+.slide .tune-panel { display: block; width: 100%; height: auto; max-height: 520px; margin: var(--zilliz-s-3) auto 0; font-family: var(--zilliz-font-sans); }
+.tune-panel .panel { fill: var(--zilliz-white); stroke: var(--zilliz-blue-20); stroke-width: 2; }
+.tune-panel .divider { fill: none; stroke: var(--zilliz-blue-10); stroke-width: 2; }
+.tune-panel .htitle { font-size: 32px; font-weight: 700; fill: var(--zilliz-navy); }
+.tune-panel .hsub { font-weight: 400; fill: var(--zilliz-grey); }
+.tune-panel .hcount { font-family: var(--zilliz-font-mono); font-size: 26px; font-weight: 700; fill: var(--zilliz-navy); }
+.tune-panel .hcount.auto { fill: var(--zilliz-blue); }
+.tune-panel .rlabel { font-family: var(--zilliz-font-mono); font-size: 20px; font-weight: 700; letter-spacing: 0.1em; fill: var(--zilliz-navy); }
+.tune-panel .rsub { font-size: 17px; fill: var(--zilliz-grey); }
+.tune-panel .sw { fill: var(--zilliz-white); stroke: var(--zilliz-navy); stroke-width: 2.5; }
+.tune-panel .sw-on { fill: var(--zilliz-navy); }
+.tune-panel .swt { font-family: var(--zilliz-font-mono); font-size: 20px; font-weight: 600; fill: var(--zilliz-navy); }
+.tune-panel .swt.on { fill: var(--zilliz-white); }
+.tune-panel .knob circle { fill: var(--zilliz-blue-10); stroke: var(--zilliz-navy); stroke-width: 2.5; }
+.tune-panel .knob path { stroke: var(--zilliz-navy); stroke-width: 5; stroke-linecap: round; }
+.tune-panel .klabel { font-family: var(--zilliz-font-mono); font-size: 20px; font-weight: 600; fill: var(--zilliz-navy); }
+.tune-panel .klabel.auto { fill: var(--zilliz-blue); }
+.tune-panel .note { font-size: 22px; font-style: italic; fill: var(--zilliz-grey); }
+.tune-panel .op { font-size: 26px; fill: var(--zilliz-ink); }
+.tune-panel .op.auto { fill: var(--zilliz-blue); font-weight: 600; }
+.tune-panel .ring { fill: none; stroke: var(--zilliz-blue); stroke-width: 4; }
+.tune-panel .auto-badge { fill: var(--zilliz-blue); }
+.tune-panel .auto-badge-t { font-family: var(--zilliz-font-mono); font-size: 26px; font-weight: 700; letter-spacing: 0.05em; fill: var(--zilliz-white); }
+.tune-panel .dial > circle { fill: var(--zilliz-blue-10); stroke: var(--zilliz-blue); stroke-width: 4; }
+.tune-panel .dial .ticks path { stroke: var(--zilliz-blue); stroke-width: 4; stroke-linecap: round; }
+.tune-panel .dial .pointer { stroke: var(--zilliz-blue); stroke-width: 8; stroke-linecap: round; }
+.tune-panel .dnum { font-family: var(--zilliz-font-mono); font-size: 18px; font-weight: 700; fill: var(--zilliz-blue); }
+.tune-panel .dlabel { font-family: var(--zilliz-font-mono); font-size: 34px; font-weight: 700; fill: var(--zilliz-blue); }
+.tune-panel .dsub { font-size: 22px; fill: var(--zilliz-ink); }
+.tune-panel .manual, .tune-panel .auto-dim { transition: opacity 300ms ease; }
+.tune-panel .collapse { transform-box: view-box; transition: transform 450ms ease, opacity 300ms ease; }
+.slide:has(.tune-panel .stage-1.is-revealed) .tune-panel .manual { opacity: 0; }
+.slide:has(.tune-panel .stage-1.is-revealed) .tune-panel .auto-dim { opacity: 0.25; }
+/* The controls themselves go entirely so nothing bleeds past the AUTO pills;
+   only their labels stay, dimmed, to say what the engine now owns. */
+.tune-panel .auto-dim :is(.sw, .sw-on, .swt, .knob) { transition: opacity 300ms ease; }
+.slide:has(.tune-panel .stage-1.is-revealed) .tune-panel .auto-dim :is(.sw, .sw-on, .swt, .knob) { opacity: 0; }
+.slide:has(.tune-panel .stage-1.is-revealed) .tune-panel .collapse { transform: translateX(var(--dx)); opacity: 0; }
+
+/* "What it costs you": the heading's "(in theory)" reads "(in reality)" once
+   the compression chart drifts to production footprints (stage 2, mirrored
+   onto the slide by script/vega.js). The source text stays in the markdown so
+   the footer and slide anchor keep the original title. */
+.reality-swap { position: relative; }
+.slide[data-chart-stage="2"] .reality-swap { visibility: hidden; }
+.slide[data-chart-stage="2"] .reality-swap::after {
+  content: '(in reality)';
+  visibility: visible;
+  position: absolute;
+  left: 0;
+  white-space: nowrap;
+}
+
+/* "The EXPLAIN you don't get": the same dress query in two terminals. Postgres
+   shows its plan with the telling numbers marked; Milvus shows five bare hits.
+   The last step adds the exact-search list beside them and reveals a ghost row
+   under the hits for the perfect dress the search never returned (the green
+   node from the filter-graph slide, same hues). Both use visibility, not display, so their space
+   is reserved and nothing shifts when they appear. */
+.slide .explain-pair { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: var(--zilliz-s-4); align-items: stretch; margin-top: var(--zilliz-s-3); }
+.explain-pair .term { background: var(--zilliz-nearly-black); color: #d7deea; border-radius: var(--zilliz-radius-card); padding: var(--zilliz-s-3) var(--zilliz-s-4); display: flex; flex-direction: column; gap: var(--zilliz-s-2); box-shadow: var(--zilliz-shadow-card); }
+.explain-pair .term-head { display: flex; justify-content: space-between; align-items: baseline; font-family: var(--zilliz-font-mono); font-size: 18px; text-transform: uppercase; letter-spacing: 0.06em; }
+.explain-pair .term-name { color: var(--zilliz-grey); }
+.explain-pair .term-verdict { font-weight: 700; color: var(--zilliz-sky); }
+.slide .explain-pair pre { margin: 0; padding: 0; background: none; border: 0; font-family: var(--zilliz-font-mono); font-size: 22px; line-height: 1.45; color: var(--zilliz-white); white-space: pre; overflow: visible; }
+.explain-pair .prompt { color: var(--zilliz-grey); }
+.explain-pair .out { display: block; margin-top: var(--zilliz-s-2); color: #b9c3d6; }
+.explain-pair .term-tags { display: flex; gap: var(--zilliz-s-1); flex-wrap: wrap; margin-top: auto; }
+.explain-pair .term-tags span { font-family: var(--zilliz-font-mono); font-size: 16px; text-transform: uppercase; letter-spacing: 0.04em; color: var(--zilliz-sky); border: 1.5px solid rgba(73, 188, 255, 0.5); border-radius: 999px; padding: 4px 12px; }
+.explain-pair .hits { display: grid; grid-template-columns: 1fr 1fr; gap: var(--zilliz-s-3); }
+.slide .explain-pair .hit-list { list-style: none; margin: 0; padding: 0; font-family: var(--zilliz-font-mono); font-size: 20px; line-height: 1.3; }
+.slide .explain-pair .hit-list li { display: grid; grid-template-columns: 2.2em 1fr auto; column-gap: var(--zilliz-s-2); padding: 4px 12px; font-size: 24px; line-height: 1.3; border-radius: 6px; border: 2px solid transparent; margin: 0 0 4px; }
+.explain-pair .hit-list li span:last-child { font-variant-numeric: tabular-nums; }
+.slide .explain-pair .hit-list .hit-label { display: block; font-size: 15px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--zilliz-grey); padding-bottom: 2px; visibility: hidden; }
+.explain-pair .ghost-row { visibility: hidden; }
+.slide:has(.hit-list.truth.is-revealed) .hit-list .hit-label { visibility: visible; }
+.slide:has(.hit-list.truth.is-revealed) .ghost-row { visibility: visible; border: 2px dashed #54a24b; color: #54a24b; opacity: 0.75; }
+.slide:has(.hit-list.truth.is-revealed) .returned { background: rgba(228, 154, 59, 0.16); border-color: #e49a3b; color: #f2b866; }
+.explain-pair .perfect { background: rgba(84, 162, 75, 0.2); border-color: #54a24b; color: #8fd486; }
+
+/* "Cost per correct answer" summary: a two-row table under the chart, one
+   column per corpus, kept short so the chart above keeps its height. */
+.slide table.cost-latency { margin: var(--zilliz-s-2) auto 0; font-size: 24px; }
+.slide .cost-latency th, .slide .cost-latency td { padding: 8px var(--zilliz-s-3); vertical-align: baseline; }
+.slide .cost-latency thead th { font-size: 19px; }
+.slide .cost-latency tbody th { font-family: var(--zilliz-font-mono); font-size: 19px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; text-align: left; color: var(--zilliz-grey); border-bottom: 1px solid rgba(6, 25, 130, 0.08); }
+.slide .cost-latency tbody tr:last-child th { border-bottom: none; }
+
+/* "Measure what you can't see": one golden query's recall@5 sum on the left
+   (the truth/got lists from the EXPLAIN slide, light theme), the daily
+   recall chart on the right. */
+.slide .recall-watch { flex: 1; min-height: 0; display: grid; grid-template-columns: minmax(0, 0.62fr) minmax(0, 1fr); gap: var(--zilliz-s-4); align-items: center; margin-top: var(--zilliz-s-3); }
+.recall-watch .rw-sample { gap: var(--zilliz-s-2); }
+.slide .recall-watch pre.rw-query { margin: 0; padding: 0; background: none; border: 0; font-family: var(--zilliz-font-mono); font-size: 20px; color: var(--zilliz-ink); }
+.recall-watch .rw-lists { display: grid; grid-template-columns: 1fr 1fr; gap: var(--zilliz-s-2); }
+.slide .recall-watch .rw-list { list-style: none; margin: 0; padding: 0; font-family: var(--zilliz-font-mono); }
+.slide .recall-watch .rw-list li { display: flex; justify-content: space-between; gap: var(--zilliz-s-1); padding: 3px 10px; margin: 0 0 4px; font-size: 20px; line-height: 1.3; border-radius: 6px; border: 2px solid transparent; font-variant-numeric: tabular-nums; }
+.slide .recall-watch .rw-list li.rw-label { display: block; font-size: 15px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--zilliz-grey); padding-bottom: 0; }
+.recall-watch .rw-list .hit { background: var(--zilliz-blue-10); color: var(--zilliz-navy); }
+.recall-watch .rw-list .miss { border: 2px dashed #54a24b; color: #3c7a35; }
+.recall-watch .rw-list .extra { background: rgba(228, 154, 59, 0.14); border-color: #e49a3b; color: #a8661c; }
+.recall-watch .rw-score { display: flex; justify-content: space-between; align-items: baseline; border-top: 2px solid var(--zilliz-blue-20); padding-top: var(--zilliz-s-2); font-family: var(--zilliz-font-mono); font-size: 22px; color: var(--zilliz-navy); }
+.recall-watch .rw-score span:first-child { font-size: 18px; text-transform: uppercase; letter-spacing: 0.06em; }
+.recall-watch .rw-score b { font-size: 34px; color: var(--zilliz-blue); }
+.slide .recall-watch .rw-foot { margin: 0; font-size: 20px; color: var(--zilliz-ink); opacity: 0.8; }
+.recall-watch .rw-chart { min-width: 0; height: 100%; display: flex; align-items: center; }
+
+/* Metrics ladder: four layers of search measurement, revealed bottom-up
+   (column-reverse keeps DOM order index-first so fragments step upward). */
+.slide .metric-ladder { margin-top: var(--zilliz-s-3); font-size: 22px; }
+.metric-ladder .ml-head, .metric-ladder .ml-rung { display: grid; grid-template-columns: 150px minmax(0, 1.5fr) minmax(0, 1fr) minmax(0, 0.8fr) minmax(0, 1fr); gap: var(--zilliz-s-3); align-items: center; }
+.metric-ladder .ml-head { padding: 0 var(--zilliz-s-3) var(--zilliz-s-1) calc(var(--zilliz-s-3) + 64px); font-family: var(--zilliz-font-mono); font-size: 16px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--zilliz-grey); }
+.metric-ladder .ml-body { display: grid; grid-template-columns: 48px 1fr; gap: var(--zilliz-s-2); }
+.metric-ladder .ml-rail { position: relative; border-left: 0; display: flex; align-items: center; justify-content: center; }
+.metric-ladder .ml-rail::before { content: ""; position: absolute; top: 8px; bottom: 0; left: 50%; width: 4px; transform: translateX(-50%); background: linear-gradient(to top, var(--zilliz-blue-20), var(--zilliz-blue)); border-radius: 2px; }
+.metric-ladder .ml-rail::after { content: ""; position: absolute; top: 0; left: 50%; transform: translateX(-50%); border: 10px solid transparent; border-bottom: 14px solid var(--zilliz-blue); border-top: 0; }
+.metric-ladder .ml-rail span { position: relative; writing-mode: vertical-rl; transform: rotate(180deg); background: var(--zilliz-white); padding: 8px 0; font-family: var(--zilliz-font-mono); font-size: 16px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--zilliz-blue); }
+.metric-ladder .ml-rungs { display: flex; flex-direction: column-reverse; gap: var(--zilliz-s-2); }
+.metric-ladder .ml-rung { background: var(--zilliz-white); border: 2px solid var(--zilliz-blue-20); border-radius: var(--zilliz-radius-card); padding: var(--zilliz-s-2) var(--zilliz-s-3); line-height: 1.3; color: var(--zilliz-ink); }
+.metric-ladder .ml-rung.is-current { border-color: var(--zilliz-blue); box-shadow: var(--zilliz-shadow-pop); }
+.metric-ladder .ml-name { font-family: var(--zilliz-font-mono); font-size: 22px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; color: var(--zilliz-navy); }
+.metric-ladder .ml-metrics { display: flex; flex-wrap: wrap; gap: 6px; }
+.metric-ladder .ml-metrics .pill { min-width: 0; font-size: 16px; }
+
+/* Dataset pill strip under a chart, same idea as .methodology .rig. */
+.slide .chart-rig { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--zilliz-s-1) var(--zilliz-s-2); margin: var(--zilliz-s-2) 0 0; }
+.slide .chart-rig .pill { min-width: 0; }
+
+/* .eyebrow-bench — names which benchmark a results slide belongs to, on its
+   own line above the heading; the claim stays the title. Stripped from the
+   footer title and slug by HEADING_EYEBROW_RE like the other eyebrows. */
+.slide .eyebrow-bench { display: block; margin-bottom: var(--zilliz-s-1); font-family: var(--zilliz-font-mono); font-size: 20px; font-weight: 700; line-height: 1.2; letter-spacing: 0.06em; text-transform: uppercase; color: var(--zilliz-blue); }
+
+/* .deploy-options — Milvus deployment modes over Zilliz Cloud tiers. Each row
+   leads with a label column; each card carries four 5-pip meters where more
+   filled is always better for the user, so the eye can compare down a column
+   without decoding per-row polarity. The pips are one gradient fill masked
+   into five segments, driven by an inline --v. */
+.slide .deploy-matrix { display: grid; gap: var(--zilliz-s-3); margin-top: var(--zilliz-s-4); }
+.deploy-matrix .dm-row { display: grid; grid-template-columns: 210px repeat(3, minmax(0, 1fr)); gap: var(--zilliz-s-3); align-items: stretch; }
+.deploy-matrix .dm-label { display: flex; flex-direction: column; justify-content: center; gap: 6px; }
+.deploy-matrix .dm-label strong { font-size: 32px; color: var(--zilliz-navy); line-height: 1.1; }
+.deploy-matrix .dm-label span { font-family: var(--zilliz-font-mono); font-size: 15px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--zilliz-grey); }
+.deploy-matrix .card { padding: var(--zilliz-s-3); gap: 14px; }
+.deploy-matrix .dm-head { display: flex; justify-content: space-between; align-items: center; gap: var(--zilliz-s-1); }
+.deploy-matrix .dm-name { font-size: 36px; font-weight: 700; color: var(--zilliz-navy); }
+.deploy-matrix .dm-head .pill { min-width: 0; margin: 0; font-size: 16px; white-space: nowrap; }
+.slide .deploy-matrix code.dm-how { font-family: var(--zilliz-font-mono); font-size: 20px; color: var(--zilliz-blue); background: none; padding: 0; }
+.slide .deploy-matrix p.dm-when { margin: 0; font-size: 22px; font-style: italic; color: var(--zilliz-ink); }
+.deploy-matrix .dm-meters { display: grid; grid-template-columns: auto 92px auto 92px; justify-content: space-between; gap: 10px 12px; white-space: nowrap; align-items: center; margin-top: 4px; font-family: var(--zilliz-font-mono); font-size: 15px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--zilliz-grey); }
+.deploy-matrix .dm-pips { height: 16px; background: linear-gradient(to right, var(--zilliz-blue) calc(var(--v) * 20%), var(--zilliz-blue-20) 0); -webkit-mask: repeating-linear-gradient(to right, #000 0 16px, transparent 16px 19px); mask: repeating-linear-gradient(to right, #000 0 16px, transparent 16px 19px); }
+.slide.deploy-options .dm-key { margin: var(--zilliz-s-3) 0 0 calc(210px + var(--zilliz-s-3)); font-family: var(--zilliz-font-mono); font-size: 16px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--zilliz-grey); }

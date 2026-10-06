@@ -1,0 +1,359 @@
+{
+  "$schema": "https://vega.github.io/schema/vega/v5.json",
+  "description": "Strategy map for filtered vector search: how much survives the filter (x) and how expensive the filter is (y) pick between alpha traversal, brute force and iterative filtering.",
+  "width": 1200,
+  "height": 520,
+  "padding": 0,
+  "autosize": "fit",
+  "background": "rgba(0,0,0,0)",
+
+  "signals": [
+    {"name": "stage", "value": 0},
+    {"name": "split", "value": 78}
+  ],
+
+  "data": [
+    {
+      "name": "regions",
+      "values": [
+        {"g": "alpha", "s": 1, "x1": 0,  "x2": 78,  "y1": 0,  "y2": 50,  "fill": "#3f6fb5"},
+        {"g": "iter",  "s": 3, "x1": 0,  "x2": 78,  "y1": 50, "y2": 100, "fill": "#7b5ea7"},
+        {"g": "brute", "s": 2, "x1": 78, "x2": 100, "y1": 0,  "y2": 100, "fill": "#54a24b"}
+      ]
+    },
+    {
+      "name": "labels",
+      "values": [
+        {"s": 1, "x": 2,  "y": 50,  "title": "Alpha", "tag": "automatic", "tx": 78, "talign": "right", "tdx": -16, "tdy": 34, "caption": "step through filtered-out nodes"},
+        {"s": 3, "x": 2,  "y": 100, "title": "Iterative", "tag": "search hint", "tx": 78, "talign": "right", "tdx": -16, "tdy": 34, "caption": "fetch a batch, filter, repeat until k"},
+        {"s": 2, "x": 80, "y": 100, "title": "Brute force", "tag": "automatic", "tx": 80, "talign": "left", "tdx": 6, "tdy": 90, "caption": "exact, 100% recall"}
+      ]
+    },
+    {
+      "name": "nodes",
+      "values": [
+        {"s": 1, "x": 8,  "y": 20, "k": "keep"},
+        {"s": 1, "x": 18, "y": 28, "k": "keep"},
+        {"s": 1, "x": 28, "y": 15, "k": "drop"},
+        {"s": 1, "x": 38, "y": 26, "k": "keep"},
+        {"s": 1, "x": 48, "y": 14, "k": "drop"},
+        {"s": 1, "x": 57, "y": 25, "k": "drop"},
+        {"s": 1, "x": 65, "y": 17, "k": "match"},
+
+        {"s": 2, "x": 81, "y": 22, "k": "drop"},
+        {"s": 2, "x": 86, "y": 14, "k": "drop"},
+        {"s": 2, "x": 97, "y": 18, "k": "drop"},
+        {"s": 2, "x": 82, "y": 60, "k": "drop"},
+        {"s": 2, "x": 90, "y": 72, "k": "drop"},
+        {"s": 2, "x": 97, "y": 52, "k": "drop"},
+        {"s": 2, "x": 94, "y": 36, "k": "drop"},
+        {"s": 2, "x": 80, "y": 44, "k": "drop"},
+        {"s": 2, "x": 84, "y": 68, "k": "keep"},
+        {"s": 2, "x": 96, "y": 64, "k": "keep"},
+        {"s": 2, "x": 83, "y": 30, "k": "keep"},
+        {"s": 2, "x": 95, "y": 26, "k": "keep"},
+        {"s": 2, "x": 92, "y": 48, "k": "match"},
+
+        {"s": 3, "x": 9,  "y": 76, "k": "keep"},
+        {"s": 3, "x": 12, "y": 76, "k": "drop"},
+        {"s": 3, "x": 9,  "y": 66, "k": "drop"},
+        {"s": 3, "x": 12, "y": 66, "k": "keep"},
+        {"s": 3, "x": 25, "y": 76, "k": "drop"},
+        {"s": 3, "x": 28, "y": 76, "k": "keep"},
+        {"s": 3, "x": 25, "y": 66, "k": "keep"},
+        {"s": 3, "x": 28, "y": 66, "k": "drop"},
+        {"s": 3, "x": 41, "y": 76, "k": "keep"},
+        {"s": 3, "x": 44, "y": 76, "k": "drop"},
+        {"s": 3, "x": 41, "y": 66, "k": "drop"},
+        {"s": 3, "x": 44, "y": 66, "k": "drop"},
+        {"s": 3, "x": 56, "y": 71, "k": "keep"},
+        {"s": 3, "x": 59, "y": 71, "k": "keep"},
+        {"s": 3, "x": 62, "y": 71, "k": "keep"},
+        {"s": 3, "x": 65, "y": 71, "k": "keep"},
+        {"s": 3, "x": 68, "y": 71, "k": "match"}
+      ]
+    },
+    {
+      "name": "queries",
+      "values": [
+        {"s": 1, "x": 72, "y": 25},
+        {"s": 2, "x": 89, "y": 44}
+      ]
+    },
+    {
+      "name": "edges",
+      "values": [
+        {"s": 1, "x1": 8,  "y1": 20, "x2": 18, "y2": 28, "dash": false},
+        {"s": 1, "x1": 18, "y1": 28, "x2": 28, "y2": 15, "dash": true},
+        {"s": 1, "x1": 28, "y1": 15, "x2": 38, "y2": 26, "dash": true},
+        {"s": 1, "x1": 38, "y1": 26, "x2": 48, "y2": 14, "dash": true},
+        {"s": 1, "x1": 48, "y1": 14, "x2": 57, "y2": 25, "dash": true},
+        {"s": 1, "x1": 57, "y1": 25, "x2": 65, "y2": 17, "dash": true},
+
+        {"s": 2, "x1": 89, "y1": 44, "x2": 84, "y2": 68, "dash": false},
+        {"s": 2, "x1": 89, "y1": 44, "x2": 96, "y2": 64, "dash": false},
+        {"s": 2, "x1": 89, "y1": 44, "x2": 83, "y2": 30, "dash": false},
+        {"s": 2, "x1": 89, "y1": 44, "x2": 95, "y2": 26, "dash": false},
+        {"s": 2, "x1": 89, "y1": 44, "x2": 92, "y2": 48, "dash": false}
+      ]
+    },
+    {
+      "name": "arrows",
+      "values": [
+        {"x": 18.5, "y": 71},
+        {"x": 34.5, "y": 71},
+        {"x": 50.5, "y": 71}
+      ]
+    }
+  ],
+
+  "scales": [
+    {"name": "x", "type": "linear", "domain": [0, 100], "range": {"signal": "[60, width - 6]"}, "zero": false},
+    {"name": "y", "type": "linear", "domain": [0, 100], "range": {"signal": "[height - 56, 6]"}, "zero": false}
+  ],
+
+  "marks": [
+    {
+      "type": "rect",
+      "from": {"data": "regions"},
+      "encode": {
+        "update": {
+          "x": {"scale": "x", "field": "x1"}, "x2": {"scale": "x", "field": "x2"},
+          "y": {"scale": "y", "field": "y2"}, "y2": {"scale": "y", "field": "y1"},
+          "fill": {"field": "fill"},
+          "fillOpacity": {"signal": "stage >= datum.s ? 0.09 : 0"},
+          "stroke": {"value": "#c3cad6"},
+          "strokeWidth": {"value": 1.5},
+          "cornerRadius": {"value": 10}
+        }
+      }
+    },
+
+    {
+      "type": "text",
+      "from": {"data": "labels"},
+      "encode": {
+        "update": {
+          "x": {"scale": "x", "field": "x", "offset": 6},
+          "y": {"scale": "y", "field": "y", "offset": 34},
+          "text": {"field": "title"},
+          "fontSize": {"value": 26},
+          "fontWeight": {"value": "bold"},
+          "opacity": {"signal": "stage >= datum.s ? 1 : 0"}
+        }
+      }
+    },
+    {
+      "type": "text",
+      "from": {"data": "labels"},
+      "encode": {
+        "update": {
+          "x": {"scale": "x", "field": "x", "offset": 6},
+          "y": {"scale": "y", "field": "y", "offset": 62},
+          "text": {"field": "caption"},
+          "fontSize": {"value": 19},
+          "fill": {"value": "#5a6478"},
+          "opacity": {"signal": "stage >= datum.s ? 1 : 0"}
+        }
+      }
+    },
+
+    {
+      "type": "text",
+      "from": {"data": "labels"},
+      "encode": {
+        "update": {
+          "x": {"scale": "x", "field": "tx", "offset": {"field": "tdx"}},
+          "y": {"scale": "y", "field": "y", "offset": {"field": "tdy"}},
+          "text": {"field": "tag"},
+          "align": {"field": "talign"},
+          "fontSize": {"value": 17},
+          "fontWeight": {"value": "bold"},
+          "fill": {"signal": "datum.tag === 'automatic' ? '#1f6f3f' : '#7b5ea7'"},
+          "opacity": {"signal": "stage >= datum.s ? 1 : 0"}
+        }
+      }
+    },
+
+    {
+      "type": "rule",
+      "from": {"data": "edges"},
+      "encode": {
+        "update": {
+          "x": {"scale": "x", "field": "x1"}, "y": {"scale": "y", "field": "y1"},
+          "x2": {"scale": "x", "field": "x2"}, "y2": {"scale": "y", "field": "y2"},
+          "stroke": {"signal": "datum.s === 2 ? '#8a93a6' : '#1f6f3f'"},
+          "strokeWidth": {"signal": "datum.s === 2 ? 1.5 : 4"},
+          "strokeDash": {"signal": "datum.dash ? [7, 6] : []"},
+          "opacity": {"signal": "stage >= datum.s ? 1 : 0"}
+        }
+      }
+    },
+
+    {
+      "type": "text",
+      "from": {"data": "arrows"},
+      "encode": {
+        "update": {
+          "x": {"scale": "x", "field": "x"}, "y": {"scale": "y", "field": "y"},
+          "text": {"value": "›"},
+          "align": {"value": "center"}, "baseline": {"value": "middle"},
+          "fontSize": {"value": 40},
+          "fill": {"value": "#8a93a6"},
+          "opacity": {"signal": "stage >= 3 ? 1 : 0"}
+        }
+      }
+    },
+
+    {
+      "type": "symbol",
+      "from": {"data": "nodes"},
+      "encode": {
+        "update": {
+          "x": {"scale": "x", "field": "x"}, "y": {"scale": "y", "field": "y"},
+          "size": {"signal": "datum.k === 'match' ? 560 : 340"},
+          "fill": {"signal": "datum.k === 'match' ? '#54a24b' : datum.k === 'keep' ? '#9ec5e8' : '#b8bec9'"},
+          "stroke": {"signal": "datum.k === 'match' ? '#2f7d2f' : '#3a4660'"},
+          "strokeWidth": {"signal": "datum.k === 'match' ? 3 : 1"},
+          "opacity": {"signal": "stage < datum.s ? 0 : datum.k === 'drop' ? 0.3 : 1"}
+        }
+      }
+    },
+
+    {
+      "type": "symbol",
+      "from": {"data": "queries"},
+      "encode": {
+        "update": {
+          "x": {"scale": "x", "field": "x"}, "y": {"scale": "y", "field": "y"},
+          "shape": {"value": "M0,-1 L0.225,-0.309 L0.951,-0.309 L0.363,0.118 L0.588,0.809 L0,0.382 L-0.588,0.809 L-0.363,0.118 L-0.951,-0.309 L-0.225,-0.309 Z"},
+          "size": {"value": 520},
+          "fill": {"value": "#e45756"},
+          "stroke": {"value": "#a02020"},
+          "strokeWidth": {"value": 1},
+          "opacity": {"signal": "stage >= datum.s ? 1 : 0"}
+        }
+      }
+    },
+
+    {
+      "type": "rule",
+      "encode": {
+        "update": {
+          "x": {"scale": "x", "value": 0}, "x2": {"scale": "x", "value": 100},
+          "y": {"signal": "height - 30"},
+          "stroke": {"value": "#3a4660"}, "strokeWidth": {"value": 2}
+        }
+      }
+    },
+    {
+      "type": "symbol",
+      "encode": {
+        "update": {
+          "x": {"scale": "x", "value": 100}, "y": {"signal": "height - 30"},
+          "shape": {"value": "triangle-right"}, "size": {"value": 120},
+          "fill": {"value": "#3a4660"}
+        }
+      }
+    },
+    {
+      "type": "text",
+      "encode": {
+        "update": {
+          "x": {"scale": "x", "value": 39}, "y": {"signal": "height"},
+          "text": {"value": "how much survives the filter"},
+          "align": {"value": "center"}, "baseline": {"value": "bottom"},
+          "fontWeight": {"value": "bold"}
+        }
+      }
+    },
+    {
+      "type": "text",
+      "encode": {
+        "update": {
+          "x": {"scale": "x", "value": 0}, "y": {"signal": "height"},
+          "text": {"value": "100%"},
+          "baseline": {"value": "bottom"},
+          "fill": {"value": "#5a6478"}
+        }
+      }
+    },
+    {
+      "type": "rule",
+      "encode": {
+        "update": {
+          "x": {"scale": "x", "signal": "split"}, "y": {"signal": "height - 36"}, "y2": {"signal": "height - 24"},
+          "stroke": {"value": "#3a4660"}, "strokeWidth": {"value": 2}
+        }
+      }
+    },
+    {
+      "type": "text",
+      "encode": {
+        "update": {
+          "x": {"scale": "x", "signal": "split"}, "y": {"signal": "height"},
+          "text": {"value": "~7%"},
+          "align": {"value": "center"}, "baseline": {"value": "bottom"},
+          "fill": {"value": "#5a6478"}
+        }
+      }
+    },
+
+    {
+      "type": "rule",
+      "encode": {
+        "update": {
+          "x": {"value": 30},
+          "y": {"scale": "y", "value": 0}, "y2": {"scale": "y", "value": 100},
+          "stroke": {"value": "#3a4660"}, "strokeWidth": {"value": 2}
+        }
+      }
+    },
+    {
+      "type": "symbol",
+      "encode": {
+        "update": {
+          "x": {"value": 30}, "y": {"scale": "y", "value": 100},
+          "shape": {"value": "triangle-up"}, "size": {"value": 120},
+          "fill": {"value": "#3a4660"}
+        }
+      }
+    },
+    {
+      "type": "text",
+      "encode": {
+        "update": {
+          "x": {"value": 14}, "y": {"scale": "y", "value": 50},
+          "text": {"value": "filter cost"},
+          "angle": {"value": -90},
+          "align": {"value": "center"}, "baseline": {"value": "middle"},
+          "fontWeight": {"value": "bold"}
+        }
+      }
+    },
+    {
+      "type": "text",
+      "encode": {
+        "update": {
+          "x": {"value": 14}, "y": {"scale": "y", "value": 0},
+          "text": {"value": "cheap"},
+          "angle": {"value": -90},
+          "align": {"value": "left"}, "baseline": {"value": "middle"},
+          "fill": {"value": "#5a6478"}
+        }
+      }
+    },
+    {
+      "type": "text",
+      "encode": {
+        "update": {
+          "x": {"value": 14}, "y": {"scale": "y", "value": 100},
+          "text": {"value": "costly"},
+          "angle": {"value": -90},
+          "align": {"value": "right"}, "baseline": {"value": "middle"},
+          "fill": {"value": "#5a6478"}
+        }
+      }
+    }
+  ]
+}
