@@ -90,7 +90,11 @@ npm test                                    # run tests
 npm run build talks/<slug>                  # build a deck → dist/index.html
 npm run bundle talks/<slug>                 # bundle a built deck → dist/bundle.html
 npm run bundle talks/<slug> -- --no-images  # bundle without inlining raster images
+node bin/render-spec.js <spec.json> --signal stage=3   # one chart → PNG, brand-themed
+node bin/render-slide.js talks/<slug> <n> --steps 2    # one built slide → PNG, warns on overflow
 ```
+
+Creating or editing a Vega spec: use the `editing-vega-specs` skill in `.claude/skills/`.
 
 The example deck at [talks/2026-05-example/](talks/2026-05-example/) is the canonical reference and exercises every layout class, the `authors` frontmatter, and the `vega` frontmatter (scatter plot from [scatter.json](talks/2026-05-example/scatter.json)). The [talks/vectordb-101/](talks/vectordb-101/) deck additionally exercises three interactive Vega specs and two `dot` diagrams (slides 18 and 25).
 
