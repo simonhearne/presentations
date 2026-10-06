@@ -744,7 +744,7 @@
 .search-demo .below-note { font-size: 17px; line-height: 1.4; opacity: 0.75; margin: var(--zilliz-s-2) 0 0; font-style: italic; }
 
 .search-demo .formulas { display: flex; flex-direction: column; gap: var(--zilliz-s-3); }
-.search-demo .formula-card, .search-demo .section { border: 2px solid var(--zilliz-blue-20); border-radius: var(--zilliz-radius-node); padding: var(--zilliz-s-3); background: var(--zilliz-white); }
+.search-demo .formula-card, .search-demo .section { border: 2px solid var(--zilliz-blue-20); border-radius: var(--zilliz-radius-node); padding: var(--zilliz-s-2); background: var(--zilliz-white); }
 .search-demo .formula-name { font-family: var(--zilliz-font-mono); font-size: 15px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--zilliz-navy); margin-bottom: 4px; }
 .search-demo .formula-q { font-size: 22px; font-weight: 500; margin: 0 0 var(--zilliz-s-2); line-height: 1.3; color: var(--zilliz-black); }
 .search-demo .formula-q em { font-style: italic; color: var(--zilliz-blue); font-weight: 600; }
@@ -1500,6 +1500,7 @@
    stage 1; light it from the slide instead. */
 .slide:has(.size-diagram .stage-1.is-current) .size-diagram .nodes .node { stroke: var(--zilliz-blue); stroke-width: 4; }
 
+
 /* "Where the cost lands" build. Same staged-SVG vocabulary as .refine-diagram
    and .size-diagram, but the rail runs the other way: one spine (question,
    model, answer) drawn once, and four stations below it feeding the same
@@ -1905,3 +1906,28 @@
 .slide .qa-q { font-size: 25px; font-weight: 600; font-style: italic; line-height: 1.25; color: var(--zilliz-navy); margin: 0; }
 .slide .qa-a { font-size: 20px; line-height: 1.35; color: var(--zilliz-ink); margin: 0; }
 .slide .qa-a strong { color: var(--zilliz-blue); }
+
+/* ── Deck: talks/2026-10-milvus-meetup ── */
+
+/* "Spend recall on purpose" closer. Same staged-SVG vocabulary as
+   .size-diagram: one node per lever the talk covered, the rail is a recall
+   ledger (spend, buy back, protect, audit), and the last stage draws the
+   dashed loop from measurement back to the index choice. */
+.slide .levers-diagram { display: block; width: 100%; height: auto; max-height: 480px; margin: var(--zilliz-s-4) auto 0; font-family: var(--zilliz-font-sans); }
+.levers-diagram .node { fill: var(--zilliz-white); stroke: var(--zilliz-navy); stroke-width: 2.5; transition: stroke 200ms ease; }
+.levers-diagram .node-measure { fill: var(--zilliz-navy); }
+.levers-diagram .nlabel { font-size: 28px; font-weight: 600; fill: var(--zilliz-navy); }
+.levers-diagram .nsub { font-size: 19px; fill: var(--zilliz-ink); }
+.levers-diagram .nlabel-measure, .levers-diagram .nsub-measure { fill: var(--zilliz-white); }
+.levers-diagram .edge { fill: none; stroke: var(--zilliz-navy); stroke-width: 2.5; marker-end: url(#lv-arrow); transition: stroke 200ms ease; }
+.levers-diagram .edge.dashed { stroke-dasharray: 9 7; }
+.levers-diagram .elabel { font-family: var(--zilliz-font-mono); font-size: 20px; font-weight: 600; letter-spacing: 0.03em; fill: var(--zilliz-navy); transition: fill 200ms ease; }
+.levers-diagram .elabel.muted { fill: var(--zilliz-grey); font-style: italic; }
+.levers-diagram .rail path { fill: none; stroke: var(--zilliz-blue-20); stroke-width: 2; stroke-dasharray: 6 8; }
+.levers-diagram .tag { fill: var(--zilliz-blue-10); stroke: var(--zilliz-blue-20); stroke-width: 2; transition: fill 200ms ease, stroke 200ms ease; }
+.levers-diagram .tlabel { font-family: var(--zilliz-font-mono); font-size: 24px; font-weight: 700; fill: var(--zilliz-navy); transition: fill 200ms ease; }
+.levers-diagram .stage.is-current .node { stroke: var(--zilliz-blue); stroke-width: 4; }
+.levers-diagram .stage.is-current .edge { stroke: var(--zilliz-blue); stroke-width: 4; }
+.levers-diagram .stage.is-current .elabel:not(.muted) { fill: var(--zilliz-blue); }
+.levers-diagram .stage.is-current .tag { fill: var(--zilliz-blue); stroke: var(--zilliz-blue); }
+.levers-diagram .stage.is-current .tlabel { fill: var(--zilliz-white); }
