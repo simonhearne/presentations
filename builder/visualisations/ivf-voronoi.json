@@ -287,7 +287,7 @@
         "update": {
           "x": { "value": 26 }, "y": { "value": 74 },
           "fill": [ { "test": "found == k", "value": "#061982" }, { "value": "#c84cff" } ],
-          "text": { "signal": "'recall@' + k + ' = ' + found + ' / ' + k + (found < k ? '  •  ' + (k - found) + (k - found == 1 ? ' true neighbour sits' : ' true neighbours sit') + ' in cells we never opened' : '  •  every true neighbour found')" }
+          "text": { "signal": "'recall@' + k + ' = ' + (recall == 1 ? '1.0' : format(recall, '.2~f')) + (found < k ? '  •  ' + (k - found) + (k - found == 1 ? ' true neighbour sits' : ' true neighbours sit') + ' in cells we never opened' : '  •  every true neighbour found')" }
         }
       }
     }
