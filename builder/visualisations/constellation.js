@@ -4,7 +4,7 @@
 // k nearest neighbours, re-ranked every frame. Plain 2D canvas: the `three`
 // runtime only needs init({ canvas, opts }), not three.js itself. Ambient —
 // no advance()/retreat(). Animates only while its slide is current and the
-// tab is visible; reduced motion draws one static frame.
+// tab is visible.
 
 const DEFAULTS = {
   points: 60,
@@ -29,7 +29,6 @@ export default function init({ canvas, opts = {} }) {
   const cfg = { ...DEFAULTS, ...opts };
   const ctx = canvas.getContext('2d');
   const slide = canvas.closest('.slide');
-  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const rand = mulberry32(cfg.seed);
   const v = 0.0007 * cfg.speed;
 
@@ -101,7 +100,7 @@ export default function init({ canvas, opts = {} }) {
   }
 
   function sync() {
-    const on = !reduceMotion && !document.hidden && (!slide || slide.classList.contains('is-current'));
+    const on = !document.hidden && (!slide || slide.classList.contains('is-current'));
     if (on && rafId === null) rafId = requestAnimationFrame(frame);
     else if (!on && rafId !== null) { cancelAnimationFrame(rafId); rafId = null; }
   }

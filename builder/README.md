@@ -307,7 +307,7 @@ The `.three-bg` layout class makes the canvas a full-bleed background and keeps 
 ```
 ````
 
-It animates only while its slide is current and the tab is visible, and draws one static frame under `prefers-reduced-motion`. Positions come from a seeded PRNG so the OG screenshot is stable across builds. Optional `opts`: `points`, `k` (neighbours, default 5), `seed`, `speed` (motion multiplier), and colours `point`, `neighbour`, `query`.
+It animates only while its slide is current and the tab is visible. Positions come from a seeded PRNG so the OG screenshot is stable across builds. Optional `opts`: `points`, `k` (neighbours, default 5), `seed`, `speed` (motion multiplier), and colours `point`, `neighbour`, `query`.
 
 ### Shared UMAP modality-gap point cloud
 
