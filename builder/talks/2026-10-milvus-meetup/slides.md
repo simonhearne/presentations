@@ -892,10 +892,11 @@ PCA and Matryoshka trade accuracy for speed and cost. Refinement spends a little
   renderer: svg
   actions: false
   signal-stage: [0, 1, 2]
+  fragment-index: 0
   fit: contain
 ```
 
-<blockquote class="blue fragment bottom"><span class="label">The catch</span><p>The harder you filter, the more of the graph you destroy. So there's no single fix - <span class="hit-text">the right technique depends on how much survives the filter</span>.</p></blockquote>
+<blockquote class="blue fragment bottom" data-fragment-index="1"><span class="label">The catch</span><p>The harder you filter, the more of the graph you destroy. So there's no single fix - <span class="hit-text">the right technique depends on how much survives the filter</span>.</p></blockquote>
 
 <!-- notes
 Same errand, now with the filters every shop has: size 38, under 150 euros.
@@ -911,39 +912,13 @@ No error, no warning: the shopper just never sees it.
 
 # Three ways out
 
-<br>
-
-<p style="text-align: center">Two questions pick the strategy: <strong>how much survives</strong> the filter, and <strong>how much the filter costs</strong> to evaluate.</p>
-
-<br>
-
-<div class="three-col cards" style="align-items: stretch; margin: 1vh 0;">
-<div class="fragment">
-
-**Very selective** · brute force
-
-Under about 1% survives. The graph is mostly holes, so Milvus **skips it** and computes exact distances over the survivors: cheap because the set is tiny, and **100% recall**.
-
-</div>
-<div class="fragment">
-
-**In between** · keep the graph walkable
-
-Milvus's **alpha strategy** still visits some filtered-out nodes, with a probability set by the filter ratio, so the search can step *through* them to reach matches instead of stranding.
-
-</div>
-<div class="fragment">
-
-**Expensive filters** · iterative
-
-JSON paths and string matches cost more than distance maths. **Iterative filtering** pulls nearest neighbours in batches and filters each batch, until _k_ survive. Turn it on with a search hint.
-
-</div>
-</div>
-
-<br>
-
-<blockquote class="blue fragment bottom"><span class="label">In Milvus</span><p>The brute-force switch and alpha are <span class="hit-text">automatic</span>. Iterative filtering is a hint. On Zilliz Cloud, metadata-aware indexing adds subgraphs for filter values you hit often, and AUTOINDEX tunes the rest from your data's statistics.</p></blockquote>
+```vega
+- spec: ../../visualisations/filter-strategies.json
+  renderer: svg
+  actions: false
+  signal-stage: [0, 1, 2, 3]
+  fit: contain
+```
 
 <!-- src: milvus.io/blog/how-to-filter-efficiently-without-killing-recall.md (alpha strategy, brute-force fallback at ~99% filtered, metadata-aware column graphs, iterative filtering, external filtering, AUTOINDEX) -->
 <!-- src: milvus.io/docs/filtered-search.md (search_params={"hints": "iterative_filter"}) -->
@@ -951,15 +926,17 @@ JSON paths and string matches cost more than distance maths. **Iterative filteri
 <!-- notes
 Source: milvus.io/blog/how-to-filter-efficiently-without-killing-recall.md.
 
-Very selective: when the filter removes about 99%, Milvus detects it and
-falls back to brute force over the survivors.
+Axes first: how much survives the filter, and how costly the filter is.
 
-In between: alpha. The graph traversal visits filtered-out nodes with a
+Alpha (cheap filter, most survive). The graph traversal visits filtered-out nodes with a
 probability tied to the filter ratio, purely as stepping stones, so matches
 on the far side stay reachable. That is the "graph destroyed" picture on the
 previous slide, repaired.
 
-Expensive filters: iterative filtering, inspired by VBase. Search a batch,
+Brute force (right strip): when the filter removes about 99%, Milvus detects it and
+falls back to brute force over the survivors.
+
+Iterative (costly filter): inspired by VBase. Search a batch,
 filter it, fetch more until k survive. Wins when evaluating the filter costs
 more than the vector maths. The hint is hints="iterative_filter" in the
 search params.
@@ -967,7 +944,9 @@ search params.
 If asked: metadata-aware indexing (column graphs per field) for repeated
 filter patterns; external filtering through the search iterator when the
 filter data lives in Postgres or Mongo. ACORN is the academic approach to
-the same problem.
+the same problem. On Zilliz Cloud, metadata-aware indexing adds subgraphs
+for filter values you hit often, and AUTOINDEX tunes the rest from your
+data's statistics.
 -->
 ---
 

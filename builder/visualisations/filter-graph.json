@@ -188,7 +188,7 @@
       "type": "text",
       "encode": {
         "update": {
-          "x": {"scale": "xScale", "value": 7.0},
+          "x": {"scale": "xScale", "value": 7.4},
           "y": {"scale": "yScale", "value": 4.8},
           "dy": {"value": 30},
           "text": {"value": "search stops here"},
