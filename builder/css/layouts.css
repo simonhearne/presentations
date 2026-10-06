@@ -2101,7 +2101,7 @@
 /* Metrics ladder: four layers of search measurement, revealed bottom-up
    (column-reverse keeps DOM order index-first so fragments step upward). */
 .slide .metric-ladder { margin-top: var(--zilliz-s-3); font-size: 22px; }
-.metric-ladder .ml-head, .metric-ladder .ml-rung { display: grid; grid-template-columns: 200px minmax(0, 1.5fr) minmax(0, 1fr) minmax(0, 0.8fr) minmax(0, 1fr); gap: var(--zilliz-s-3); align-items: center; }
+.metric-ladder .ml-head, .metric-ladder .ml-rung { display: grid; grid-template-columns: 150px minmax(0, 1.5fr) minmax(0, 1fr) minmax(0, 0.8fr) minmax(0, 1fr); gap: var(--zilliz-s-3); align-items: center; }
 .metric-ladder .ml-head { padding: 0 var(--zilliz-s-3) var(--zilliz-s-1) calc(var(--zilliz-s-3) + 64px); font-family: var(--zilliz-font-mono); font-size: 16px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--zilliz-grey); }
 .metric-ladder .ml-body { display: grid; grid-template-columns: 48px 1fr; gap: var(--zilliz-s-2); }
 .metric-ladder .ml-rail { position: relative; border-left: 0; display: flex; align-items: center; justify-content: center; }
@@ -2114,3 +2114,12 @@
 .metric-ladder .ml-name { font-family: var(--zilliz-font-mono); font-size: 22px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; color: var(--zilliz-navy); }
 .metric-ladder .ml-metrics { display: flex; flex-wrap: wrap; gap: 6px; }
 .metric-ladder .ml-metrics .pill { min-width: 0; font-size: 16px; }
+
+/* Dataset pill strip under a chart, same idea as .methodology .rig. */
+.slide .chart-rig { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--zilliz-s-1) var(--zilliz-s-2); margin: var(--zilliz-s-2) 0 0; }
+.slide .chart-rig .pill { min-width: 0; }
+
+/* .eyebrow-bench — names which benchmark a results slide belongs to, on its
+   own line above the heading; the claim stays the title. Stripped from the
+   footer title and slug by HEADING_EYEBROW_RE like the other eyebrows. */
+.slide .eyebrow-bench { display: block; margin-bottom: var(--zilliz-s-1); font-family: var(--zilliz-font-mono); font-size: 20px; font-weight: 700; line-height: 1.2; letter-spacing: 0.06em; text-transform: uppercase; color: var(--zilliz-blue); }

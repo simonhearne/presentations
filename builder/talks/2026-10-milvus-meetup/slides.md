@@ -1165,26 +1165,36 @@ for the golden set, or you're scoring against yesterday's catalogue.
 <div class="ml-body">
 <div class="ml-rail"><span>closer to the user</span></div>
 <div class="ml-rungs">
-<div class="ml-rung fragment" data-fragment-index="1"><span class="ml-name">Index</span><span class="ml-metrics"><span class="pill ghost">recall@k</span></span><span>exact search</span><span>every deploy</span><span>ANN params, data drift</span></div>
-<div class="ml-rung fragment" data-fragment-index="2"><span class="ml-name">Relevance</span><span class="ml-metrics"><span class="pill ghost">NDCG@k</span><span class="pill ghost">MRR</span><span class="pill ghost">precision@k</span></span><span>graded human or LLM labels</span><span>every model change</span><span>weak embeddings, chunking</span></div>
-<div class="ml-rung fragment" data-fragment-index="3"><span class="ml-name">Behaviour</span><span class="ml-metrics"><span class="pill ghost">CTR</span><span class="pill ghost">zero results</span><span class="pill ghost">reformulations</span><span class="pill ghost">thumbs up / down</span></span><span>real users</span><span>live, A/B</span><span>ranking users ignore</span></div>
-<div class="ml-rung fragment" data-fragment-index="4"><span class="ml-name">Business</span><span class="ml-metrics"><span class="pill ghost">conversion</span><span class="pill ghost">revenue / search</span><span class="pill ghost">return rate</span></span><span>the P&amp;L</span><span>A/B, quarterly</span><span>relevant that doesn't sell</span></div>
+<div class="ml-rung fragment" data-fragment-index="1"><span class="ml-name">Model</span><span class="ml-metrics"><span class="pill ghost">LGTM@k</span><span class="pill ghost">answer presence</span><span class="pill ghost">MTEB</span></span><span>labels, using exact search</span><span>model change</span><span>weak embeddings, chunking</span></div>
+<div class="ml-rung fragment" data-fragment-index="2"><span class="ml-name">Index</span><span class="ml-metrics"><span class="pill ghost">recall@k</span><span class="pill ghost">filtered recall</span><span class="pill ghost">p99 latency</span></span><span>exact search</span><span>every deploy</span><span>ANN params, data drift</span></div>
+<div class="ml-rung fragment" data-fragment-index="3"><span class="ml-name">Relevance</span><span class="ml-metrics"><span class="pill ghost">NDCG@k</span><span class="pill ghost">MRR</span><span class="pill ghost">precision@k</span></span><span>graded human or LLM labels</span><span>every pipeline change</span><span>bad ranking, filters, reranker</span></div>
+<div class="ml-rung fragment" data-fragment-index="4"><span class="ml-name">Behaviour</span><span class="ml-metrics"><span class="pill ghost">CTR</span><span class="pill ghost">zero results</span><span class="pill ghost">search modifications</span><span class="pill ghost">thumbs up / down</span></span><span>real users</span><span>live, A/B</span><span>ranking users ignore</span></div>
+<div class="ml-rung fragment" data-fragment-index="5"><span class="ml-name">Business</span><span class="ml-metrics"><span class="pill ghost">conversion</span><span class="pill ghost">revenue / search</span><span class="pill ghost">return rate</span></span><span>the P&amp;L</span><span>A/B, quarterly</span><span>relevant that doesn't sell</span></div>
 </div>
 </div>
 </div>
 
-<blockquote class="blue fragment bottom" data-fragment-index="5"><span class="label">Watch every layer</span><p>Each layer up is slower and noisier, but closer to what matters. A dip at the <span class="hit-text">bottom</span> is cheap to catch.</p></blockquote>
+<blockquote class="blue fragment bottom" data-fragment-index="6"><span class="label">Watch every layer</span><p>Each layer up is slower and noisier, but closer to what matters. A dip at the <span class="hit-text">bottom</span> is cheap to catch.</p></blockquote>
 
 <!-- notes
 Recall@k tells you the index agrees with exact search. It doesn't tell you
 exact search was any good. So measure up the stack, bottom first.
 
-Index: what we just built. Cheap, deterministic, run it on every deploy.
+Model: the ceiling. Before any index, run your own labelled queries
+through exact search: if the right answer isn't in the top k there, no
+index setting will put it there. Public benchmarks like MTEB help you
+shortlist, LGTM@k on your own queries decides. Re-run it whenever you change the
+model or the chunking.
 
-Relevance: now you need labels. Graded judgements from people, or an LLM
-judge you've checked against people. NDCG rewards putting the best result
-first, MRR asks how far down the first good one is. This is where a bad
-embedding model or bad chunking shows up, and no nprobe fixes it.
+Index: what we just built. Cheap, deterministic, run it on every deploy.
+Slice it by filter too: the average can hold while the size-38 queries
+collapse. And track p99 latency next to it, because every recall knob you
+turn moves latency as well.
+
+Relevance: the whole pipeline, end to end: ANN, filters, hybrid, reranker.
+Graded judgements from people, or an LLM judge you've checked against
+people. NDCG rewards putting the best result first, MRR asks how far down
+the first good one is.
 
 Behaviour: real users. Click-through, how often a search returns nothing,
 how often people rephrase, thumbs up and down in a chat UI. Noisy, needs
@@ -1205,9 +1215,11 @@ are, with real numbers.
 # Is the index <span class="hero-text">worth it</span>?
 
 <div class="section-byline">
-  <div class="bi-cell get"><span class="bi-num">Code search</span><span class="bi-lab">benchmark: grep vs index</span></div>
+  <div class="bi-cell get"><span class="bi-num">Q&amp;A</span><span class="bi-lab">Wikipedia: recall vs answers</span></div>
+  <div class="bi-arrow">·</div>
+  <div class="bi-cell get"><span class="bi-num">Code</span><span class="bi-lab">code search: grep vs index</span></div>
   <div class="bi-arrow">&amp;</div>
-  <div class="bi-cell get"><span class="bi-num">Agentic memory</span><span class="bi-lab">benchmark: replay vs index</span></div>
+  <div class="bi-cell get"><span class="bi-num">Memory</span><span class="bi-lab">agent memory: replay vs index</span></div>
 </div>
 
 <!-- notes
@@ -1224,7 +1236,7 @@ reproducible, every number traceable to a CSV.
 
 {.small-title}
 
-# Recall isn't answer quality
+# [Q&A benchmark]{.eyebrow-bench} Recall isn't answer quality
 
 *Index recall: does the index match exact search? Answer-presence: is the answer in the top 10?*
 
@@ -1240,6 +1252,8 @@ reproducible, every number traceable to a CSV.
 ```
 
 </div>
+
+<p class="rig chart-rig"><span class="pill ghost">NQ-Open</span><span class="pill ghost">450 questions</span><span class="pill ghost">10M Wikipedia 2023-11</span><span class="pill ghost">mxbai-embed-large-v1</span><span class="pill ghost">11 index configs</span></p>
 
 <blockquote class="blue fragment" style="margin-top: var(--zilliz-s-3)"><span class="label">Evaluate the model first</span><p>The embedding model and chunking set the ceiling. Measure <span class="hit-text">LGTM@k</span> using exact search before ANN.</p></blockquote>
 
@@ -1275,9 +1289,9 @@ embedding models against it before you touch the index.
 
 {.small-title}
 
-# Benchmarking agentic search
+# [Code search benchmark setup]{.eyebrow-bench} Three ways to answer a question
 
-Three ways for an agent to answer the same question, the search itself is not expensive.
+The same question, three ways to feed the model. The search itself is never the expensive part.
 
 <svg class="cost-anatomy" viewBox="0 0 1400 378" role="img" aria-label="One pipeline, three ways to feed it. A question goes into a model and the model returns an answer. Three stations sit below the model. Parametric has no retrieval at all and pays only for the answer it writes. Agentic loops three to four times through a grep, read and glob tool, each turn cheap on its own but re-sending the whole transcript. Indexed takes one or two fat payloads of chunks from a vector search, and carries a navy band across the foot of its own box marking the charge it incurs per day whether or not anything is asked. Every per-query charge is marked with a purple coin; the one per-day charge is the navy band inside the index's box.">
 <defs>
@@ -1362,7 +1376,7 @@ question is always how many queries a day repay the box.
 
 {.chart-animate}
 
-# Training data matters
+# [Code benchmark]{.eyebrow-bench} Training data matters
 
 A blind model answered 25 of 40 questions on fastapi, and
 0 on a repository published after training cutoff.
@@ -1395,7 +1409,7 @@ arm, claude-context search_code over a Milvus index for the indexed arm.
 
 {.chart-animate .small-title}
 
-# Cost per correct answer
+# [Code benchmark]{.eyebrow-bench} Cost per correct answer
 
 *Total agent spend over the whole run, divided by the answers the judge marked correct*
 
@@ -1452,7 +1466,7 @@ Caveats to have ready, do not volunteer them all:
 
 {.memory-break-even}
 
-# Break-even on agentic memory
+# [Memory benchmark]{.eyebrow-bench} Break-even on agentic memory
 
 *No memory system vs Milvus memsearch index on a box at $86.07 a month*
 
@@ -1498,13 +1512,13 @@ the window the index wins on answers, not on price.
 
 {.floor-rungs}
 
-# The floor can go to zero
+# [Cost]{.eyebrow-bench} Assuming you pay for an index...
 
-*Same index, same corpus, the same measured token costs. Only the thing underneath it changes*
+*I assumed the worst-case - that you provision a VM just for the use case*
 
 <div class="card-grid cols-3">
 <div class="card"><p><span class="pill gradient">a box of your own</span></p><p>A dedicated r8g.large at <strong>$86.07 a month</strong> to hold the index. Break-even lands at <strong>10 to 334</strong> queries per day with a warm cache, and <strong>under 8</strong> with a cold one.<!-- src: data/ws5/break_even.csv:infra_mode=dedicated infra_month=86.06751; break_even_qpd 333.76/14.84/10.42 at S/M/L; data/ws5/churn.csv:live_cache=invalidated churn_frac_per_day=0.0 edit_kind=append break_even_qpd 7.41/1.82/0.74 --></p></div>
-<div class="card"><p><span class="pill navy">a box you already run</span></p><p>Milvus Lite on your laptop or spare space on an existing box. Same index, same prices, break-even on the first query.<!-- src: data/ws5/sensitivity.csv:max_spread_ratio=68944.94 knob=infra_mode workload=memory. The workload filter is load-bearing since WS9: the same knob reads 7421.06 on code_unseen --></p></div>
+<div class="card"><p><span class="pill navy">a box you already run</span></p><p>Milvus Lite or Standalone on your laptop or spare space on an existing box. Same index, same prices, break-even on the first query.<!-- src: data/ws5/sensitivity.csv:max_spread_ratio=68944.94 knob=infra_mode workload=memory. The workload filter is load-bearing since WS9: the same knob reads 7421.06 on code_unseen --></p></div>
 <div class="card is-win"><p><span class="pill ghost">no box at all</span></p><p>Serverless, metered per query with no floor to amortise. Every corpus combined fits into the <strong>Zilliz free-forever</strong> tier.<!-- src: data/ws5/serverless.csv:ws8_issues.billed_gb_upper=0.246826 pct_of_free_storage=4.9365 usd_per_query_max=0.00006; data/ws5/break_even.csv:c_index_query 0.0114765 to 0.0665983 --></p></div>
 </div>
 
