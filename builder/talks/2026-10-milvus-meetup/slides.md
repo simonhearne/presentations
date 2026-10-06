@@ -211,6 +211,17 @@ Every technique trades **speed**, **accuracy** & **cost**.
 
 # <span class="hero-text">Approximate</span> <br>nearest neighbour
 
+<div class="ann-byline">
+  <div class="bi-cell give"><span class="bi-num">&lt;10%</span><span class="bi-lab">recall you give up</span></div>
+  <div class="bi-arrow">→</div>
+  <div class="bi-cell get"><span class="bi-num">&gt;100×</span><span class="bi-lab">faster, cheaper search</span></div>
+</div>
+
+<!-- notes
+The big idea of the whole talk, in one line: give up under 10% recall, get
+over 100x faster and cheaper search. Everything in this section is how.
+-->
+
 ---
 
 {.small-title}
@@ -300,29 +311,6 @@ Sequins: a party, but this is a daytime garden in Provence. Trousers: right
 fabric, not a dress. The two we missed sit at 14 and 27, perfectly good
 dresses the index ranked below the cut.
 -->
----
-
-{.no-chrome .dark .no-title .center}
-
-# The big idea
-
-<style>
-  .big-idea { display: flex; align-items: center; justify-content: center; gap: 3vw; margin: 10vh 0; font-size: 32px; }
-  .big-idea .bi-cell { display: flex; flex-direction: column; align-items: center; }
-  .big-idea .bi-num { font-size: 3.4em; font-weight: 800; line-height: 1; }
-  .big-idea .bi-lab { font-family: var(--zilliz-font-mono, monospace); font-size: 0.85em; opacity: 0.65; margin-top: 0.6em; }
-  .big-idea .give .bi-num { color: #94a3b8; }
-  .big-idea .get .bi-num { color: var(--zilliz-blue, #175fff); }
-  .big-idea .bi-arrow { font-size: 2.6em; opacity: 0.4; }
-  .big-idea-foot { text-align: center; font-size: 1.3em; }
-</style>
-
-<div class="big-idea">
-  <div class="bi-cell give"><span class="bi-num">&lt;10%</span><span class="bi-lab">recall you give up</span></div>
-  <div class="bi-arrow">→</div>
-  <div class="bi-cell get"><span class="bi-num">&gt;100×</span><span class="bi-lab">faster, cheaper search</span></div>
-</div>
-
 ---
 
 # IVF: partition the space
