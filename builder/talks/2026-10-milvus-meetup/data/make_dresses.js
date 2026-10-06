@@ -37,7 +37,6 @@ const DRESSES = [
   { name: 'Charcoal Jersey Maxi', length: 0.85, formality: -0.45, hex: '#3b3b40' },
 ];
 
-const CARD = '#f4f1ec';
 
 function rgb(hex) {
   const n = parseInt(hex.slice(1), 16);
@@ -73,7 +72,7 @@ function patternDef(kind, fill, id) {
     case 'floral':
       return `<pattern id="${id}" width="26" height="26" patternUnits="userSpaceOnUse">
         <circle cx="7" cy="7" r="3.2" fill="${ink}"/><circle cx="20" cy="19" r="2.4" fill="${ink}" opacity="0.7"/>
-        <circle cx="7" cy="7" r="1.1" fill="${CARD}"/></pattern>`;
+        <circle cx="7" cy="7" r="1.1" fill="#ffffff"/></pattern>`;
     case 'stripe':
       return `<pattern id="${id}" width="20" height="18" patternUnits="userSpaceOnUse">
         <rect y="0" width="20" height="6" fill="#2c4a7a"/></pattern>`;
@@ -145,7 +144,6 @@ function dressSvg({ length, formality, hex, pattern }, i) {
 
   const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="600" height="800" viewBox="0 0 300 400">
   <defs>${def}<clipPath id="${cid}">${shape}</clipPath></defs>
-  <rect x="2" y="2" width="296" height="396" rx="26" fill="${CARD}"/>
   ${hanger}${straps}
   <g fill="${hex}" stroke="${outline}" stroke-width="2.5" stroke-linejoin="round">${shape}</g>
   ${overlay}${folds.join('')}${belt}${sheen}
@@ -178,6 +176,6 @@ const previewIdx = process.argv.indexOf('--preview');
 if (previewIdx !== -1) {
   const out = resolve(process.argv[previewIdx + 1]);
   const cards = DRESSES.map((d, i) => `<figure>${dressSvg(d, i).replace('width="600" height="800"', 'width="150" height="200"')}<figcaption>${d.name}</figcaption></figure>`);
-  writeFileSync(out, `<body style="background:#0a0e1a;color:#ddd;font:12px sans-serif;display:flex;flex-wrap:wrap;gap:12px">${cards.join('')}</body>`);
+  writeFileSync(out, `<body style="background:#ffffff;color:#333;font:12px sans-serif;display:flex;flex-wrap:wrap;gap:12px">${cards.join('')}</body>`);
   console.log(`wrote ${out}`);
 }

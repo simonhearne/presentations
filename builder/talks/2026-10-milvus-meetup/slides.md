@@ -152,7 +152,7 @@ So what does our library look like?
 
 ---
 
-{.dark .small-title}
+{.small-title}
 
 # Let's build a dress-finder model
 
@@ -220,22 +220,6 @@ Compare the query to every entity in the database. Exact, simple, **O(N)**.
 
 ---
 
-{.chart-animate .small-title}
-
-# The trade-off triangle
-
-Every technique trades **speed**, **accuracy** & **cost**.
-
-```vega
-- spec: ../../visualisations/trade-off-triangle.json
-  renderer: svg
-  signal-stage: [0,1]
-  actions: false
-  fit: contain
-```
-
----
-
 {.section}
 
 # <span class="hero-text">Approximate</span> <br>nearest neighbour
@@ -250,6 +234,22 @@ Every technique trades **speed**, **accuracy** & **cost**.
 The big idea of the whole talk, in one line: give up under 10% recall, get
 over 100x faster and cheaper search. Everything in this section is how.
 -->
+
+---
+
+{.chart-animate .small-title}
+
+# The trade-off triangle
+
+Every technique trades **speed**, **accuracy** & **cost**.
+
+```vega
+- spec: ../../visualisations/trade-off-triangle.json
+  renderer: svg
+  signal-stage: [0,1]
+  actions: false
+  fit: contain
+```
 
 ---
 
@@ -342,6 +342,19 @@ dresses the index ranked below the cut.
 -->
 ---
 
+# HNSW: navigate a graph
+
+**Hierarchical Navigable Small World.** Multi-layer graph: top layers have long-range highways, lower layers have local connections. Start at the top, walk greedily closer, drop down a layer, repeat.
+
+```vega
+- spec: ../../visualisations/hnsw.json
+  renderer: svg
+  signal-step: [0,1,2,3,4,5,6,7,8]
+  actions: false
+```
+
+---
+
 # IVF: partition the space
 
 IVF clusters the vectors into _nlist_ cells. At query time, only search within the nearest _nprobe_ cells. A true neighbour just over the border of a cell you never open is simply gone.
@@ -369,19 +382,6 @@ fix, and it is paid for in scanned vectors.
 Query pinned at qx=5.75, qy=5 (chosen so nprobe 2 misses five) and frozen
 on load. Click the chart to let the query follow the pointer.
 -->
-
----
-
-# HNSW: navigate a graph
-
-**Hierarchical Navigable Small World.** Multi-layer graph: top layers have long-range highways, lower layers have local connections. Start at the top, walk greedily closer, drop down a layer, repeat.
-
-```vega
-- spec: ../../visualisations/hnsw.json
-  renderer: svg
-  signal-step: [0,1,2,3,4,5,6,7,8]
-  actions: false
-```
 
 ---
 
@@ -459,32 +459,81 @@ Approximate nearest-neighbour algorithms all trade perfection for reduced latenc
 
 # Sounds... complex?
 
-`HNSW`, `IVF`, `DiskANN`, `nlist`, `nprobe`, `M`, `ef`, `search_list`. Can't the machine work it out?
+All those knobs. Can't the machine work it out?
 
-<div class="two-col cards" style="align-items: stretch; margin: 1.5em 0;">
-<div class="fragment">
+<!--
+TALK TRACK (~40s, 2 advances)
 
-**You tune** · open-source Milvus / other VectorDB
+Stage 0 - You tune.
+  On screen: one control panel, eight decisions across build, query, operate.
+  "Everything we just saw is yours to set in open-source Milvus. Pick the
+   metric, pick the index family, set its build knobs, pick quantisation.
+   Then at query time a different knob per family: nprobe for IVF, ef for
+   HNSW, search_list for DiskANN. And when the data shifts, you re-tune."
 
-- Pick the index family yourself - IVF, HNSW, DiskANN, GPU…
-- Set build knobs: `nlist`, `M` / `efConstruction` etc.
-- Set search knobs per query: `nprobe`, `ef` - and re-tune as data shifts
-- Choose quantisation & memory mode by hand
+Stage 1 - AUTOINDEX decides. [->]
+  On screen: build controls are replaced by AUTO pills, the three query knobs fold
+  into one level dial, the counter drops to 2.
+  "With AUTOINDEX you still choose the metric. Index type, build params and
+   quantisation are picked for you, per segment, and re-optimised as data
+   moves. At query time there is one dial, level 1 to 10: recall vs speed."
 
-</div>
-<div class="fragment">
+Stage 2 - Trade-off. [->]
+-->
 
-**AUTOINDEX decides** · managed
+<svg class="tune-panel" viewBox="0 0 1700 570" role="img" aria-label="A control panel of index settings. Manually you set eight things: metric, index family, M, efConstruction and quantisation at build time, nprobe, ef or search_list per query, and re-tune by hand as the data shifts. With AUTOINDEX the build row is chosen automatically, the three query knobs collapse into a single level dial from 1 to 10, and only the metric and level remain yours.">
+<rect class="panel" x="10" y="80" width="1680" height="480" rx="16"/>
+<path class="divider" d="M30 270 H1670 M30 450 H1670"/>
+<g class="head manual"><text class="htitle" x="20" y="50">You tune <tspan class="hsub">· open-source Milvus / other vector DBs</tspan></text><text class="hcount" x="1690" y="50" text-anchor="end">8 decisions</text></g>
+<g class="rows">
+<text class="rlabel" x="40" y="170">BUILD</text><text class="rsub" x="40" y="197">per index</text>
+<text class="rlabel" x="40" y="355">QUERY</text><text class="rsub" x="40" y="382">per request</text>
+<text class="rlabel" x="40" y="500">OPERATE</text><text class="rsub" x="40" y="527">as data shifts</text>
+</g>
+<g class="switch">
+<rect class="sw" x="210" y="135" width="270" height="50" rx="25"/><rect class="sw-on" x="390" y="135" width="90" height="50" rx="25"/>
+<text class="swt" x="255" y="167" text-anchor="middle">L2</text><text class="swt" x="345" y="167" text-anchor="middle">IP</text><text class="swt on" x="435" y="167" text-anchor="middle">COSINE</text>
+<text class="klabel" x="345" y="232" text-anchor="middle">metric</text>
+</g>
+<g class="auto-dim">
+<g class="switch">
+<rect class="sw" x="510" y="135" width="400" height="50" rx="25"/><rect class="sw-on" x="610" y="135" width="100" height="50" rx="25"/>
+<text class="swt" x="560" y="167" text-anchor="middle">IVF</text><text class="swt on" x="660" y="167" text-anchor="middle">HNSW</text><text class="swt" x="760" y="167" text-anchor="middle">DiskANN</text><text class="swt" x="860" y="167" text-anchor="middle">GPU</text>
+<text class="klabel" x="710" y="232" text-anchor="middle">index</text>
+</g>
+<g class="knob" transform="translate(1060 160)"><circle r="32"/><path d="M0 0 V-24" transform="rotate(40)"/></g><text class="klabel" x="1060" y="232" text-anchor="middle">M</text>
+<g class="knob" transform="translate(1200 160)"><circle r="32"/><path d="M0 0 V-24" transform="rotate(115)"/></g><text class="klabel" x="1200" y="232" text-anchor="middle">efConstruction</text>
+<g class="switch">
+<rect class="sw" x="1350" y="135" width="285" height="50" rx="25"/><rect class="sw-on" x="1445" y="135" width="95" height="50" rx="25"/>
+<text class="swt" x="1397" y="167" text-anchor="middle">none</text><text class="swt on" x="1492" y="167" text-anchor="middle">SQ8</text><text class="swt" x="1587" y="167" text-anchor="middle">PQ</text>
+<text class="klabel" x="1492" y="232" text-anchor="middle">quantisation</text>
+</g>
+</g>
+<g class="collapse" style="--dx: 160px"><g class="knob" transform="translate(360 350)"><circle r="32"/><path d="M0 0 V-24" transform="rotate(20)"/></g><text class="klabel" x="360" y="420" text-anchor="middle">nprobe</text></g>
+<g class="collapse" style="--dx: 0px"><g class="knob" transform="translate(520 350)"><circle r="32"/><path d="M0 0 V-24" transform="rotate(-90)"/></g><text class="klabel" x="520" y="420" text-anchor="middle">ef</text></g>
+<g class="collapse" style="--dx: -160px"><g class="knob" transform="translate(680 350)"><circle r="32"/><path d="M0 0 V-24" transform="rotate(75)"/></g><text class="klabel" x="680" y="420" text-anchor="middle">search_list</text></g>
+<text class="note manual" x="800" y="358">a different knob for every index family</text>
+<text class="op manual" x="210" y="513">↻  watch recall drift, re-tune, rebuild</text>
+<g class="stage stage-1 fragment" data-fragment-index="1">
+<g class="head"><text class="htitle" x="20" y="50">AUTOINDEX decides <tspan class="hsub">· managed, on Zilliz Cloud</tspan></text><text class="hcount auto" x="1690" y="50" text-anchor="end">2 decisions</text></g>
+<rect class="ring" x="198" y="123" width="294" height="74" rx="37"/>
+<text class="klabel auto" x="345" y="262" text-anchor="middle">you choose</text>
+<rect class="auto-badge" x="506" y="126" width="408" height="68" rx="34"/><text class="auto-badge-t" x="710" y="169" text-anchor="middle">AUTO</text>
+<rect class="auto-badge" x="1010" y="126" width="240" height="68" rx="34"/><text class="auto-badge-t" x="1130" y="169" text-anchor="middle">AUTO</text>
+<rect class="auto-badge" x="1346" y="126" width="293" height="68" rx="34"/><text class="auto-badge-t" x="1492" y="169" text-anchor="middle">AUTO</text>
+<g class="dial" transform="translate(520 360)">
+<circle r="56"/>
+<g class="ticks"><path d="M0 -64 V-74" transform="rotate(-135)"/><path d="M0 -64 V-74" transform="rotate(-105)"/><path d="M0 -64 V-74" transform="rotate(-75)"/><path d="M0 -64 V-74" transform="rotate(-45)"/><path d="M0 -64 V-74" transform="rotate(-15)"/><path d="M0 -64 V-74" transform="rotate(15)"/><path d="M0 -64 V-74" transform="rotate(45)"/><path d="M0 -64 V-74" transform="rotate(75)"/><path d="M0 -64 V-74" transform="rotate(105)"/><path d="M0 -64 V-74" transform="rotate(135)"/></g>
+<path class="pointer" d="M0 0 V-42" transform="rotate(-15)"/>
+<text class="dnum" x="-68" y="80" text-anchor="middle">1</text><text class="dnum" x="68" y="80" text-anchor="middle">10</text>
+</g>
+<text class="dlabel" x="640" y="352">level</text>
+<text class="dsub" x="640" y="386">one dial: recall vs speed</text>
+<text class="op auto" x="210" y="513">↻  re-optimised per segment as the data moves</text>
+</g>
+</svg>
 
-- You set the **metric** and performance characteristics
-- Index type, build params & quantisation tuned automatically
-- One query-time `level` dial (1 - 10)
-- Re-optimises per segment as the data moves
-
-</div>
-</div>
-
-<blockquote class="fragment bottom"><span class="label">Trade-off</span><p>Full control and full responsibility, or <span class="hit-text">one dial</span> and trust the engine.</p></blockquote>
+<blockquote class="fragment bottom" data-fragment-index="2"><span class="label">Trade-off</span><p>Full control and full responsibility, or <span class="hit-text">one dial</span> and trust the engine.</p></blockquote>
 
 ---
 

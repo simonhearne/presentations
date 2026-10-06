@@ -1987,3 +1987,45 @@
 .slide.memory-break-even .bar::before { content: ""; flex: 0 0 auto; height: 30px; width: max(4px, calc(var(--v) * (100% - 120px))); border-radius: 4px 0 0 4px; }
 .slide.memory-break-even .bar-replay::before { background: var(--zilliz-blue); }
 .slide.memory-break-even .bar-index::before { background: var(--zilliz-purple); }
+/* "Sounds... complex?" control panel. One panel drawn twice over: stage 0 is
+   every knob you set by hand, stage 1 swaps each build control for an AUTO pill
+   and folds the three query knobs (--dx to the middle one) into the level
+   dial, so the delta between the two modes is the animation itself. */
+.slide .tune-panel { display: block; width: 100%; height: auto; max-height: 520px; margin: var(--zilliz-s-3) auto 0; font-family: var(--zilliz-font-sans); }
+.tune-panel .panel { fill: var(--zilliz-white); stroke: var(--zilliz-blue-20); stroke-width: 2; }
+.tune-panel .divider { fill: none; stroke: var(--zilliz-blue-10); stroke-width: 2; }
+.tune-panel .htitle { font-size: 32px; font-weight: 700; fill: var(--zilliz-navy); }
+.tune-panel .hsub { font-weight: 400; fill: var(--zilliz-grey); }
+.tune-panel .hcount { font-family: var(--zilliz-font-mono); font-size: 26px; font-weight: 700; fill: var(--zilliz-navy); }
+.tune-panel .hcount.auto { fill: var(--zilliz-blue); }
+.tune-panel .rlabel { font-family: var(--zilliz-font-mono); font-size: 20px; font-weight: 700; letter-spacing: 0.1em; fill: var(--zilliz-navy); }
+.tune-panel .rsub { font-size: 17px; fill: var(--zilliz-grey); }
+.tune-panel .sw { fill: var(--zilliz-white); stroke: var(--zilliz-navy); stroke-width: 2.5; }
+.tune-panel .sw-on { fill: var(--zilliz-navy); }
+.tune-panel .swt { font-family: var(--zilliz-font-mono); font-size: 20px; font-weight: 600; fill: var(--zilliz-navy); }
+.tune-panel .swt.on { fill: var(--zilliz-white); }
+.tune-panel .knob circle { fill: var(--zilliz-blue-10); stroke: var(--zilliz-navy); stroke-width: 2.5; }
+.tune-panel .knob path { stroke: var(--zilliz-navy); stroke-width: 5; stroke-linecap: round; }
+.tune-panel .klabel { font-family: var(--zilliz-font-mono); font-size: 20px; font-weight: 600; fill: var(--zilliz-navy); }
+.tune-panel .klabel.auto { fill: var(--zilliz-blue); }
+.tune-panel .note { font-size: 22px; font-style: italic; fill: var(--zilliz-grey); }
+.tune-panel .op { font-size: 26px; fill: var(--zilliz-ink); }
+.tune-panel .op.auto { fill: var(--zilliz-blue); font-weight: 600; }
+.tune-panel .ring { fill: none; stroke: var(--zilliz-blue); stroke-width: 4; }
+.tune-panel .auto-badge { fill: var(--zilliz-blue); }
+.tune-panel .auto-badge-t { font-family: var(--zilliz-font-mono); font-size: 26px; font-weight: 700; letter-spacing: 0.05em; fill: var(--zilliz-white); }
+.tune-panel .dial > circle { fill: var(--zilliz-blue-10); stroke: var(--zilliz-blue); stroke-width: 4; }
+.tune-panel .dial .ticks path { stroke: var(--zilliz-blue); stroke-width: 4; stroke-linecap: round; }
+.tune-panel .dial .pointer { stroke: var(--zilliz-blue); stroke-width: 8; stroke-linecap: round; }
+.tune-panel .dnum { font-family: var(--zilliz-font-mono); font-size: 18px; font-weight: 700; fill: var(--zilliz-blue); }
+.tune-panel .dlabel { font-family: var(--zilliz-font-mono); font-size: 34px; font-weight: 700; fill: var(--zilliz-blue); }
+.tune-panel .dsub { font-size: 22px; fill: var(--zilliz-ink); }
+.tune-panel .manual, .tune-panel .auto-dim { transition: opacity 300ms ease; }
+.tune-panel .collapse { transform-box: view-box; transition: transform 450ms ease, opacity 300ms ease; }
+.slide:has(.tune-panel .stage-1.is-revealed) .tune-panel .manual { opacity: 0; }
+.slide:has(.tune-panel .stage-1.is-revealed) .tune-panel .auto-dim { opacity: 0.25; }
+/* The controls themselves go entirely so nothing bleeds past the AUTO pills;
+   only their labels stay, dimmed, to say what the engine now owns. */
+.tune-panel .auto-dim :is(.sw, .sw-on, .swt, .knob) { transition: opacity 300ms ease; }
+.slide:has(.tune-panel .stage-1.is-revealed) .tune-panel .auto-dim :is(.sw, .sw-on, .swt, .knob) { opacity: 0; }
+.slide:has(.tune-panel .stage-1.is-revealed) .tune-panel .collapse { transform: translateX(var(--dx)); opacity: 0; }
