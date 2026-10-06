@@ -325,6 +325,82 @@ IVF clusters the vectors into _nlist_ cells. At query time, only search within t
 
 ---
 
+{.no-vega-bindings}
+
+# DiskANN: when RAM runs out
+
+Graph index, engineered for SSD. Minimises random reads, index billions of vectors on ~GBs of RAM.
+
+<!--
+TALK TRACK (~65s, one ArrowRight per stage - 8 advances, then the deck moves on)
+The viz walks through how DiskANN BUILDS its graph (Vamana), then queries it.
+Stages 2-4 zoom in on inserting one representative node to show the per-node rule;
+stage 5 is the finished graph after every node has been through that same procedure.
+
+Stage 0 - Entry point.
+  On screen: 60 dots, one purple diamond.
+  "DiskANN builds a navigable graph called Vamana. We pick the medoid -
+   the most central vector - as the fixed entry point every search starts from."
+
+Stage 1 - Random graph. [→]
+  On screen: faint grey edges, at most three per node.
+  "We don't start clever. Every node gets a few random edges. A bad map,
+   but a connected one - the build's whole job is to rewire it into something
+   worth following."
+
+Stage 2 - Greedy search. [→]
+  On screen: one node lit up, a blue path from the medoid, purple candidate rings.
+  "To add a node, we greedily walk the graph from the medoid towards it,
+   collecting everything we pass. Those become its candidate neighbours."
+
+Stage 3 - RobustPrune, α=1. [→]
+  On screen: three solid edges kept, three dashed edges dropped.
+  "Then we prune. Keep the nearest candidate; drop any candidate that's
+   closer to one we've already kept than it is to the node itself. That kills
+   redundant edges all pointing the same way."
+
+Stage 4 - RobustPrune, α=1.2. [→]
+  On screen: one long purple edge survives.
+  "Run it again, but relax the rule by a factor α, about 1.2. That spares one
+   long-range edge the strict pass would have cut. Diversity over pure
+   proximity - that's what keeps the graph shallow."
+
+Stage 5 - Built graph. [→]
+  On screen: the full graph, short local edges only.
+  "Repeat for every vector and you get this: clean, mostly-local hops. Easy
+   to follow - but crossing the space takes many hops, and on DiskANN every
+   hop is a disk read."
+
+Stage 6 - Shortcuts. [→]
+  On screen: purple long-range edges woven through.
+  "Those spared α-edges are the long-range shortcuts, threaded through the
+   whole graph. They let a search jump across the space in a few steps instead
+   of crawling neighbour to neighbour."
+
+Stage 7 - Query lands. [→]
+  On screen: purple query diamond appears in the cloud, no path yet.
+  "Now a query arrives. Here's the DiskANN bargain: the full vectors and the
+   graph itself live on SSD - RAM holds only a tiny compressed PQ summary.
+   So the only thing that costs us at query time is reading nodes off disk."
+
+Stage 8 - Graph traversal. [→]
+  On screen: thick blue path medoid→query, badge "DiskANN: 4 SSD reads /
+  Flat scan: 60 SSD reads".
+  "We start at the medoid and hop greedily toward the query. Every hop reads
+   one node from disk - four hops, four SSD reads. A flat scan would have to
+   pull all sixty vectors off disk to be sure. That gap is the whole point:
+   billions of vectors on disk, answered in a handful of random reads."
+-->
+
+```vega
+- spec: ../../visualisations/diskann-vamana.json
+  renderer: svg
+  signal-stage: [0,1,2,3,4,5,6,7,8]
+  actions: false
+```
+
+---
+
 # ANN Benefits
 
 ```vega
@@ -586,6 +662,38 @@ Each algorithm can use quantisation to trade accuracy for significantly reduced 
 
 ---
 
+# PCA: rotate, drop the quiet axes
+
+PCA finds the _directions_ of greatest variance and keeps the top _k_. Fewer dimensions, full precision.
+
+<div class="two-col" style="grid-template-columns: 1.6fr 1fr; align-items: center;">
+<div>
+
+```vega
+- spec: ../../visualisations/pca-projection.json
+  renderer: svg
+  signal-stage: [0, 1, 2, 3]
+  actions: false
+```
+
+</div>
+<div>
+
+<blockquote class="blue"><span class="label">Benefit</span><p>Keep <span class="hit-text">one number instead of two</span> and 94% of the variance - linear, fast, deterministic.</p></blockquote>
+
+<blockquote class=""><span class="label">Drawback</span><p>Maximises for <em>variance, not meaning</em>: structure on a low-variance axis is discarded, and it must be refit when the data shifts.</p></blockquote>
+
+</div>
+</div>
+<!--
+<aside class="speaker-notes">
+PCA is relatively rare in production workloads, AlloyDB is one solution that supports it natively.
+PCA will reduce precision, especially at low k values.
+</aside>
+-->
+
+---
+
 {.quant-steps}
 
 # MRL: one vector, many lengths
@@ -730,7 +838,7 @@ limit 10 and k=2 that is twenty rows rescored, not a thousand.
 
 If asked about re-ranking: Milvus rerankers score query-document text pairs
 after retrieval. They cannot raise recall@10, because the ten are already
-chosen. They move relevance, which is the next section's problem.
+chosen. They move relevance, which the last section comes back to.
 -->
 
 ---
