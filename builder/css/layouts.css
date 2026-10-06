@@ -1964,9 +1964,9 @@
 .levers-diagram .stage.is-current .tlabel { fill: var(--zilliz-white); }
 .slide .search-demo .body:has(> .section:nth-child(3)) { grid-template-columns: repeat(3, 1fr); gap: var(--zilliz-s-4); }
 .slide .search-demo .pill.near { background: #fff4dc; color: #8a5a00; }
-/* Three-station variant: the stations sit centred under the model at x 210 to
-   1190, so 15% side padding puts each caption under its own box. */
-.slide .cost-notes.cols-3 { grid-template-columns: repeat(3, 1fr); padding: 0 15%; }
+/* Three-station variant: the stations sit at x 40 to 1020 so the two retrieval
+   arms straddle the model; this padding puts each caption under its own box. */
+.slide .cost-notes.cols-3 { grid-template-columns: repeat(3, 1fr); padding: 0 27.143% 0 2.857%; }
 /* Break-even on agentic memory: the money table replaces the cost-curve chart.
    Numbers right-aligned in fixed columns so the rows read as comparisons; the
    two break-even rows sit apart from the per-query costs above them. */
@@ -2043,3 +2043,38 @@
   left: 0;
   white-space: nowrap;
 }
+
+/* "The EXPLAIN you don't get": the same dress query in two terminals. Postgres
+   shows its plan with the telling numbers marked; Milvus shows five bare hits.
+   The last step adds the exact-search list beside them and reveals a ghost row
+   under the hits for the perfect dress the search never returned (the green
+   node from the filter-graph slide, same hues). Both use visibility, not display, so their space
+   is reserved and nothing shifts when they appear. */
+.slide .explain-pair { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: var(--zilliz-s-4); align-items: stretch; margin-top: var(--zilliz-s-3); }
+.explain-pair .term { background: var(--zilliz-nearly-black); color: #d7deea; border-radius: var(--zilliz-radius-card); padding: var(--zilliz-s-3) var(--zilliz-s-4); display: flex; flex-direction: column; gap: var(--zilliz-s-2); box-shadow: var(--zilliz-shadow-card); }
+.explain-pair .term-head { display: flex; justify-content: space-between; align-items: baseline; font-family: var(--zilliz-font-mono); font-size: 18px; text-transform: uppercase; letter-spacing: 0.06em; }
+.explain-pair .term-name { color: var(--zilliz-grey); }
+.explain-pair .term-verdict { font-weight: 700; color: var(--zilliz-sky); }
+.slide .explain-pair pre { margin: 0; padding: 0; background: none; border: 0; font-family: var(--zilliz-font-mono); font-size: 22px; line-height: 1.45; color: var(--zilliz-white); white-space: pre; overflow: visible; }
+.explain-pair .prompt { color: var(--zilliz-grey); }
+.explain-pair .out { display: block; margin-top: var(--zilliz-s-2); color: #b9c3d6; }
+.explain-pair .term-tags { display: flex; gap: var(--zilliz-s-1); flex-wrap: wrap; margin-top: auto; }
+.explain-pair .term-tags span { font-family: var(--zilliz-font-mono); font-size: 16px; text-transform: uppercase; letter-spacing: 0.04em; color: var(--zilliz-sky); border: 1.5px solid rgba(73, 188, 255, 0.5); border-radius: 999px; padding: 4px 12px; }
+.explain-pair .hits { display: grid; grid-template-columns: 1fr 1fr; gap: var(--zilliz-s-3); }
+.slide .explain-pair .hit-list { list-style: none; margin: 0; padding: 0; font-family: var(--zilliz-font-mono); font-size: 20px; line-height: 1.3; }
+.slide .explain-pair .hit-list li { display: grid; grid-template-columns: 2.2em 1fr auto; column-gap: var(--zilliz-s-2); padding: 4px 12px; font-size: 24px; line-height: 1.3; border-radius: 6px; border: 2px solid transparent; margin: 0 0 4px; }
+.explain-pair .hit-list li span:last-child { font-variant-numeric: tabular-nums; }
+.slide .explain-pair .hit-list .hit-label { display: block; font-size: 15px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--zilliz-grey); padding-bottom: 2px; visibility: hidden; }
+.explain-pair .ghost-row { visibility: hidden; }
+.slide:has(.hit-list.truth.is-revealed) .hit-list .hit-label { visibility: visible; }
+.slide:has(.hit-list.truth.is-revealed) .ghost-row { visibility: visible; border: 2px dashed #54a24b; color: #54a24b; opacity: 0.75; }
+.slide:has(.hit-list.truth.is-revealed) .returned { background: rgba(228, 154, 59, 0.16); border-color: #e49a3b; color: #f2b866; }
+.explain-pair .perfect { background: rgba(84, 162, 75, 0.2); border-color: #54a24b; color: #8fd486; }
+
+/* "Cost per correct answer" summary: a two-row table under the chart, one
+   column per corpus, kept short so the chart above keeps its height. */
+.slide table.cost-latency { margin: var(--zilliz-s-2) auto 0; font-size: 24px; }
+.slide .cost-latency th, .slide .cost-latency td { padding: 8px var(--zilliz-s-3); vertical-align: baseline; }
+.slide .cost-latency thead th { font-size: 19px; }
+.slide .cost-latency tbody th { font-family: var(--zilliz-font-mono); font-size: 19px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; text-align: left; color: var(--zilliz-grey); border-bottom: 1px solid rgba(6, 25, 130, 0.08); }
+.slide .cost-latency tbody tr:last-child th { border-bottom: none; }

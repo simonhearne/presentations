@@ -922,7 +922,7 @@ chosen. They move relevance, which the last section comes back to.
 
 # Refinement pulls the other way
 
-PCA and Matryoshka trade accuracy for speed and cost. Refinement spends a little of both to buy **accuracy** back - the same triangle, travelled in reverse.
+Refinement spends a little cost & latency to buy **accuracy** back.
 
 ```vega
 - spec: ../../visualisations/trade-off-triangle.json
@@ -1027,38 +1027,73 @@ data's statistics.
 
 # The <span class="hero-text">EXPLAIN</span> you don't get
 
-<br>
-
-<div class="two-col cards" style="align-items: stretch; margin-top: 1vh;">
-<div class="fragment">
-
-**SQL / Lucene** · fails _loudly_
-
-- `EXPLAIN` hands you the plan - which index, which scan, what it cost
-- No match? You get **zero rows** - an unmistakable signal
-- You get errors, stack traces, log lines
-
+<div class="explain-pair">
+<div class="term fragment" data-fragment-index="1">
+<div class="term-head"><span class="term-name">postgres</span><span class="term-verdict">fails loudly</span></div>
+<pre><span class="prompt">=#</span> EXPLAIN ANALYZE SELECT * FROM dresses
+     WHERE size = 38 AND price &lt; 150;
+<span class="out">Index Scan using <mark>dresses_size_price_idx</mark>
+  (cost=<mark>0.42..8.44</mark> rows=12)
+  (actual time=0.03..0.04 <mark>rows=12</mark> loops=1)
+  Index Cond: ((size = 38) AND (price &lt; 150))
+Execution Time: 0.05 ms</span></pre>
+<div class="term-tags"><span>which index</span><span>what it cost</span><span>how many matched</span></div>
 </div>
-<div class="fragment">
-
-**Vector search** · fails _silently_
-
-- You get the _k_ rows you asked for - always
-- Each carries a rank & score. **Nothing else**
-- No plan, no "why", no "were these any good?"
-
+<div class="term milvus fragment" data-fragment-index="2">
+<div class="term-head"><span class="term-name">milvus</span><span class="term-verdict">fails silently</span></div>
+<pre><span class="prompt">&gt;&gt;&gt;</span> client.search("dresses", data=[q], limit=5,
+      filter="size == 38 and price &lt; 150")</pre>
+<div class="hits">
+<ol class="hit-list got">
+<li class="hit-label">what you got</li>
+<li class="returned"><span>#1</span><span>dress_8812</span><span>0.83</span></li>
+<li><span>#2</span><span>dress_1204</span><span>0.81</span></li>
+<li><span>#3</span><span>dress_0937</span><span>0.80</span></li>
+<li><span>#4</span><span>dress_5521</span><span>0.79</span></li>
+<li><span>#5</span><span>dress_3310</span><span>0.78</span></li>
+<li class="ghost-row"><span>✕</span><span>dress_0412</span><span>0.91</span></li>
+</ol>
+<ol class="hit-list truth fragment" data-fragment-index="3">
+<li class="hit-label">what was there</li>
+<li class="perfect"><span>#1</span><span>dress_0412</span><span>0.91</span></li>
+<li><span>#2</span><span>dress_8812</span><span>0.83</span></li>
+<li><span>#3</span><span>dress_1204</span><span>0.81</span></li>
+<li><span>#4</span><span>dress_0937</span><span>0.80</span></li>
+<li><span>#5</span><span>dress_5521</span><span>0.79</span></li>
+</ol>
 </div>
 </div>
+</div>
 
-<blockquote class="fragment bottom"><span class="label">The gap</span><p>SQL fails <span class="hit-text">loudly</span>. Vector search fails <span class="hit-text">silently</span> - so we build the instrumentation back ourselves.</p></blockquote>
+<blockquote class="fragment bottom" data-fragment-index="4"><span class="label">The gap</span><p>SQL fails <span class="hit-text">loudly</span>. Vector search fails <span class="hit-text">silently</span>, so we have to build the instrumentation back ourselves.</p></blockquote>
+
+<!-- notes
+Same errand as the filter slides: size 38, under 150 euros.
+
+Postgres first. EXPLAIN ANALYZE tells you which index it used, what it
+expected to cost, and how many rows actually matched. If nothing matched,
+you get zero rows, which is an unmistakable signal.
+
+Milvus, same query. Five rows, five scores. That's the whole response. No
+plan, no "why", no "were these any good?".
+
+Now put the two side by side. Left is what the filtered graph search
+returned. Right is what an exact search over the same filter returns. The
+perfect dress, 0.91, the green node from two slides back, is missing from
+the left. Nothing in the response tells you. The scores look healthy. Four
+of five overlap. You'd ship this.
+
+The only way to see the difference is to have the right-hand list. Which is
+the next slide.
+-->
 
 ---
 
 # Measure what you can't see
 
-You can't eyeball recall. You need a number - and you need it on every deploy.
+You can't eyeball recall. You need a constant measure to identify regressions & improvements.
 
-Build a **golden set**: freeze a sample of real queries, compute their _true_ neighbours once with exact brute-force - the O(N) scan from the start of this talk. That's your ground truth. Then score the production index against it - `recall@k`, continuously.
+Calculate ground truth for a representative set of queries, then score the production index against it - `recall@k`, continuously.
 
 ```dot
 golden [label="Golden\nquery set"]
@@ -1115,7 +1150,7 @@ reproducible, every number traceable to a CSV.
 
 </div>
 
-<blockquote class="blue fragment" style="margin-top: var(--zilliz-s-3)"><span class="label">Evaluate the model first</span><p>Even at near-perfect recall, answer-presence never got past 0.82. The <span class="hit-text">embedding model and chunking set the ceiling</span>.<br>Measure LGTM@k using exact search before ANN.</p></blockquote>
+<blockquote class="blue fragment" style="margin-top: var(--zilliz-s-3)"><span class="label">Evaluate the model first</span><p>The embedding model and chunking set the ceiling. Measure <span class="hit-text">LGTM@k</span> using exact search before ANN.</p></blockquote>
 
 <!-- src: ../rag-cost-curve/data/ws4/summary.csv:metric=answer_presence_at_10 sq8_np512 recall 0.992 quality 0.8178; rabitq_np256 recall 0.7811 quality 0.7911 -->
 
@@ -1149,7 +1184,7 @@ embedding models against it before you touch the index.
 
 {.small-title}
 
-# Where the cost comes from
+# Benchmarking agentic search
 
 Three ways for an agent to answer the same question, the search itself is not expensive.
 
@@ -1171,37 +1206,37 @@ Three ways for an agent to answer the same question, the search itself is not ex
 </g>
 
 <g class="stage stage-1 fragment" data-fragment-index="1">
-<rect class="node node-none" x="210" y="230" width="300" height="72" rx="10"/>
-<text class="nlabel nlabel-none" x="360" y="274" text-anchor="middle">no retrieval</text>
+<rect class="node node-none" x="40" y="230" width="300" height="72" rx="10"/>
+<text class="nlabel nlabel-none" x="190" y="274" text-anchor="middle">no retrieval</text>
 <circle class="coin" cx="1045" cy="66" r="18"/><text class="coin-mark" x="1045" y="74" text-anchor="middle">$</text>
 <text class="elabel" x="1045" y="106" text-anchor="middle">per query</text>
-<rect class="tag tag-ghost" x="265" y="336" width="190" height="38" rx="19"/><text class="tlabel tlabel-ghost" x="360" y="362" text-anchor="middle">parametric</text>
+<rect class="tag tag-ghost" x="95" y="336" width="190" height="38" rx="19"/><text class="tlabel tlabel-ghost" x="190" y="362" text-anchor="middle">parametric</text>
 </g>
 
 <g class="stage stage-2 fragment" data-fragment-index="2">
-<path class="edge call" d="M760 122 V224"/>
-<path class="edge flow flow-thin" d="M640 230 V126"/>
-<text class="elabel" x="614" y="188" text-anchor="end">&times; 3 to 4 turns</text>
-<rect class="node" x="550" y="230" width="300" height="72" rx="10"/>
-<text class="nlabel" x="700" y="274" text-anchor="middle">grep / read / glob</text>
-<circle class="coin" cx="640" cy="210" r="18"/><text class="coin-mark" x="640" y="218" text-anchor="middle">$</text>
-<text class="elabel" x="614" y="216" text-anchor="end">per query</text>
-<rect class="tag tag-navy" x="605" y="336" width="190" height="38" rx="19"/><text class="tlabel tlabel-navy" x="700" y="362" text-anchor="middle">agentic</text>
+<path class="edge call" d="M620 122 V224"/>
+<path class="edge flow flow-thin" d="M560 230 V126"/>
+<text class="elabel" x="534" y="188" text-anchor="end">&times; 3 to 4 turns</text>
+<rect class="node" x="380" y="230" width="300" height="72" rx="10"/>
+<text class="nlabel" x="530" y="274" text-anchor="middle">grep / read / glob</text>
+<circle class="coin" cx="560" cy="210" r="18"/><text class="coin-mark" x="560" y="218" text-anchor="middle">$</text>
+<text class="elabel" x="534" y="216" text-anchor="end">per query</text>
+<rect class="tag tag-navy" x="435" y="336" width="190" height="38" rx="19"/><text class="tlabel tlabel-navy" x="530" y="362" text-anchor="middle">agentic</text>
 </g>
 
 <g class="stage stage-3 fragment" data-fragment-index="3">
-<path class="edge call" d="M830 122 V206 H980 V224"/>
-<path class="edge flow flow-fat" d="M1100 230 V172 H870 V152"/>
-<text class="elabel" x="1126" y="188" text-anchor="start">&times; 1 to 2</text>
-<rect class="node" x="890" y="230" width="300" height="88" rx="10"/>
-<text class="nlabel" x="1040" y="260" text-anchor="middle">vector search</text>
-<text class="nsub muted" x="1040" y="285" text-anchor="middle">embed once, negligible</text>
-<path class="plinth" d="M891.25 292 H1188.75 V308 A8.75 8.75 0 0 1 1180 316.75 H900 A8.75 8.75 0 0 1 891.25 308 Z"/>
-<text class="plabel" x="1040" y="310" text-anchor="middle">$ per day, query or not</text>
-<rect class="node node-edge" x="890" y="230" width="300" height="88" rx="10"/>
-<circle class="coin" cx="1100" cy="210" r="18"/><text class="coin-mark" x="1100" y="218" text-anchor="middle">$</text>
-<text class="elabel" x="1126" y="216" text-anchor="start">per query</text>
-<rect class="tag tag-gradient" x="945" y="336" width="190" height="38" rx="19"/><text class="tlabel tlabel-gradient" x="1040" y="362" text-anchor="middle">indexed</text>
+<path class="edge call" d="M780 122 V224"/>
+<path class="edge flow flow-fat" d="M840 230 V152"/>
+<text class="elabel" x="866" y="188" text-anchor="start">&times; 1 to 2</text>
+<rect class="node" x="720" y="230" width="300" height="88" rx="10"/>
+<text class="nlabel" x="870" y="260" text-anchor="middle">vector search</text>
+<text class="nsub muted" x="870" y="285" text-anchor="middle">embed once, negligible</text>
+<path class="plinth" d="M721.25 292 H1018.75 V308 A8.75 8.75 0 0 1 1010 316.75 H730 A8.75 8.75 0 0 1 721.25 308 Z"/>
+<text class="plabel" x="870" y="310" text-anchor="middle">$ per day, query or not</text>
+<rect class="node node-edge" x="720" y="230" width="300" height="88" rx="10"/>
+<circle class="coin" cx="840" cy="210" r="18"/><text class="coin-mark" x="840" y="218" text-anchor="middle">$</text>
+<text class="elabel" x="866" y="216" text-anchor="start">per query</text>
+<rect class="tag tag-gradient" x="775" y="336" width="190" height="38" rx="19"/><text class="tlabel tlabel-gradient" x="870" y="362" text-anchor="middle">indexed</text>
 </g>
 </svg>
 
@@ -1234,6 +1269,8 @@ question is always how many queries a day repay the box.
 
 ---
 
+{.chart-animate}
+
 # Training data matters
 
 A blind model answered 25 of 40 questions on fastapi, and
@@ -1245,6 +1282,7 @@ A blind model answered 25 of 40 questions on fastapi, and
   actions: false
   renderer: svg
   signal-stage: [0, 1, 2, 3]
+  signal-zoom: true
   fit: contain
 ```
 
@@ -1283,16 +1321,13 @@ arm, claude-context search_code over a Milvus index for the indexed arm.
 
 </div>
 
-<div class="card-grid cols-2 mechanism-cards fragment">
-<div class="card">
-<p><strong>Code it knows</strong></p>
-<p>Every retrieval arm lands within <strong>~15%</strong> of the others.<!-- src: data/cost_per_correct.csv:corpus=fastapi agentic=0.0557, indexed_topk3=0.0598, indexed=0.0666 --></p>
-</div>
-<div class="card">
-<p><strong>Code it has never seen</strong></p>
-<p>The index is <strong>~40%</strong> cheaper per correct answer.<!-- src: data/cost_per_correct.csv:corpus=agentic_hil indexed=0.0930, agentic=0.1541 --></p>
-</div>
-</div>
+<table class="cost-latency fragment">
+<thead><tr><th></th><th>Code it knows</th><th>Code it has never seen</th></tr></thead>
+<tbody>
+<tr><th scope="row">cost</th><td>every retrieval arm within <strong>~15%</strong><!-- src: data/cost_per_correct.csv:corpus=fastapi agentic=0.0557, indexed_topk3=0.0598, indexed=0.0666 --></td><td>the index is <strong>~40%</strong> cheaper<!-- src: data/cost_per_correct.csv:corpus=agentic_hil indexed=0.0930, agentic=0.1541 --></td></tr>
+<tr><th scope="row">p95 latency</th><td>grep <strong>32 s</strong>, indexed <strong>46 s</strong><!-- src: ../rag-cost-curve/data/ws6c/summary.csv:corpus=fastapi p95_latency_s agentic 31.90 indexed 45.97 --></td><td>grep <strong>60 s</strong>, indexed <strong>39 s</strong><!-- src: ../rag-cost-curve/data/ws6c/summary.csv:corpus=agentic_hil p95_latency_s agentic 60.25 indexed 39.19; median_turns 4.0 2.5 --></td></tr>
+</tbody>
+</table>
 
 <!-- notes
 This one is not an estimate. Every question ran in every arm, I have the
@@ -1306,6 +1341,13 @@ Stage two, agentic-hil, code it has never seen: the ranking inverts. Indexed
 goes from dearest to cheapest, 0.093 against grep's 0.154 per correct answer,
 and more accurate, 39 of 40 against 36.
 
+Latency row: p95 only, medians are within ten percent either way. On known
+code grep has the shorter tail; on unseen code grep wanders, four turns at
+the median, and the index cuts the tail from a minute to 39 seconds.
+The search itself is a sliver of the wall-clock: milliseconds against
+seconds per model turn. The model's turns are the latency, and the index
+only trims them when the model is lost.
+
 Caveats to have ready, do not volunteer them all:
 - Judge cost is excluded, it is the measuring instrument, not anyone's bill.
 - Break-even on unseen code lands at tens of queries a day, but the paired
@@ -1315,41 +1357,6 @@ Caveats to have ready, do not volunteer them all:
   It is in the rag-cost-curve backup slides.
 -->
 
----
-
-{.small-title}
-
-# What about latency?
-
-*Same 40 questions per repository, wall-clock per question, agent loop included*
-
-<div class="card-grid cols-2">
-<div class="card">
-<p><span class="pill ghost">code it knows</span></p>
-<p>Median <strong>11.3 s</strong> grep vs <strong>12.2 s</strong> indexed. p95 <strong>32 s</strong> vs <strong>46 s</strong>.<!-- src: ../rag-cost-curve/data/ws6c/summary.csv:corpus=fastapi median_latency_s agentic 11.295 indexed 12.1805; p95_latency_s 31.90 45.97 --></p>
-</div>
-<div class="card">
-<p><span class="pill gradient">code it has never seen</span></p>
-<p>Median <strong>13.8 s</strong> grep vs <strong>15.0 s</strong> indexed. p95 <strong>60 s</strong> vs <strong>39 s</strong>, in <strong>2.5</strong> turns instead of <strong>4</strong>.<!-- src: ../rag-cost-curve/data/ws6c/summary.csv:corpus=agentic_hil median_latency_s 13.7825 14.9575; p95_latency_s 60.25 39.19; median_turns 4.0 2.5 --></p>
-</div>
-</div>
-
-<p class="closing-line is-emphatic fragment">The search is a sliver of the wall-clock. The <strong>model's turns</strong> are the latency, and the index only trims them when the model is lost.</p>
-
-<!-- notes
-Not measured separately in the study, so say it as an assertion: a Milvus
-search is milliseconds against seconds per model turn.
-
-Agenda promised latency, so here it is, honestly. Medians are within ten
-percent either way: the index adds a fatter payload the model has to read.
-Tails go either way: on code the model knows, grep is faster at p95 because
-it rarely needs many turns. On code it has never seen, grep wanders, four
-turns at the median, and the p95 is a minute; the index cuts that to 39
-seconds.
-
-Same message as cost: the index pays when the model does not already know
-the material.
--->
 ---
 
 {.memory-break-even}
@@ -1428,6 +1435,12 @@ Then the recap: every lever in one loop.
 
 ---
 
+{.section}
+
+# In summary
+
+---
+
 # Spend recall on purpose
 
 Every lever in this talk spends recall, buys it back, or checks the balance.
@@ -1458,7 +1471,7 @@ Every lever in this talk spends recall, buys it back, or checks the balance.
 <rect class="node" x="482" y="110" width="200" height="120" rx="16"/>
 <text class="nlabel" x="582" y="162" text-anchor="middle">Shrink it</text>
 <text class="nsub" x="582" y="198" text-anchor="middle">SQ · PQ · RaBitQ</text>
-<text class="elabel muted" x="582" y="272" text-anchor="middle">PCA · MRL</text>
+<text class="elabel muted" x="582" y="272" text-anchor="middle">or AUTOINDEX</text>
 <rect class="tag" x="512" y="338" width="140" height="44" rx="22"/><text class="tlabel" x="582" y="368" text-anchor="middle">spend</text>
 </g>
 <g class="stage stage-4 fragment" data-fragment-index="4">
@@ -1466,7 +1479,7 @@ Every lever in this talk spends recall, buys it back, or checks the balance.
 <rect class="node" x="718" y="110" width="200" height="120" rx="16"/>
 <text class="nlabel" x="818" y="162" text-anchor="middle">Buy it back</text>
 <text class="nsub" x="818" y="198" text-anchor="middle">refine · nprobe</text>
-<text class="elabel muted" x="818" y="272" text-anchor="middle">at query time</text>
+<text class="elabel muted" x="818" y="272" text-anchor="middle">or level</text>
 <rect class="tag" x="748" y="338" width="140" height="44" rx="22"/><text class="tlabel" x="818" y="368" text-anchor="middle">buy back</text>
 </g>
 <g class="stage stage-5 fragment" data-fragment-index="5">
