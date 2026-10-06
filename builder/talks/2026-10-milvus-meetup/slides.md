@@ -126,6 +126,26 @@ So what does our library look like?
 
 ---
 
+{.dark .small-title .auto-reveal delay=900}
+
+# What can we do with them?
+
+<!-- Every modern model learns the same trick - text, images, audio, even molecules. Once meaning becomes geometry, the same idea unlocks: -->
+
+<div class="usecase-grid">
+  <div class="usecase-tile fragment"><span class="icon">📚</span><p class="label">RAG</p><p class="tagline">Ground LLMs in your own documents</p></div>
+  <div class="usecase-tile fragment"><span class="icon">🧠</span><p class="label">Agent memory</p><p class="tagline">Recall the right past conversation</p></div>
+  <div class="usecase-tile fragment"><span class="icon">⚖️</span><p class="label">Legal analysis</p><p class="tagline">Surface relevant case law</p></div>
+  <div class="usecase-tile fragment"><span class="icon">🛡️</span><p class="label">Fraud detection</p><p class="tagline">Spot the needle in a stack of needles</p></div>
+  <div class="usecase-tile fragment"><span class="icon">🎵</span><p class="label">Song matching</p><p class="tagline">Identify a tune from a whistle</p></div>
+  <div class="usecase-tile fragment"><span class="icon">🛍️</span><p class="label">Visual search</p><p class="tagline">Find products that look like this photo</p></div>
+  <div class="usecase-tile fragment"><span class="icon">🚗</span><p class="label">Autonomous driving</p><p class="tagline">Detect erratic lane changes</p></div>
+  <div class="usecase-tile fragment"><span class="icon">🧬</span><p class="label">Molecular discovery</p><p class="tagline">Find molecules with similar shape</p></div>
+  <div class="usecase-tile fragment"><span class="icon">🔬</span><p class="label">Cancer screening</p><p class="tagline">Match diagnostic images to known cases</p></div>
+</div>
+
+---
+
 {.section}
 
 # Picturing meaning
@@ -1082,13 +1102,12 @@ embedding models against it before you touch the index.
 
 # Where the cost comes from
 
-Four ways for an agent to answer the same question, the search itself is not expensive.
+Three ways for an agent to answer the same question, the search itself is not expensive.
 
-<svg class="cost-anatomy" viewBox="0 0 1400 378" role="img" aria-label="One pipeline, four ways to feed it. A question goes into a model and the model returns an answer. Four stations sit below the model. Parametric has no retrieval at all and pays only for the answer it writes. Agentic loops three to four times through a grep, read and glob tool, each turn cheap on its own but re-sending the whole transcript. Indexed takes one or two fat payloads of chunks from a vector search, and carries a navy band across the foot of its own box marking the charge it incurs per day whether or not anything is asked. Stuffed sends the whole corpus through a prompt cache once, in full, and reads from it cheaply after that. Every per-query charge is marked with a purple coin; the one per-day charge is the navy band inside the index's box.">
+<svg class="cost-anatomy" viewBox="0 0 1400 378" role="img" aria-label="One pipeline, three ways to feed it. A question goes into a model and the model returns an answer. Three stations sit below the model. Parametric has no retrieval at all and pays only for the answer it writes. Agentic loops three to four times through a grep, read and glob tool, each turn cheap on its own but re-sending the whole transcript. Indexed takes one or two fat payloads of chunks from a vector search, and carries a navy band across the foot of its own box marking the charge it incurs per day whether or not anything is asked. Every per-query charge is marked with a purple coin; the one per-day charge is the navy band inside the index's box.">
 <defs>
 <marker id="ca-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="18" markerHeight="18" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="context-stroke"/></marker>
 <marker id="ca-arrow-fat" viewBox="0 0 10 10" refX="0" refY="5" markerWidth="26" markerHeight="28" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="context-stroke"/></marker>
-<marker id="ca-arrow-huge" viewBox="0 0 10 10" refX="0" refY="5" markerWidth="30" markerHeight="32" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="context-stroke"/></marker>
 <linearGradient id="ca-grad" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#175fff"/><stop offset="50%" stop-color="#7f47ff"/><stop offset="100%" stop-color="#c84cff"/></linearGradient>
 </defs>
 
@@ -1103,61 +1122,47 @@ Four ways for an agent to answer the same question, the search itself is not exp
 </g>
 
 <g class="stage stage-1 fragment" data-fragment-index="1">
-<rect class="node node-none" x="40" y="230" width="300" height="72" rx="10"/>
-<text class="nlabel nlabel-none" x="190" y="274" text-anchor="middle">no retrieval</text>
+<rect class="node node-none" x="210" y="230" width="300" height="72" rx="10"/>
+<text class="nlabel nlabel-none" x="360" y="274" text-anchor="middle">no retrieval</text>
 <circle class="coin" cx="1045" cy="66" r="18"/><text class="coin-mark" x="1045" y="74" text-anchor="middle">$</text>
 <text class="elabel" x="1045" y="106" text-anchor="middle">per query</text>
-<rect class="tag tag-ghost" x="95" y="336" width="190" height="38" rx="19"/><text class="tlabel tlabel-ghost" x="190" y="362" text-anchor="middle">parametric</text>
+<rect class="tag tag-ghost" x="265" y="336" width="190" height="38" rx="19"/><text class="tlabel tlabel-ghost" x="360" y="362" text-anchor="middle">parametric</text>
 </g>
 
 <g class="stage stage-2 fragment" data-fragment-index="2">
-<path class="edge call" d="M560 122 V206 H470 V224"/>
-<path class="edge flow flow-thin" d="M590 230 V182 H620 V126"/>
-<text class="elabel" x="470" y="188" text-anchor="middle">&times; 3 to 4 turns</text>
-<rect class="node" x="380" y="230" width="300" height="72" rx="10"/>
-<text class="nlabel" x="530" y="274" text-anchor="middle">grep / read / glob</text>
-<circle class="coin" cx="590" cy="210" r="18"/><text class="coin-mark" x="590" y="218" text-anchor="middle">$</text>
-<text class="elabel" x="616" y="216" text-anchor="start">per query</text>
-<rect class="tag tag-navy" x="435" y="336" width="190" height="38" rx="19"/><text class="tlabel tlabel-navy" x="530" y="362" text-anchor="middle">agentic</text>
+<path class="edge call" d="M760 122 V224"/>
+<path class="edge flow flow-thin" d="M640 230 V126"/>
+<text class="elabel" x="614" y="188" text-anchor="end">&times; 3 to 4 turns</text>
+<rect class="node" x="550" y="230" width="300" height="72" rx="10"/>
+<text class="nlabel" x="700" y="274" text-anchor="middle">grep / read / glob</text>
+<circle class="coin" cx="640" cy="210" r="18"/><text class="coin-mark" x="640" y="218" text-anchor="middle">$</text>
+<text class="elabel" x="614" y="216" text-anchor="end">per query</text>
+<rect class="tag tag-navy" x="605" y="336" width="190" height="38" rx="19"/><text class="tlabel tlabel-navy" x="700" y="362" text-anchor="middle">agentic</text>
 </g>
 
 <g class="stage stage-3 fragment" data-fragment-index="3">
-<path class="edge call" d="M790 122 V206 H810 V224"/>
-<path class="edge flow flow-fat" d="M930 230 V196 H830 V152"/>
-<text class="elabel" x="760" y="188" text-anchor="end">&times; 1 to 2</text>
-<rect class="node" x="720" y="230" width="300" height="88" rx="10"/>
-<text class="nlabel" x="870" y="260" text-anchor="middle">vector search</text>
-<text class="nsub muted" x="870" y="285" text-anchor="middle">embed once, negligible</text>
-<path class="plinth" d="M721.25 292 H1018.75 V308 A8.75 8.75 0 0 1 1010 316.75 H730 A8.75 8.75 0 0 1 721.25 308 Z"/>
-<text class="plabel" x="870" y="310" text-anchor="middle">$ per day, query or not</text>
-<rect class="node node-edge" x="720" y="230" width="300" height="88" rx="10"/>
-<circle class="coin" cx="930" cy="210" r="18"/><text class="coin-mark" x="930" y="218" text-anchor="middle">$</text>
-<text class="elabel" x="956" y="216" text-anchor="start">per query</text>
-<rect class="tag tag-gradient" x="775" y="336" width="190" height="38" rx="19"/><text class="tlabel tlabel-gradient" x="870" y="362" text-anchor="middle">indexed</text>
-</g>
-
-<g class="stage stage-4 fragment" data-fragment-index="4">
-<path class="edge flow flow-huge plain" d="M1210 230 V172 H1170"/>
-<path class="edge flow flow-huge" d="M990 172 H880 V156"/>
-<rect class="node node-cache" x="990" y="146" width="170" height="52" rx="10"/>
-<text class="nsub" x="1075" y="179" text-anchor="middle">prompt cache</text>
-<text class="elabel" x="1236" y="178" text-anchor="start">&times; 1</text>
-<rect class="node" x="1060" y="230" width="300" height="72" rx="10"/>
-<text class="nlabel" x="1210" y="274" text-anchor="middle">the whole corpus</text>
-<circle class="coin" cx="1210" cy="210" r="18"/><text class="coin-mark" x="1210" y="218" text-anchor="middle">$</text>
-<text class="elabel" x="1236" y="216" text-anchor="start">per query</text>
-<rect class="tag tag-berry" x="1115" y="336" width="190" height="38" rx="19"/><text class="tlabel tlabel-berry" x="1210" y="362" text-anchor="middle">stuffed</text>
+<path class="edge call" d="M830 122 V206 H980 V224"/>
+<path class="edge flow flow-fat" d="M1100 230 V172 H870 V152"/>
+<text class="elabel" x="1126" y="188" text-anchor="start">&times; 1 to 2</text>
+<rect class="node" x="890" y="230" width="300" height="88" rx="10"/>
+<text class="nlabel" x="1040" y="260" text-anchor="middle">vector search</text>
+<text class="nsub muted" x="1040" y="285" text-anchor="middle">embed once, negligible</text>
+<path class="plinth" d="M891.25 292 H1188.75 V308 A8.75 8.75 0 0 1 1180 316.75 H900 A8.75 8.75 0 0 1 891.25 308 Z"/>
+<text class="plabel" x="1040" y="310" text-anchor="middle">$ per day, query or not</text>
+<rect class="node node-edge" x="890" y="230" width="300" height="88" rx="10"/>
+<circle class="coin" cx="1100" cy="210" r="18"/><text class="coin-mark" x="1100" y="218" text-anchor="middle">$</text>
+<text class="elabel" x="1126" y="216" text-anchor="start">per query</text>
+<rect class="tag tag-gradient" x="945" y="336" width="190" height="38" rx="19"/><text class="tlabel tlabel-gradient" x="1040" y="362" text-anchor="middle">indexed</text>
 </g>
 </svg>
 
-<div class="cost-notes">
+<div class="cost-notes cols-3">
 <p class="fragment" data-fragment-index="1">No search, no payload. You pay for the answer, and nothing else.</p>
 <p class="fragment" data-fragment-index="2">Small results each time. But the whole transcript goes back every turn.</p>
 <p class="fragment" data-fragment-index="3">One fat payload of chunks, and a box that bills daily whether you ask or not.</p>
-<p class="fragment" data-fragment-index="4">The corpus is written to cache once, in full. Reads after that are cheap.</p>
 </div>
 
-<p class="closing-line is-emphatic fragment" data-fragment-index="5">Only the index has a fixed cost, everything else is per query or per embedding. The same logic applies for code search and agentic memory.</p>
+<p class="closing-line is-emphatic fragment" data-fragment-index="4">Only the index has a fixed cost, everything else is per query or per embedding. The same logic applies for code search and agentic memory.</p>
 
 <!-- notes
 One click per arm. Nothing on this slide is a measured value; it is the
@@ -1173,9 +1178,6 @@ are the bill, not bytes off disk.
 Indexed inverts that: one or two turns with a fatter payload of chunks. The
 navy band is the point. The index also charges you for existing, a box every
 day whether anyone asks it anything. It is the only per-day charge here.
-
-Stuffed is the honest extreme: whole corpus in the prompt, let the cache do
-the work. Reads are cheap but the write scales with the corpus.
 
 Land the closing line: one fixed cost, everything else per query. So the
 question is always how many queries a day repay the box.
@@ -1301,36 +1303,48 @@ the material.
 -->
 ---
 
+{.memory-break-even}
+
 # Break-even on agentic memory
 
-*Replaying a conversation history every query, against searching it with an index on a dedicated box*
+*No memory system vs Milvus memsearch index on a box at $86.07 a month*
 
-```vega
-- spec: ../rag-cost-curve/charts/cost-curve.vg.json
-  actions: false
-  renderer: svg
-  signal-stage: 3
-```
+| Token $ per query | 98k tokens | 392k tokens | 1.2M tokens* |
+|---|---|---|---|
+| Replay, cache warm | <span class="bar bar-replay" style="--v:0.0052">$0.020</span> | <span class="bar bar-replay" style="--v:0.0529">$0.203</span> | <span class="bar bar-replay" style="--v:0.0756">$0.290</span> |
+| Replay, cache cold | <span class="bar bar-replay" style="--v:0.1023">$0.393</span> | <span class="bar bar-replay" style="--v:0.4086">$1.569</span> | <span class="bar bar-replay" style="--v:1.0000">$3.839</span> |
+| Index | <span class="bar bar-index" style="--v:0.0030">$0.011</span> | <span class="bar bar-index" style="--v:0.0032">$0.012</span> | <span class="bar bar-index" style="--v:0.0049">$0.019</span> |
+| **Break-even, cache warm** | **334 a day** | **15 a day** | **10 a day** |
+| **Break-even, cache cold** | **7.4 a day** | **1.8 a day** | **0.7 a day** |
 
-<!-- src: data/ws5/break_even.csv:workload=memory,footprint=pca_uc_384_sq8,hit_rate_basis=measured -->
-<!-- src: data/ws5/break_even.csv:break_even_qpd workload=memory live_arm=replay index_arm=memsearch regime=claude infra_mode=dedicated hit_rate_basis=measured 333.76/14.84/10.42 at S/M/L -->
+<!-- src: data/ws5/break_even.csv:c_live,c_index_query,break_even_qpd workload=memory regime=claude infra_mode=dedicated hit_rate_basis=measured footprint=pca_uc_384_sq8; S replay 0.01995/0.01148/333.76, M replay 0.20300/0.01245/14.84, L replay_trunc 0.29018/0.01880/10.42; cache_hit 1.0/0.9167/0.9737 -->
+<!-- src: data/ws5/churn.csv:c_live,break_even_qpd same filters, live_cache=invalidated churn_frac_per_day=0.0 edit_kind=append; S 0.39286/7.41, M 1.56887/1.82, L 3.83945/0.74 -->
+<!-- src: data/ws5/break_even.csv:fixed_daily 2.8277 (infra_month 86.06751) -->
+<!-- src: data/ws6b/summary_l.csv:judge_accuracy replay_trunc 0.474, memsearch 1.0, n=38 -->
+
+<p class="table-note">Break-even is the box's $2.83 a day divided by the saving per query. Warm uses the measured cache hit rates, 100%, 92% and 97%; cold is a miss on every query, which is what a five-minute cache sees at 15 queries a day. Mean billed cost per query; bars share one scale.</p>
+<p class="table-note">* 1.2M tokens is past the context window: replay keeps 78.5% of the history and answers 47% of questions correctly, against 100% for the index.</p>
 
 <!-- notes
 Second workload: agent memory. A synthetic conversation history in markdown
 at 98k, 392k and 1.2M tokens, with facts planted in it. Say "synthetic" out
-loud. The live arm replays the whole transcript into context on every query,
-prompt-cached; the index arm is memsearch over Milvus, hybrid dense plus BM25.
+loud. The live arm is what you do with no memory system: the whole history
+goes into the prompt on every query, prompt-cached, one turn per query, so
+there is no per-turn multiplication. Real agents compact or summarise long
+before this; replay is the upper bound, not what anyone ships. The index arm
+is memsearch over Milvus, hybrid dense plus BM25.
 
-The line is break-even in queries per day on one r8g.large, 16 GiB, $86.07 a
-month. 334 a day at 98k tokens, then 15 and 10. A 22x fall for a 4x corpus.
-A short history asked a few times a day should not be indexed. Past a few
-hundred thousand tokens, the index pays almost immediately.
+Read the warm row first. Break-even on one r8g.large, $86.07 a month: 334 a
+day at 98k tokens, then 15 and 10. A 22x fall for a 4x corpus.
 
-The shaded band is the range I pre-registered before measuring, tens to
-hundreds a day; all three points land inside it.
+Then the catch: those warm figures assume the cache hit, and the cache lives
+five minutes. At 15 queries a day it is cold every time. A miss on every
+query takes the big history from $0.29 to $3.84 a query and break-even from
+10 a day to under one. Even the small history drops from 334 to 7.
 
-If pushed on the cache: steelmanned, at 99% hit rate the line reads 232, 35,
-13. Still hundreds at the small end.
+The 1.2M column is not a fair cost fight at all: it does not fit the
+context window, replay keeps 78.5% of the history and gets 47% right. Past
+the window the index wins on answers, not on price.
 -->
 
 ---
@@ -1342,7 +1356,7 @@ If pushed on the cache: steelmanned, at 99% hit rate the line reads 232, 35,
 *Same index, same corpus, the same measured token costs. Only the thing underneath it changes*
 
 <div class="card-grid cols-3">
-<div class="card"><p><span class="pill gradient">a box of your own</span></p><p>A dedicated r8g.large at <strong>$86.07 a month</strong> to hold the index. Break-even lands at <strong>10 - 334</strong> queries per day.<!-- src: data/ws5/break_even.csv:infra_mode=dedicated infra_month=86.06751; break_even_qpd 333.76/14.84/10.42 at S/M/L --></p></div>
+<div class="card"><p><span class="pill gradient">a box of your own</span></p><p>A dedicated r8g.large at <strong>$86.07 a month</strong> to hold the index. Break-even lands at <strong>10 to 334</strong> queries per day with a warm cache, and <strong>under 8</strong> with a cold one.<!-- src: data/ws5/break_even.csv:infra_mode=dedicated infra_month=86.06751; break_even_qpd 333.76/14.84/10.42 at S/M/L; data/ws5/churn.csv:live_cache=invalidated churn_frac_per_day=0.0 edit_kind=append break_even_qpd 7.41/1.82/0.74 --></p></div>
 <div class="card"><p><span class="pill navy">a box you already run</span></p><p>Milvus Lite on your laptop or spare space on an existing box. Same index, same prices, break-even on the first query.<!-- src: data/ws5/sensitivity.csv:max_spread_ratio=68944.94 knob=infra_mode workload=memory. The workload filter is load-bearing since WS9: the same knob reads 7421.06 on code_unseen --></p></div>
 <div class="card is-win"><p><span class="pill ghost">no box at all</span></p><p>Serverless, metered per query with no floor to amortise. Every corpus combined fits into the <strong>Zilliz free-forever</strong> tier.<!-- src: data/ws5/serverless.csv:ws8_issues.billed_gb_upper=0.246826 pct_of_free_storage=4.9365 usd_per_query_max=0.00006; data/ws5/break_even.csv:c_index_query 0.0114765 to 0.0665983 --></p></div>
 </div>
@@ -1378,7 +1392,7 @@ Every lever in this talk spends recall, buys it back, or checks the balance.
 <g class="stage stage-1 fragment" data-fragment-index="1">
 <rect class="node" x="10" y="110" width="200" height="120" rx="16"/>
 <text class="nlabel" x="110" y="162" text-anchor="middle">Check model</text>
-<text class="nsub" x="110" y="198" text-anchor="middle">answer-presence@k</text>
+<text class="nsub" x="110" y="198" text-anchor="middle">LGTM@k</text>
 <text class="elabel muted" x="110" y="272" text-anchor="middle">sets the ceiling</text>
 <rect class="tag" x="40" y="338" width="140" height="44" rx="22"/><text class="tlabel" x="110" y="368" text-anchor="middle">ceiling</text>
 </g>
@@ -1428,7 +1442,7 @@ Every lever in this talk spends recall, buys it back, or checks the balance.
 </g>
 </svg>
 
-<p class="closing-line fragment" data-fragment-index="7">Trade <strong>&lt;10% recall</strong> for <strong>&gt;100× speed</strong>, but only if you measure which 10% you gave up, and only build the index when the queries repay it.</p>
+<p class="closing-line fragment" data-fragment-index="7">Trade <strong>&lt;10% recall</strong> for <strong>&gt;100× speed</strong>, but only if the index is needed.</p>
 
 <!-- notes
 Seven clicks, one per lever, then the loop.
@@ -1457,22 +1471,20 @@ index level during migrations. Budget for re-embedding from day one.
 
 ---
 
-{.small-title}
-
 # Up next
 
-Tonight we went from one query to an index you can measure. Next, what that looks like in production.
+So far we've looked at the tech and the numbers, next we'll see what it looks like in production.
 
 <div class="card-grid cols-2">
 <div class="card fragment">
 <p><span class="pill navy">19:20 · Criteo</span></p>
 <p><strong>From Product Need to Distributed Vector Search</strong></p>
-<p>Mehdi Sebbar and Peter Goron: why their use case needed a distributed vector database, and the pain points on the way.</p>
+<p>Mehdi &amp; Peter on why their use case needed a distributed vector database, and the pain points on the way.</p>
 </div>
 <div class="card fragment">
 <p><span class="pill gradient">20:00 · Gorgias</span></p>
 <p><strong>RAG Design Patterns: Product Indexing at Scale</strong></p>
-<p>Mohamed Ali Fathallah and Othmane Jebbari: two years of scalability pressure shaping a product index.</p>
+<p>Mohamed &amp; Othmane on two years of scalability pressure shaping a product index.</p>
 </div>
 </div>
 
