@@ -765,6 +765,8 @@
 
 .search-demo .formulas { display: flex; flex-direction: column; gap: var(--zilliz-s-3); }
 .search-demo .formula-card, .search-demo .section { border: 2px solid var(--zilliz-blue-20); border-radius: var(--zilliz-radius-node); padding: var(--zilliz-s-2); background: var(--zilliz-white); }
+.search-demo .section.is-best { border-color: var(--zilliz-purple); background: color-mix(in srgb, var(--zilliz-purple-10) 40%, var(--zilliz-white)); }
+.search-demo .section.is-best .section-title { color: var(--zilliz-purple); border-bottom-color: var(--zilliz-purple); }
 .search-demo .formula-name { font-family: var(--zilliz-font-mono); font-size: 15px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--zilliz-navy); margin-bottom: 4px; }
 .search-demo .formula-q { font-size: 22px; font-weight: 500; margin: 0 0 var(--zilliz-s-2); line-height: 1.3; color: var(--zilliz-black); }
 .search-demo .formula-q em { font-style: italic; color: var(--zilliz-blue); font-weight: 600; }

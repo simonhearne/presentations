@@ -72,7 +72,7 @@
     <p class="below-note">Gets the <strong>occasion</strong>, blurs the <strong>brand</strong>.</p>
   </div>
 
-  <div class="section fragment">
+  <div class="section fragment is-best">
     <div class="section-title"><span>Hybrid</span><span class="tag">BM25 + dense</span></div>
     <ol class="results">
       <li class="result is-hit"><span class="rank">01</span><span class="title"><span class="hit-text">Maison Lune</span> Linen Floral Midi</span><span class="pill hit">Match</span></li>
@@ -320,6 +320,8 @@ dresses the index ranked below the cut.
 -->
 ---
 
+{.small-title}
+
 # IVF: partition the space
 
 IVF clusters the vectors into _nlist_ cells. At query time, only search within the nearest _nprobe_ cells. A true neighbour just over the border of a cell you never open is simply gone.
@@ -347,7 +349,6 @@ fix, and it is paid for in scanned vectors.
 Query pinned at qx=5.75, qy=5 (chosen so nprobe 2 misses five) and frozen
 on load. Click the chart to let the query follow the pointer.
 -->
-
 
 ---
 
