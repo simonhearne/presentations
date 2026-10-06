@@ -218,7 +218,7 @@ Every technique trades **speed**, **accuracy** & **cost**.
 
 # <span class="hero-text">Approximate</span> <br>nearest neighbour
 
-<div class="ann-byline">
+<div class="section-byline">
   <div class="bi-cell give"><span class="bi-num">&lt;10%</span><span class="bi-lab">recall you give up</span></div>
   <div class="bi-arrow">→</div>
   <div class="bi-cell get"><span class="bi-num">&gt;100×</span><span class="bi-lab">faster, cheaper search</span></div>
@@ -1009,6 +1009,12 @@ prod -> recall
 
 # Is the index <span class="hero-text">worth it</span>?
 
+<div class="section-byline">
+  <div class="bi-cell get"><span class="bi-num">Code search</span><span class="bi-lab">benchmark: grep vs index</span></div>
+  <div class="bi-arrow">&amp;</div>
+  <div class="bi-cell get"><span class="bi-num">Agentic memory</span><span class="bi-lab">benchmark: replay vs index</span></div>
+</div>
+
 <!-- notes
 Bridge from measurement. We can now measure index recall on every deploy.
 Two questions are left, and they are the ones the room is actually asking in
@@ -1040,7 +1046,7 @@ reproducible, every number traceable to a CSV.
 
 </div>
 
-<blockquote class="blue fragment" style="margin-top: var(--zilliz-s-3)"><span class="label">Evaluate the model first</span><p>Across 11 configurations, recall 0.76 → 0.99, and answer-presence never gets past 0.82. The <span class="hit-text">embedding model and chunking set the ceiling</span>, and the index can only lose what they found. Measure answer-presence@k on your own questions before you tune a single knob.</p></blockquote>
+<blockquote class="blue fragment" style="margin-top: var(--zilliz-s-3)"><span class="label">Evaluate the model first</span><p>Even at near-perfect recall, answer-presence never got past 0.82. The <span class="hit-text">embedding model and chunking set the ceiling</span>.<br>Measure LGTM@k using exact search before ANN.</p></blockquote>
 
 <!-- src: ../rag-cost-curve/data/ws4/summary.csv:metric=answer_presence_at_10 sq8_np512 recall 0.992 quality 0.8178; rabitq_np256 recall 0.7811 quality 0.7911 -->
 

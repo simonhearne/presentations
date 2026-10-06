@@ -58,6 +58,7 @@ apply slide layout classes. Available layouts:
 | `.dark` (modifier) | Inverts default content slide to white-on-navy |
 | `.no-chrome` (modifier) | Hides the bottom-right page indicator |
 | `.no-number` (modifier) | On a `.section` slide, hides the auto-incremented section number |
+| `.section-byline` (block) | On a `.section` slide, a line under the heading: either a plain `<p>` subtitle, or a stat row of `.bi-cell.give` / `.bi-cell.get` cells (each a `.bi-num` + `.bi-lab`) separated by a `.bi-arrow` |
 | `.dot-fit` (modifier) | Disables the 1.25× scale-up on `dot` diagrams — for diagrams that already fill the slide width |
 | `.big-code` (modifier) | Enlarges code blocks on the slide for low-res replay legibility |
 | `.three-bg` (layout) | Renders a `three` block as a full-bleed background with slide text on top; pair with `.dark` and `.no-chrome` |

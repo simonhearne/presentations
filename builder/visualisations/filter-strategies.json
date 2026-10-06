@@ -272,7 +272,7 @@
       "encode": {
         "update": {
           "x": {"scale": "x", "value": 0}, "y": {"signal": "height"},
-          "text": {"value": "all"},
+          "text": {"value": "100%"},
           "baseline": {"value": "bottom"},
           "fill": {"value": "#5a6478"}
         }
