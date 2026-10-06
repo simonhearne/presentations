@@ -1917,7 +1917,7 @@
 .levers-diagram .node { fill: var(--zilliz-white); stroke: var(--zilliz-navy); stroke-width: 2.5; transition: stroke 200ms ease; }
 .levers-diagram .node-measure { fill: var(--zilliz-navy); }
 .levers-diagram .nlabel { font-size: 28px; font-weight: 600; fill: var(--zilliz-navy); }
-.levers-diagram .nsub { font-size: 19px; fill: var(--zilliz-ink); }
+.levers-diagram .nsub { font-size: 17px; fill: var(--zilliz-ink); }
 .levers-diagram .nlabel-measure, .levers-diagram .nsub-measure { fill: var(--zilliz-white); }
 .levers-diagram .edge { fill: none; stroke: var(--zilliz-navy); stroke-width: 2.5; marker-end: url(#lv-arrow); transition: stroke 200ms ease; }
 .levers-diagram .edge.dashed { stroke-dasharray: 9 7; }

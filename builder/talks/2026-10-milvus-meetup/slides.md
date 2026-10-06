@@ -1401,81 +1401,118 @@ Then the recap: every lever in one loop.
 
 Every lever in this talk spends recall, buys it back, or checks the balance.
 
-<svg class="levers-diagram" viewBox="0 0 1400 412" role="img" aria-label="The levers from this talk as a loop: pick the index, shrink the vectors, buy recall back at query time, match the filter strategy to selectivity, then measure recall@k against a golden set on every deploy and feed the result back into the index choice">
+<svg class="levers-diagram" viewBox="0 0 1400 412" role="img" aria-label="The levers from this talk as a loop: check the model's answer ceiling, pick the index, shrink the vectors, buy recall back at query time, match the filter strategy to selectivity, then measure recall@k against a golden set on every deploy and feed the result back into the index choice">
 <defs>
 <marker id="lv-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="context-stroke"/></marker>
 </defs>
 <g class="rail"><path d="M10 360 H1390"/></g>
 <text class="elabel muted" x="10" y="404">recall</text>
 <g class="stage stage-1 fragment" data-fragment-index="1">
-<rect class="node" x="10" y="110" width="236" height="120" rx="16"/>
-<text class="nlabel" x="128" y="162" text-anchor="middle">Pick the index</text>
-<text class="nsub" x="128" y="198" text-anchor="middle">HNSW · IVF · DiskANN</text>
-<text class="elabel muted" x="128" y="272" text-anchor="middle">or let AUTOINDEX</text>
-<rect class="tag" x="53" y="338" width="150" height="44" rx="22"/><text class="tlabel" x="128" y="368" text-anchor="middle">spend</text>
+<rect class="node" x="10" y="110" width="200" height="120" rx="16"/>
+<text class="nlabel" x="110" y="162" text-anchor="middle">Check model</text>
+<text class="nsub" x="110" y="198" text-anchor="middle">answer-presence@k</text>
+<text class="elabel muted" x="110" y="272" text-anchor="middle">sets the ceiling</text>
+<rect class="tag" x="40" y="338" width="140" height="44" rx="22"/><text class="tlabel" x="110" y="368" text-anchor="middle">ceiling</text>
 </g>
 <g class="stage stage-2 fragment" data-fragment-index="2">
-<path class="edge" d="M250 170 H292"/>
-<rect class="node" x="296" y="110" width="236" height="120" rx="16"/>
-<text class="nlabel" x="414" y="162" text-anchor="middle">Shrink it</text>
-<text class="nsub" x="414" y="198" text-anchor="middle">SQ · PQ · RaBitQ</text>
-<text class="elabel muted" x="414" y="272" text-anchor="middle">and MRL: fewer dims</text>
-<rect class="tag" x="339" y="338" width="150" height="44" rx="22"/><text class="tlabel" x="414" y="368" text-anchor="middle">spend</text>
+<path class="edge" d="M214 170 H242"/>
+<rect class="node" x="246" y="110" width="200" height="120" rx="16"/>
+<text class="nlabel" x="346" y="162" text-anchor="middle">Pick index</text>
+<text class="nsub" x="346" y="198" text-anchor="middle">HNSW · IVF · DiskANN</text>
+<text class="elabel muted" x="346" y="272" text-anchor="middle">or AUTOINDEX</text>
+<rect class="tag" x="276" y="338" width="140" height="44" rx="22"/><text class="tlabel" x="346" y="368" text-anchor="middle">spend</text>
 </g>
 <g class="stage stage-3 fragment" data-fragment-index="3">
-<path class="edge" d="M536 170 H578"/>
-<rect class="node" x="582" y="110" width="236" height="120" rx="16"/>
-<text class="nlabel" x="700" y="162" text-anchor="middle">Buy it back</text>
-<text class="nsub" x="700" y="198" text-anchor="middle">refine · oversample</text>
-<text class="elabel muted" x="700" y="272" text-anchor="middle">at query time</text>
-<rect class="tag" x="625" y="338" width="150" height="44" rx="22"/><text class="tlabel" x="700" y="368" text-anchor="middle">buy back</text>
+<path class="edge" d="M450 170 H478"/>
+<rect class="node" x="482" y="110" width="200" height="120" rx="16"/>
+<text class="nlabel" x="582" y="162" text-anchor="middle">Shrink it</text>
+<text class="nsub" x="582" y="198" text-anchor="middle">SQ · PQ · RaBitQ</text>
+<text class="elabel muted" x="582" y="272" text-anchor="middle">PCA · MRL</text>
+<rect class="tag" x="512" y="338" width="140" height="44" rx="22"/><text class="tlabel" x="582" y="368" text-anchor="middle">spend</text>
 </g>
 <g class="stage stage-4 fragment" data-fragment-index="4">
-<path class="edge" d="M822 170 H864"/>
-<rect class="node" x="868" y="110" width="236" height="120" rx="16"/>
-<text class="nlabel" x="986" y="162" text-anchor="middle">Filter wisely</text>
-<text class="nsub" x="986" y="198" text-anchor="middle">match selectivity</text>
-<text class="elabel muted" x="986" y="272" text-anchor="middle">or recall collapses</text>
-<rect class="tag" x="911" y="338" width="150" height="44" rx="22"/><text class="tlabel" x="986" y="368" text-anchor="middle">protect</text>
+<path class="edge" d="M686 170 H714"/>
+<rect class="node" x="718" y="110" width="200" height="120" rx="16"/>
+<text class="nlabel" x="818" y="162" text-anchor="middle">Buy it back</text>
+<text class="nsub" x="818" y="198" text-anchor="middle">refine · nprobe</text>
+<text class="elabel muted" x="818" y="272" text-anchor="middle">at query time</text>
+<rect class="tag" x="748" y="338" width="140" height="44" rx="22"/><text class="tlabel" x="818" y="368" text-anchor="middle">buy back</text>
 </g>
 <g class="stage stage-5 fragment" data-fragment-index="5">
-<path class="edge" d="M1108 170 H1150"/>
-<rect class="node node-measure" x="1154" y="110" width="236" height="120" rx="16"/>
-<text class="nlabel nlabel-measure" x="1272" y="162" text-anchor="middle">Measure</text>
-<text class="nsub nsub-measure" x="1272" y="198" text-anchor="middle">recall@k, every deploy</text>
-<text class="elabel muted" x="1272" y="272" text-anchor="middle">on a golden set</text>
-<rect class="tag" x="1197" y="338" width="150" height="44" rx="22"/><text class="tlabel" x="1272" y="368" text-anchor="middle">audit</text>
+<path class="edge" d="M922 170 H950"/>
+<rect class="node" x="954" y="110" width="200" height="120" rx="16"/>
+<text class="nlabel" x="1054" y="162" text-anchor="middle">Filter wisely</text>
+<text class="nsub" x="1054" y="198" text-anchor="middle">match selectivity</text>
+<text class="elabel muted" x="1054" y="272" text-anchor="middle">or lose recall</text>
+<rect class="tag" x="984" y="338" width="140" height="44" rx="22"/><text class="tlabel" x="1054" y="368" text-anchor="middle">protect</text>
 </g>
 <g class="stage stage-6 fragment" data-fragment-index="6">
-<path class="edge dashed" d="M1272 104 V56 H128 V102"/>
-<text class="elabel" x="700" y="42" text-anchor="middle">re-tune as data and models drift</text>
+<path class="edge" d="M1158 170 H1186"/>
+<rect class="node node-measure" x="1190" y="110" width="200" height="120" rx="16"/>
+<text class="nlabel nlabel-measure" x="1290" y="162" text-anchor="middle">Measure</text>
+<text class="nsub nsub-measure" x="1290" y="198" text-anchor="middle">every deploy</text>
+<text class="elabel muted" x="1290" y="272" text-anchor="middle">on a golden set</text>
+<rect class="tag" x="1220" y="338" width="140" height="44" rx="22"/><text class="tlabel" x="1290" y="368" text-anchor="middle">audit</text>
+</g>
+<g class="stage stage-7 fragment" data-fragment-index="7">
+<path class="edge dashed" d="M1290 104 V56 H110 V102"/>
+<text class="elabel" x="700" y="42" text-anchor="middle">re-check as data and models drift</text>
 </g>
 </svg>
 
-<p class="closing-line fragment" data-fragment-index="6">Trade <strong>&lt;10% recall</strong> for <strong>&gt;100× speed</strong>, but only if you measure which 10% you gave up.</p>
+<p class="closing-line fragment" data-fragment-index="7">Trade <strong>&lt;10% recall</strong> for <strong>&gt;100× speed</strong>, but only if you measure which 10% you gave up, and only build the index when the queries repay it.</p>
 
 <!-- notes
-Six clicks, one per lever, then the loop.
+Seven clicks, one per lever, then the loop.
 
-1. Pick the index. HNSW, IVF, DiskANN when RAM runs out, or let AUTOINDEX
+1. Check the model. Answer-presence@k on your own questions, before any
+   index exists. It is the ceiling every later lever works under.
+2. Pick the index. HNSW, IVF, DiskANN when RAM runs out, or let AUTOINDEX
    turn the knobs. This is where you first spend recall for speed.
-2. Shrink it. SQ, PQ, RaBitQ, and MRL or PCA for fewer dimensions. Spend
+3. Shrink it. SQ, PQ, RaBitQ, and PCA and MRL for fewer dimensions. Spend
    more recall to fit the budget.
-3. Buy it back. Refine with the SQ8 copies, oversample. Query-time levers,
+4. Buy it back. Refine with the SQ8 copies, widen nprobe. Query-time levers,
    tuned per use case.
-4. Filter wisely. Match the strategy to selectivity, or a filter quietly
+5. Filter wisely. Match the strategy to selectivity, or a filter quietly
    wrecks the recall you just paid for.
-5. Measure. The golden set from the previous slide, recall@k on every deploy.
+6. Measure. The golden set from earlier, recall@k on every deploy.
    Version the index alongside the model that built it.
-6. The loop. Data shifts, models change, so the measurement feeds the next
-   index choice. Land the big idea again: under 10% recall for over 100x,
-   but only if you know what you gave up.
+7. The loop. Data shifts, models change, so the measurement feeds back to
+   the model check. Land the big idea again: under 10% recall for over 100x,
+   but only if you know what you gave up, and only when the queries repay
+   the box.
 
 If asked what to monitor in production beyond recall@k: score spread and
 filter hit-rate before the agent consumes results. Dual-write and A/B at the
 index level during migrations. Budget for re-embedding from day one.
 -->
 
+---
+
+{.small-title}
+
+# Up next
+
+Tonight we went from one query to an index you can measure. Next, what that looks like in production.
+
+<div class="card-grid cols-2">
+<div class="card fragment">
+<p><span class="pill navy">19:20 · Criteo</span></p>
+<p><strong>From Product Need to Distributed Vector Search</strong></p>
+<p>Mehdi Sebbar and Peter Goron: why their use case needed a distributed vector database, and the pain points on the way.</p>
+</div>
+<div class="card fragment">
+<p><span class="pill gradient">20:00 · Gorgias</span></p>
+<p><strong>RAG Design Patterns: Product Indexing at Scale</strong></p>
+<p>Mohamed Ali Fathallah and Othmane Jebbari: two years of scalability pressure shaping a product index.</p>
+</div>
+</div>
+
+<!-- notes
+One breath. The red trainers from slide two were product search: Criteo and
+Gorgias both live there, at a scale where every lever tonight is a daily
+decision. Hand over.
+-->
 ---
 
 {.title .no-chrome .no-footer}
