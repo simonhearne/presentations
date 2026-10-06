@@ -325,21 +325,23 @@ IVF clusters the vectors into _nlist_ cells. At query time, only search within t
   renderer: svg
   actions: false
   signal-stage: [2, 4, 6]
+  signal-qx: 5.75
+  signal-interactive: false
 ```
 
 <!-- notes
 Three clicks: nprobe 2, 4, 6. Filled blue are the true top-10, found.
 Ringed berry are true top-10 sitting in a cell we never opened: that is
 where recall goes. Each click opens more cells and the berry rings turn
-blue, at the cost of scanning more vectors (top-left counter): 6, then 9,
+blue, at the cost of scanning more vectors (top-left counter): 5, then 9,
 then all 10.
 
 This is the answer to "why does recall drop where it does": queries near a
 cell border lose neighbours to the cell next door. Raising nprobe is the
 fix, and it is paid for in scanned vectors.
 
-Default query frozen at qx=5.5, qy=5 (chosen so nprobe 2 misses four).
-Click the chart to freeze or unfreeze the query before hovering.
+Query pinned at qx=5.75, qy=5 (chosen so nprobe 2 misses five) and frozen
+on load. Click the chart to let the query follow the pointer.
 -->
 
 
@@ -962,7 +964,7 @@ JSON paths and string matches cost more than distance maths. **Iterative filteri
 
 <br>
 
-<blockquote class="blue fragment bottom"><span class="label">In Milvus</span><p>The brute-force switch and alpha are <span class="hit-text">automatic</span>. Iterative filtering is a hint. Filter on the same field every time? Metadata-aware indexing builds a graph per field. Zilliz AUTOINDEX tunes all of it per query.</p></blockquote>
+<blockquote class="blue fragment bottom"><span class="label">In Milvus</span><p>The brute-force switch and alpha are <span class="hit-text">automatic</span>. Iterative filtering is a hint. On Zilliz Cloud, metadata-aware indexing adds subgraphs for filter values you hit often, and AUTOINDEX tunes the rest from your data's statistics.</p></blockquote>
 
 <!-- src: milvus.io/blog/how-to-filter-efficiently-without-killing-recall.md (alpha strategy, brute-force fallback at ~99% filtered, metadata-aware column graphs, iterative filtering, external filtering, AUTOINDEX) -->
 <!-- src: milvus.io/docs/filtered-search.md (search_params={"hints": "iterative_filter"}) -->
@@ -1080,7 +1082,7 @@ reproducible, every number traceable to a CSV.
 
 </div>
 
-<blockquote class="blue fragment" style="margin-top: var(--zilliz-s-3)"><span class="label">Evaluate the model first</span><p>Recall 0.78 → 0.99 moved answer-presence 0.79 → 0.82. The <span class="hit-text">embedding model and chunking set the ceiling</span>, and the index can only lose what they found. Measure answer-presence@k on your own questions before you tune a single knob.</p></blockquote>
+<blockquote class="blue fragment" style="margin-top: var(--zilliz-s-3)"><span class="label">Evaluate the model first</span><p>Across 11 configurations, recall 0.76 → 0.99, and answer-presence never gets past 0.82. The <span class="hit-text">embedding model and chunking set the ceiling</span>, and the index can only lose what they found. Measure answer-presence@k on your own questions before you tune a single knob.</p></blockquote>
 
 <!-- src: ../rag-cost-curve/data/ws4/summary.csv:metric=answer_presence_at_10 sq8_np512 recall 0.992 quality 0.8178; rabitq_np256 recall 0.7811 quality 0.7911 -->
 
@@ -1094,8 +1096,10 @@ Click one: index recall across eleven configurations of a 10M index, from
 the metric measures.
 
 Click two: for the same configurations, how often the gold answer is
-anywhere in the top 10. Flat. Twenty-one points of recall bought less than
-three points of answer-presence.
+anywhere in the top 10. It never gets past 0.82. Above recall 0.9 it barely
+moves, 0.80 to 0.82. The one low dot is SQ8 at nprobe 4, recall 0.80 and
+presence 0.74: cut recall hard enough and you do lose answers, but past
+about 0.9 the extra recall buys almost nothing.
 
 Click three: the ceiling. Even at recall 0.992, one question in five does
 not have its answer in the retrieved ten. That is not the index. It is the

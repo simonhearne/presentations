@@ -12,7 +12,7 @@
     { "name": "k", "value": 10, "bind": { "input": "range", "min": 1, "max": 20, "step": 1, "name": "k " } },
     { "name": "probed_cells", "update": "min(nprobe, nlist)" },
     { "name": "interactive", "value": true, "on": [{"events": "click", "update": "!interactive" }] },
-    { "name": "qx", "value": 5.5, "on": [ { "events": "*:pointerover", "update": "interactive ? invert('xscale', x()) : qx" } ] },
+    { "name": "qx", "value": 6, "on": [ { "events": "*:pointerover", "update": "interactive ? invert('xscale', x()) : qx" } ] },
     { "name": "qy", "value": 5, "on": [ { "events": "*:pointerover", "update": "interactive ? invert('yscale', y()) : qy" } ] },
     { "name": "scanned", "update": "length(data('scanned_points'))" },
     { "name": "skipped", "update": "500 - scanned" },
@@ -39,7 +39,8 @@
       "source": "centroids",
       "transform": [
         { "type": "formula", "as": "dist", "expr": "sqrt(pow(datum.x - qx, 2) + pow(datum.y - qy, 2))" },
-        { "type": "window", "ops": ["row_number"], "as": ["rank"], "sort": { "field": "dist" } },
+        { "type": "formula", "as": "pdist", "expr": "sqrt(pow((datum.x - qx) * width / 10, 2) + pow((datum.y - qy) * height / 10, 2))" },
+        { "type": "window", "ops": ["row_number"], "as": ["rank"], "sort": { "field": "pdist" } },
         { "type": "formula", "as": "probed", "expr": "datum.rank <= nprobe" },
         { "type": "formula", "as": "px", "expr": "scale('xscale', datum.x)" },
         { "type": "formula", "as": "py", "expr": "scale('yscale', datum.y)" }
@@ -69,7 +70,7 @@
         { "type": "formula", "as": "cids", "expr": "sequence(0, nlist)" },
         { "type": "flatten", "fields": ["cids"], "as": ["cid"] },
         { "type": "lookup", "from": "centroids", "key": "id", "fields": ["cid"], "values": ["x", "y"], "as": ["cx", "cy"] },
-        { "type": "formula", "as": "cd", "expr": "pow(datum.x - datum.cx, 2) + pow(datum.y - datum.cy, 2)" },
+        { "type": "formula", "as": "cd", "expr": "pow((datum.x - datum.cx) * width / 10, 2) + pow((datum.y - datum.cy) * height / 10, 2)" },
         { "type": "aggregate", "groupby": ["i", "x", "y"], "ops": ["argmin"], "fields": ["cd"], "as": ["nearest"] },
         { "type": "formula", "as": "cell", "expr": "datum.nearest.cid" }
       ]
@@ -78,7 +79,7 @@
       "name": "points_ranked",
       "source": "point_centroid_pairs",
       "transform": [
-        { "type": "formula", "as": "qdist", "expr": "sqrt(pow(datum.x - qx, 2) + pow(datum.y - qy, 2))" },
+        { "type": "formula", "as": "qdist", "expr": "sqrt(pow((datum.x - qx) * width / 10, 2) + pow((datum.y - qy) * height / 10, 2))" },
         { "type": "lookup", "from": "centroids_with_dist", "key": "id", "fields": ["cell"], "values": ["probed"], "as": ["probed"] },
         { "type": "window", "ops": ["row_number"], "as": ["qrank"], "sort": { "field": "qdist" } },
         { "type": "formula", "as": "topk", "expr": "datum.qrank <= k" }
@@ -286,7 +287,7 @@
         "update": {
           "x": { "value": 26 }, "y": { "value": 74 },
           "fill": [ { "test": "found == k", "value": "#061982" }, { "value": "#c84cff" } ],
-          "text": { "signal": "'recall@' + k + ' = ' + found + ' / ' + k + (found < k ? '  •  ' + (k - found) + ' true neighbours sit in cells we never opened' : '  •  every true neighbour found')" }
+          "text": { "signal": "'recall@' + k + ' = ' + found + ' / ' + k + (found < k ? '  •  ' + (k - found) + (k - found == 1 ? ' true neighbour sits' : ' true neighbours sit') + ' in cells we never opened' : '  •  every true neighbour found')" }
         }
       }
     }
