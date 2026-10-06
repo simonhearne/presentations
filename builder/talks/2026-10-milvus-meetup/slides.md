@@ -35,7 +35,7 @@
 <div class="search-demo">
   <div class="header fragment">
     <div>
-      <div class="query">comfortable red AirGlide 3 trainers</div>
+      <div class="query">Maison Lune dress for a summer wedding in Provence</div>
     </div>
   </div>
 
@@ -44,37 +44,37 @@
   <div class="section fragment">
     <div class="section-title"><span>Keyword</span><span class="tag">BM25</span></div>
     <ol class="results">
-      <li class="result is-hit"><span class="rank">01</span><span class="title"><span class="hit-text">AirGlide 3</span> Red</span><span class="pill hit">Match</span></li>
-      <li class="result"><span class="rank">02</span><span class="title"><span class="hit-text">AirGlide 3</span> Blue</span><span class="pill miss">Wrong</span></li>
-      <li class="result"><span class="rank">03</span><span class="title"><span class="hit-text">AirGlide 3</span> Laces</span><span class="pill miss">Wrong</span></li>
-      <li class="result"><span class="rank">04</span><span class="title"><span class="hit-text">Comfortable Red</span> Sweater</span><span class="pill miss">Wrong</span></li>
-      <li class="result"><span class="rank">05</span><span class="title">Personal <span class="hit-text">Trainers</span> Course</span><span class="pill miss">Wrong</span></li>
+      <li class="result"><span class="rank">01</span><span class="title"><span class="hit-text">Maison Lune</span> Wool Coat</span><span class="pill miss">Wrong</span></li>
+      <li class="result"><span class="rank">02</span><span class="title"><span class="hit-text">Maison Lune</span> Gift Card</span><span class="pill miss">Wrong</span></li>
+      <li class="result is-hit"><span class="rank">03</span><span class="title"><span class="hit-text">Maison Lune</span> Linen Floral Midi</span><span class="pill hit">Match</span></li>
+      <li class="result"><span class="rank">04</span><span class="title"><span class="hit-text">Provence</span> Lavender Candle</span><span class="pill miss">Wrong</span></li>
+      <li class="result"><span class="rank">05</span><span class="title"><span class="hit-text">Summer Wedding</span> Planner</span><span class="pill miss">Wrong</span></li>
     </ol>
-    <p class="below-note">Finds the <strong>model</strong>, misses the <strong>intent</strong>.</p>
+    <p class="below-note">Finds the <strong>brand</strong>, misses the <strong>occasion</strong>.</p>
   </div>
 
   <div class="section fragment">
     <div class="section-title"><span>Vector</span><span class="tag">dense</span></div>
     <ol class="results">
-      <li class="result"><span class="rank">01</span><span class="title">Cosy Crimson Sneakers</span><span class="pill near">Close</span></li>
-      <li class="result"><span class="rank">02</span><span class="title">AirGlide 2 Cherry Red</span><span class="pill near">Close</span></li>
-      <li class="result is-hit"><span class="rank">03</span><span class="title"><span class="hit-text">AirGlide 3</span> Red</span><span class="pill hit">Match</span></li>
-      <li class="result"><span class="rank">04</span><span class="title">Soft Scarlet Runners</span><span class="pill near">Close</span></li>
-      <li class="result"><span class="rank">05</span><span class="title">Cushioned Burgundy Trainers</span><span class="pill near">Close</span></li>
+      <li class="result"><span class="rank">01</span><span class="title">Linen Floral Midi · other brand</span><span class="pill near">Close</span></li>
+      <li class="result"><span class="rank">02</span><span class="title">Sage Chiffon Wrap · other brand</span><span class="pill near">Close</span></li>
+      <li class="result is-hit"><span class="rank">03</span><span class="title"><span class="hit-text">Maison Lune</span> Linen Floral Midi</span><span class="pill hit">Match</span></li>
+      <li class="result"><span class="rank">04</span><span class="title">Pale Blue Cotton Midi · other brand</span><span class="pill near">Close</span></li>
+      <li class="result"><span class="rank">05</span><span class="title">Blush Silk Slip · other brand</span><span class="pill near">Close</span></li>
     </ol>
-    <p class="below-note">Gets the <strong>meaning</strong>, blurs the <strong>model</strong>.</p>
+    <p class="below-note">Gets the <strong>occasion</strong>, blurs the <strong>brand</strong>.</p>
   </div>
 
   <div class="section fragment">
     <div class="section-title"><span>Hybrid</span><span class="tag">BM25 + dense</span></div>
     <ol class="results">
-      <li class="result is-hit"><span class="rank">01</span><span class="title"><span class="hit-text">AirGlide 3</span> Red</span><span class="pill hit">Match</span></li>
-      <li class="result is-hit"><span class="rank">02</span><span class="title"><span class="hit-text">AirGlide 3</span> Crimson</span><span class="pill hit">Match</span></li>
-      <li class="result is-hit"><span class="rank">03</span><span class="title"><span class="hit-text">AirGlide 3</span> Cherry, wide fit</span><span class="pill hit">Match</span></li>
-      <li class="result is-hit"><span class="rank">04</span><span class="title"><span class="hit-text">AirGlide 3</span> Scarlet Trail</span><span class="pill hit">Match</span></li>
-      <li class="result"><span class="rank">05</span><span class="title">AirGlide 2 Cherry Red</span><span class="pill near">Close</span></li>
+      <li class="result is-hit"><span class="rank">01</span><span class="title"><span class="hit-text">Maison Lune</span> Linen Floral Midi</span><span class="pill hit">Match</span></li>
+      <li class="result is-hit"><span class="rank">02</span><span class="title"><span class="hit-text">Maison Lune</span> Sage Wrap Dress</span><span class="pill hit">Match</span></li>
+      <li class="result is-hit"><span class="rank">03</span><span class="title"><span class="hit-text">Maison Lune</span> Cotton Sundress</span><span class="pill hit">Match</span></li>
+      <li class="result is-hit"><span class="rank">04</span><span class="title"><span class="hit-text">Maison Lune</span> Pale Blue Midi</span><span class="pill hit">Match</span></li>
+      <li class="result"><span class="rank">05</span><span class="title">Linen Floral Midi · other brand</span><span class="pill near">Close</span></li>
     </ol>
-    <p class="below-note">The <strong>model</strong> and the <strong>meaning</strong>.</p>
+    <p class="below-note">The <strong>brand</strong> and the <strong>occasion</strong>.</p>
   </div>
 
   </div>
@@ -84,10 +84,14 @@
 <blockquote class="fragment bottom"><span class="label">Takeaway</span><p>Keyword matches <span class="hit-text">tokens</span>, vectors match <span class="hit-text">meaning</span>. In production you run <span class="hit-text">both</span>: Milvus does BM25 and dense in one query.</p></blockquote>
 
 <!-- notes
-Keyword finds the model name and nothing else. Vector finds the feeling,
-red comfy trainers, but treats "AirGlide 3" as just more meaning, so last
-year's model and other brands crowd in. Hybrid fuses both ranked lists and
-gets the exact model in the right colours. Built into Milvus: BM25 full-text
+One shopper, one errand, and it runs through every search demo tonight: a
+guest dress for a summer wedding in Provence. Maison Lune is made up.
+
+Keyword nails the brand and nothing else: a coat, a gift card, a candle
+because it says Provence. No synonym list turns "summer wedding in Provence"
+into linen, midi, floral. Vector gets the occasion, light fabrics and
+pastels, but treats "Maison Lune" as just more meaning, so other brands
+crowd in. Hybrid fuses both ranked lists. Built into Milvus: BM25 full-text
 plus dense in one hybrid search, fused with RRF or weighted ranking.
 -->
 
@@ -216,7 +220,7 @@ Every technique trades **speed**, **accuracy** & **cost**.
 <div class="search-demo">
   <div class="header fragment">
     <div>
-      <div class="query">movie with a robot from the future</div>
+      <div class="query">dress for a summer wedding in Provence</div>
     </div>
     <div class="eyebrow">k = 10</div>
   </div>
@@ -229,22 +233,22 @@ Every technique trades **speed**, **accuracy** & **cost**.
       <span>4 of 10 · 6 relevant total</span>
     </div>
     <ol class="results">
-      <li class="result is-hit"><span class="rank">01</span><span class="title">The Terminator <span class="year">1984</span></span><span class="pill hit">Relevant</span></li>
-      <li class="result is-hit"><span class="rank">02</span><span class="title">Terminator 2: Judgment Day <span class="year">1991</span></span><span class="pill hit">Relevant</span></li>
-      <li class="result is-hit"><span class="rank">03</span><span class="title">Terminator 3: Rise of the Machines <span class="year">2003</span></span><span class="pill hit">Relevant</span></li>
-      <li class="result"><span class="rank">04</span><span class="title">I, Robot <span class="year">2004</span></span><span class="pill miss">Not relevant</span></li>
-      <li class="result"><span class="rank">05</span><span class="title">The Matrix <span class="year">1999</span></span><span class="pill miss">Not relevant</span></li>
-      <li class="result"><span class="rank">06</span><span class="title">Westworld <span class="year">1973</span></span><span class="pill miss">Not relevant</span></li>
-      <li class="result is-hit"><span class="rank">07</span><span class="title">Terminator Salvation <span class="year">2009</span></span><span class="pill hit">Relevant</span></li>
-      <li class="result"><span class="rank">08</span><span class="title">Blade Runner <span class="year">1982</span></span><span class="pill miss">Not relevant</span></li>
-      <li class="result"><span class="rank">09</span><span class="title">Ex Machina <span class="year">2014</span></span><span class="pill miss">Not relevant</span></li>
-      <li class="result"><span class="rank">10</span><span class="title">Looper <span class="year">2012</span></span><span class="pill miss">Not relevant</span></li>
+      <li class="result is-hit"><span class="rank">01</span><span class="title">Linen Floral Midi</span><span class="pill hit">Relevant</span></li>
+      <li class="result"><span class="rank">02</span><span class="title">Ivory Lace Maxi <span class="year">never wear white</span></span><span class="pill miss">Not relevant</span></li>
+      <li class="result is-hit"><span class="rank">03</span><span class="title">Sage Chiffon Wrap Dress</span><span class="pill hit">Relevant</span></li>
+      <li class="result"><span class="rank">04</span><span class="title">Black Wool Sheath <span class="year">not summer</span></span><span class="pill miss">Not relevant</span></li>
+      <li class="result"><span class="rank">05</span><span class="title">Striped Beach Cover-up <span class="year">not a wedding</span></span><span class="pill miss">Not relevant</span></li>
+      <li class="result is-hit"><span class="rank">06</span><span class="title">Lavender-Print Sundress</span><span class="pill hit">Relevant</span></li>
+      <li class="result"><span class="rank">07</span><span class="title">Sequin Cocktail Dress <span class="year">evening, not daytime</span></span><span class="pill miss">Not relevant</span></li>
+      <li class="result"><span class="rank">08</span><span class="title">Linen Wide-Leg Trousers <span class="year">not a dress</span></span><span class="pill miss">Not relevant</span></li>
+      <li class="result is-hit"><span class="rank">09</span><span class="title">Pale Blue Cotton Midi</span><span class="pill hit">Relevant</span></li>
+      <li class="result"><span class="rank">10</span><span class="title">Velvet Midi <span class="year">winter</span></span><span class="pill miss">Not relevant</span></li>
       <div class="cutoff">
         <span class="cutoff-label">k = 10 cutoff</span>
         <span class="cutoff-line"></span>
       </div>
-      <li class="result below is-hit"><span class="rank">14</span><span class="title">Terminator Genisys <span class="year">2015</span></span><span class="pill hit">Relevant</span></li>
-      <li class="result below is-hit"><span class="rank">27</span><span class="title">Terminator: Dark Fate <span class="year">2019</span></span><span class="pill hit">Relevant</span></li>
+      <li class="result below is-hit"><span class="rank">14</span><span class="title">Blush Silk Slip Midi</span><span class="pill hit">Relevant</span></li>
+      <li class="result below is-hit"><span class="rank">27</span><span class="title">Terracotta Poplin Maxi</span><span class="pill hit">Relevant</span></li>
     </ol>
   </div>
 
@@ -277,7 +281,7 @@ Every technique trades **speed**, **accuracy** & **cost**.
     </blockquote>
     <blockquote class="small blue fragment" style="margin-top: 0">
       <span class="label">Thought</span>
-      <p>What would happen if we <span class="hit-text">filtered by release year?</span></p>
+      <p>What would happen if we <span class="hit-text">filtered to size 38, under €150?</span></p>
     </blockquote>
   </div>
 
@@ -286,10 +290,15 @@ Every technique trades **speed**, **accuracy** & **cost**.
 
 
 <!-- notes
-On the misses: every "not relevant" film has half the query. I, Robot,
-Westworld, Ex Machina: robots, not from the future. Looper: time travel, no
-robot. Blade Runner, The Matrix: future machines, nobody travels back. Only
-the Terminators are both.
+Same errand, brand dropped: now it is pure meaning, vector search's home
+ground, so this is where we measure it.
+
+On the misses: every "not relevant" dress has half the query. Ivory lace:
+a wedding dress, and you never wear white to someone else's wedding. Black
+wool, velvet: wedding-ish, wrong season. Beach cover-up: summer, no wedding.
+Sequins: a party, but this is a daytime garden in Provence. Trousers: right
+fabric, not a dress. The two we missed sit at 14 and 27, perfectly good
+dresses the index ranked below the cut.
 -->
 ---
 
@@ -909,7 +918,7 @@ PCA and Matryoshka trade accuracy for speed and cost. Refinement spends a little
 <div class="search-demo">
   <div class="header">
     <div>
-      <div class="query">movie with a robot from the future, released after 2000, with Arnie</div>
+      <div class="query">dress for a summer wedding in Provence · size 38 · under €150</div>
     </div>
   </div>
 </div>
@@ -925,6 +934,14 @@ PCA and Matryoshka trade accuracy for speed and cost. Refinement spends a little
 ```
 
 <blockquote class="blue fragment bottom"><span class="label">The catch</span><p>The harder you filter, the more of the graph you destroy. So there's no single fix - <span class="hit-text">the right technique depends on how much survives the filter</span>.</p></blockquote>
+
+<!-- notes
+Same errand, now with the filters every shop has: size 38, under 150 euros.
+The green node is the perfect dress, and it passes both filters. But the
+filter knocked out the dresses around it, the ones the graph used to walk
+through, so the search stops at the orange node and returns something worse.
+No error, no warning: the shopper just never sees it.
+-->
 
 ---
 
@@ -1513,7 +1530,7 @@ Tonight we went from one query to an index you can measure. Next, what that look
 </div>
 
 <!-- notes
-One breath. The red trainers from slide two were product search: Criteo and
+One breath. The wedding-guest dresses from slide two were product search: Criteo and
 Gorgias both live there, at a scale where every lever tonight is a daily
 decision. Hand over.
 -->
