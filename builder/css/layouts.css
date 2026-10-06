@@ -248,6 +248,26 @@
   background: url(../img/automata.jpg) right no-repeat, linear-gradient(180deg, #050a0e 0%, #070c17 100%)
 }
 
+/* .constellation — title slide with an animated kNN search on the right
+   (visualisations/constellation.js via a `three` block). The mask fades the
+   canvas out before it reaches the title text. */
+.slide.title.constellation {
+  background: radial-gradient(circle at 75% 50%, rgba(23, 95, 255, 0.18) 0%, transparent 55%), linear-gradient(180deg, #050a0e 0%, #070c17 100%);
+}
+.slide.title.constellation .three-canvas {
+  left: auto;
+  width: 58%;
+  height: calc(100% - 80px);
+  z-index: 0;
+  -webkit-mask-image: linear-gradient(to right, transparent 0%, #000 35%);
+  mask-image: linear-gradient(to right, transparent 0%, #000 35%);
+}
+.slide.title.constellation > :not(.three-canvas):not(.chrome):not(.footer):not(.logo) {
+  position: relative;
+  z-index: 1;
+}
+.slide.title.constellation .logo { z-index: 1; }
+
 .slide.hero {
   color: var(--zilliz-white);
   justify-content: center;

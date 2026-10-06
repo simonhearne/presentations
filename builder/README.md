@@ -61,6 +61,7 @@ apply slide layout classes. Available layouts:
 | `.dot-fit` (modifier) | Disables the 1.25× scale-up on `dot` diagrams — for diagrams that already fill the slide width |
 | `.big-code` (modifier) | Enlarges code blocks on the slide for low-res replay legibility |
 | `.three-bg` (layout) | Renders a `three` block as a full-bleed background with slide text on top; pair with `.dark` and `.no-chrome` |
+| `.constellation` (modifier) | Title slide with an animated nearest-neighbour search on the right; pair with `.title` and a `three` block using `visualisations/constellation.js` |
 
 Example:
 
@@ -291,6 +292,22 @@ See [talks/threejs-example/](talks/threejs-example/) for a working example — t
 ````
 
 The `.three-bg` layout class makes the canvas a full-bleed background and keeps slide text legible on top; the visual is purely ambient (no `advance`/`retreat`). Optional `opts`: `count` (neuron count), `lobes` (`1` or `2`), `accent` (colour), `background` (clear colour; `transparent` for no fill, which also drops the depth fade), `speed` (motion multiplier).
+
+### Shared constellation (animated kNN search)
+
+`visualisations/constellation.js` is an ambient 2D-canvas animation: a drifting point cloud with a glowing query point and live edges to its k nearest neighbours, re-ranked every frame. It needs no three.js; it just uses the `three` block's `init({ canvas, opts })` contract. Pair it with `.title .constellation` to fill the right of a title slide, faded out before the title text:
+
+````markdown
+{.title .no-chrome .constellation}
+
+```three
+- module: ../../visualisations/constellation.js
+  id: constellation
+  points: 90
+```
+````
+
+It animates only while its slide is current and the tab is visible, and draws one static frame under `prefers-reduced-motion`. Positions come from a seeded PRNG so the OG screenshot is stable across builds. Optional `opts`: `points`, `k` (neighbours, default 5), `seed`, `speed` (motion multiplier), and colours `point`, `neighbour`, `query`.
 
 ### Shared UMAP modality-gap point cloud
 

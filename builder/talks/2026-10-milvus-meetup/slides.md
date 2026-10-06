@@ -2,7 +2,7 @@
 - agenda: false
 ```
 
-{.title .no-chrome .automata}
+{.title .no-chrome .constellation}
 
 <style>
   .q-grid { display: grid; grid-template-columns: repeat(8, 1fr); gap: 0.7vw; margin: 1.6vh 0; }
@@ -24,6 +24,13 @@
   position: solutions architect
   company: zilliz
   photo: https://avatars.githubusercontent.com/u/496189?v=4
+```
+
+```three
+- module: ../../visualisations/constellation.js
+  id: constellation
+  points: 90
+  k: 5
 ```
 
 ---
