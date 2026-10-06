@@ -273,7 +273,7 @@ Every technique trades **speed**, **accuracy** & **cost**.
     </div>
     <blockquote class="small fragment">
       <span class="label">Production notes</span>
-      <p>Recall@k can be calculated against brute force / <span class="hit-text">exact</span> match results</p>
+      <p>For an index, recall@k is measured against <span class="hit-text">exact</span> search, not human judgement. We'll come back to the gap.</p>
     </blockquote>
     <blockquote class="small blue fragment" style="margin-top: 0">
       <span class="label">Thought</span>
@@ -284,6 +284,13 @@ Every technique trades **speed**, **accuracy** & **cost**.
   </div>
 </div>
 
+
+<!-- notes
+On the misses: every "not relevant" film has half the query. I, Robot,
+Westworld, Ex Machina: robots, not from the future. Looper: time travel, no
+robot. Blade Runner, The Matrix: future machines, nobody travels back. Only
+the Terminators are both.
+-->
 ---
 
 {.no-chrome .dark .no-title .center}
@@ -887,18 +894,220 @@ PCA and Matryoshka trade accuracy for speed and cost. Refinement spends a little
 
 {.section}
 
+# Filters are tricky
+
+---
+
+{.small-title .filter-demo}
+
+# Filtering quietly wrecks your recall
+
+<br>
+
+<div class="search-demo">
+  <div class="header">
+    <div>
+      <div class="query">movie with a robot from the future, released after 2000, with Arnie</div>
+    </div>
+  </div>
+</div>
+
+<br>
+
+```vega
+- spec: ../../visualisations/filter-graph.json
+  renderer: svg
+  actions: false
+  signal-stage: [0, 1, 2]
+  fit: contain
+```
+
+<blockquote class="blue fragment bottom"><span class="label">The catch</span><p>The harder you filter, the more of the graph you destroy. So there's no single fix - <span class="hit-text">the right technique depends on how much survives the filter</span>.</p></blockquote>
+
+---
+
+{.small-title}
+
+# Three ways out
+
+<br>
+
+<p style="text-align: center">Two questions pick the strategy: <strong>how much survives</strong> the filter, and <strong>how much the filter costs</strong> to evaluate.</p>
+
+<br>
+
+<div class="three-col cards" style="align-items: stretch; margin: 1vh 0;">
+<div class="fragment">
+
+**Very selective** · brute force
+
+Under about 1% survives. The graph is mostly holes, so Milvus **skips it** and computes exact distances over the survivors: cheap because the set is tiny, and **100% recall**.
+
+</div>
+<div class="fragment">
+
+**In between** · keep the graph walkable
+
+Milvus's **alpha strategy** still visits some filtered-out nodes, with a probability set by the filter ratio, so the search can step *through* them to reach matches instead of stranding.
+
+</div>
+<div class="fragment">
+
+**Expensive filters** · iterative
+
+JSON paths and string matches cost more than distance maths. **Iterative filtering** pulls nearest neighbours in batches and filters each batch, until _k_ survive. Turn it on with a search hint.
+
+</div>
+</div>
+
+<br>
+
+<blockquote class="blue fragment bottom"><span class="label">In Milvus</span><p>The brute-force switch and alpha are <span class="hit-text">automatic</span>. Iterative filtering is a hint. Filter on the same field every time? Metadata-aware indexing builds a graph per field. Zilliz AUTOINDEX tunes all of it per query.</p></blockquote>
+
+<!-- src: milvus.io/blog/how-to-filter-efficiently-without-killing-recall.md (alpha strategy, brute-force fallback at ~99% filtered, metadata-aware column graphs, iterative filtering, external filtering, AUTOINDEX) -->
+<!-- src: milvus.io/docs/filtered-search.md (search_params={"hints": "iterative_filter"}) -->
+
+<!-- notes
+Source: milvus.io/blog/how-to-filter-efficiently-without-killing-recall.md.
+
+Very selective: when the filter removes about 99%, Milvus detects it and
+falls back to brute force over the survivors.
+
+In between: alpha. The graph traversal visits filtered-out nodes with a
+probability tied to the filter ratio, purely as stepping stones, so matches
+on the far side stay reachable. That is the "graph destroyed" picture on the
+previous slide, repaired.
+
+Expensive filters: iterative filtering, inspired by VBase. Search a batch,
+filter it, fetch more until k survive. Wins when evaluating the filter costs
+more than the vector maths. The hint is hints="iterative_filter" in the
+search params.
+
+If asked: metadata-aware indexing (column graphs per field) for repeated
+filter patterns; external filtering through the search iterator when the
+filter data lives in Postgres or Mongo. ACORN is the academic approach to
+the same problem.
+-->
+---
+
+{.section}
+
+# When retrieval <span class="hero-text">quietly fails</span>
+
+---
+
+# The <span class="hero-text">EXPLAIN</span> you don't get
+
+<br>
+
+<div class="two-col cards" style="align-items: stretch; margin-top: 1vh;">
+<div class="fragment">
+
+**SQL / Lucene** · fails _loudly_
+
+- `EXPLAIN` hands you the plan - which index, which scan, what it cost
+- No match? You get **zero rows** - an unmistakable signal
+- You get errors, stack traces, log lines
+
+</div>
+<div class="fragment">
+
+**Vector search** · fails _silently_
+
+- You get the _k_ rows you asked for - always
+- Each carries a rank & score. **Nothing else**
+- No plan, no "why", no "were these any good?"
+
+</div>
+</div>
+
+<blockquote class="fragment bottom"><span class="label">The gap</span><p>SQL fails <span class="hit-text">loudly</span>. Vector search fails <span class="hit-text">silently</span> - so we build the instrumentation back ourselves.</p></blockquote>
+
+---
+
+# Measure what you can't see
+
+You can't eyeball recall. You need a number - and you need it on every deploy.
+
+Build a **golden set**: freeze a sample of real queries, compute their _true_ neighbours once with exact brute-force - the O(N) scan from the start of this talk. That's your ground truth. Then score the production index against it - `recall@k`, continuously.
+
+```dot
+golden [label="Golden\nquery set"]
+exact [label="Exact\nbrute-force\nO(N), once"]
+truth [label="Ground-truth\ntop-k"]
+prod [label="Production\nindex (ANN)"]
+recall [label="recall@k", fillcolor="#175fff", fontcolor="white"]
+golden -> exact -> truth
+golden -> prod [label="every deploy"]
+truth -> recall [label="overlap"]
+prod -> recall
+```
+
+---
+
+{.section}
+
 # Is the index <span class="hero-text">worth it</span>?
 
 <!-- notes
-Bridge from compression. Everything so far made the index smaller: the box
-priced in the next few slides holds 384 dimensions in SQ8, exactly the kind of
-index the last section built. Now the question the room is actually asking in
-2026: agents can grep, so when is an index worth paying for at all?
+Bridge from measurement. We can now measure index recall on every deploy.
+Two questions are left, and they are the ones the room is actually asking in
+2026: does that recall reach the answer, and with agents that can grep, is
+an index worth paying for at all?
 
-Two workloads, both from the RAG cost curve study: code search and agentic
-(conversation) memory. Everything is open source and reproducible.
+Everything that follows is from the RAG cost curve study: open source,
+reproducible, every number traceable to a CSV.
 -->
 
+---
+
+{.small-title}
+
+# Recall isn't answer quality
+
+*Index recall: does the index match exact search? Answer-presence: is the answer in the top 10?*
+
+<div class="chart-band">
+
+```vega
+- spec: ./recall-vs-presence.vl.json
+  renderer: svg
+  actions: false
+  signal-stage: [0, 1, 2]
+  fit: contain
+  fragment-index: 0
+```
+
+</div>
+
+<blockquote class="blue fragment" style="margin-top: var(--zilliz-s-3)"><span class="label">Evaluate the model first</span><p>Recall 0.78 → 0.99 moved answer-presence 0.79 → 0.82. The <span class="hit-text">embedding model and chunking set the ceiling</span>, and the index can only lose what they found. Measure answer-presence@k on your own questions before you tune a single knob.</p></blockquote>
+
+<!-- src: ../rag-cost-curve/data/ws4/summary.csv:metric=answer_presence_at_10 sq8_np512 recall 0.992 quality 0.8178; rabitq_np256 recall 0.7811 quality 0.7911 -->
+
+<!-- notes
+Two different recalls, finally side by side. Back on the Recall & Precision
+slide we scored results against human judgement. Every recall number since
+(0.778, 0.986, the golden set) scored the index against exact search.
+
+Click one: index recall across eleven configurations of a 10M index, from
+1-bit RaBitQ to SQ8 at nprobe 512. On the diagonal, because that is what
+the metric measures.
+
+Click two: for the same configurations, how often the gold answer is
+anywhere in the top 10. Flat. Twenty-one points of recall bought less than
+three points of answer-presence.
+
+Click three: the ceiling. Even at recall 0.992, one question in five does
+not have its answer in the retrieved ten. That is not the index. It is the
+embedding model and the chunking, and no nprobe fixes it.
+
+Caveat if pushed: NQ-Open gold answers are 2018-era against a 2023 corpus,
+so some of the missing fifth is stale gold, not model failure. The flatness
+holds either way because every arm sees the same stale questions.
+
+Takeaway: build a golden set with answers, not just neighbours. Swap
+embedding models against it before you touch the index.
+-->
 ---
 
 {.small-title}
@@ -1089,6 +1298,41 @@ Caveats to have ready, do not volunteer them all:
 
 ---
 
+{.small-title}
+
+# What about latency?
+
+*Same 40 questions per repository, wall-clock per question, agent loop included*
+
+<div class="card-grid cols-2">
+<div class="card">
+<p><span class="pill ghost">code it knows</span></p>
+<p>Median <strong>11.3 s</strong> grep vs <strong>12.2 s</strong> indexed. p95 <strong>32 s</strong> vs <strong>46 s</strong>.<!-- src: ../rag-cost-curve/data/ws6c/summary.csv:corpus=fastapi median_latency_s agentic 11.295 indexed 12.1805; p95_latency_s 31.90 45.97 --></p>
+</div>
+<div class="card">
+<p><span class="pill gradient">code it has never seen</span></p>
+<p>Median <strong>13.8 s</strong> grep vs <strong>15.0 s</strong> indexed. p95 <strong>60 s</strong> vs <strong>39 s</strong>, in <strong>2.5</strong> turns instead of <strong>4</strong>.<!-- src: ../rag-cost-curve/data/ws6c/summary.csv:corpus=agentic_hil median_latency_s 13.7825 14.9575; p95_latency_s 60.25 39.19; median_turns 4.0 2.5 --></p>
+</div>
+</div>
+
+<p class="closing-line is-emphatic fragment">The search is a sliver of the wall-clock. The <strong>model's turns</strong> are the latency, and the index only trims them when the model is lost.</p>
+
+<!-- notes
+Not measured separately in the study, so say it as an assertion: a Milvus
+search is milliseconds against seconds per model turn.
+
+Agenda promised latency, so here it is, honestly. Medians are within ten
+percent either way: the index adds a fatter payload the model has to read.
+Tails go either way: on code the model knows, grep is faster at p95 because
+it rarely needs many turns. On code it has never seen, grep wanders, four
+turns at the median, and the p95 is a minute; the index cuts that to 39
+seconds.
+
+Same message as cost: the index pays when the model does not already know
+the material.
+-->
+---
+
 # Break-even on agentic memory
 
 *Replaying a conversation history every query, against searching it with an index on a dedicated box*
@@ -1135,7 +1379,7 @@ If pushed on the cache: steelmanned, at 99% hit rate the line reads 232, 35,
 <div class="card is-win"><p><span class="pill ghost">no box at all</span></p><p>Serverless, metered per query with no floor to amortise. Every corpus combined fits into the <strong>Zilliz free-forever</strong> tier.<!-- src: data/ws5/serverless.csv:ws8_issues.billed_gb_upper=0.246826 pct_of_free_storage=4.9365 usd_per_query_max=0.00006; data/ws5/break_even.csv:c_index_query 0.0114765 to 0.0665983 --></p></div>
 </div>
 
-<p><span class="stamp-sub">Rates read off <a href="https://zilliz.com/pricing#calculator">zilliz.com/pricing#calculator</a> on 2026-09-15: $4 per million vCU, a 1536-dim FP16 write costing 0.75 vCU and a read on a 1M-vector collection 15 vCU. Reads grow with collection size, so 15 is an upper bound here. Free tier 5 GB storage plus 2.5M vCU a month, up to 5 collections.<!-- src: data/ws5/serverless.csv:kind=rate,model,free --></span></p>
+<!-- src: data/ws5/serverless.csv:kind=rate,model,free. Rates read off zilliz.com/pricing#calculator on 2026-09-15: $4 per million vCU, write 0.75 vCU, read 15 vCU on 1M vectors, free tier 5 GB plus 2.5M vCU a month -->
 
 <!-- notes
 Every break-even so far assumed a dedicated box at $86 a month, and that box
@@ -1148,161 +1392,8 @@ free tier.
 
 So the real answer to "is the index worth it" is: for unseen code and long
 agent memory, yes, and the fixed cost is a deployment choice, not a law.
-Then turn: once you do index, here is how it quietly fails.
+Then the recap: every lever in one loop.
 -->
-
----
-
-{.section}
-
-# Filters are tricky
-
----
-
-{.small-title .filter-demo}
-
-# Filtering quietly wrecks your recall
-
-<br>
-
-<div class="search-demo">
-  <div class="header">
-    <div>
-      <div class="query">movie with a robot from the future, released after 2000, with Arnie</div>
-    </div>
-  </div>
-</div>
-
-<br>
-
-```vega
-- spec: ../../visualisations/filter-graph.json
-  renderer: svg
-  actions: false
-  signal-stage: [0, 1, 2]
-  fit: contain
-```
-
-<blockquote class="blue fragment bottom"><span class="label">The catch</span><p>The harder you filter, the more of the graph you destroy. So there's no single fix - <span class="hit-text">the right technique depends on how much survives the filter</span>.</p></blockquote>
-
----
-
-{.small-title}
-
-# Three ways out
-
-<br>
-
-<p style="text-align: center">Two questions pick the strategy: <strong>how much survives</strong> the filter, and <strong>how much the filter costs</strong> to evaluate.</p>
-
-<br>
-
-<div class="three-col cards" style="align-items: stretch; margin: 1vh 0;">
-<div class="fragment">
-
-**Very selective** · brute force
-
-Under about 1% survives. The graph is mostly holes, so Milvus **skips it** and computes exact distances over the survivors: cheap because the set is tiny, and **100% recall**.
-
-</div>
-<div class="fragment">
-
-**In between** · keep the graph walkable
-
-Milvus's **alpha strategy** still visits some filtered-out nodes, with a probability set by the filter ratio, so the search can step *through* them to reach matches instead of stranding.
-
-</div>
-<div class="fragment">
-
-**Expensive filters** · iterative
-
-JSON paths and string matches cost more than distance maths. **Iterative filtering** pulls nearest neighbours in batches and filters each batch, until _k_ survive. Turn it on with a search hint.
-
-</div>
-</div>
-
-<br>
-
-<blockquote class="blue fragment bottom"><span class="label">In Milvus</span><p>The brute-force switch and alpha are <span class="hit-text">automatic</span>. Iterative filtering is a hint. Filter on the same field every time? Metadata-aware indexing builds a graph per field. Zilliz AUTOINDEX tunes all of it per query.</p></blockquote>
-
-<!-- src: milvus.io/blog/how-to-filter-efficiently-without-killing-recall.md (alpha strategy, brute-force fallback at ~99% filtered, metadata-aware column graphs, iterative filtering, external filtering, AUTOINDEX) -->
-<!-- src: milvus.io/docs/filtered-search.md (search_params={"hints": "iterative_filter"}) -->
-
-<!-- notes
-Source: milvus.io/blog/how-to-filter-efficiently-without-killing-recall.md.
-
-Very selective: when the filter removes about 99%, Milvus detects it and
-falls back to brute force over the survivors.
-
-In between: alpha. The graph traversal visits filtered-out nodes with a
-probability tied to the filter ratio, purely as stepping stones, so matches
-on the far side stay reachable. That is the "graph destroyed" picture on the
-previous slide, repaired.
-
-Expensive filters: iterative filtering, inspired by VBase. Search a batch,
-filter it, fetch more until k survive. Wins when evaluating the filter costs
-more than the vector maths. The hint is hints="iterative_filter" in the
-search params.
-
-If asked: metadata-aware indexing (column graphs per field) for repeated
-filter patterns; external filtering through the search iterator when the
-filter data lives in Postgres or Mongo. ACORN is the academic approach to
-the same problem.
--->
----
-
-{.section}
-
-# When retrieval <span class="hero-text">quietly fails</span>
-
----
-
-# The <span class="hero-text">EXPLAIN</span> you don't get
-
-<br>
-
-<div class="two-col cards" style="align-items: stretch; margin-top: 1vh;">
-<div class="fragment">
-
-**SQL / Lucene** · fails _loudly_
-
-- `EXPLAIN` hands you the plan - which index, which scan, what it cost
-- No match? You get **zero rows** - an unmistakable signal
-- You get errors, stack traces, log lines
-
-</div>
-<div class="fragment">
-
-**Vector search** · fails _silently_
-
-- You get the _k_ rows you asked for - always
-- Each carries a rank & score. **Nothing else**
-- No plan, no "why", no "were these any good?"
-
-</div>
-</div>
-
-<blockquote class="fragment bottom"><span class="label">The gap</span><p>SQL fails <span class="hit-text">loudly</span>. Vector search fails <span class="hit-text">silently</span> - so we build the instrumentation back ourselves.</p></blockquote>
-
----
-
-# Measure what you can't see
-
-You can't eyeball recall. You need a number - and you need it on every deploy.
-
-Build a **golden set**: freeze a sample of real queries, compute their _true_ neighbours once with exact brute-force - the O(N) scan from the start of this talk. That's your ground truth. Then score the production index against it - `recall@k`, continuously.
-
-```dot
-golden [label="Golden\nquery set"]
-exact [label="Exact\nbrute-force\nO(N), once"]
-truth [label="Ground-truth\ntop-k"]
-prod [label="Production\nindex (ANN)"]
-recall [label="recall@k", fillcolor="#175fff", fontcolor="white"]
-golden -> exact -> truth
-golden -> prod [label="every deploy"]
-truth -> recall [label="overlap"]
-prod -> recall
-```
 
 ---
 
