@@ -154,13 +154,15 @@ So what does our library look like?
 
 {.dark .small-title}
 
-# Let's build a face-finder model
+# Let's build a dress-finder model
 
 ```three
-- module: ./cloud.js
+- module: ./dress-cloud.js
 ```
 
 ---
+
+{.small-title}
 
 # What "similar" means
 
@@ -206,7 +208,7 @@ Compare the query to every entity in the database. Exact, simple, **O(N)**.
 
 # Why flat search doesn't scale
 
-16 faces, fine. A billion vectors? Not so much. Latency grows linearly and ~all of the comparisons are waste.
+16 dresses, fine. A billion vectors? Not so much. Latency grows linearly and ~all comparisons are waste.
 
 ```vega
 - spec: ../../visualisations/ann-vs-exact.json
@@ -315,7 +317,7 @@ over 100x faster and cheaper search. Everything in this section is how.
     </div>
     <blockquote class="small fragment">
       <span class="label">Production notes</span>
-      <p>For an index, recall@k is measured against <span class="hit-text">exact</span> search, not human judgement. We'll come back to the gap.</p>
+      <p>Recall &amp; precision are measured against <span class="hit-text">exact</span> search, not human judgement.</p>
     </blockquote>
     <blockquote class="small blue fragment" style="margin-top: 0">
       <span class="label">Thought</span>
@@ -339,8 +341,6 @@ fabric, not a dress. The two we missed sit at 14 and 27, perfectly good
 dresses the index ranked below the cut.
 -->
 ---
-
-{.small-title}
 
 # IVF: partition the space
 
