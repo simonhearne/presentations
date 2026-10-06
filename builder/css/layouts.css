@@ -2123,3 +2123,23 @@
    own line above the heading; the claim stays the title. Stripped from the
    footer title and slug by HEADING_EYEBROW_RE like the other eyebrows. */
 .slide .eyebrow-bench { display: block; margin-bottom: var(--zilliz-s-1); font-family: var(--zilliz-font-mono); font-size: 20px; font-weight: 700; line-height: 1.2; letter-spacing: 0.06em; text-transform: uppercase; color: var(--zilliz-blue); }
+
+/* .deploy-options — Milvus deployment modes over Zilliz Cloud tiers. Each row
+   leads with a label column; each card carries four 5-pip meters where more
+   filled is always better for the user, so the eye can compare down a column
+   without decoding per-row polarity. The pips are one gradient fill masked
+   into five segments, driven by an inline --v. */
+.slide .deploy-matrix { display: grid; gap: var(--zilliz-s-3); margin-top: var(--zilliz-s-4); }
+.deploy-matrix .dm-row { display: grid; grid-template-columns: 210px repeat(3, minmax(0, 1fr)); gap: var(--zilliz-s-3); align-items: stretch; }
+.deploy-matrix .dm-label { display: flex; flex-direction: column; justify-content: center; gap: 6px; }
+.deploy-matrix .dm-label strong { font-size: 32px; color: var(--zilliz-navy); line-height: 1.1; }
+.deploy-matrix .dm-label span { font-family: var(--zilliz-font-mono); font-size: 15px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--zilliz-grey); }
+.deploy-matrix .card { padding: var(--zilliz-s-3); gap: 14px; }
+.deploy-matrix .dm-head { display: flex; justify-content: space-between; align-items: center; gap: var(--zilliz-s-1); }
+.deploy-matrix .dm-name { font-size: 36px; font-weight: 700; color: var(--zilliz-navy); }
+.deploy-matrix .dm-head .pill { min-width: 0; margin: 0; font-size: 16px; white-space: nowrap; }
+.slide .deploy-matrix code.dm-how { font-family: var(--zilliz-font-mono); font-size: 20px; color: var(--zilliz-blue); background: none; padding: 0; }
+.slide .deploy-matrix p.dm-when { margin: 0; font-size: 22px; font-style: italic; color: var(--zilliz-ink); }
+.deploy-matrix .dm-meters { display: grid; grid-template-columns: auto 92px auto 92px; justify-content: space-between; gap: 10px 12px; white-space: nowrap; align-items: center; margin-top: 4px; font-family: var(--zilliz-font-mono); font-size: 15px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--zilliz-grey); }
+.deploy-matrix .dm-pips { height: 16px; background: linear-gradient(to right, var(--zilliz-blue) calc(var(--v) * 20%), var(--zilliz-blue-20) 0); -webkit-mask: repeating-linear-gradient(to right, #000 0 16px, transparent 16px 19px); mask: repeating-linear-gradient(to right, #000 0 16px, transparent 16px 19px); }
+.slide.deploy-options .dm-key { margin: var(--zilliz-s-3) 0 0 calc(210px + var(--zilliz-s-3)); font-family: var(--zilliz-font-mono); font-size: 16px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--zilliz-grey); }

@@ -877,7 +877,7 @@ Build time compression and dimensionality reduction both trade _accuracy to buy 
 <rect class="node node-off" x="946" y="150" width="180" height="80" rx="12"/>
 <text class="nlabel" x="1036" y="196" text-anchor="middle">re-ranker</text>
 <text class="nsub" x="1036" y="258" text-anchor="middle">reorders the top-k</text>
-<text class="elabel muted" x="1036" y="292" text-anchor="middle">off this rail</text>
+<text class="elabel muted" x="1036" y="292" text-anchor="middle">out of scope today</text>
 </g>
 <g class="nodes">
 <rect class="node" x="4" y="155" width="130" height="70" rx="35"/><text class="nlabel" x="69" y="199" text-anchor="middle">Query</text>
@@ -1374,7 +1374,7 @@ question is always how many queries a day repay the box.
 
 ---
 
-{.chart-animate}
+{.chart-animate .small-title}
 
 # [Code benchmark]{.eyebrow-bench} Training data matters
 
@@ -1514,7 +1514,7 @@ the window the index wins on answers, not on price.
 
 # [Cost]{.eyebrow-bench} Assuming you pay for an index...
 
-*I assumed the worst-case - that you provision a VM just for the use case*
+*I assumed the worst-case - that you provision a VM just for the index*
 
 <div class="card-grid cols-3">
 <div class="card"><p><span class="pill gradient">a box of your own</span></p><p>A dedicated r8g.large at <strong>$86.07 a month</strong> to hold the index. Break-even lands at <strong>10 to 334</strong> queries per day with a warm cache, and <strong>under 8</strong> with a cold one.<!-- src: data/ws5/break_even.csv:infra_mode=dedicated infra_month=86.06751; break_even_qpd 333.76/14.84/10.42 at S/M/L; data/ws5/churn.csv:live_cache=invalidated churn_frac_per_day=0.0 edit_kind=append break_even_qpd 7.41/1.82/0.74 --></p></div>
@@ -1536,6 +1536,40 @@ free tier.
 So the real answer to "is the index worth it" is: for unseen code and long
 agent memory, yes, and the fixed cost is a deployment choice, not a law.
 Then the recap: every lever in one loop.
+-->
+
+---
+
+{.small-title .deploy-options}
+
+# Where should it run?
+
+<br>
+<div class="deploy-matrix">
+<div class="dm-row"><div class="dm-label"><strong>Milvus</strong><span>self-hosted</span></div><div class="card"><div class="dm-head"><span class="dm-name">Lite</span><span class="pill ghost">≤ 1M</span></div><code class="dm-how">pip install pymilvus</code><p class="dm-when">Notebooks, prototypes, CI, edge</p><div class="dm-meters"><span class="dm-k">Easy setup</span><span class="dm-pips" style="--v:5"></span><span class="dm-k">Low ops</span><span class="dm-pips" style="--v:5"></span><span class="dm-k">Scale</span><span class="dm-pips" style="--v:1"></span><span class="dm-k">Low cost</span><span class="dm-pips" style="--v:5"></span></div></div><div class="card"><div class="dm-head"><span class="dm-name">Standalone</span><span class="pill ghost">≤ 100M</span></div><code class="dm-how">docker compose up</code><p class="dm-when">One box in production</p><div class="dm-meters"><span class="dm-k">Easy setup</span><span class="dm-pips" style="--v:4"></span><span class="dm-k">Low ops</span><span class="dm-pips" style="--v:3"></span><span class="dm-k">Scale</span><span class="dm-pips" style="--v:3"></span><span class="dm-k">Low cost</span><span class="dm-pips" style="--v:4"></span></div></div><div class="card"><div class="dm-head"><span class="dm-name">Distributed</span><span class="pill ghost">20M - 10B+</span></div><code class="dm-how">helm install milvus</code><p class="dm-when">Scale-out, with a platform team</p><div class="dm-meters"><span class="dm-k">Easy setup</span><span class="dm-pips" style="--v:1"></span><span class="dm-k">Low ops</span><span class="dm-pips" style="--v:1"></span><span class="dm-k">Scale</span><span class="dm-pips" style="--v:5"></span><span class="dm-k">Low cost</span><span class="dm-pips" style="--v:2"></span></div></div></div>
+<br>
+<div class="dm-row"><div class="dm-label"><strong>Zilliz Cloud</strong><span>fully managed</span></div><div class="card"><div class="dm-head"><span class="dm-name">Serverless</span><span class="pill ghost">free tier</span></div><code class="dm-how">pay per request + storage</code><p class="dm-when">Small or spiky traffic</p><div class="dm-meters"><span class="dm-k">Easy setup</span><span class="dm-pips" style="--v:5"></span><span class="dm-k">Low ops</span><span class="dm-pips" style="--v:5"></span><span class="dm-k">Scale</span><span class="dm-pips" style="--v:3"></span><span class="dm-k">Low cost</span><span class="dm-pips" style="--v:5"></span></div></div><div class="card"><div class="dm-head"><span class="dm-name">Dedicated</span><span class="pill ghost">steady price</span></div><code class="dm-how">provisioned compute, per hour</code><p class="dm-when">Steady traffic, latency SLAs</p><div class="dm-meters"><span class="dm-k">Easy setup</span><span class="dm-pips" style="--v:4"></span><span class="dm-k">Low ops</span><span class="dm-pips" style="--v:5"></span><span class="dm-k">Scale</span><span class="dm-pips" style="--v:5"></span><span class="dm-k">Low cost</span><span class="dm-pips" style="--v:3"></span></div></div><div class="card"><div class="dm-head"><span class="dm-name">Lakebase</span><span class="pill ghost">auto-suspend</span></div><code class="dm-how">storage + compute uptime</code><p class="dm-when">Huge dataset, occasional queries</p><div class="dm-meters"><span class="dm-k">Easy setup</span><span class="dm-pips" style="--v:3"></span><span class="dm-k">Low ops</span><span class="dm-pips" style="--v:5"></span><span class="dm-k">Scale</span><span class="dm-pips" style="--v:5"></span><span class="dm-k">Low cost</span><span class="dm-pips" style="--v:4"></span></div></div></div>
+</div>
+
+<p class="dm-key">Same engine in every box</p>
+
+<!-- notes
+Same Milvus engine in every box, so the choice is about who carries the
+operations and how the bill behaves, not about features.
+
+Top row, open source. Lite is a file on disk: pip install and go, up to about
+a million vectors. Standalone is one container for one box, comfortably into
+the tens of millions. Distributed is Kubernetes and scales past ten billion,
+but it wants someone who runs Kubernetes for a living.
+
+Bottom row, Zilliz Cloud. Serverless has a free tier and then bills per
+request, which is the "no box at all" option from the last slide. Dedicated
+is provisioned capacity billed per CU-hour: predictable price and latency.
+Lakebase keeps the index on object storage and bills compute only while the
+cluster is up, so huge corpora you query occasionally cost very little, at
+the price of a cold start.
+
+The pips: more filled is better for you. Setup, operations, scale, cost.
 -->
 
 ---
