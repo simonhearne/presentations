@@ -245,6 +245,24 @@ A spec on a noticeably narrower canvas is the exception: below roughly 900px the
 
 Per-mark `fontSize` on an individual text mark is a separate thing and stays in the spec: those are annotation sizes, not the chart's type scale.
 
+### Checking a chart
+
+Two scripts render a chart to a PNG without opening a browser yourself:
+
+```bash
+# one spec on its own, with the brand theme, at a given stage
+node bin/render-spec.js visualisations/ann-vs-exact.json --signal stage=3 --wait 2500
+
+# one slide of a built deck, stepped forward like a presenter would
+node bin/render-slide.js talks/rag-cost-curve 11 --steps 2 --wait 2500
+```
+
+`render-spec.js` runs the deck's own [script/vega.js](script/vega.js), so the screenshot is themed exactly as on a slide. Add `--theme dark` for the dark variant. `--signal name=value` sets any signal (or Vega-Lite param) and can repeat.
+
+`render-slide.js` builds the deck, opens `dist/index.html` over `file://`, presses ArrowRight `--steps` times and screenshots at 1920x1080. The slide can be its number or heading text. It warns when slide content runs into the footer, and when `--steps` walked off the slide. Both scripts write to the system temp folder unless given `--out`, and fall back to an installed Chrome when Playwright's bundled Chromium is missing.
+
+The `editing-vega-specs` skill in `.claude/skills/` walks an agent through the full edit, render and rebuild loop.
+
 ## Diagrams (Graphviz)
 
 Any slide can declare one or more Graphviz diagrams via a fenced ` ```dot ` block. The body is the digraph body — no `digraph { }` envelope needed; the build wraps it and injects brand-themed defaults (Inter font, brand-blue rounded boxes, navy edges, `rankdir=LR`).
