@@ -1093,7 +1093,7 @@ the next slide.
 
 You can't eyeball recall. You need a constant measure to identify regressions & improvements.
 
-Calculate ground truth for a representative set of queries, then score the production index against it - `recall@k`, continuously.
+Calculate ground truth for a representative set of queries using exact search, then score the production index against it continuously.
 
 ```dot
 golden [label="Golden\nquery set"]
