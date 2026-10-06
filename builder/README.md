@@ -212,6 +212,8 @@ On a slide that carries more than the chart — mechanism cards below it, a `.bo
 
 Passing a JSON array (e.g. `signal-stage: [0, 1, 2]`) turns the signal into a click-through stepper: the first element seeds the signal at load time, and pressing ArrowRight/Space/n steps forward through the remaining values without advancing the slide. ArrowLeft/p steps back. Once the last value is reached, the next press advances the deck as normal; likewise stepping back past the first value retreats. Multiple stepped charts on the same slide advance in parallel.
 
+The current value of a stepped signal is mirrored onto the slide's `<section>` as `data-chart-<name>` (`data-chart-stage="2"`), so slide CSS can follow the chart: a heading can swap a word when the chart reaches a stage. Wrap the word in an inline span, `# What it costs you [(in theory)]{.reality-swap}`, and key the swap on `.slide[data-chart-stage="2"] .reality-swap`. The footer and slide anchor keep the span's text and drop the marker.
+
 By default a stepped chart runs *after* every fragment on its slide, so a
 closing line lands before the stages that earn it. `fragment-index` puts the
 chart somewhere else in the order — see

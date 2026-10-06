@@ -589,7 +589,7 @@ No matter what algorithm you use, embeddings are big. In RAM or on disk, size ma
 </g>
 </svg>
 
-<p class="closing-line fragment" data-fragment-index="4">100M chunks and you are holding <strong>1.23 TB</strong> before a single query runs.</p>
+<p class="closing-line fragment" data-fragment-index="4">100M chunks and you are holding <strong>1.23 TB</strong> before indexing overhead or a single query runs.</p>
 
 <!-- src: visualisations/cost-calculator.json:constants_note (RAM $5/GB/mo, as of 2026-05) -->
 <!-- src: deck assumption, premium SSD $0.15/GB-month; cost-calculator.json carries NVMe at $0.10/GB/mo for a different workload -->
@@ -631,11 +631,11 @@ the terabytes, so it shrinks whichever of the two you are paying.
 
 # Scalar quantisation
 
-Round `float32 → int8`: **4x smaller embeddings**, a small recall hit, almost no work.
+Round `float32 → int8`: **4x smaller embeddings**, a tiny recall hit & almost no work.
 
 ```vega
 - spec: ../../visualisations/scalar-steps.json
-  signal-stage: [3]
+  signal-stage: [0,1,2,3]
   renderer: svg
   actions: false
   fit: contain
@@ -697,19 +697,19 @@ quietly under model drift.
 
 {.small-title .no-vega-bindings}
 
-# What it costs you (in theory)
+# What it costs you [(in theory)]{.reality-swap}
 
 Every lost bit risks recall, but the curve is surprisingly forgiving.
 
 ```vega
-- spec: ../../visualisations/compression-recall.json
+- spec: compression-recall.json
   renderer: svg
-  signal-stage: [1]
+  signal-stage: [1, 2]
   actions: false
   fit: contain
 ```
 
-<!-- src: compression-recall.json:source_1 (illustrative, authored at 768-D; the Embedding dim control scales residual error for PQ/PRQ/RaBitQ only, direction not measurement) -->
+<!-- src: compression-recall.json:source_1 (recall illustrative, authored at 768-D; the Embedding dim control scales residual error for PQ/PRQ/RaBitQ only. Stage 2 x drift: measured footprint vs IVF_FLAT fp32 from rag-cost-curve/data/ws2/curves_1m.csv (1024-D) for SQ8 3.60x, PQ m512/m256/m128 6.16/9.39/12.93x, RaBitQ 13.98x, RaBitQ+SQ8 refine k=2 3.19x; RaBitQ+refine with SQ8 on disk inferred at bare RaBitQ footprint 13.98x and refine recall; FP16/BF16/PQ 4/PRQ approximated as 1/(1/c + 0.04)) -->
 
 ---
 
@@ -965,7 +965,7 @@ PCA and Matryoshka trade accuracy for speed and cost. Refinement spends a little
   fit: contain
 ```
 
-<blockquote class="blue fragment bottom" data-fragment-index="1"><span class="label">The catch</span><p>The harder you filter, the more of the graph you destroy. So there's no single fix - <span class="hit-text">the right technique depends on how much survives the filter</span>.</p></blockquote>
+<blockquote class="blue fragment bottom" data-fragment-index="1"><span class="label">The catch</span><p>The harder you filter, the more of the graph you destroy.<br>There's no single fix - <span class="hit-text">the right technique depends on how much survives the filter</span>.</p></blockquote>
 
 <!-- notes
 Same errand, now with the filters every shop has: size 38, under 150 euros.

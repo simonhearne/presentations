@@ -2029,3 +2029,17 @@
 .tune-panel .auto-dim :is(.sw, .sw-on, .swt, .knob) { transition: opacity 300ms ease; }
 .slide:has(.tune-panel .stage-1.is-revealed) .tune-panel .auto-dim :is(.sw, .sw-on, .swt, .knob) { opacity: 0; }
 .slide:has(.tune-panel .stage-1.is-revealed) .tune-panel .collapse { transform: translateX(var(--dx)); opacity: 0; }
+
+/* "What it costs you": the heading's "(in theory)" reads "(in reality)" once
+   the compression chart drifts to production footprints (stage 2, mirrored
+   onto the slide by script/vega.js). The source text stays in the markdown so
+   the footer and slide anchor keep the original title. */
+.reality-swap { position: relative; }
+.slide[data-chart-stage="2"] .reality-swap { visibility: hidden; }
+.slide[data-chart-stage="2"] .reality-swap::after {
+  content: '(in reality)';
+  visibility: visible;
+  position: absolute;
+  left: 0;
+  white-space: nowrap;
+}

@@ -127,6 +127,14 @@
   // If the parsed value is an array, the signal becomes step-driven: the
   // first element is seeded now, and remaining elements are stepped through
   // via ArrowRight/Left (see applyStepper).
+  // Stepped signal values are mirrored onto the slide as data-chart-<name>, so
+  // slide CSS can follow a chart's stage (a heading that changes with it).
+  function mirrorStep(el, name, value) {
+    const section = el.closest('section');
+    if (!section) return;
+    section.dataset['chart' + name[0].toUpperCase() + name.slice(1)] = value;
+  }
+
   function applySignals(el, view) {
     let touched = false;
     for (const [key, raw] of Object.entries(el.dataset)) {
@@ -141,6 +149,7 @@
         touched = true;
         if (isStepList) {
           (el.__vegaSteps ||= []).push({ name: sigName, values: value, index: 0 });
+          mirrorStep(el, sigName, seed);
         }
       } catch (err) {
         console.warn(`vega signal "${sigName}" not found on`, el.id || el, err.message);
@@ -207,7 +216,7 @@
         const next = s.index + direction;
         if (next < 0 || next >= s.values.length) continue;
         s.index = next;
-        try { view.signal(s.name, s.values[next]); consumed = true; }
+        try { view.signal(s.name, s.values[next]); mirrorStep(el, s.name, s.values[next]); consumed = true; }
         catch (err) { console.warn(`vega step signal "${s.name}" failed on`, el.id || el, err.message); }
       }
       if (consumed) view.runAsync();

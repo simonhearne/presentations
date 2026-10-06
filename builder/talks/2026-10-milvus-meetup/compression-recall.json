@@ -1,0 +1,260 @@
+{
+  "$schema": "https://vega.github.io/schema/vega/v6.json",
+  "background": "white",
+  "padding": 5,
+  "width": 1200,
+  "height": 640,
+  "style": "cell",
+  "data": [
+    {
+      "name": "source_0",
+      "values": [
+        {"series": "FP32 (FLAT)", "compression": 1, "prod": 1, "recall": 1},
+        {"series": "FP16", "compression": 2, "prod": 1.85, "recall": 0.995},
+        {"series": "BF16", "compression": 2, "prod": 1.85, "recall": 0.99},
+        {"series": "SQ8", "compression": 4, "prod": 3.60, "recall": 0.99},
+        {"series": "PQ", "compression": 4, "prod": 3.45, "recall": 0.97},
+        {"series": "PQ", "compression": 8, "prod": 6.16, "recall": 0.93},
+        {"series": "PQ", "compression": 16, "prod": 9.39, "recall": 0.87},
+        {"series": "PQ", "compression": 32, "prod": 12.93, "recall": 0.79},
+        {"series": "PRQ", "compression": 8, "prod": 6.67, "recall": 0.95},
+        {"series": "PRQ", "compression": 16, "prod": 9.76, "recall": 0.91},
+        {"series": "PRQ", "compression": 32, "prod": 14.0, "recall": 0.85},
+        {"series": "RaBitQ (1-bit)", "compression": 32, "prod": 13.98, "recall": 0.76},
+        {"series": "RaBitQ (1-bit+SQ8)", "compression": 32, "prod": 3.19, "recall": 0.93},
+        {"series": "RaBitQ (1-bit+SQ8)", "variant": "SQ8 on disk", "compression": 13.98, "prod": 13.98, "recall": 0.93}
+      ]
+    },
+    {
+      "name": "source_1",
+      "values": [
+        {
+          "note": "Illustrative, representative of Ada-002 / BGE-m3 style embeddings on Milvus 2.6+ (FLAT, FP16/BF16, INT8, IVF_SQ8, IVF_PQ, HNSW_PRQ, IVF_RABITQ). Points are authored at 768-D; the Embedding dim control scales the residual recall error of the dimension-sensitive families (PQ, PRQ, RaBitQ) by 1.10 / 1.00 / 0.90 / 0.82 at 384 / 768 / 1536 / 3072-D. Direction only, not measured. Scalar methods (FP16, BF16, SQ8) quantise each number independently and are held flat. Stage 2 drifts each point along x from nominal payload compression to an approximate production footprint, measured against the IVF_FLAT fp32 index (index structure and segment heap included). SQ8, PQ 8/16/32, RaBitQ and RaBitQ+rerank use the measured 1M, 1024-D footprints from rag-cost-curve/data/ws2/curves_1m.csv (ivf_sq8, ivf_pq_m512/m256/m128, rabitq, rabitq_refine_sq8_k2). FP16, BF16, PQ 4 and PRQ were not measured and use 1/(1/c + 0.04), the overhead the measured IVF arms imply (within ~5% of each); PRQ is HNSW, so its graph overhead is assumed similar. RaBitQ+refine lands at 3.19x because refine keeps an SQ8 copy of every vector in memory. The SQ8 on disk variant (revealed at stage 2) is inferred, not measured: the refine copy is read from disk, so memory footprint is taken as bare RaBitQ (13.98x) and recall as RaBitQ+refine, at the cost of disk reads per query. Recall is not moved."
+        }
+      ]
+    },
+    {
+      "name": "data_0",
+      "source": "source_0",
+      "transform": [
+        {
+          "type": "formula",
+          "expr": "(datum.series == 'PQ' || datum.series == 'PRQ' || indexof(datum.series, 'RaBitQ') >= 0) ? 1 - (1 - datum.recall) * (dim == '384' ? 1.10 : dim == '1536' ? 0.90 : dim == '3072' ? 0.82 : 1) : datum.recall",
+          "as": "recall_adj"
+        },
+        {
+          "type": "filter",
+          "expr": "isValid(datum[\"compression\"]) && isFinite(+datum[\"compression\"]) && isValid(datum[\"recall_adj\"]) && isFinite(+datum[\"recall_adj\"])"
+        }
+      ]
+    }
+  ],
+  "signals": [
+    {
+      "name": "dim",
+      "value": "3072",
+      "bind": {
+        "input": "select",
+        "options": ["384", "768", "1536", "3072"],
+        "name": "Embedding dim "
+      }
+    },
+    {"name": "stage", "value": 0},
+    {"name": "stageTarget", "update": "stage >= 1 ? 1 : 0"},
+    {
+      "name": "tween",
+      "value": 0,
+      "on": [
+        {
+          "events": {"type": "timer", "throttle": 16},
+          "update": "abs(stageTarget - tween) < 0.001 ? stageTarget : tween + (stageTarget - tween) * 0.18"
+        }
+      ]
+    },
+    {"name": "driftTarget", "update": "stage >= 2 ? 1 : 0"},
+    {
+      "name": "drift",
+      "value": 0,
+      "on": [
+        {
+          "events": {"type": "timer", "throttle": 16},
+          "update": "abs(driftTarget - drift) < 0.001 ? driftTarget : drift + (driftTarget - drift) * 0.12"
+        }
+      ]
+    }
+  ],
+  "marks": [
+    {
+      "name": "drift_rules",
+      "type": "rule",
+      "from": {"data": "data_0"},
+      "encode": {
+        "update": {
+          "x": {"scale": "x", "field": "compression"},
+          "x2": {"signal": "scale('x', datum.compression) + (scale('x', datum.prod) - scale('x', datum.compression)) * drift"},
+          "y": {"scale": "y", "field": "recall_adj"},
+          "stroke": {"scale": "color", "field": "series"},
+          "strokeWidth": {"value": 2},
+          "strokeDash": {"value": [3, 3]},
+          "opacity": {"signal": "datum.prod < datum.compression * 0.85 ? drift * 0.8 : 0"}
+        }
+      }
+    },
+    {
+      "name": "nominal_ghosts",
+      "type": "symbol",
+      "from": {"data": "data_0"},
+      "encode": {
+        "update": {
+          "x": {"scale": "x", "field": "compression"},
+          "y": {"scale": "y", "field": "recall_adj"},
+          "size": {"value": 500},
+          "fill": {"value": "transparent"},
+          "stroke": {"scale": "color", "field": "series"},
+          "strokeWidth": {"value": 2},
+          "opacity": {"signal": "datum.prod < datum.compression * 0.85 ? drift * 0.6 : 0"}
+        }
+      }
+    },
+    {
+      "name": "layer_0_marks",
+      "type": "symbol",
+      "style": ["point"],
+      "from": {"data": "data_0"},
+      "encode": {
+        "update": {
+          "opacity": {"signal": "datum.variant ? drift * 0.9 : 0.9"},
+          "shape": {"value": "circle"},
+          "size": {"value": 500},
+          "fill": {"scale": "color", "field": "series"},
+          "tooltip": {
+            "signal": "{\"Quantisation\": isValid(datum[\"series\"]) ? isArray(datum[\"series\"]) ? join(datum[\"series\"], '\\n') : datum[\"series\"] : \"\"+datum[\"series\"], \"Recall@10\": format(datum[\"recall_adj\"], \".2f\"), \"Compression\": format(datum[\"compression\"], \"\")}"
+          },
+          "x": {"signal": "scale('x', datum.compression) + (scale('x', datum.prod) - scale('x', datum.compression)) * drift"},
+          "y": {"scale": "y", "field": "recall_adj"}
+        }
+      }
+    },
+    {
+      "name": "annotation_halo",
+      "type": "text",
+      "style": ["text"],
+      "from": {"data": "data_0"},
+      "encode": {
+        "update": {
+          "text": {"signal": "(datum.variant ? 'RaBitQ + refine, ' + datum.variant : datum.series) + ' · ' + format(datum.recall_adj, '.2f') + ' @ 1/' + (drift > 0 ? format(datum.compression + (datum.prod - datum.compression) * drift, '.1f') : datum.compression)"},
+          "x": {"signal": "scale('x', datum.compression) + (scale('x', datum.prod) - scale('x', datum.compression)) * drift"},
+          "y": {"scale": "y", "field": "recall_adj"},
+          "dx": {"signal": "datum.variant ? 0 : datum.compression >= 32 || (stage >= 2 && datum.prod < datum.compression * 0.85) ? -16 : 16"},
+          "dy": {"signal": "datum.variant ? -22 : stage >= 2 && datum.series == 'PQ' && datum.compression == 8 ? 14 : datum.series == 'FP32 (FLAT)' ? 7 : datum.series == 'FP16' ? -9 : datum.series == 'BF16' ? 9 : 0"},
+          "align": {"signal": "datum.variant ? 'center' : datum.compression >= 32 || (stage >= 2 && datum.prod < datum.compression * 0.85) ? 'right' : 'left'"},
+          "baseline": {"value": "middle"},
+          "fontSize": {"value": 13},
+          "fontWeight": {"value": 600},
+          "fill": {"value": "white"},
+          "stroke": {"value": "white"},
+          "strokeWidth": {"value": 4},
+          "opacity": {"signal": "datum.variant ? drift * 0.9 : 0.9"}
+        }
+      }
+    },
+    {
+      "name": "annotation_labels",
+      "type": "text",
+      "style": ["text"],
+      "from": {"data": "data_0"},
+      "encode": {
+        "update": {
+          "text": {"signal": "(datum.variant ? 'RaBitQ + refine, ' + datum.variant : datum.series) + ' · ' + format(datum.recall_adj, '.2f') + ' @ 1/' + (drift > 0 ? format(datum.compression + (datum.prod - datum.compression) * drift, '.1f') : datum.compression)"},
+          "x": {"signal": "scale('x', datum.compression) + (scale('x', datum.prod) - scale('x', datum.compression)) * drift"},
+          "y": {"scale": "y", "field": "recall_adj"},
+          "dx": {"signal": "datum.variant ? 0 : datum.compression >= 32 || (stage >= 2 && datum.prod < datum.compression * 0.85) ? -16 : 16"},
+          "dy": {"signal": "datum.variant ? -22 : stage >= 2 && datum.series == 'PQ' && datum.compression == 8 ? 14 : datum.series == 'FP32 (FLAT)' ? 7 : datum.series == 'FP16' ? -9 : datum.series == 'BF16' ? 9 : 0"},
+          "align": {"signal": "datum.variant ? 'center' : datum.compression >= 32 || (stage >= 2 && datum.prod < datum.compression * 0.85) ? 'right' : 'left'"},
+          "baseline": {"value": "middle"},
+          "fontSize": {"value": 13},
+          "fontWeight": {"value": 600},
+          "fill": {"scale": "color", "field": "series"},
+          "opacity": {"signal": "datum.variant ? drift : 1"}
+        }
+      }
+    }
+  ],
+  "scales": [
+    {
+      "name": "x",
+      "type": "log",
+      "domain": [0.8, 40],
+      "range": [0, {"signal": "width"}],
+      "base": 2
+    },
+    {
+      "name": "y",
+      "type": "linear",
+      "domain": {"signal": "[(dim == '384' ? 0.70 : 0.75) * tween, 1]"},
+      "range": [{"signal": "height"}, 0],
+      "zero": false
+    },
+    {
+      "name": "color",
+      "type": "ordinal",
+      "domain": {"data": "data_0", "field": "series", "sort": true},
+      "range": {"scheme": "tableau10"}
+    }
+  ],
+  "axes": [
+    {
+      "scale": "x",
+      "orient": "bottom",
+      "values": [1, 2, 4, 8, 16, 32],
+      "gridScale": "y",
+      "grid": true,
+      "tickMinStep": 1,
+      "domain": false,
+      "labels": false,
+      "aria": false,
+      "maxExtent": 0,
+      "minExtent": 0,
+      "ticks": false,
+      "zindex": 0
+    },
+    {
+      "scale": "y",
+      "orient": "left",
+      "gridScale": "x",
+      "grid": true,
+      "tickCount": {"signal": "ceil(height/40)"},
+      "domain": false,
+      "labels": false,
+      "aria": false,
+      "maxExtent": 0,
+      "minExtent": 0,
+      "ticks": false,
+      "zindex": 0
+    },
+    {
+      "scale": "x",
+      "orient": "bottom",
+      "grid": false,
+      "title": "Compression ratio (×)",
+      "format": "d",
+      "values": [1, 2, 4, 8, 16, 32],
+      "labelFlush": true,
+      "labelOverlap": "greedy",
+      "tickMinStep": 1,
+      "zindex": 0
+    },
+    {
+      "scale": "y",
+      "orient": "left",
+      "grid": false,
+      "title": "Recall@10",
+      "format": ".2f",
+      "labelOverlap": true,
+      "tickCount": {"signal": "ceil(height/40)"},
+      "zindex": 0
+    }
+  ],
+  "legends": [],
+  "usermeta": {"embedOptions": {"renderer": "svg", "actions": false}}
+}
