@@ -1,0 +1,84 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "description": "Illustrative: daily recall@10 of a production index scored against exact-search ground truth for a golden query set. Stage 0 steady state, stage 1 a catalogue growth regression crossing the alert line, stage 2 recovery after retuning nprobe.",
+  "width": 960,
+  "height": 420,
+  "params": [{"name": "stage", "value": 0}],
+  "data": {"values": [
+      {"day": 1, "recall": 0.968},
+      {"day": 2, "recall": 0.971},
+      {"day": 3, "recall": 0.966},
+      {"day": 4, "recall": 0.97},
+      {"day": 5, "recall": 0.967},
+      {"day": 6, "recall": 0.972},
+      {"day": 7, "recall": 0.969},
+      {"day": 8, "recall": 0.965},
+      {"day": 9, "recall": 0.97},
+      {"day": 10, "recall": 0.968},
+      {"day": 11, "recall": 0.971},
+      {"day": 12, "recall": 0.967},
+      {"day": 13, "recall": 0.969},
+      {"day": 14, "recall": 0.931},
+      {"day": 15, "recall": 0.902},
+      {"day": 16, "recall": 0.889},
+      {"day": 17, "recall": 0.884},
+      {"day": 18, "recall": 0.886},
+      {"day": 19, "recall": 0.883},
+      {"day": 20, "recall": 0.962},
+      {"day": 21, "recall": 0.968},
+      {"day": 22, "recall": 0.97},
+      {"day": 23, "recall": 0.967},
+      {"day": 24, "recall": 0.971},
+      {"day": 25, "recall": 0.969},
+      {"day": 26, "recall": 0.972},
+      {"day": 27, "recall": 0.968},
+      {"day": 28, "recall": 0.97},
+      {"day": 29, "recall": 0.971},
+      {"day": 30, "recall": 0.969}
+  ]},
+  "transform": [
+    {"filter": "datum.day <= (stage === 0 ? 13 : stage === 1 ? 19 : 30)"}
+  ],
+  "encoding": {
+    "x": {"field": "day", "type": "quantitative", "scale": {"domain": [1, 30]}, "axis": {"title": "day", "values": [1, 7, 14, 21, 28], "grid": false}},
+    "y": {"field": "recall", "type": "quantitative", "scale": {"domain": [0.86, 1.0]}, "axis": {"title": "recall@10 vs exact", "format": ".2f", "values": [0.86, 0.9, 0.95, 1.0]}}
+  },
+  "layer": [
+    {
+      "data": {"values": [{"y": 0.95}]},
+      "transform": [],
+      "mark": {"type": "rule", "strokeDash": [8, 6], "strokeWidth": 2, "color": "#c84cff"},
+      "encoding": {"x": null, "y": {"field": "y", "type": "quantitative"}}
+    },
+    {
+      "data": {"values": [{"x": 30, "y": 0.95, "t": "alert below 0.95"}]},
+      "transform": [],
+      "mark": {"type": "text", "align": "right", "baseline": "bottom", "dy": -6, "color": "#c84cff", "fontWeight": 600},
+      "encoding": {"x": {"field": "x", "type": "quantitative"}, "y": {"field": "y", "type": "quantitative"}, "text": {"field": "t"}}
+    },
+    {
+      "mark": {"type": "line", "strokeWidth": 4, "interpolate": "monotone", "color": "#175fff"}
+    },
+    {
+      "mark": {"type": "circle", "size": 110, "opacity": 1},
+      "encoding": {
+        "color": {"condition": {"test": "datum.recall < 0.95", "value": "#c84cff"}, "value": "#175fff"},
+        "tooltip": [{"field": "day"}, {"field": "recall", "format": ".3f"}]
+      }
+    },
+    {
+      "data": {"values": [{"x": 14, "t": ["+30% catalogue,", "same nprobe"], "s": 1, "y": 0.879}, {"x": 20, "t": ["retune:", "nprobe 16 \u2192 32"], "s": 2, "y": 0.879}]},
+      "transform": [],
+      "layer": [
+        {
+          "mark": {"type": "rule", "strokeDash": [4, 4], "strokeWidth": 2, "color": "#061982"},
+          "encoding": {"x": {"field": "x", "type": "quantitative"}, "y": null, "opacity": {"condition": {"test": "stage >= datum.s", "value": 0.5}, "value": 0}}
+        },
+        {
+          "mark": {"type": "text", "align": "left", "baseline": "top", "dx": 10, "lineHeight": 26, "color": "#061982"},
+          "encoding": {"x": {"field": "x", "type": "quantitative"}, "y": {"field": "y", "type": "quantitative"}, "text": {"field": "t"}, "opacity": {"condition": {"test": "stage >= datum.s", "value": 1}, "value": 0}}
+        }
+      ]
+    }
+  ]
+}

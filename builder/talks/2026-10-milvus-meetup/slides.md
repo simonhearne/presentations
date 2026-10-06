@@ -1091,21 +1091,112 @@ the next slide.
 
 # Measure what you can't see
 
-You can't eyeball recall. You need a constant measure to identify regressions & improvements.
+Score the index against exact search, on every deploy and every data change.
 
-Calculate ground truth for a representative set of queries using exact search, then score the production index against it continuously.
+<div class="recall-watch">
+<div class="card rw-sample">
+<div class="feature-cat">golden query #127</div>
+<pre class="rw-query">size == 38 and price &lt; 150</pre>
+<div class="rw-lists">
+<ol class="rw-list">
+<li class="rw-label">exact (truth)</li>
+<li class="miss"><span>dress_0412</span><span>0.91</span></li>
+<li class="hit"><span>dress_8812</span><span>0.83</span></li>
+<li class="hit"><span>dress_1204</span><span>0.81</span></li>
+<li class="hit"><span>dress_0937</span><span>0.80</span></li>
+<li class="hit"><span>dress_5521</span><span>0.79</span></li>
+</ol>
+<ol class="rw-list">
+<li class="rw-label">production (ANN)</li>
+<li class="hit"><span>dress_8812</span><span>0.83</span></li>
+<li class="hit"><span>dress_1204</span><span>0.81</span></li>
+<li class="hit"><span>dress_0937</span><span>0.80</span></li>
+<li class="hit"><span>dress_5521</span><span>0.79</span></li>
+<li class="extra"><span>dress_3310</span><span>0.78</span></li>
+</ol>
+</div>
+<div class="rw-score"><span>recall@5</span><span><b>4</b> / 5 = <b>0.80</b></span></div>
+<p class="rw-foot">Average over ~500 real queries, plot it daily.</p>
+</div>
 
-```dot
-golden [label="Golden\nquery set"]
-exact [label="Exact\nbrute-force\nO(N), once"]
-truth [label="Ground-truth\ntop-k"]
-prod [label="Production\nindex (ANN)"]
-recall [label="recall@k", fillcolor="#175fff", fontcolor="white"]
-golden -> exact -> truth
-golden -> prod [label="every deploy"]
-truth -> recall [label="overlap"]
-prod -> recall
+<div class="rw-chart">
+
+```vega
+- spec: ./recall-watch.vl.json
+  renderer: svg
+  actions: false
+  signal-stage: [0, 1, 2]
+  fit: contain
 ```
+
+</div>
+</div>
+
+<!-- notes
+This is the right-hand list from the last slide, turned into a habit.
+
+Left: one golden query. Exact search gives the truth, computed offline, and
+recomputed whenever the data changes. Production gives what users actually
+get. Overlap four of five: recall@5 is 0.80. Do that for a few hundred real
+queries and you have one number per day.
+
+Right, illustrative but very typical. Two weeks flat around 0.97.
+
+Click: the catalogue grows 30 percent. Nobody deployed anything. Same
+nprobe, more vectors per cluster, recall slides to 0.88. Nothing errors,
+latency looks fine, every response still has ten rows. Only the golden set
+notices, and it fires the alert.
+
+Click: retune nprobe from 16 to 32, recall is back. That is the loop: the
+data drifts, the measurement catches it, you buy recall back on purpose.
+
+The ground truth goes stale too: when the data changes, re-run exact search
+for the golden set, or you're scoring against yesterday's catalogue.
+-->
+
+---
+
+{.small-title}
+
+# Recall is a proxy. <span class="hero-text">Users are the truth.</span>
+
+<div class="metric-ladder">
+<div class="ml-head"><span>layer</span><span>metrics</span><span>scored against</span><span>cadence</span><span>catches</span></div>
+<div class="ml-body">
+<div class="ml-rail"><span>closer to the user</span></div>
+<div class="ml-rungs">
+<div class="ml-rung fragment" data-fragment-index="1"><span class="ml-name">Index</span><span class="ml-metrics"><span class="pill ghost">recall@k</span></span><span>exact search</span><span>every deploy</span><span>ANN params, data drift</span></div>
+<div class="ml-rung fragment" data-fragment-index="2"><span class="ml-name">Relevance</span><span class="ml-metrics"><span class="pill ghost">NDCG@k</span><span class="pill ghost">MRR</span><span class="pill ghost">precision@k</span></span><span>graded human or LLM labels</span><span>every model change</span><span>weak embeddings, chunking</span></div>
+<div class="ml-rung fragment" data-fragment-index="3"><span class="ml-name">Behaviour</span><span class="ml-metrics"><span class="pill ghost">CTR</span><span class="pill ghost">zero results</span><span class="pill ghost">reformulations</span><span class="pill ghost">thumbs up / down</span></span><span>real users</span><span>live, A/B</span><span>ranking users ignore</span></div>
+<div class="ml-rung fragment" data-fragment-index="4"><span class="ml-name">Business</span><span class="ml-metrics"><span class="pill ghost">conversion</span><span class="pill ghost">revenue / search</span><span class="pill ghost">return rate</span></span><span>the P&amp;L</span><span>A/B, quarterly</span><span>relevant that doesn't sell</span></div>
+</div>
+</div>
+</div>
+
+<blockquote class="blue fragment bottom" data-fragment-index="5"><span class="label">Watch every layer</span><p>Each layer up is slower and noisier, but closer to what matters. A dip at the <span class="hit-text">bottom</span> is cheap to catch.</p></blockquote>
+
+<!-- notes
+Recall@k tells you the index agrees with exact search. It doesn't tell you
+exact search was any good. So measure up the stack, bottom first.
+
+Index: what we just built. Cheap, deterministic, run it on every deploy.
+
+Relevance: now you need labels. Graded judgements from people, or an LLM
+judge you've checked against people. NDCG rewards putting the best result
+first, MRR asks how far down the first good one is. This is where a bad
+embedding model or bad chunking shows up, and no nprobe fixes it.
+
+Behaviour: real users. Click-through, how often a search returns nothing,
+how often people rephrase, thumbs up and down in a chat UI. Noisy, needs
+traffic and A/B tests, but it's what people actually do.
+
+Business: conversion, revenue per search. For the dress finder, return
+rate. Remember the size-38 dress the filtered search never surfaced? That
+miss shows up months later as a wrong-size order coming back.
+
+The layers come apart. The next section shows how far apart the first two
+are, with real numbers.
+-->
 
 ---
 

@@ -2078,3 +2078,39 @@
 .slide .cost-latency thead th { font-size: 19px; }
 .slide .cost-latency tbody th { font-family: var(--zilliz-font-mono); font-size: 19px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; text-align: left; color: var(--zilliz-grey); border-bottom: 1px solid rgba(6, 25, 130, 0.08); }
 .slide .cost-latency tbody tr:last-child th { border-bottom: none; }
+
+/* "Measure what you can't see": one golden query's recall@5 sum on the left
+   (the truth/got lists from the EXPLAIN slide, light theme), the daily
+   recall chart on the right. */
+.slide .recall-watch { flex: 1; min-height: 0; display: grid; grid-template-columns: minmax(0, 0.62fr) minmax(0, 1fr); gap: var(--zilliz-s-4); align-items: center; margin-top: var(--zilliz-s-3); }
+.recall-watch .rw-sample { gap: var(--zilliz-s-2); }
+.slide .recall-watch pre.rw-query { margin: 0; padding: 0; background: none; border: 0; font-family: var(--zilliz-font-mono); font-size: 20px; color: var(--zilliz-ink); }
+.recall-watch .rw-lists { display: grid; grid-template-columns: 1fr 1fr; gap: var(--zilliz-s-2); }
+.slide .recall-watch .rw-list { list-style: none; margin: 0; padding: 0; font-family: var(--zilliz-font-mono); }
+.slide .recall-watch .rw-list li { display: flex; justify-content: space-between; gap: var(--zilliz-s-1); padding: 3px 10px; margin: 0 0 4px; font-size: 20px; line-height: 1.3; border-radius: 6px; border: 2px solid transparent; font-variant-numeric: tabular-nums; }
+.slide .recall-watch .rw-list li.rw-label { display: block; font-size: 15px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--zilliz-grey); padding-bottom: 0; }
+.recall-watch .rw-list .hit { background: var(--zilliz-blue-10); color: var(--zilliz-navy); }
+.recall-watch .rw-list .miss { border: 2px dashed #54a24b; color: #3c7a35; }
+.recall-watch .rw-list .extra { background: rgba(228, 154, 59, 0.14); border-color: #e49a3b; color: #a8661c; }
+.recall-watch .rw-score { display: flex; justify-content: space-between; align-items: baseline; border-top: 2px solid var(--zilliz-blue-20); padding-top: var(--zilliz-s-2); font-family: var(--zilliz-font-mono); font-size: 22px; color: var(--zilliz-navy); }
+.recall-watch .rw-score span:first-child { font-size: 18px; text-transform: uppercase; letter-spacing: 0.06em; }
+.recall-watch .rw-score b { font-size: 34px; color: var(--zilliz-blue); }
+.slide .recall-watch .rw-foot { margin: 0; font-size: 20px; color: var(--zilliz-ink); opacity: 0.8; }
+.recall-watch .rw-chart { min-width: 0; height: 100%; display: flex; align-items: center; }
+
+/* Metrics ladder: four layers of search measurement, revealed bottom-up
+   (column-reverse keeps DOM order index-first so fragments step upward). */
+.slide .metric-ladder { margin-top: var(--zilliz-s-3); font-size: 22px; }
+.metric-ladder .ml-head, .metric-ladder .ml-rung { display: grid; grid-template-columns: 200px minmax(0, 1.5fr) minmax(0, 1fr) minmax(0, 0.8fr) minmax(0, 1fr); gap: var(--zilliz-s-3); align-items: center; }
+.metric-ladder .ml-head { padding: 0 var(--zilliz-s-3) var(--zilliz-s-1) calc(var(--zilliz-s-3) + 64px); font-family: var(--zilliz-font-mono); font-size: 16px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--zilliz-grey); }
+.metric-ladder .ml-body { display: grid; grid-template-columns: 48px 1fr; gap: var(--zilliz-s-2); }
+.metric-ladder .ml-rail { position: relative; border-left: 0; display: flex; align-items: center; justify-content: center; }
+.metric-ladder .ml-rail::before { content: ""; position: absolute; top: 8px; bottom: 0; left: 50%; width: 4px; transform: translateX(-50%); background: linear-gradient(to top, var(--zilliz-blue-20), var(--zilliz-blue)); border-radius: 2px; }
+.metric-ladder .ml-rail::after { content: ""; position: absolute; top: 0; left: 50%; transform: translateX(-50%); border: 10px solid transparent; border-bottom: 14px solid var(--zilliz-blue); border-top: 0; }
+.metric-ladder .ml-rail span { position: relative; writing-mode: vertical-rl; transform: rotate(180deg); background: var(--zilliz-white); padding: 8px 0; font-family: var(--zilliz-font-mono); font-size: 16px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--zilliz-blue); }
+.metric-ladder .ml-rungs { display: flex; flex-direction: column-reverse; gap: var(--zilliz-s-2); }
+.metric-ladder .ml-rung { background: var(--zilliz-white); border: 2px solid var(--zilliz-blue-20); border-radius: var(--zilliz-radius-card); padding: var(--zilliz-s-2) var(--zilliz-s-3); line-height: 1.3; color: var(--zilliz-ink); }
+.metric-ladder .ml-rung.is-current { border-color: var(--zilliz-blue); box-shadow: var(--zilliz-shadow-pop); }
+.metric-ladder .ml-name { font-family: var(--zilliz-font-mono); font-size: 22px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; color: var(--zilliz-navy); }
+.metric-ladder .ml-metrics { display: flex; flex-wrap: wrap; gap: 6px; }
+.metric-ladder .ml-metrics .pill { min-width: 0; font-size: 16px; }
