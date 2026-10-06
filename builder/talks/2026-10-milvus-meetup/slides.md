@@ -301,7 +301,7 @@ Every technique trades **speed**, **accuracy** & **cost**.
 
 # IVF: partition the space
 
-IVF clusters the vectors into _nlist_ cells. At query time, only search within the nearest _nprobe_ cells.
+IVF clusters the vectors into _nlist_ cells. At query time, only search within the nearest _nprobe_ cells. A true neighbour just over the border of a cell you never open is simply gone.
 
 ```vega
 - spec: ../../visualisations/ivf-voronoi.json
@@ -309,6 +309,22 @@ IVF clusters the vectors into _nlist_ cells. At query time, only search within t
   actions: false
   signal-stage: [2, 4, 6]
 ```
+
+<!-- notes
+Three clicks: nprobe 2, 4, 6. Filled blue are the true top-10, found.
+Ringed berry are true top-10 sitting in a cell we never opened: that is
+where recall goes. Each click opens more cells and the berry rings turn
+blue, at the cost of scanning more vectors (top-left counter): 6, then 9,
+then all 10.
+
+This is the answer to "why does recall drop where it does": queries near a
+cell border lose neighbours to the cell next door. Raising nprobe is the
+fix, and it is paid for in scanned vectors.
+
+Default query frozen at qx=5.5, qy=5 (chosen so nprobe 2 misses four).
+Click the chart to freeze or unfreeze the query before hovering.
+-->
+
 
 ---
 
