@@ -6,8 +6,7 @@
   "width": 820,
   "height": 430,
   "config": {
-    "axis": { "labelFontSize": 13, "titleFontSize": 14 },
-    "legend": { "labelFontSize": 14, "titleFontSize": 14, "symbolType": "stroke", "symbolStrokeWidth": 3 }
+    "axis": { "labelFontSize": 13, "titleFontSize": 14 }
   },
   "params": [
     { "name": "prefix", "value": 768 },
@@ -32,13 +31,13 @@
       "field": "dim",
       "type": "quantitative",
       "scale": { "type": "log", "base": 2, "domain": [220, 3500] },
-      "axis": { "title": "Prefix length kept (dimensions)", "values": [256, 512, 1024, 1536, 3072], "format": "d" }
+      "axis": { "title": "prefix kept (dims)", "values": [256, 512, 1024, 1536, 3072], "format": "d" }
     },
     "y": {
       "field": "retained",
       "type": "quantitative",
       "scale": { "domain": [0.5, 1.02] },
-      "axis": { "title": "MTEB average retained vs full 3072-D", "format": ".0%" }
+      "axis": { "title": "MTEB retained vs 3072-D", "format": ".0%" }
     }
   },
   "layer": [
@@ -49,8 +48,8 @@
         "color": {
           "field": "series",
           "type": "nominal",
-          "scale": { "domain": ["MRL-trained", "Not MRL-trained"], "range": ["#175fff", "#c84cff"] },
-          "legend": { "title": null, "orient": "bottom-left" }
+          "scale": { "domain": ["MRL-trained", "Not MRL-trained"], "range": ["#175fff", "#d97706"] },
+          "legend": null
         },
         "tooltip": [
           { "field": "series", "type": "nominal", "title": "Model" },
@@ -66,8 +65,8 @@
         "color": {
           "field": "series",
           "type": "nominal",
-          "scale": { "domain": ["MRL-trained", "Not MRL-trained"], "range": ["#175fff", "#c84cff"] },
-          "legend": { "title": null, "orient": "bottom-left" }
+          "scale": { "domain": ["MRL-trained", "Not MRL-trained"], "range": ["#175fff", "#d97706"] },
+          "legend": null
         },
         "tooltip": [
           { "field": "series", "type": "nominal", "title": "Model" },
@@ -77,8 +76,18 @@
       }
     },
     {
+      "transform": [{ "filter": "datum.dim == 512 && datum.series == 'MRL-trained' && prefix > 0" }],
+      "mark": { "type": "text", "align": "center", "baseline": "top", "dy": 14, "fontSize": 16, "fontWeight": 700, "color": "#175fff" },
+      "encoding": { "text": { "value": "MRL-trained" } }
+    },
+    {
+      "transform": [{ "filter": "datum.dim == 256 && datum.series == 'Not MRL-trained'" }],
+      "mark": { "type": "text", "align": "left", "dx": 16, "fontSize": 16, "fontWeight": 700, "color": "#b45309" },
+      "encoding": { "text": { "value": "not MRL-trained" } }
+    },
+    {
       "transform": [{ "filter": "datum.series == 'MRL-trained' && datum.dim == prefix" }],
-      "mark": { "type": "rule", "strokeWidth": 1.5, "strokeDash": [4, 4], "color": "#94a3b8" },
+      "mark": { "type": "rule", "style": "guide" },
       "encoding": { "y": { "value": 0 } }
     },
     {
@@ -94,9 +103,9 @@
       "encoding": { "text": { "field": "label" }, "x": { "value": 30 }, "y": { "value": 20 } }
     },
     {
-      "data": { "values": [{ "note": "MRL line ≈ text-embedding-3-large MTEB retained vs 3072-D (256-D keeps ~96%). Non-MRL line illustrative, flat until ~80% of dims are cut." }] },
-      "mark": { "type": "text", "align": "left", "baseline": "bottom", "fontSize": 11, "color": "#94a3b8" },
-      "encoding": { "text": { "field": "note" }, "x": { "value": 2 }, "y": { "value": 428 } }
+      "data": { "values": [{ "note": ["MRL line ≈ text-embedding-3-large MTEB retained vs 3072-D (256-D keeps ~96%).", "Non-MRL line illustrative, flat until ~80% of dims are cut."] }] },
+      "mark": { "type": "text", "style": "annotation", "align": "left", "baseline": "bottom", "fontSize": 12, "lineHeight": 16 },
+      "encoding": { "text": { "field": "note" }, "x": { "value": 2 }, "y": { "value": 410 } }
     }
   ]
 }

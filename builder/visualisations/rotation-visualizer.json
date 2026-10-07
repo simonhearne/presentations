@@ -108,7 +108,7 @@
     }
   ],
   "axes": [
-    { "scale": "xscale", "orient": "bottom", "grid": true, "gridDash": [2, 4], "gridColor": "#cbd5e1", "tickCount": 9, "labels": false },
-    { "scale": "yscale", "orient": "left", "grid": true, "gridDash": [2, 4], "gridColor": "#cbd5e1", "tickCount": 9, "labels": false }
+    { "scale": "xscale", "orient": "bottom", "grid": true, "gridDash": [2, 4], "gridColor": "#cbd5e1", "tickCount": 9, "labels": false, "domain": false, "ticks": false },
+    { "scale": "yscale", "orient": "left", "grid": true, "gridDash": [2, 4], "gridColor": "#cbd5e1", "tickCount": 9, "labels": false, "domain": false, "ticks": false }
   ]
 }

@@ -229,7 +229,16 @@ Vega/vega-lite/vega-embed are loaded from jsDelivr at view time, but **only when
 
 ### Brand theme
 
-Charts are automatically styled to match the Zilliz brand — Inter typography, brand-coloured axes and gridlines, a brand categorical palette (blue → berry → green → purple → sky), gradient bar/area fills, and a transparent background that lets the slide show through. **You don't need to add any styling config to a spec** — write the data and encoding, and it comes out on-brand. A spec's own `config` still wins where it sets something explicitly, so deliberate colours (e.g. semantic series colours) are preserved.
+Charts are automatically styled to match the deck's hand-drawn SVG diagrams rather than a spreadsheet: no gridlines, a heavy round-capped axis line with a few short ticks (about five on continuous axes; explicit `values` and category axes are left alone), lowercase IBM Plex Mono numbers and axis titles, Inter for category names, fat points, a colour-blind-checked categorical palette (blue → amber → berry → teal → purple → sky → navy), gradient bar/area fills, and a transparent background that lets the slide show through. **You don't need to add any styling config to a spec** — write the data and encoding, and it comes out on-brand. A spec's own `config` still wins where it sets something explicitly, so deliberate colours (e.g. semantic series colours) are preserved.
+
+Label series directly on the chart rather than with a legend where you can. Four named styles are available on any mark via `"style"` (Vega and Vega-Lite):
+
+| Style | Use |
+|---|---|
+| `guide` | dotted, round-capped grey rule for diagonals, thresholds and brackets |
+| `annotation` | grey italic mono text for footnotes and asides |
+| `callout` | bold 22px text for a headline on the chart (set its colour to match its series) |
+| `ring` | a slide-coloured ring around points, for large markers that overlap |
 
 The theme has light and dark variants. The runtime picks one from the slide's background: dark slides (`.dark`, `.title`, `.hero`, `.bg`) get light text and axes; everything else gets the light variant. To override per chart, add `theme`:
 
