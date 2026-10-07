@@ -133,16 +133,24 @@ So what does our library look like?
 <!-- Every modern model learns the same trick - text, images, audio, even molecules. Once meaning becomes geometry, the same idea unlocks: -->
 
 <div class="usecase-grid">
-  <div class="usecase-tile fragment"><span class="icon">📚</span><p class="label">RAG</p><p class="tagline">Ground LLMs in your own documents</p></div>
+  <div class="usecase-tile fragment"><span class="icon">🎯</span><p class="label">Ad &amp; product recommendations</p><p class="tagline">Match billions of products to the right shopper</p><span class="pill navy">Criteo · 19:20</span></div>
+  <div class="usecase-tile fragment"><span class="icon">💬</span><p class="label">RAG for support</p><p class="tagline">Ground answers in a live product catalogue</p><span class="pill gradient">Gorgias · 20:00</span></div>
+  <div class="usecase-tile fragment"><span class="icon">🛍️</span><p class="label">Visual search</p><p class="tagline">Find products that look like this photo</p></div>
   <div class="usecase-tile fragment"><span class="icon">🧠</span><p class="label">Agent memory</p><p class="tagline">Recall the right past conversation</p></div>
-  <div class="usecase-tile fragment"><span class="icon">⚖️</span><p class="label">Legal analysis</p><p class="tagline">Surface relevant case law</p></div>
   <div class="usecase-tile fragment"><span class="icon">🛡️</span><p class="label">Fraud detection</p><p class="tagline">Spot the needle in a stack of needles</p></div>
   <div class="usecase-tile fragment"><span class="icon">🎵</span><p class="label">Song matching</p><p class="tagline">Identify a tune from a whistle</p></div>
-  <div class="usecase-tile fragment"><span class="icon">🛍️</span><p class="label">Visual search</p><p class="tagline">Find products that look like this photo</p></div>
   <div class="usecase-tile fragment"><span class="icon">🚗</span><p class="label">Autonomous driving</p><p class="tagline">Detect erratic lane changes</p></div>
   <div class="usecase-tile fragment"><span class="icon">🧬</span><p class="label">Molecular discovery</p><p class="tagline">Find molecules with similar shape</p></div>
   <div class="usecase-tile fragment"><span class="icon">🔬</span><p class="label">Cancer screening</p><p class="tagline">Match diagnostic images to known cases</p></div>
 </div>
+
+<!-- notes
+The first two tiles are tonight's other talks: Criteo run product and ad
+recommendation at a scale that needed distributed vector search; Gorgias ground
+support answers in merchants' product catalogues. Then visual search, which is
+where we go next with the dress-finder. The rest is the long tail: same trick,
+different data.
+-->
 
 ---
 
