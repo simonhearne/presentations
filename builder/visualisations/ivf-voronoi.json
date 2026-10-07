@@ -8,7 +8,9 @@
   "signals": [
     { "name": "nlist", "value": 24, "bind": { "input": "range", "min": 8, "max": 64, "step": 8, "name": "nlist " } },
     { "name": "stage", "value": 2, "bind": { "input": "range", "min": 1, "max": 16, "step": 1, "name": "nprobe " } },
-    { "name": "nprobe", "update": "stage" },
+    { "name": "nprobe", "update": "stage >= 2 ? stage : 0" },
+    { "name": "showQuery", "update": "stage >= 1" },
+    { "name": "exact", "update": "stage == 1" },
     { "name": "k", "value": 10, "bind": { "input": "range", "min": 1, "max": 20, "step": 1, "name": "k " } },
     { "name": "probed_cells", "update": "min(nprobe, nlist)" },
     { "name": "interactive", "value": true, "on": [{"events": "click", "update": "!interactive" }] },
@@ -81,6 +83,7 @@
       "transform": [
         { "type": "formula", "as": "qdist", "expr": "sqrt(pow((datum.x - qx) * width / 10, 2) + pow((datum.y - qy) * height / 10, 2))" },
         { "type": "lookup", "from": "centroids_with_dist", "key": "id", "fields": ["cell"], "values": ["probed"], "as": ["probed"] },
+        { "type": "formula", "as": "probed", "expr": "exact || datum.probed" },
         { "type": "window", "ops": ["row_number"], "as": ["qrank"], "sort": { "field": "qdist" } },
         { "type": "formula", "as": "topk", "expr": "datum.qrank <= k" }
       ]
@@ -147,8 +150,9 @@
       "type": "rule",
       "from": { "data": "topk_missed" },
       "encode": {
-        "enter": { "stroke": { "value": "#c84cff" }, "strokeWidth": { "value": 1.5 }, "strokeDash": { "value": [2, 4] }, "strokeOpacity": { "value": 0.7 } },
+        "enter": { "stroke": { "value": "#c84cff" }, "strokeWidth": { "value": 1.5 }, "strokeDash": { "value": [2, 4] } },
         "update": {
+          "strokeOpacity": { "signal": "showQuery ? 0.7 : 0" },
           "x": { "scale": "xscale", "signal": "qx" }, "y": { "scale": "yscale", "signal": "qy" },
           "x2": { "scale": "xscale", "field": "x" }, "y2": { "scale": "yscale", "field": "y" }
         }
@@ -159,7 +163,7 @@
       "from": { "data": "topk_found" },
       "encode": {
         "enter": { "shape": { "value": "circle" }, "size": { "value": 170 }, "fill": { "value": "#175fff" }, "stroke": { "value": "#ffffff" }, "strokeWidth": { "value": 2 } },
-        "update": { "x": { "scale": "xscale", "field": "x" }, "y": { "scale": "yscale", "field": "y" } }
+        "update": { "opacity": { "signal": "showQuery ? 1 : 0" }, "x": { "scale": "xscale", "field": "x" }, "y": { "scale": "yscale", "field": "y" } }
       }
     },
     {
@@ -167,7 +171,7 @@
       "from": { "data": "topk_missed" },
       "encode": {
         "enter": { "shape": { "value": "circle" }, "size": { "value": 260 }, "fill": { "value": "#ffffff" }, "stroke": { "value": "#c84cff" }, "strokeWidth": { "value": 4 } },
-        "update": { "x": { "scale": "xscale", "field": "x" }, "y": { "scale": "yscale", "field": "y" } }
+        "update": { "opacity": { "signal": "showQuery ? 1 : 0" }, "x": { "scale": "xscale", "field": "x" }, "y": { "scale": "yscale", "field": "y" } }
       }
     },
     {
@@ -227,6 +231,7 @@
       "encode": {
         "enter": { "size": { "value": 220 }, "shape": { "value": "diamond" }, "fill": { "value": "#c84cff" }, "stroke": { "value": "#fff" }, "strokeWidth": { "value": 2 } },
         "update": {
+          "opacity": { "signal": "showQuery ? 1 : 0" },
           "x": { "scale": "xscale", "field": "x" },
           "y": { "scale": "yscale", "field": "y" }
         }
@@ -245,7 +250,7 @@
           "x": { "value": 14 },
           "y": { "value": 14 },
           "width": { "value": 700 },
-          "height": { "value": 96 }
+          "height": { "signal": "showQuery ? 96 : 48" }
         }
       }
     },
@@ -261,7 +266,7 @@
         "update": {
           "x": { "value": 26 },
           "y": { "value": 26 },
-          "text": { "signal": "'Compared ' + scanned + ' / 500 vectors  •  Skipped ' + skipped + '  (' + format(skipped / 500, '.0%') + ' of dataset)'" }
+          "text": { "signal": "!showQuery ? '500 vectors clustered into ' + nlist + ' cells' : 'Compared ' + scanned + ' / 500 vectors  •  Skipped ' + skipped + '  (' + format(skipped / 500, '.0%') + ' of dataset)'" }
         }
       }
     },
@@ -276,7 +281,7 @@
         "update": {
           "x": { "value": 26 },
           "y": { "value": 50 },
-          "text": { "signal": "'nprobe = ' + probed_cells + ' of ' + nlist + ' cells visited, the rest of the index is never touched.'" }
+          "text": { "signal": "!showQuery ? '' : exact ? 'Exact search: every vector compared, so these are the true top-' + k + '.' : 'nprobe = ' + probed_cells + ' of ' + nlist + ' cells visited, the rest of the index is never touched.'" }
         }
       }
     },
@@ -287,7 +292,7 @@
         "update": {
           "x": { "value": 26 }, "y": { "value": 74 },
           "fill": [ { "test": "found == k", "value": "#061982" }, { "value": "#c84cff" } ],
-          "text": { "signal": "'recall@' + k + ' = ' + (recall == 1 ? '1.0' : format(recall, '.2~f')) + (found < k ? '  •  ' + (k - found) + (k - found == 1 ? ' true neighbour sits' : ' true neighbours sit') + ' in cells we never opened' : '  •  every true neighbour found')" }
+          "text": { "signal": "!showQuery ? '' : 'recall@' + k + ' = ' + (recall == 1 ? '1.0' : format(recall, '.2~f')) + (found < k ? '  •  ' + (k - found) + (k - found == 1 ? ' true neighbour sits' : ' true neighbours sit') + ' in cells we never opened' : '  •  every true neighbour found')" }
         }
       }
     }

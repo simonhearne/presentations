@@ -363,13 +363,15 @@ IVF clusters the vectors into _nlist_ cells. At query time, only search within t
 - spec: ../../visualisations/ivf-voronoi.json
   renderer: svg
   actions: false
-  signal-stage: [2, 4, 6]
+  signal-stage: [0,1,2, 4, 6]
   signal-qx: 5.75
   signal-interactive: false
 ```
 
 <!-- notes
-Three clicks: nprobe 2, 4, 6. Filled blue are the true top-10, found.
+Opens on the cells alone, no query. Click 1: the query lands and exact
+search lights up its true top-10, the answer IVF has to match. Then three
+clicks: nprobe 2, 4, 6. Filled blue are the true top-10, found.
 Ringed berry are true top-10 sitting in a cell we never opened: that is
 where recall goes. Each click opens more cells and the berry rings turn
 blue, at the cost of scanning more vectors (top-left counter): 5, then 9,
