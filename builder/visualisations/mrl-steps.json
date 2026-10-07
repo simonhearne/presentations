@@ -1,6 +1,6 @@
 {
   "$schema": "https://vega.github.io/schema/vega/v5.json",
-  "description": "Stepped walkthrough of Matryoshka representation learning as a vertical vector column: a full vector whose dimensions are ordered by importance -> reveal the front-loaded importance profile -> slice off a prefix and drop the tail -> a shorter, complete output vector. Stepped via the stage signal.",
+  "description": "Stepped walkthrough of Matryoshka representation learning as a vertical vector column: a full vector whose per-dimension importance is in no particular order -> the rows re-ordered so importance runs high to low -> slice off a prefix and drop the tail -> a shorter, complete output vector. Stepped via the stage signal.",
   "width": 820,
   "height": 500,
   "padding": 5,
@@ -18,22 +18,33 @@
     {"name": "cutY", "update": "stripY + prefixN * cellH"},
     {"name": "midPrefixY", "update": "stripY + prefixN * cellH / 2"},
     {
+      "name": "sortT",
+      "value": 0,
+      "on": [
+        {
+          "events": {"type": "timer", "throttle": 16},
+          "update": "stage >= 1 ? min(1, sortT + 0.025) : 0"
+        }
+      ]
+    },
+    {"name": "sortE", "update": "sortT * sortT * (3 - 2 * sortT)"},
+    {
       "name": "headline",
-      "value": "3072 ordered dimensions",
+      "value": "3072 dimensions, no order",
       "on": [
         {
           "events": {"signal": "stage"},
-          "update": "['3072 ordered dimensions', 'importance is front-loaded', 'keep the first 256', 'one shorter, complete vector'][stage]"
+          "update": "['3072 dimensions, no order', 'importance first', 'keep the first 256', 'one shorter, complete vector'][stage]"
         }
       ]
     },
     {
       "name": "narration",
-      "value": "One vector. MRL training orders the dimensions so the most informative come first.",
+      "value": "One vector. Normally the important dimensions are scattered throughout.",
       "on": [
         {
           "events": {"signal": "stage"},
-          "update": "['One vector. MRL training orders the dimensions so the most informative come first.', 'Most of the signal sits in the early dimensions: the tail adds only diminishing detail.', 'Slice off a prefix and discard the rest: no re-embedding, no second model.', 'The prefix is itself a valid, normalised vector: 12× smaller, ranks almost as well. (cells shown for clarity)'][stage]"
+          "update": "['One vector. Normally the important dimensions are scattered throughout.', 'MRL training puts the most informative dimensions first: the tail adds diminishing detail.', 'Slice off a prefix and discard the rest: no re-embedding, no second model.', 'The prefix is itself a valid, normalised vector: 12× smaller, ranks almost as well. (cells shown for clarity)'][stage]"
         }
       ]
     }
@@ -48,7 +59,10 @@
         {"i": 18}, {"i": 19}, {"i": 20}, {"i": 21}, {"i": 22}, {"i": 23}
       ],
       "transform": [
-        {"type": "formula", "expr": "pow(0.9, datum.i)", "as": "imp"}
+        {"type": "formula", "expr": "pow(0.9, datum.i)", "as": "imp"},
+        {"type": "formula", "expr": "[13, 4, 19, 8, 22, 1, 16, 10, 6, 20, 3, 14, 0, 18, 9, 23, 5, 12, 21, 2, 17, 7, 15, 11][datum.i]", "as": "pos"},
+        {"type": "formula", "expr": "[0.62, 0.18, 0.85, 0.4, 0.27, 0.93, 0.55, 0.12, 0.71, 0.35, 0.88, 0.22, 0.48, 0.79, 0.3, 0.66, 0.15, 0.97, 0.44, 0.58, 0.25, 0.82, 0.37, 0.69][datum.i]", "as": "val"},
+        {"type": "formula", "expr": "datum.pos + (datum.i - datum.pos) * sortE", "as": "row"}
       ]
     }
   ],
@@ -109,9 +123,9 @@
         "update": {
           "x": {"signal": "colX"},
           "width": {"signal": "cellW"},
-          "y": {"signal": "stripY + datum.i * cellH"},
+          "y": {"signal": "stripY + datum.row * cellH"},
           "height": {"signal": "cellH - 1.5"},
-          "fill": {"scale": "heat", "field": "imp"},
+          "fill": {"scale": "heat", "field": "val"},
           "cornerRadius": {"value": 1.5},
           "opacity": [{"test": "stage >= 2 && datum.i >= prefixN", "value": 0.18}, {"value": 1}]
         }
@@ -127,8 +141,7 @@
           "text": {"value": "importance →"},
           "align": {"value": "left"}, "baseline": {"value": "alphabetic"},
           "fontSize": {"value": 13}, "fontWeight": {"value": "bold"},
-          "fill": {"value": "#64748b"},
-          "opacity": [{"test": "stage >= 1", "value": 1}, {"value": 0}]
+          "fill": {"value": "#64748b"}
         }
       }
     },
@@ -139,14 +152,13 @@
         "update": {
           "x": {"signal": "curveX"},
           "width": {"signal": "max(2, datum.imp * curveW)"},
-          "y": {"signal": "stripY + datum.i * cellH"},
+          "y": {"signal": "stripY + datum.row * cellH"},
           "height": {"signal": "cellH - 2.5"},
           "fill": {"value": "#7c3aed"},
           "cornerRadius": {"value": 1},
           "opacity": [
             {"test": "stage >= 2 && datum.i >= prefixN", "value": 0.16},
-            {"test": "stage >= 1", "value": 0.85},
-            {"value": 0}
+            {"value": 0.85}
           ]
         }
       }
@@ -238,7 +250,7 @@
           "width": {"signal": "cellW"},
           "y": {"signal": "stripY + datum.i * cellH"},
           "height": {"signal": "cellH - 1.5"},
-          "fill": {"scale": "heat", "field": "imp"},
+          "fill": {"scale": "heat", "field": "val"},
           "cornerRadius": {"value": 1.5},
           "opacity": [{"test": "stage >= 3 && datum.i < prefixN", "value": 1}, {"value": 0}]
         }

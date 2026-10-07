@@ -88,7 +88,7 @@
 </div>
 <br><br>
 
-<blockquote class="fragment bottom"><span class="label">Takeaway</span><p>Keyword matches <span class="hit-text">tokens</span>, vectors match <span class="hit-text">meaning</span>. In production you run <span class="hit-text">both</span>: Milvus does BM25 and dense in one query.</p></blockquote>
+<blockquote class="fragment bottom"><span class="label">Takeaway</span><p>Keyword matches <span class="hit-text">tokens</span>, vectors match <span class="hit-text">meaning</span>. In many cases hybrid search provides the best results.</p></blockquote>
 
 <!-- notes
 One shopper, one errand, and it runs through every search demo tonight: a
@@ -106,7 +106,7 @@ plus dense in one hybrid search, fused with RRF or weighted ranking.
 
 # Models turn 'stuff' into numbers
 
-Each model turns its input into an array of numbers - the embedding's position in high-dimensional space. Anywhere from a few hundred to a few thousand Float32 values.
+Each model turns its input into an array of numbers - the embedding. Anywhere from 128 - 3,072+ values.
 
 <img src="../../../img/image_embedding.svg" alt="diagram of image embedding model" loading="lazy" style="height:66%;"/>
 <!-- 
@@ -133,14 +133,14 @@ So what does our library look like?
 <!-- Every modern model learns the same trick - text, images, audio, even molecules. Once meaning becomes geometry, the same idea unlocks: -->
 
 <div class="usecase-grid">
-  <div class="usecase-tile fragment"><span class="icon">📚</span><p class="label">RAG</p><p class="tagline">Ground LLMs in your own documents</p></div>
+  <div class="usecase-tile fragment"><span class="icon">🎯</span><p class="label">Ad &amp; Product Recommendations</p><p class="tagline">Millisecond responses over millions of options</p><span class="pill navy">Criteo · 19:20</span></div>
+  <div class="usecase-tile fragment"><span class="icon">💬</span><p class="label">RAG for support</p><p class="tagline">Ground answers in a live product catalogue</p><span class="pill gradient">Gorgias · 20:00</span></div>
+  <div class="usecase-tile fragment"><span class="icon">🛍️</span><p class="label">Visual search</p><p class="tagline">Find products that look like this photo</p></div>
   <div class="usecase-tile fragment"><span class="icon">🧠</span><p class="label">Agent memory</p><p class="tagline">Recall the right past conversation</p></div>
-  <div class="usecase-tile fragment"><span class="icon">⚖️</span><p class="label">Legal analysis</p><p class="tagline">Surface relevant case law</p></div>
   <div class="usecase-tile fragment"><span class="icon">🛡️</span><p class="label">Fraud detection</p><p class="tagline">Spot the needle in a stack of needles</p></div>
   <div class="usecase-tile fragment"><span class="icon">🎵</span><p class="label">Song matching</p><p class="tagline">Identify a tune from a whistle</p></div>
-  <div class="usecase-tile fragment"><span class="icon">🛍️</span><p class="label">Visual search</p><p class="tagline">Find products that look like this photo</p></div>
   <div class="usecase-tile fragment"><span class="icon">🚗</span><p class="label">Autonomous driving</p><p class="tagline">Detect erratic lane changes</p></div>
-  <div class="usecase-tile fragment"><span class="icon">🧬</span><p class="label">Molecular discovery</p><p class="tagline">Find molecules with similar shape</p></div>
+  <div class="usecase-tile fragment"><span class="icon">🧬</span><p class="label">Molecular discovery</p><p class="tagline">Find molecules with similar shapes</p></div>
   <div class="usecase-tile fragment"><span class="icon">🔬</span><p class="label">Cancer screening</p><p class="tagline">Match diagnostic images to known cases</p></div>
 </div>
 
@@ -185,7 +185,7 @@ How do you measure similarity in multi-dimensional space?
 
 {.small-title}
 
-# The naïve approach
+# The flat approach
 
 Compare the query to every entity in the database. Exact, simple, **O(N)**.
 
@@ -225,13 +225,13 @@ Compare the query to every entity in the database. Exact, simple, **O(N)**.
 # <span class="hero-text">Approximate</span> <br>nearest neighbour
 
 <div class="section-byline">
-  <div class="bi-cell give"><span class="bi-num">&lt;10%</span><span class="bi-lab">recall you give up</span></div>
+  <div class="bi-cell give"><span class="bi-num">&lt;0.1</span><span class="bi-lab">recall you give up</span></div>
   <div class="bi-arrow">→</div>
   <div class="bi-cell get"><span class="bi-num">&gt;100×</span><span class="bi-lab">faster, cheaper search</span></div>
 </div>
 
 <!-- notes
-The big idea of the whole talk, in one line: give up under 10% recall, get
+The big idea of the whole talk, in one line: give up under 0.1 recall, get
 over 100x faster and cheaper search. Everything in this section is how.
 -->
 
@@ -301,7 +301,7 @@ Every technique trades **speed**, **accuracy** & **cost**.
         <span class="equals">=</span>
         <div class="fraction"><div class="num hit-num">4</div><div class="bar"></div><div class="den">6</div></div>
         <span class="equals">=</span>
-        <span class="result-num">66.7%</span>
+        <span class="result-num">0.667</span>
       </div>
     </div>
     <div class="formula-card fragment">
@@ -312,7 +312,7 @@ Every technique trades **speed**, **accuracy** & **cost**.
         <span class="equals">=</span>
         <div class="fraction"><div class="num hit-num">4</div><div class="bar"></div><div class="den">10</div></div>
         <span class="equals">=</span>
-        <span class="result-num">40%</span>
+        <span class="result-num">0.4</span>
       </div>
     </div>
     <blockquote class="small fragment">
@@ -649,88 +649,6 @@ Each algorithm can use quantisation to trade accuracy for significantly reduced 
 
 ---
 
-{.small-title}
-
-# Sounds... complex?
-
-All those knobs. Can't the machine work it out?
-
-<!--
-TALK TRACK (~40s, 2 advances)
-
-Stage 0 - You tune.
-  On screen: one control panel, eight decisions across build, query, operate.
-  "Everything we just saw is yours to set in open-source Milvus. Pick the
-   metric, pick the index family, set its build knobs, pick quantisation.
-   Then at query time a different knob per family: nprobe for IVF, ef for
-   HNSW, search_list for DiskANN. And when the data shifts, you re-tune."
-
-Stage 1 - AUTOINDEX decides. [->]
-  On screen: build controls are replaced by AUTO pills, the three query knobs fold
-  into one level dial, the counter drops to 2.
-  "With AUTOINDEX you still choose the metric. Index type, build params and
-   quantisation are picked for you, per segment, and re-optimised as data
-   moves. At query time there is one dial, level 1 to 10: recall vs speed."
-
-Stage 2 - Trade-off. [->]
--->
-
-<svg class="tune-panel" viewBox="0 0 1700 570" role="img" aria-label="A control panel of index settings. Manually you set eight things: metric, index family, M, efConstruction and quantisation at build time, nprobe, ef or search_list per query, and re-tune by hand as the data shifts. With AUTOINDEX the build row is chosen automatically, the three query knobs collapse into a single level dial from 1 to 10, and only the metric and level remain yours.">
-<rect class="panel" x="10" y="80" width="1680" height="480" rx="16"/>
-<path class="divider" d="M30 270 H1670 M30 450 H1670"/>
-<g class="head manual"><text class="htitle" x="20" y="50">You tune <tspan class="hsub">· open-source Milvus / other vector DBs</tspan></text><text class="hcount" x="1690" y="50" text-anchor="end">8 decisions</text></g>
-<g class="rows">
-<text class="rlabel" x="40" y="170">BUILD</text><text class="rsub" x="40" y="197">per index</text>
-<text class="rlabel" x="40" y="355">QUERY</text><text class="rsub" x="40" y="382">per request</text>
-<text class="rlabel" x="40" y="500">OPERATE</text><text class="rsub" x="40" y="527">as data shifts</text>
-</g>
-<g class="switch">
-<rect class="sw" x="210" y="135" width="270" height="50" rx="25"/><rect class="sw-on" x="390" y="135" width="90" height="50" rx="25"/>
-<text class="swt" x="255" y="167" text-anchor="middle">L2</text><text class="swt" x="345" y="167" text-anchor="middle">IP</text><text class="swt on" x="435" y="167" text-anchor="middle">COSINE</text>
-<text class="klabel" x="345" y="232" text-anchor="middle">metric</text>
-</g>
-<g class="auto-dim">
-<g class="switch">
-<rect class="sw" x="510" y="135" width="400" height="50" rx="25"/><rect class="sw-on" x="610" y="135" width="100" height="50" rx="25"/>
-<text class="swt" x="560" y="167" text-anchor="middle">IVF</text><text class="swt on" x="660" y="167" text-anchor="middle">HNSW</text><text class="swt" x="760" y="167" text-anchor="middle">DiskANN</text><text class="swt" x="860" y="167" text-anchor="middle">GPU</text>
-<text class="klabel" x="710" y="232" text-anchor="middle">index</text>
-</g>
-<g class="knob" transform="translate(1060 160)"><circle r="32"/><path d="M0 0 V-24" transform="rotate(40)"/></g><text class="klabel" x="1060" y="232" text-anchor="middle">M</text>
-<g class="knob" transform="translate(1200 160)"><circle r="32"/><path d="M0 0 V-24" transform="rotate(115)"/></g><text class="klabel" x="1200" y="232" text-anchor="middle">efConstruction</text>
-<g class="switch">
-<rect class="sw" x="1350" y="135" width="285" height="50" rx="25"/><rect class="sw-on" x="1445" y="135" width="95" height="50" rx="25"/>
-<text class="swt" x="1397" y="167" text-anchor="middle">none</text><text class="swt on" x="1492" y="167" text-anchor="middle">SQ8</text><text class="swt" x="1587" y="167" text-anchor="middle">PQ</text>
-<text class="klabel" x="1492" y="232" text-anchor="middle">quantisation</text>
-</g>
-</g>
-<g class="collapse" style="--dx: 160px"><g class="knob" transform="translate(360 350)"><circle r="32"/><path d="M0 0 V-24" transform="rotate(20)"/></g><text class="klabel" x="360" y="420" text-anchor="middle">nprobe</text></g>
-<g class="collapse" style="--dx: 0px"><g class="knob" transform="translate(520 350)"><circle r="32"/><path d="M0 0 V-24" transform="rotate(-90)"/></g><text class="klabel" x="520" y="420" text-anchor="middle">ef</text></g>
-<g class="collapse" style="--dx: -160px"><g class="knob" transform="translate(680 350)"><circle r="32"/><path d="M0 0 V-24" transform="rotate(75)"/></g><text class="klabel" x="680" y="420" text-anchor="middle">search_list</text></g>
-<text class="note manual" x="800" y="358">a different knob for every index family</text>
-<text class="op manual" x="210" y="513">↻  watch recall drift, re-tune, rebuild</text>
-<g class="stage stage-1 fragment" data-fragment-index="1">
-<g class="head"><text class="htitle" x="20" y="50">AUTOINDEX decides <tspan class="hsub">· managed, on Zilliz Cloud</tspan></text><text class="hcount auto" x="1690" y="50" text-anchor="end">2 decisions</text></g>
-<rect class="ring" x="198" y="123" width="294" height="74" rx="37"/>
-<text class="klabel auto" x="345" y="262" text-anchor="middle">you choose</text>
-<rect class="auto-badge" x="506" y="126" width="408" height="68" rx="34"/><text class="auto-badge-t" x="710" y="169" text-anchor="middle">AUTO</text>
-<rect class="auto-badge" x="1010" y="126" width="240" height="68" rx="34"/><text class="auto-badge-t" x="1130" y="169" text-anchor="middle">AUTO</text>
-<rect class="auto-badge" x="1346" y="126" width="293" height="68" rx="34"/><text class="auto-badge-t" x="1492" y="169" text-anchor="middle">AUTO</text>
-<g class="dial" transform="translate(520 360)">
-<circle r="56"/>
-<g class="ticks"><path d="M0 -64 V-74" transform="rotate(-135)"/><path d="M0 -64 V-74" transform="rotate(-105)"/><path d="M0 -64 V-74" transform="rotate(-75)"/><path d="M0 -64 V-74" transform="rotate(-45)"/><path d="M0 -64 V-74" transform="rotate(-15)"/><path d="M0 -64 V-74" transform="rotate(15)"/><path d="M0 -64 V-74" transform="rotate(45)"/><path d="M0 -64 V-74" transform="rotate(75)"/><path d="M0 -64 V-74" transform="rotate(105)"/><path d="M0 -64 V-74" transform="rotate(135)"/></g>
-<path class="pointer" d="M0 0 V-42" transform="rotate(-15)"/>
-<text class="dnum" x="-68" y="80" text-anchor="middle">1</text><text class="dnum" x="68" y="80" text-anchor="middle">10</text>
-</g>
-<text class="dlabel" x="640" y="352">level</text>
-<text class="dsub" x="640" y="386">one dial: recall vs speed</text>
-<text class="op auto" x="210" y="513">↻  re-optimised per segment as the data moves</text>
-</g>
-</svg>
-
-<blockquote class="fragment bottom" data-fragment-index="2"><span class="label">Trade-off</span><p>Full control and full responsibility, or <span class="hit-text">one dial</span> and trust the engine.</p></blockquote>
-
----
-
 {.section}
 
 # <span class="hero-text">Dimensionality Reduction</span>: <br>fewer numbers
@@ -779,7 +697,7 @@ The dimensions are ordered by importance, so a prefix is a complete vector.
 
 ```vega
 - spec: ../../visualisations/mrl-steps.json
-  signal-stage: [1,2,3]
+  signal-stage: [0,1,2,3]
   renderer: svg
   actions: false
   fit: contain
@@ -1019,6 +937,100 @@ the same problem. On Zilliz Cloud, metadata-aware indexing adds subgraphs
 for filter values you hit often, and AUTOINDEX tunes the rest from your
 data's statistics.
 -->
+
+---
+
+{.small-title}
+
+# Sounds... complex?
+
+All those knobs. Can't the machine work it out?
+
+<!--
+TALK TRACK (~40s, 2 advances)
+
+Stage 0 - You tune.
+  On screen: one control panel, nine decisions across build, query, operate.
+  "Everything we just saw is yours to set in open-source Milvus. Pick the
+   metric, pick the index family, set its build knobs, pick quantisation.
+   Then at query time a different knob per family: nprobe for IVF, ef for
+   HNSW, search_list for DiskANN. Plus the filter strategy from the last
+   slide: alpha by default, the iterative hint when the filter is costly.
+   And when the data shifts, you re-tune."
+
+Stage 1 - AUTOINDEX decides. [->]
+  On screen: build controls and the filter strategy are replaced by AUTO pills, the three query knobs fold
+  into one level dial, the counter drops to 2.
+  "With AUTOINDEX you still choose the metric. Index type, build params and
+   quantisation are picked for you, per segment, and re-optimised as data
+   moves. Filtering too: the engine picks the strategy from your data's
+   statistics. At query time there is one dial, level 1 to 10: recall vs speed."
+
+Stage 2 - Trade-off. [->]
+-->
+
+<svg class="tune-panel" viewBox="0 0 1700 570" role="img" aria-label="A control panel of index settings. Manually you set nine things: metric, index family, M, efConstruction and quantisation at build time, nprobe, ef or search_list and the filter strategy per query, and re-tune by hand as the data shifts. With AUTOINDEX the build row and the filter strategy are chosen automatically, the three query knobs collapse into a single level dial from 1 to 10, and only the metric and level remain yours.">
+<rect class="panel" x="10" y="80" width="1680" height="480" rx="16"/>
+<path class="divider" d="M30 270 H1670 M30 450 H1670"/>
+<g class="head manual"><text class="htitle" x="20" y="50">You tune <tspan class="hsub">· open-source Milvus / other vector DBs</tspan></text><text class="hcount" x="1690" y="50" text-anchor="end">9 decisions</text></g>
+<g class="rows">
+<text class="rlabel" x="40" y="170">BUILD</text><text class="rsub" x="40" y="197">per index</text>
+<text class="rlabel" x="40" y="355">QUERY</text><text class="rsub" x="40" y="382">per request</text>
+<text class="rlabel" x="40" y="500">OPERATE</text><text class="rsub" x="40" y="527">as data shifts</text>
+</g>
+<g class="switch">
+<rect class="sw" x="210" y="135" width="270" height="50" rx="25"/><rect class="sw-on" x="390" y="135" width="90" height="50" rx="25"/>
+<text class="swt" x="255" y="167" text-anchor="middle">L2</text><text class="swt" x="345" y="167" text-anchor="middle">IP</text><text class="swt on" x="435" y="167" text-anchor="middle">COSINE</text>
+<text class="klabel" x="345" y="232" text-anchor="middle">metric</text>
+</g>
+<g class="auto-dim">
+<g class="switch">
+<rect class="sw" x="510" y="135" width="400" height="50" rx="25"/><rect class="sw-on" x="610" y="135" width="100" height="50" rx="25"/>
+<text class="swt" x="560" y="167" text-anchor="middle">IVF</text><text class="swt on" x="660" y="167" text-anchor="middle">HNSW</text><text class="swt" x="760" y="167" text-anchor="middle">DiskANN</text><text class="swt" x="860" y="167" text-anchor="middle">GPU</text>
+<text class="klabel" x="710" y="232" text-anchor="middle">index</text>
+</g>
+<g class="knob" transform="translate(1060 160)"><circle r="32"/><path d="M0 0 V-24" transform="rotate(40)"/></g><text class="klabel" x="1060" y="232" text-anchor="middle">M</text>
+<g class="knob" transform="translate(1200 160)"><circle r="32"/><path d="M0 0 V-24" transform="rotate(115)"/></g><text class="klabel" x="1200" y="232" text-anchor="middle">efConstruction</text>
+<g class="switch">
+<rect class="sw" x="1350" y="135" width="285" height="50" rx="25"/><rect class="sw-on" x="1445" y="135" width="95" height="50" rx="25"/>
+<text class="swt" x="1397" y="167" text-anchor="middle">none</text><text class="swt on" x="1492" y="167" text-anchor="middle">SQ8</text><text class="swt" x="1587" y="167" text-anchor="middle">PQ</text>
+<text class="klabel" x="1492" y="232" text-anchor="middle">quantisation</text>
+</g>
+</g>
+<g class="collapse" style="--dx: 160px"><g class="knob" transform="translate(360 350)"><circle r="32"/><path d="M0 0 V-24" transform="rotate(20)"/></g><text class="klabel" x="360" y="420" text-anchor="middle">nprobe</text></g>
+<g class="collapse" style="--dx: 0px"><g class="knob" transform="translate(520 350)"><circle r="32"/><path d="M0 0 V-24" transform="rotate(-90)"/></g><text class="klabel" x="520" y="420" text-anchor="middle">ef</text></g>
+<g class="collapse" style="--dx: -160px"><g class="knob" transform="translate(680 350)"><circle r="32"/><path d="M0 0 V-24" transform="rotate(75)"/></g><text class="klabel" x="680" y="420" text-anchor="middle">search_list</text></g>
+<text class="note manual" x="800" y="358">a knob per index family</text>
+<g class="auto-dim">
+<g class="switch">
+<rect class="sw" x="1300" y="325" width="330" height="50" rx="25"/><rect class="sw-on" x="1300" y="325" width="165" height="50" rx="25"/>
+<text class="swt on" x="1382" y="357" text-anchor="middle">alpha</text><text class="swt" x="1547" y="357" text-anchor="middle">iterative</text>
+<text class="klabel" x="1465" y="420" text-anchor="middle">filter strategy</text>
+</g>
+</g>
+<text class="op manual" x="210" y="513">↻  watch recall drift, re-tune, rebuild</text>
+<g class="stage stage-1 fragment" data-fragment-index="1">
+<g class="head"><text class="htitle" x="20" y="50">AUTOINDEX decides <tspan class="hsub">· managed, on Zilliz Cloud</tspan></text><text class="hcount auto" x="1690" y="50" text-anchor="end">2 decisions</text></g>
+<rect class="ring" x="198" y="123" width="294" height="74" rx="37"/>
+<text class="klabel auto" x="345" y="262" text-anchor="middle">you choose</text>
+<rect class="auto-badge" x="506" y="126" width="408" height="68" rx="34"/><text class="auto-badge-t" x="710" y="169" text-anchor="middle">AUTO</text>
+<rect class="auto-badge" x="1010" y="126" width="240" height="68" rx="34"/><text class="auto-badge-t" x="1130" y="169" text-anchor="middle">AUTO</text>
+<rect class="auto-badge" x="1346" y="126" width="293" height="68" rx="34"/><text class="auto-badge-t" x="1492" y="169" text-anchor="middle">AUTO</text>
+<rect class="auto-badge" x="1296" y="316" width="338" height="68" rx="34"/><text class="auto-badge-t" x="1465" y="359" text-anchor="middle">AUTO</text>
+<g class="dial" transform="translate(520 360)">
+<circle r="56"/>
+<g class="ticks"><path d="M0 -64 V-74" transform="rotate(-135)"/><path d="M0 -64 V-74" transform="rotate(-105)"/><path d="M0 -64 V-74" transform="rotate(-75)"/><path d="M0 -64 V-74" transform="rotate(-45)"/><path d="M0 -64 V-74" transform="rotate(-15)"/><path d="M0 -64 V-74" transform="rotate(15)"/><path d="M0 -64 V-74" transform="rotate(45)"/><path d="M0 -64 V-74" transform="rotate(75)"/><path d="M0 -64 V-74" transform="rotate(105)"/><path d="M0 -64 V-74" transform="rotate(135)"/></g>
+<path class="pointer" d="M0 0 V-42" transform="rotate(-15)"/>
+<text class="dnum" x="-68" y="80" text-anchor="middle">1</text><text class="dnum" x="68" y="80" text-anchor="middle">10</text>
+</g>
+<text class="dlabel" x="640" y="352">level</text>
+<text class="dsub" x="640" y="386">one dial: recall vs speed</text>
+<text class="op auto" x="210" y="513">↻  re-optimised per segment as the data moves</text>
+</g>
+</svg>
+
+<blockquote class="fragment bottom" data-fragment-index="2"><span class="label">Trade-off</span><p>Full control and full responsibility, or <span class="hit-text">one dial</span> and trust the engine.</p></blockquote>
+
 ---
 
 {.section}
@@ -1389,41 +1401,6 @@ question is always how many queries a day repay the box.
 
 {.chart-animate .small-title}
 
-# [Code benchmark]{.eyebrow-bench} Training data matters
-
-A blind model answered 25 of 40 questions on fastapi, and
-0 on a repository published after training cutoff.
-<!-- src: data/ws6c/summary.csv:judge_accuracy arm=parametric, corpus=fastapi 0.625, corpus=agentic_hil 0.000 -->
-
-```vega
-- spec: ../rag-cost-curve/charts/accuracy-by-arm.vl.json
-  actions: false
-  renderer: svg
-  signal-stage: [0, 1, 2, 3]
-  signal-zoom: true
-  fit: contain
-```
-
-<p class="rig chart-rig"><span class="pill ghost">fastapi + agentic-hil</span><span class="pill ghost">40 questions each</span><span class="pill ghost">Sonnet 5 agent</span><span class="pill ghost">Opus 5 judges</span><span class="pill ghost">claude-context 0.1.15</span><span class="pill ghost">Milvus</span></p>
-
-<!-- notes
-0.625 with zero access to the repository is the contamination floor: the
-model already knows a lot about a famous open source project from
-pretraining. The right-hand panel is the same pipeline on a repository
-published after the training cutoff, and the floor is 0.000.
-
-This is the "when" for code search. If the model already knows the code, grep
-plus memory gets it most of the way and the index has little to add. If it
-has never seen the code, retrieval is doing all the work.
-
-Setup if asked: 40 questions per repo, Sonnet agent, Opus judge blind to the
-arm, claude-context search_code over a Milvus index for the indexed arm.
--->
-
----
-
-{.chart-animate .small-title}
-
 # [Code benchmark]{.eyebrow-bench} Cost per correct answer
 
 *Total agent spend over the whole run, divided by the answers the judge marked correct*
@@ -1662,7 +1639,7 @@ Every lever in this talk spends recall, buys it back, or checks the balance.
 </g>
 </svg>
 
-<p class="closing-line fragment" data-fragment-index="7">Trade <strong>&lt;10% recall</strong> for <strong>&gt;100× speed</strong>, but only if the index is needed.</p>
+<p class="closing-line fragment" data-fragment-index="7">Trade <strong>&lt;0.1 recall</strong> for <strong>&gt;100× speed</strong>, but only if the index is needed.</p>
 
 <!-- notes
 Seven clicks, one per lever, then the loop.
@@ -1680,7 +1657,7 @@ Seven clicks, one per lever, then the loop.
 6. Measure. The golden set from earlier, recall@k on every deploy.
    Version the index alongside the model that built it.
 7. The loop. Data shifts, models change, so the measurement feeds back to
-   the model check. Land the big idea again: under 10% recall for over 100x,
+   the model check. Land the big idea again: under 0.1 recall for over 100x,
    but only if you know what you gave up, and only when the queries repay
    the box.
 

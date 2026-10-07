@@ -26,7 +26,7 @@
       "values": [
         {"s": 1, "x": 2,  "y": 50,  "title": "Alpha", "tag": "automatic", "tx": 78, "talign": "right", "tdx": -16, "tdy": 34, "caption": "step through filtered-out nodes"},
         {"s": 3, "x": 2,  "y": 100, "title": "Iterative", "tag": "search hint", "tx": 78, "talign": "right", "tdx": -16, "tdy": 34, "caption": "fetch a batch, filter, repeat until k"},
-        {"s": 2, "x": 80, "y": 100, "title": "Brute force", "tag": "automatic", "tx": 80, "talign": "left", "tdx": 6, "tdy": 90, "caption": "exact, 100% recall"}
+        {"s": 2, "x": 80, "y": 100, "title": "Brute force", "tag": "automatic", "tx": 80, "talign": "left", "tdx": 6, "tdy": 90, "caption": "exact, recall 1.0"}
       ]
     },
     {
