@@ -144,7 +144,7 @@
           "x": {"signal": "scale('x', datum.compression) + (scale('x', datum.prod) - scale('x', datum.compression)) * drift"},
           "y": {"scale": "y", "field": "recall_adj"},
           "dx": {"signal": "datum.variant ? 0 : datum.compression >= 32 || (stage >= 2 && datum.prod < datum.compression * 0.85) ? -16 : 16"},
-          "dy": {"signal": "datum.variant ? -22 : stage >= 2 && datum.series == 'PQ' && datum.compression == 8 ? 14 : datum.series == 'FP32 (FLAT)' ? -24 : datum.series == 'FP16' ? -6 : datum.series == 'BF16' ? 12 : 0"},
+          "dy": {"signal": "datum.variant ? -22 : stage >= 2 && datum.series == 'PQ' && datum.compression == 8 ? 14 : datum.series == 'FP32 (FLAT)' ? -18 : datum.series == 'FP16' ? -6 : datum.series == 'BF16' ? 12 : 0"},
           "align": {"signal": "datum.variant ? 'center' : datum.compression >= 32 || (stage >= 2 && datum.prod < datum.compression * 0.85) ? 'right' : 'left'"},
           "baseline": {"value": "middle"},
           "font": {"value": "IBM Plex Mono, ui-monospace, monospace"},
@@ -168,7 +168,7 @@
           "x": {"signal": "scale('x', datum.compression) + (scale('x', datum.prod) - scale('x', datum.compression)) * drift"},
           "y": {"scale": "y", "field": "recall_adj"},
           "dx": {"signal": "datum.variant ? 0 : datum.compression >= 32 || (stage >= 2 && datum.prod < datum.compression * 0.85) ? -16 : 16"},
-          "dy": {"signal": "datum.variant ? -22 : stage >= 2 && datum.series == 'PQ' && datum.compression == 8 ? 14 : datum.series == 'FP32 (FLAT)' ? -24 : datum.series == 'FP16' ? -6 : datum.series == 'BF16' ? 12 : 0"},
+          "dy": {"signal": "datum.variant ? -22 : stage >= 2 && datum.series == 'PQ' && datum.compression == 8 ? 14 : datum.series == 'FP32 (FLAT)' ? -18 : datum.series == 'FP16' ? -6 : datum.series == 'BF16' ? 12 : 0"},
           "align": {"signal": "datum.variant ? 'center' : datum.compression >= 32 || (stage >= 2 && datum.prod < datum.compression * 0.85) ? 'right' : 'left'"},
           "baseline": {"value": "middle"},
           "font": {"value": "IBM Plex Mono, ui-monospace, monospace"},
@@ -191,7 +191,7 @@
     {
       "name": "y",
       "type": "linear",
-      "domain": {"signal": "[(dim == '384' ? 0.70 : 0.75) * tween, 1]"},
+      "domain": {"signal": "[(dim == '384' ? 0.70 : 0.75) * tween, 1.015]"},
       "range": [{"signal": "height"}, 0],
       "zero": false
     },

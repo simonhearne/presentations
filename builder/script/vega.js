@@ -63,8 +63,8 @@
         labelFontSize: 16, titleFontSize: 20, titleFontWeight: 400,
         grid: false, gridColor: grid,
         domainColor: axisLine, domainWidth: 2.5, domainCap: 'round',
-        tickColor: axisLine, tickWidth: 2, tickSize: 8, tickCap: 'round',
-        labelPadding: 8, titlePadding: 14,
+        tickColor: axisLine, tickWidth: 2, tickSize: 6, tickCap: 'round',
+        labelPadding: 6, titlePadding: 8,
       },
       axisBand: discreteAxis,
       axisPoint: discreteAxis,
@@ -114,7 +114,7 @@
     for (const axis of spec.axes || []) {
       if (axis.values || DISCRETE_SCALES.has(types[axis.scale])) continue;
       const tc = axis.tickCount;
-      const auto = tc && tc.signal && /^ceil\((width|height)\/40\)$/.test(tc.signal);
+      const auto = tc && tc.signal && /^ceil\(\w*(width|height)\/40\)$/i.test(tc.signal);
       if (tc === undefined || auto) axis.tickCount = TICK_COUNT;
     }
     for (const mark of spec.marks || []) {
