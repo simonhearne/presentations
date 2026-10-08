@@ -65,6 +65,10 @@ A companion ` ```iframe-fallback ` block on the same slide holds markdown shown 
 
 The shared kv-list parser is `parseKvList` in [bin/build.js](bin/build.js) — `parseAuthors`, `parseVega`, and `parseThree` all validate on top of it. `dot` skips it because the body is freeform DOT, not kv pairs. Add new fenced frontmatter blocks the same way: `parseFoo` (validate required fields), `extractFoo` (uses `extractFencedBlock`, or loops it for multiples), `copyFooAssets` / `embedFooAssets` if it references local files, `renderFoo`, then wire into `buildDeck` and `renderSlide`.
 
+## Visual regression
+
+[bin/vrt.js](bin/vrt.js) diffs two assembled `_site/` dirs slide by slide; [.github/workflows/vrt.yml](../.github/workflows/vrt.yml) runs it on PRs touching shared assets (base vs head, published decks only, report-only, never blocks). Each deck page runs under Playwright's fake clock, paused, so page-side `setTimeout`/`requestAnimationFrame` only move when the harness calls `clock.runFor`: never await either inside a `page.evaluate` there, or it hangs (locator screenshots and the default `raf` polling of `waitForFunction` hang the same way). The clock is per browser *context*, so every deck gets its own context. Determinism hinges on three things found the hard way: `drain` waits for three.js init and vega's step-triggered animator start before fake time moves; `vegaEmbed` is wrapped to wait for every `document.fonts` face, since labels measured before Inter lands shift by a sub-pixel; and the page is reopened after any canvas slide because `script/three.js` never pauses off-slide canvases. Steps are counted from runtime state (unrevealed `.fragment`s plus each chart's `__vegaSteps`), not the `fragments-done` cue, so it also works against an older base build. `script/three.js` doesn't register with `deckSteps`, so canvases are played out by calling `__three.advance()` until it answers false, then given 8 s of fake time. Pure helpers (`touchedDecks`, `classify`, `summarise`, the renderers) are unit-tested in `test/vrt.test.js`.
+
 ## Code style
 
 This is a deliberately dep-light project. One runtime dep (`marked`) and Node's built-in test runner. Match the surrounding style:
@@ -92,6 +96,7 @@ npm run bundle talks/<slug>                 # bundle a built deck → dist/bundl
 npm run bundle talks/<slug> -- --no-images  # bundle without inlining raster images
 node bin/render-spec.js <spec.json> --signal stage=3   # one chart → PNG, brand-themed
 node bin/render-slide.js talks/<slug> <n> --steps 2    # one built slide → PNG, warns on overflow
+npm run vrt -- --base <_site> --head <_site> --out <dir>  # visual regression between two assembled sites
 ```
 
 Creating or editing a Vega spec: use the `editing-vega-specs` skill in `.claude/skills/`.

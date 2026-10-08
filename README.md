@@ -26,6 +26,8 @@ Deploy is handled by Netlify ([`netlify.toml`](netlify.toml)):
   publish = "_site"
 ```
 
+Pull requests that change shared deck assets also get a visual regression check ([`.github/workflows/vrt.yml`](.github/workflows/vrt.yml)): every published slide is screenshotted on the base and the PR and diffed, and changes in decks the PR didn't edit are flagged in a PR comment. It reports only and never blocks a merge. See [`builder/README.md`](builder/README.md#visual-regression).
+
 ## Talks
 
 | Talk | Year | Format |

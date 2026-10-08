@@ -631,3 +631,38 @@ from `simonhearne/presentations` where this builder lives under `builder/`.
   (`base = "builder"`, `command = "npm ci && node bin/site.js"`,
   `publish = "_site"`). Legacy decks remain served by GitHub Pages via the
   `simonhearne.com/presentations/*` proxy and are linked (not re-hosted).
+
+## Visual regression
+
+Pull requests that touch shared assets (`css/`, `script/`, `templates/`, `img/`,
+`visualisations/`, `bin/build.js`, `bin/site.js` or the lockfile) run
+[`.github/workflows/vrt.yml`](../.github/workflows/vrt.yml). It builds the site
+from the PR's base and from the PR, screenshots every slide of every published
+deck at its final step (all fragments revealed, every vega signal step taken,
+every three.js `advance()` called), and diffs each pair with `pixelmatch`.
+three.js stages ease in over a few seconds of frames and the harness gives them
+8, so a slow module such as facenet-learning is captured late in its run but not
+always fully settled; it is still the same frame on both sides.
+
+A diff in a deck whose own `talks/<slug>/` files the PR edits is expected and
+listed quietly. A diff in any other deck came from the shared change and is
+flagged. Results land in three places: a PR comment (updated on each push), the
+job summary, and a `vrt-report` artifact whose `index.html` shows before, after
+and diff for every changed slide. The check never fails on a visual diff, so it
+won't block a merge; it only fails if the harness itself breaks.
+
+Run it locally against any two assembled sites:
+
+```bash
+npm run vrt -- --base ../other-checkout/builder/_site --head _site --out /tmp/vrt
+```
+
+Screenshots are repeatable because both sides render in the same browser run,
+each deck under its own Playwright fake clock (animators, auto-reveals and
+three.js frame loops advance by a fixed amount), with a seeded `Math.random`,
+fonts and CDN scripts served from one in-memory copy, and every chart held back
+until its fonts have loaded. Pixels are compared exactly. `--threshold` sets the
+share of a slide's pixels that must differ before it counts as changed (default
+0.00025, about 520 pixels): diffing a site against itself leaves at most about
+225 pixels of raster jitter, while a gridline colour or card corner change moves
+well over 800. `--deck <slug>` (repeatable) limits a local run to some decks.

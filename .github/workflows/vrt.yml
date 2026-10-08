@@ -1,0 +1,103 @@
+# Visual regression for shared deck assets. Builds the site from the PR's base
+# and head, screenshots every slide of every published deck at its final step,
+# and diffs the two (builder/bin/vrt.js). Reports through a PR comment, the job
+# summary and a downloadable artifact. It never fails on a visual diff, so it
+# does not block merging; it only fails if the harness itself breaks.
+name: Visual regression
+
+on:
+  pull_request:
+    paths:
+      - 'builder/css/**'
+      - 'builder/script/**'
+      - 'builder/templates/**'
+      - 'builder/img/**'
+      - 'builder/visualisations/**'
+      - 'builder/bin/build.js'
+      - 'builder/bin/site.js'
+      - 'builder/bin/vrt.js'
+      - 'builder/package-lock.json'
+      - '.github/workflows/vrt.yml'
+
+permissions:
+  contents: read
+  pull-requests: write
+
+concurrency:
+  group: vrt-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  vrt:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: head
+          fetch-depth: 0
+      - uses: actions/checkout@v4
+        with:
+          path: base
+          ref: ${{ github.event.pull_request.base.sha }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: head/builder/.nvmrc
+          cache: npm
+          cache-dependency-path: |
+            head/builder/package-lock.json
+            base/builder/package-lock.json
+
+      - name: Install head
+        working-directory: head/builder
+        run: npm ci && npx playwright install --with-deps chromium
+      - name: Install base
+        working-directory: base/builder
+        run: npm ci && npx playwright install chromium
+
+      - name: Build base site
+        working-directory: base/builder
+        run: node bin/site.js
+      - name: Build head site
+        working-directory: head/builder
+        run: node bin/site.js
+
+      - name: Compare
+        working-directory: head/builder
+        run: |
+          git diff --name-only ${{ github.event.pull_request.base.sha }}...HEAD > "$RUNNER_TEMP/changed.txt"
+          node bin/vrt.js --base ../../base/builder/_site --head _site \
+            --out "$RUNNER_TEMP/vrt" --changed "$RUNNER_TEMP/changed.txt"
+
+      - name: Upload report
+        id: upload
+        uses: actions/upload-artifact@v4
+        with:
+          name: vrt-report
+          path: ${{ runner.temp }}/vrt
+          retention-days: 14
+
+      - name: Summarise
+        env:
+          REPORT_URL: ${{ steps.upload.outputs.artifact-url }}
+        run: |
+          echo -e "\n[Download the before / after / diff report]($REPORT_URL) (open index.html)" >> "$RUNNER_TEMP/vrt/summary.md"
+          cat "$RUNNER_TEMP/vrt/summary.md" >> "$GITHUB_STEP_SUMMARY"
+
+      # Edits the previous run's comment rather than stacking a new one per push.
+      # Fork PRs get a read-only token, so a failed comment is not a failed job.
+      - name: Comment on PR
+        continue-on-error: true
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          PR: ${{ github.event.pull_request.number }}
+        run: |
+          id=$(gh api "repos/$REPO/issues/$PR/comments" --paginate \
+            --jq '[.[] | select(.body | startswith("<!-- vrt-report -->"))][0].id // empty' | head -n1)
+          body=$(jq -Rs '{body: .}' < "$RUNNER_TEMP/vrt/summary.md")
+          if [ -n "$id" ]; then
+            gh api -X PATCH "repos/$REPO/issues/comments/$id" --input - <<< "$body"
+          else
+            gh api -X POST "repos/$REPO/issues/$PR/comments" --input - <<< "$body"
+          fi
