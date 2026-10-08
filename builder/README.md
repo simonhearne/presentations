@@ -638,8 +638,11 @@ Pull requests that touch shared assets (`css/`, `script/`, `templates/`, `img/`,
 `visualisations/`, `bin/build.js`, `bin/site.js` or the lockfile) run
 [`.github/workflows/vrt.yml`](../.github/workflows/vrt.yml). It builds the site
 from the PR's base and from the PR, screenshots every slide of every published
-deck at its final step (all fragments revealed, every chart stage played), and
-diffs each pair with `pixelmatch`.
+deck at its final step (all fragments revealed, every vega signal step taken,
+every three.js `advance()` called), and diffs each pair with `pixelmatch`.
+three.js stages ease in over a few seconds of frames and the harness gives them
+8, so a slow module such as facenet-learning is captured late in its run but not
+always fully settled; it is still the same frame on both sides.
 
 A diff in a deck whose own `talks/<slug>/` files the PR edits is expected and
 listed quietly. A diff in any other deck came from the shared change and is

@@ -272,7 +272,17 @@ async function captureDeck(browser, origin, slug, outDir) {
         await page.keyboard.press('ArrowRight');
         await settle(page, 100);
       }
-      await settle(page, 1000);
+      // script/three.js modules don't report how many stages they hold, so
+      // play them out directly: advance() answers true while it took one.
+      // Their stages ease in over seconds of frames, so they get longer to land.
+      const hasCanvas = await page.evaluate(() => {
+        const canvases = document.querySelectorAll('.slide.is-current .three-canvas');
+        for (const c of canvases) {
+          for (let i = 0; i < 50 && c.__three?.advance?.() === true; i++);
+        }
+        return canvases.length > 0;
+      });
+      await settle(page, hasCanvas ? 8000 : 1000);
       // The deck fills the viewport exactly. A locator screenshot would wait for
       // the element to be stable, which Playwright checks on animation frames
       // the paused clock never delivers.
