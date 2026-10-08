@@ -1,10 +1,8 @@
 {
   "$schema": "https://vega.github.io/schema/vega/v6.json",
-  "background": "white",
   "padding": 5,
   "width": 1200,
   "height": 640,
-  "style": "cell",
   "data": [
     {
       "name": "source_0",
@@ -75,7 +73,7 @@
     {
       "name": "layer_0_marks",
       "type": "symbol",
-      "style": ["point"],
+      "style": ["point", "ring"],
       "from": {"data": "data_0"},
       "encode": {
         "update": {
@@ -101,10 +99,11 @@
           "x": {"scale": "x", "field": "compression"},
           "y": {"scale": "y", "field": "recall_adj"},
           "dx": {"signal": "datum.compression >= 32 ? -16 : 16"},
-          "dy": {"signal": "datum.series == 'FP32 (FLAT)' ? 7 : datum.series == 'FP16' ? -9 : datum.series == 'BF16' ? 9 : 0"},
+          "dy": {"signal": "datum.series == 'RaBitQ (1-bit+rerank)' ? -20 : datum.series == 'FP32 (FLAT)' ? -18 : datum.series == 'FP16' ? -6 : datum.series == 'BF16' ? 12 : 0"},
           "align": {"signal": "datum.compression >= 32 ? 'right' : 'left'"},
           "baseline": {"value": "middle"},
-          "fontSize": {"value": 13},
+          "font": {"value": "IBM Plex Mono, ui-monospace, monospace"},
+          "fontSize": {"value": 16},
           "fontWeight": {"value": 600},
           "fill": {"value": "white"},
           "stroke": {"value": "white"},
@@ -124,10 +123,11 @@
           "x": {"scale": "x", "field": "compression"},
           "y": {"scale": "y", "field": "recall_adj"},
           "dx": {"signal": "datum.compression >= 32 ? -16 : 16"},
-          "dy": {"signal": "datum.series == 'FP32 (FLAT)' ? 7 : datum.series == 'FP16' ? -9 : datum.series == 'BF16' ? 9 : 0"},
+          "dy": {"signal": "datum.series == 'RaBitQ (1-bit+rerank)' ? -20 : datum.series == 'FP32 (FLAT)' ? -18 : datum.series == 'FP16' ? -6 : datum.series == 'BF16' ? 12 : 0"},
           "align": {"signal": "datum.compression >= 32 ? 'right' : 'left'"},
           "baseline": {"value": "middle"},
-          "fontSize": {"value": 13},
+          "font": {"value": "IBM Plex Mono, ui-monospace, monospace"},
+          "fontSize": {"value": 16},
           "fontWeight": {"value": 600},
           "fill": {"scale": "color", "field": "series"}
         }
@@ -145,52 +145,23 @@
     {
       "name": "y",
       "type": "linear",
-      "domain": {"signal": "[(dim == '384' ? 0.70 : 0.75) * tween, 1]"},
+      "domain": {"signal": "[(dim == '384' ? 0.70 : 0.75) * tween, 1.015]"},
       "range": [{"signal": "height"}, 0],
       "zero": false
     },
     {
       "name": "color",
       "type": "ordinal",
-      "domain": {"data": "data_0", "field": "series", "sort": true},
-      "range": {"scheme": "tableau10"}
+      "domain": ["FP32 (FLAT)", "FP16", "BF16", "SQ8", "PQ", "PRQ", "RaBitQ (1-bit)", "RaBitQ (1-bit+rerank)"],
+      "range": ["#061982", "#175fff", "#175fff", "#175fff", "#d97706", "#b45309", "#c84cff", "#0f9f8f"]
     }
   ],
   "axes": [
     {
       "scale": "x",
       "orient": "bottom",
-      "values": [1, 2, 4, 8, 16, 32],
-      "gridScale": "y",
-      "grid": true,
-      "tickMinStep": 1,
-      "domain": false,
-      "labels": false,
-      "aria": false,
-      "maxExtent": 0,
-      "minExtent": 0,
-      "ticks": false,
-      "zindex": 0
-    },
-    {
-      "scale": "y",
-      "orient": "left",
-      "gridScale": "x",
-      "grid": true,
-      "tickCount": {"signal": "ceil(height/40)"},
-      "domain": false,
-      "labels": false,
-      "aria": false,
-      "maxExtent": 0,
-      "minExtent": 0,
-      "ticks": false,
-      "zindex": 0
-    },
-    {
-      "scale": "x",
-      "orient": "bottom",
       "grid": false,
-      "title": "Compression ratio (×)",
+      "title": "compression (×)",
       "format": "d",
       "values": [1, 2, 4, 8, 16, 32],
       "labelFlush": true,
@@ -202,10 +173,9 @@
       "scale": "y",
       "orient": "left",
       "grid": false,
-      "title": "Recall@10",
+      "title": "recall@10",
       "format": ".2f",
       "labelOverlap": true,
-      "tickCount": {"signal": "ceil(height/40)"},
       "zindex": 0
     }
   ],

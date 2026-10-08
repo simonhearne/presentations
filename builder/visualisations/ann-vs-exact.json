@@ -81,33 +81,24 @@
     {
       "orient": "bottom",
       "scale": "x",
-      "title": "Embedding count",
+      "title": "embeddings",
       "values": [100, 1000, 10000, 100000, 1000000, 10000000, 100000000, 1000000000],
-      "format": "~s",
-      "grid": true,
-      "tickSize": 6,
-      "labelPadding": 6,
-      "titlePadding": 14
+      "format": "~s"
     },
     {
       "orient": "left",
       "scale": "y",
-      "title": "Comparisons per query",
+      "title": "comparisons / query",
       "values": [100, 1000, 10000, 100000, 1000000, 10000000, 100000000, 1000000000],
-      "format": "~s",
-      "grid": true,
-      "tickSize": 6,
-      "labelPadding": 6,
-      "titlePadding": 14
+      "format": "~s"
     },
     {
       "orient": "right",
       "scale": "y",
-      "title": "Estimated latency per query",
+      "title": "est. latency / query",
       "values": {"signal": "[100, (5 - overheadMs) * 1e6 / nsPerCmp, (10 - overheadMs) * 1e6 / nsPerCmp, (100 - overheadMs) * 1e6 / nsPerCmp, (1000 - overheadMs) * 1e6 / nsPerCmp, (10000 - overheadMs) * 1e6 / nsPerCmp, (60000 - overheadMs) * 1e6 / nsPerCmp]"},
-      "tickSize": 6,
-      "labelPadding": 6,
-      "titlePadding": 14,
+      "domain": false,
+      "ticks": false,
       "encode": {
         "labels": {
           "update": {
@@ -142,7 +133,7 @@
         "enter": {
           "x": {"scale": "x", "field": "n"},
           "y": {"scale": "y", "field": "comparisons"},
-          "stroke": {"value": "#f59e0b"},
+          "stroke": {"value": "#d97706"},
           "strokeWidth": {"value": 4},
           "strokeCap": {"value": "round"},
           "interpolate": {"value": "monotone"}
@@ -175,7 +166,7 @@
           "x": {"scale": "x", "value": 1000000000},
           "y": {"scale": "y", "value": 5350},
           "size": {"value": 130},
-          "fill": {"value": "#f59e0b"},
+          "fill": {"value": "#d97706"},
           "stroke": {"value": "#ffffff"},
           "strokeWidth": {"value": 2}
         },
@@ -256,14 +247,12 @@
     },
     {
       "type": "rule",
+      "style": "guide",
       "encode": {
         "enter": {
           "x": {"scale": "x", "value": 1000000000},
           "y": {"scale": "y", "value": 5350},
-          "y2": {"scale": "y", "value": 1000000000},
-          "stroke": {"value": "#64748b"},
-          "strokeWidth": {"value": 1.5},
-          "strokeDash": {"value": [5, 4]}
+          "y2": {"scale": "y", "value": 1000000000}
         },
         "update": {
           "opacity": {"signal": "stage >= 3 ? 1 : 0"}
@@ -279,7 +268,7 @@
           "y": {"scale": "y", "value": 1000000000},
           "y2": {"scale": "y", "value": 1000000000},
           "stroke": {"value": "#64748b"},
-          "strokeWidth": {"value": 1.5}
+          "strokeWidth": {"value": 2.5}
         },
         "update": {
           "opacity": {"signal": "stage >= 3 ? 1 : 0"}
@@ -295,7 +284,7 @@
           "y": {"scale": "y", "value": 5350},
           "y2": {"scale": "y", "value": 5350},
           "stroke": {"value": "#64748b"},
-          "strokeWidth": {"value": 1.5}
+          "strokeWidth": {"value": 2.5}
         },
         "update": {
           "opacity": {"signal": "stage >= 3 ? 1 : 0"}

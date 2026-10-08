@@ -36,8 +36,9 @@
         ]
       },
       "axis": {
-        "title": "index recall@10 (vs exact search)",
-        "format": ".2f"
+        "title": "index recall@10",
+        "format": ".2f",
+        "values": [0.75, 0.8, 0.85, 0.9, 0.95, 1.0]
       }
     }
   },
@@ -55,11 +56,8 @@
       },
       "mark": {
         "type": "line",
-        "strokeDash": [
-          6,
-          6
-        ],
-        "color": "#94a3b8"
+        "style": "guide",
+        "color": "#64748b"
       },
       "encoding": {
         "x": {
@@ -77,7 +75,8 @@
           },
           "axis": {
             "title": null,
-            "format": ".2f"
+            "format": ".1f",
+            "values": [0.6, 0.7, 0.8, 0.9, 1.0]
           }
         }
       }
@@ -85,6 +84,7 @@
     {
       "mark": {
         "type": "circle",
+        "style": "ring",
         "size": 180,
         "color": "#175fff"
       },
@@ -100,7 +100,8 @@
           },
           "axis": {
             "title": null,
-            "format": ".2f"
+            "format": ".1f",
+            "values": [0.6, 0.7, 0.8, 0.9, 1.0]
           }
         },
         "opacity": {
@@ -124,8 +125,9 @@
     {
       "mark": {
         "type": "circle",
+        "style": "ring",
         "size": 180,
-        "color": "#c84cff"
+        "color": "#d97706"
       },
       "encoding": {
         "y": {
@@ -167,11 +169,12 @@
       "mark": {
         "type": "rule",
         "strokeDash": [
-          4,
-          4
+          2,
+          8
         ],
-        "strokeWidth": 2,
-        "color": "#c84cff"
+        "strokeWidth": 3,
+        "strokeCap": "round",
+        "color": "#d97706"
       },
       "encoding": {
         "y": {
@@ -210,7 +213,7 @@
         "dy": -14,
         "fontSize": 20,
         "fontWeight": 600,
-        "color": "#c84cff"
+        "color": "#b45309"
       },
       "encoding": {
         "x": {
@@ -246,7 +249,7 @@
             "x": 0.76,
             "y": 0.93,
             "t": "answer-presence@10",
-            "c": "#c84cff"
+            "c": "#b45309"
           }
         ]
       },

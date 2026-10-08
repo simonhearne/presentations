@@ -9,6 +9,7 @@
   const BRAND = {
     blue: '#175fff', navy: '#061982', berry: '#c84cff', purple: '#7f47ff',
     sky: '#49bcff', green: '#00dcc6', orange: '#f59e0b', ink: '#1e293b',
+    amber: '#d97706', teal: '#0f9f8f',
     font: 'Inter, system-ui, -apple-system, sans-serif',
     mono: 'IBM Plex Mono, ui-monospace, monospace',
   };
@@ -23,12 +24,26 @@
   // lives here rather than being restated in each one. Specs on a narrower
   // canvas (vectordb-101, and the ~700-800px charts in visualisations/) still
   // set their own smaller sizes locally, which win over these defaults.
+  //
+  // The look borrows from the deck's hand-drawn SVG diagrams rather than from
+  // a spreadsheet: no grid, a heavy round-capped axis line with a few short
+  // ticks, lowercase mono numbers, fat points, and dotted guides. Category
+  // axes and legends keep Inter, because names in mono run wide and truncate,
+  // and keep every tick, because a tick count would thin out the categories.
+  // The slide-coloured ring is opt-in (`style: ring`): on small marks it eats
+  // the fill. Series are labelled directly on the chart where possible.
+  // The category order is CVD-checked: blue against berry is near-identical
+  // for protanopes, so the second series is amber, not berry.
   function brandConfig(isDark) {
     const ink = isDark ? '#ffffff' : BRAND.ink;
-    const axisLabel = isDark ? '#cbd5e1' : '#475569';
-    const axisTitle = isDark ? '#ffffff' : BRAND.ink;
+    const axisLabel = isDark ? '#cbd5e1' : '#64748b';
+    const axisTitle = axisLabel;
+    const axisLine = isDark ? '#cbd5e1' : BRAND.ink;
     const grid = isDark ? '#1e293b' : '#eef2f7';
     const domain = isDark ? '#334155' : '#cbd5e1';
+    const ring = isDark ? '#0a0e1a' : '#ffffff';
+    const discreteAxis = { labelFont: BRAND.font };
+    const guide = { stroke: axisLabel, strokeDash: [2, 8], strokeWidth: 2.5, strokeCap: 'round' };
     const gradientFill = {
       gradient: 'linear', x1: 0, y1: 1, x2: 0, y2: 0,
       stops: [{ offset: 0, color: BRAND.blue }, { offset: 1, color: BRAND.purple }],
@@ -43,20 +58,31 @@
         fontSize: 19, fontWeight: 600, anchor: 'start',
       },
       axis: {
-        labelFont: BRAND.font, titleFont: BRAND.font,
+        labelFont: BRAND.mono, titleFont: BRAND.mono,
         labelColor: axisLabel, titleColor: axisTitle,
-        labelFontSize: 16, titleFontSize: 22, titleFontWeight: 600,
-        domainColor: domain, tickColor: domain, gridColor: grid,
-        labelPadding: 4, tickSize: 5,
+        labelFontSize: 16, titleFontSize: 20, titleFontWeight: 400,
+        grid: false, gridColor: grid,
+        domainColor: axisLine, domainWidth: 2.5, domainCap: 'round',
+        tickColor: axisLine, tickWidth: 2, tickSize: 6, tickCap: 'round',
+        labelPadding: 6, titlePadding: 8,
       },
+      axisBand: discreteAxis,
+      axisPoint: discreteAxis,
+      axisDiscrete: discreteAxis,
       legend: {
-        labelFont: BRAND.font, titleFont: BRAND.font,
+        labelFont: BRAND.font, titleFont: BRAND.mono,
         labelColor: axisLabel, titleColor: axisTitle,
-        labelFontSize: 16, titleFontSize: 22, titleFontWeight: 600,
-        symbolType: 'circle',
+        labelFontSize: 16, titleFontSize: 20, titleFontWeight: 400,
+        symbolType: 'circle', symbolStrokeWidth: 0,
+      },
+      style: {
+        guide,
+        ring: { stroke: ring, strokeWidth: 3 },
+        annotation: { font: BRAND.mono, fontStyle: 'italic', fontWeight: 400, fill: axisLabel },
+        callout: { fontWeight: 700, fontSize: 22 },
       },
       range: {
-        category: [BRAND.blue, BRAND.berry, BRAND.green, BRAND.purple, BRAND.sky, BRAND.orange, BRAND.navy],
+        category: [BRAND.blue, BRAND.amber, BRAND.berry, BRAND.teal, BRAND.purple, BRAND.sky, BRAND.navy],
         ramp: ['#e6f0ff', BRAND.sky, BRAND.blue, BRAND.navy],
         heatmap: ['#e6f0ff', BRAND.sky, BRAND.blue, BRAND.navy],
         diverging: [BRAND.navy, BRAND.blue, '#e6f0ff', '#fbe6ff', BRAND.berry],
@@ -64,12 +90,37 @@
       bar: { fill: gradientFill },
       rect: { fill: gradientFill },
       area: { fill: gradientFill, fillOpacity: 0.85, line: { color: BRAND.blue, strokeWidth: 2 } },
-      point: { fill: BRAND.blue, filled: true, size: 80 },
-      circle: { fill: BRAND.blue },
-      line: { stroke: BRAND.blue, strokeWidth: 3, strokeCap: 'round', strokeJoin: 'round' },
+      point: { fill: BRAND.blue, filled: true, size: 200 },
+      circle: { fill: BRAND.blue, size: 200 },
+      symbol: { size: 200 },
+      line: { stroke: BRAND.blue, strokeWidth: 4, strokeCap: 'round', strokeJoin: 'round' },
       text: { font: BRAND.font, fill: ink, fontSize: 20 },
-      rule: { stroke: domain },
+      rule: { stroke: domain, strokeCap: 'round' },
     };
+  }
+
+  // Few ticks on continuous axes, the way a hand-drawn axis has them. This
+  // can't live in the config: Vega applies tickCount to an axis's explicit
+  // `values` too, thinning hand-placed ticks, and on band/point scales it drops
+  // categories. So it patches the compiled spec instead, touching only axes
+  // with no `values` whose tickCount is unset or Vega-Lite's width-derived
+  // default. A spec that sets its own number keeps it.
+  const TICK_COUNT = 5;
+  const DISCRETE_SCALES = new Set(['band', 'point', 'ordinal']);
+
+  function thinTicks(spec, scaleTypes = {}) {
+    const types = { ...scaleTypes };
+    for (const sc of spec.scales || []) types[sc.name] = sc.type || 'linear';
+    for (const axis of spec.axes || []) {
+      if (axis.values || DISCRETE_SCALES.has(types[axis.scale])) continue;
+      const tc = axis.tickCount;
+      const auto = tc && tc.signal && /^ceil\(\w*(width|height)\/40\)$/i.test(tc.signal);
+      if (tc === undefined || auto) axis.tickCount = TICK_COUNT;
+    }
+    for (const mark of spec.marks || []) {
+      if (mark.type === 'group') thinTicks(mark, types);
+    }
+    return spec;
   }
 
   function isPlainObject(x) {
@@ -339,6 +390,7 @@
         ? el.dataset.theme === 'dark'
         : !!(section && section.matches('.dark, .title, .hero, .bg'));
       opts.config = deepMerge(brandConfig(isDark), opts.config || {});
+      opts.patch = vgSpec => thinTicks(vgSpec);
       vegaEmbed(el, spec, opts).then(result => {
         el.__vegaView = result.view;
         // applySignals must run before applyAnimator so trigger-value checks see seeded state.

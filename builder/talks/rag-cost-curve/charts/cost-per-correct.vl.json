@@ -29,7 +29,7 @@
       "as": "arm_order"
     },
     {
-      "calculate": "'$' + format(datum.cost_per_correct_usd, '.4f')",
+      "calculate": "'$' + format(datum.cost_per_correct_usd, '.4f') + '  ' + {'parametric':'no retrieval','agentic':'agentic','indexed_topk3':'indexed top-k 3','indexed':'indexed top-k 10'}[datum.arm]",
       "as": "cost_label"
     }
   ],
@@ -42,7 +42,6 @@
       },
       "title": null,
       "axis": {
-        "labelFontSize": 15,
         "labelLimit": 320,
         "labelPadding": 10,
         "labelExpr": "split(datum.label, ': ')",
@@ -73,16 +72,7 @@
           "#7f47ff"
         ]
       },
-      "legend": {
-        "title": null,
-        "orient": "top",
-        "direction": "horizontal",
-        "labelFontSize": 15,
-        "labelExpr": "{'parametric':'no retrieval','agentic':'agentic','indexed_topk3':'indexed top-k 3','indexed':'indexed top-k 10'}[datum.label]",
-        "symbolType": "circle",
-        "symbolSize": 130,
-        "symbolOpacity": 1
-      }
+      "legend": null
     }
   },
   "layer": [
@@ -94,7 +84,8 @@
       ],
       "mark": {
         "type": "rule",
-        "strokeWidth": 3,
+        "strokeWidth": 4,
+        "strokeCap": "round",
         "opacity": 0.45
       },
       "encoding": {
@@ -110,8 +101,7 @@
             "nice": false
           },
           "axis": {
-            "title": "billed cost per correct answer, agent only, log scale",
-            "titleFontSize": 15,
+            "title": "billed $ per correct answer (agent only, log)",
             "format": "$.3f",
             "values": [
               0.01,
@@ -136,6 +126,7 @@
       ],
       "mark": {
         "type": "point",
+        "style": "ring",
         "filled": true,
         "size": 230,
         "opacity": 1
@@ -153,8 +144,7 @@
             "nice": false
           },
           "axis": {
-            "title": "billed cost per correct answer, agent only, log scale",
-            "titleFontSize": 15,
+            "title": "billed $ per correct answer (agent only, log)",
             "format": "$.3f",
             "values": [
               0.01,
@@ -209,8 +199,8 @@
       "mark": {
         "type": "text",
         "align": "left",
-        "dx": 11,
-        "fontSize": 14,
+        "dx": 14,
+        "fontSize": 16,
         "fontWeight": 600
       },
       "encoding": {
