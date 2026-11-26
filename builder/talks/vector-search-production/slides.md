@@ -1562,16 +1562,10 @@ one that stops launches, and it stays empty until somebody owns it.
 </div>
 </div>
 
-<div class="cl-foot">
 <div class="card cl-road">
 <p class="case-name">Clear the road to production</p>
 <p class="cl-boxes" aria-hidden="true"><span class="cl-box is-ticked"></span><span class="cl-box is-ticked"></span><span class="cl-box is-ticked"></span><span class="cl-box is-ticked"></span><span class="cl-box is-ticked"></span><span class="cl-box is-ticked"></span></p>
 <p class="case-proof">A solution design covering data residency, AI policy and HA/DR is approved <strong>early</strong>.</p>
-</div>
-<a class="cl-repo" href="https://github.com/simonhearne/prod-vector-search">
-<img src="repo-qr.svg" alt="QR code for github.com/simonhearne/prod-vector-search">
-<span class="cl-repo-text"><span class="cl-repo-label">Checklist, benchmarks and data</span><span class="cl-repo-url">github.com/simonhearne/<wbr>prod-vector-search</span></span>
-</a>
 </div>
 
 <!-- notes
@@ -1605,6 +1599,8 @@ Everything from today in one place: the slides, the Lumen demo and the write-up.
 # Thank you!
 
 ## simon @ zilliz.com
+
+### [milvus.io](https://milvus.io) · [zilliz.com](https://zilliz.com)
 
 ```authors
 - name: Simon Hearne
