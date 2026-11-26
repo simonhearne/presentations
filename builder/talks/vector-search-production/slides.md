@@ -1582,7 +1582,7 @@ All five groups ticked. The fifth took people rather than tests.
 <div class="tl-card">
 <a class="tl-link" href="https://hearne.me/prod">
 <img src="talk-qr.svg" alt="QR code for hearne.me/prod">
-<span class="tl-text"><span class="tl-label">Slides, demo and write-up</span><span class="tl-url">hearne.me/prod</span></span>
+<span class="tl-text"><span class="tl-label">Slides, data and demo</span><span class="tl-url">hearne.me/prod</span></span>
 </a>
 </div>
 
