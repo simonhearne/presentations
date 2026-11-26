@@ -4,13 +4,6 @@
 
 {.title .no-chrome .constellation}
 
-<style>
-  .q-grid { display: grid; grid-template-columns: repeat(8, 1fr); gap: 0.7vw; margin: 1.6vh 0; }
-  .q-grid img { width: 100%; aspect-ratio: 2 / 1; object-fit: contain; border-radius: 5px; image-rendering: pixelated; }
-  .source-ref { font-family: var(--zilliz-font-mono, monospace); font-size: 0.55em; opacity: 0.5; margin-top: 1.5vh; }
-  .source-ref a { color: inherit; }
-</style>
-
 <img class="logo" src="../../../img/zilliz-light.svg" alt="">
 
 # Vector Search <br><span class="hero-text smashing">Visualised</span>

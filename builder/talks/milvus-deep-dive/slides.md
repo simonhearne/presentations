@@ -106,12 +106,6 @@ m2 -> delta
 
 # The words you'll hear next
 
-<style>
-  .glossary { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.4vw 2.4vw; margin: 3vh 0; }
-  .glossary .term { font-weight: 700; color: var(--zilliz-navy); font-size: 1.05em; }
-  .glossary .def { opacity: 0.8; }
-</style>
-
 <div class="glossary">
   <div><span class="term">Collection</span> — <span class="def">a table: one schema, many entities.</span></div>
   <div><span class="term">Partition</span> — <span class="def">a named slice of a collection you can target.</span></div>
@@ -206,10 +200,6 @@ The dominant query-side lever is **output-field / payload width** — not the in
 
 {.small-title .filter-demo}
 
-<style>
-  .slide.filter-demo .vega-chart svg { width: 1080px; max-width: 100%; height: auto; }
-</style>
-
 # Filtered search fights the graph
 
 The filter and the ANN search pull against each other — the harder you filter, the more of the graph you destroy.
@@ -279,11 +269,6 @@ Only the best index for your **recall target**, your **memory budget**, and your
 {.small-title .no-vega-bindings}
 
 # Four families, one question each
-
-<style>
-  .idx-thumbs .vega-chart svg { width: 100%; height: auto; max-height: 34vh; }
-  .idx-thumbs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.2vw; align-items: start; }
-</style>
 
 <div class="idx-thumbs">
 
@@ -432,19 +417,6 @@ Point-in-time images of a collection, restored by **copying segment files** — 
 
 # Bring real numbers
 
-<style>
-  .nb-placeholder {
-    border: 2px dashed var(--zilliz-blue-20);
-    border-radius: 12px;
-    background: var(--zilliz-blue-10);
-    color: var(--zilliz-navy);
-    padding: 8vh 2vw;
-    text-align: center;
-    font-family: var(--zilliz-font-mono);
-    margin: 3vh 0;
-  }
-</style>
-
 <div class="nb-placeholder">
   📓 Drop your benchmark-notebook screenshot here<br>
   <small>save it into this deck folder and swap in the &lt;img&gt; below</small>
@@ -458,11 +430,6 @@ Point-in-time images of a collection, restored by **copying segment files** — 
 {.small-title}
 
 # One decision per section
-
-<style>
-  .recap { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.2vh 2.4vw; margin: 3vh 0; font-size: 0.95em; }
-  .recap .k { font-weight: 700; color: var(--zilliz-blue); }
-</style>
 
 <div class="recap">
   <div><span class="k">Deploy</span> — Standalone → Operator → managed; or don't ingest at all.</div>

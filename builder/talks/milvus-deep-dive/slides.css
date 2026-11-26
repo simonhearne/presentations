@@ -1,0 +1,45 @@
+.release-badge {
+  display: inline-block;
+  font-family: var(--zilliz-font-mono);
+  font-size: 0.5em;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--zilliz-blue);
+  background: var(--zilliz-blue-10);
+  border: 1px solid var(--zilliz-blue-20);
+  padding: 0.25em 0.8em;
+  border-radius: 999px;
+  vertical-align: middle;
+  line-height: 1.6;
+  white-space: nowrap;
+}
+
+.release-badge.cloud {
+  color: var(--zilliz-purple);
+  background: var(--zilliz-berry-10);
+  border-color: var(--zilliz-berry-20);
+}
+
+.glossary { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.4vw 2.4vw; margin: 3vh 0; }
+.glossary .term { font-weight: 700; color: var(--zilliz-navy); font-size: 1.05em; }
+.glossary .def { opacity: 0.8; }
+
+.slide.filter-demo .vega-chart svg { width: 1080px; max-width: 100%; height: auto; }
+
+.idx-thumbs .vega-chart svg { width: 100%; height: auto; max-height: 34vh; }
+.idx-thumbs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.2vw; align-items: start; }
+
+.nb-placeholder {
+  border: 2px dashed var(--zilliz-blue-20);
+  border-radius: 12px;
+  background: var(--zilliz-blue-10);
+  color: var(--zilliz-navy);
+  padding: 8vh 2vw;
+  text-align: center;
+  font-family: var(--zilliz-font-mono);
+  margin: 3vh 0;
+}
+
+.recap { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.2vh 2.4vw; margin: 3vh 0; font-size: 0.95em; }
+.recap .k { font-weight: 700; color: var(--zilliz-blue); }

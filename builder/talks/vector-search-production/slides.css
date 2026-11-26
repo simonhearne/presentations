@@ -1,0 +1,332 @@
+.slide .readers .case-name { font-size: 36px; }
+.slide .readers .case-proof li { font-size: 28px; }
+.slide .readers .card { transition: opacity 300ms ease, transform 300ms ease, border-color 300ms ease, box-shadow 300ms ease; }
+.slide .readers:has(~ .readers-pick.is-revealed) .is-pick { border-color: var(--zilliz-blue); box-shadow: var(--zilliz-shadow-pop); }
+.slide .ws-diagram { --ws-amber: #d97706; --ws-amber-10: #fff4e0; display: block; width: 100%; height: auto; max-height: 960px; margin: auto; font-family: var(--zilliz-font-sans); }
+.ws-diagram .ws-lane { font-size: 13px; font-weight: 600; letter-spacing: 2px; fill: var(--zilliz-grey); text-anchor: middle; }
+.ws-diagram .ws-name { font-size: 16px; font-weight: 600; fill: var(--zilliz-navy); text-anchor: middle; }
+.ws-diagram text.ws-name[text-anchor="end"] { text-anchor: end; }
+.ws-diagram .ws-proxy { fill: var(--zilliz-blue-10); stroke: var(--zilliz-blue); stroke-width: 2; }
+.ws-diagram .ws-node { fill: var(--zilliz-white); stroke: var(--zilliz-navy); stroke-width: 2; }
+.ws-diagram .ws-links path { fill: none; stroke: var(--zilliz-blue-20); stroke-width: 2; stroke-dasharray: 4 5; }
+.ws-seg { fill: var(--zilliz-white); stroke: var(--zilliz-blue); stroke-width: 2.5; }
+.ws-seg.is-growing { stroke-dasharray: 6 4; }
+.ws-seg.is-sealed { fill: var(--zilliz-blue-10); }
+.ws-seg.is-indexed { fill: var(--zilliz-purple-10); stroke: var(--zilliz-purple); }
+.ws-dots { fill: var(--zilliz-blue); }
+.ws-dots.is-indexed { fill: var(--zilliz-purple); }
+.ws-edges { fill: none; stroke: var(--zilliz-purple); stroke-width: 1.5; }
+.ws-diagram .ws-doc { fill: var(--zilliz-white); stroke: var(--zilliz-blue); stroke-width: 2; }
+.ws-diagram .ws-arrow { fill: none; stroke: var(--zilliz-navy); stroke-width: 2.5; marker-end: url(#ws-ah); }
+/* End states are the resting styles; keyframes only describe where each step starts. */
+.ws-diagram .ws-a-draw { stroke-dasharray: 1 1; }
+.ws-diagram .ws-a-pop, .ws-diagram .ws-a-slide { transform-box: fill-box; transform-origin: center; }
+.ws-diagram .ws-step { animation-duration: 450ms; animation-timing-function: ease; animation-fill-mode: both; animation-delay: var(--d, 0ms); }
+.ws-diagram .ws-a-fade.is-revealed { animation-name: ws-fade; }
+.ws-diagram .ws-a-draw.is-revealed { animation-name: ws-draw; }
+.ws-diagram .ws-a-pop.is-revealed { animation-name: ws-pop; animation-timing-function: cubic-bezier(.3, 1.4, .5, 1); }
+.ws-diagram .ws-a-slide.is-revealed { animation-name: ws-slide; }
+/* Entered backward: show the finished diagram rather than replaying every stage at once. */
+.ws-diagram .ws-step.is-prerevealed { animation: none; transition: none; }
+@keyframes ws-fade { from { opacity: 0; } }
+@keyframes ws-draw { from { opacity: 0; stroke-dashoffset: 1; marker-end: none; } 10% { opacity: 1; } 95% { marker-end: none; } }
+@keyframes ws-pop { from { opacity: 0; transform: scale(.5); } }
+@keyframes ws-slide { from { opacity: 0; transform: translateX(-40px); } }
+@media print { .ws-diagram * { animation: none !important; } }
+.ws-diagram .ws-insert { transition: opacity 200ms ease; }
+.ws-diagram:has(.ws-search .is-revealed) .ws-insert { opacity: .25; }
+.ws-diagram:has(.ws-search .is-prerevealed) .ws-insert { transition: none; }
+.ws-diagram .ws-part { fill: none; stroke: var(--zilliz-blue-20); stroke-width: 1.5; }
+.ws-diagram .ws-part.is-hot { stroke: var(--ws-amber); stroke-width: 2; }
+.ws-diagram .ws-part-name { font-size: 13px; font-weight: 600; fill: var(--zilliz-navy); }
+/* Once the search is routed, the partition it skips recedes. */
+.ws-diagram .ws-pruned { transition: opacity 200ms ease; }
+.ws-diagram:has(.ws-route.is-revealed) .ws-pruned { opacity: .3; }
+.ws-diagram:has(.ws-route.is-prerevealed) .ws-pruned { transition: none; }
+.ws-diagram .ws-arrow.is-search { stroke: var(--ws-amber); }
+.ws-diagram .ws-arrow.is-return { stroke-width: 2; stroke-dasharray: 6 5; }
+.ws-diagram .ws-search-icon { fill: none; stroke: var(--ws-amber); stroke-width: 3.5; stroke-linecap: round; }
+.ws-diagram .ws-results rect { fill: var(--ws-amber); }
+.ws-diagram .ws-seg.is-hot { fill: var(--ws-amber-10); stroke: var(--ws-amber); }
+.ws-diagram .ws-dots.is-hot { fill: var(--ws-amber); }
+.ws-diagram .ws-scan { fill: none; stroke: var(--ws-amber); stroke-width: 1; opacity: .7; }
+.ws-diagram .ws-hop { fill: none; stroke: var(--ws-amber); stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
+/* Model change: the diagram follows the chart's stage (data-chart-stage on the slide), so one
+   click moves both. Durations match how long b4b-swap.json takes to draw each stage. Dots
+   keep the same rate when slow (spacing and speed drop together): arrivals don't change. */
+.slide .sw-diagram { --sw-old: var(--zilliz-blue); --sw-new: var(--zilliz-purple); display: block; flex: none; width: 100%; height: auto; max-height: none; margin: 0 0 var(--zilliz-s-1); font-family: var(--zilliz-font-sans); }
+.sw-diagram text { fill: var(--zilliz-navy); text-anchor: middle; }
+.sw-diagram .sw-name { font-size: 28px; font-weight: 700; }
+.sw-diagram .sw-name.is-left { text-anchor: start; }
+.sw-diagram .sw-model { font-size: 24px; font-weight: 400; }
+.sw-diagram .sw-sub, .sw-diagram .sw-note { font-size: 22px; fill: var(--zilliz-ink); }
+.sw-diagram .sw-status { font-size: 24px; font-weight: 700; text-anchor: end; }
+.sw-diagram .sw-box { fill: var(--zilliz-white); stroke: var(--zilliz-navy); stroke-width: 2.5; }
+.sw-diagram .sw-box.is-old { stroke: var(--sw-old); }
+.sw-diagram .sw-box.is-new { stroke: var(--sw-new); }
+.sw-diagram .sw-alias { fill: var(--zilliz-blue-10); stroke: var(--zilliz-navy); stroke-width: 2.5; }
+.sw-diagram .sw-cell.is-old { fill: var(--zilliz-blue); }
+.sw-diagram .sw-cell.is-new { fill: var(--zilliz-purple); }
+.sw-diagram .sw-cover { fill: var(--zilliz-white); transform-box: fill-box; transform-origin: right; }
+.sw-diagram .sw-wire { fill: none; stroke: var(--zilliz-navy); stroke-width: 2; }
+.sw-diagram .sw-flow { fill: none; stroke: var(--sw-old); stroke-width: 12; stroke-linecap: round; stroke-dasharray: 0 72; animation: sw-flow 0.5s linear infinite; transition: stroke 300ms ease 300ms, opacity 300ms ease; }
+.sw-diagram .sw-flow.is-load { stroke: var(--sw-new); }
+@keyframes sw-flow { from { stroke-dashoffset: 72; } }
+.sw-diagram .sw-enc text { font-size: 23px; font-weight: 600; fill: var(--zilliz-white); }
+.sw-diagram .sw-enc.is-old rect { fill: var(--sw-old); }
+.sw-diagram .sw-enc.is-new rect { fill: var(--sw-new); }
+.sw-diagram .sw-zero-n { font-size: 34px; font-weight: 700; }
+.sw-diagram .sw-arm { transform-box: view-box; transform-origin: 670px 95px; transition: transform 700ms cubic-bezier(.5, 0, .2, 1); }
+.sw-diagram :is(.sw-v1, .sw-v2, .sw-load, .sw-enc, .sw-zero, .sw-status) { transition: opacity 400ms ease; }
+.sw-diagram :is(.sw-v2, .sw-load, .sw-zero, .sw-enc.is-new, .sw-status.is-b, .sw-status.is-c) { opacity: 0; }
+.slide[data-chart-stage]:not([data-chart-stage="0"]) .sw-v2, .slide:is([data-chart-stage="1"], [data-chart-stage="2"]) .sw-load { opacity: 1; }
+.slide[data-chart-stage]:not([data-chart-stage="0"]) .sw-cover.is-first, .slide:is([data-chart-stage="2"], [data-chart-stage="3"]) .sw-cover.is-rest { transform: scaleX(0); }
+/* A fast click leaves the previous stage mid-transition: drop what it was animating outright. */
+.slide:is([data-chart-stage="2"], [data-chart-stage="3"]) .sw-cover.is-first, .slide[data-chart-stage="3"] .sw-cover.is-rest { visibility: hidden; }
+.slide[data-chart-stage="3"] :is(.sw-load, .sw-v2 .sw-status:not(.is-c)), .slide:is([data-chart-stage="0"], [data-chart-stage="1"]) .sw-v2 .sw-status:not(.is-a) { visibility: hidden; }
+.slide[data-chart-stage="1"] .sw-cover.is-first { transition: transform 5s steps(19); }
+.slide[data-chart-stage="2"] .sw-cover.is-rest { transition: transform 2.5s steps(9); }
+.slide[data-chart-stage="2"] .sw-v2 .sw-status.is-a { opacity: 0; transition-delay: 2.5s; }
+.slide[data-chart-stage="2"] .sw-v2 .sw-status.is-b { opacity: 1; transition-delay: 2.5s; }
+.slide[data-chart-stage="2"] .sw-load { opacity: .35; transition-delay: 2.5s; }
+.slide[data-chart-stage="2"] .sw-flow.is-load { opacity: 0; transition-delay: 2.5s; }
+.slide[data-chart-stage="3"] .sw-arm { transform: rotate(21deg) scaleX(1.071); }
+.slide[data-chart-stage="3"] .sw-flow.is-query { stroke: var(--sw-new); }
+.slide[data-chart-stage="3"] .sw-enc.is-old, .slide[data-chart-stage="3"] .sw-status.is-a { opacity: 0; }
+.slide[data-chart-stage="3"] :is(.sw-enc.is-new, .sw-v2 .sw-status.is-c, .sw-zero) { opacity: 1; }
+.slide[data-chart-stage="3"]:has(.closing-line.is-revealed) .sw-v1 { opacity: .5; }
+.slide[data-chart-stage="3"]:has(.closing-line.is-revealed) .sw-v1 .sw-status.is-b { opacity: 1; }
+.slide:has(.sw-diagram) .closing-line.is-emphatic { margin-top: 0; }
+@media print { .sw-diagram * { animation: none !important; transition: none !important; } }
+.slide .tb-diagram { display: block; flex: none; width: 100%; height: auto; margin: 0 0 var(--zilliz-s-2); font-family: var(--zilliz-font-sans); }
+.tb-diagram text { fill: var(--zilliz-navy); text-anchor: middle; }
+.tb-diagram .tb-lane { font-family: var(--zilliz-font-mono); font-size: 18px; font-weight: 600; letter-spacing: 2px; fill: var(--zilliz-grey); text-anchor: start; }
+.tb-diagram .tb-name { font-size: 28px; font-weight: 700; }
+.tb-diagram .tb-name.is-model { font-size: 26px; }
+.tb-diagram .tb-sub { font-size: 22px; fill: var(--zilliz-ink); }
+.tb-diagram .tb-sub.is-model { font-size: 20px; }
+.tb-diagram .tb-note { font-size: 18px; fill: var(--zilliz-grey); }
+.tb-diagram .tb-field-name { font-size: 22px; font-weight: 600; }
+.tb-diagram .tb-box { fill: var(--zilliz-white); stroke: var(--zilliz-navy); stroke-width: 2.5; }
+.tb-diagram .tb-model { fill: var(--zilliz-blue-10); stroke: var(--zilliz-blue); stroke-width: 2.5; }
+.tb-diagram .tb-field { fill: var(--zilliz-white); stroke: var(--zilliz-blue); stroke-width: 2; }
+.tb-diagram .tb-field.is-search { fill: var(--zilliz-blue-10); }
+.tb-diagram .tb-score { fill: var(--zilliz-white); stroke: var(--zilliz-purple); stroke-width: 2.5; }
+.tb-diagram .tb-wire { fill: none; stroke: var(--zilliz-navy); stroke-width: 2.5; }
+.tb-diagram .tb-wire.is-bypass { stroke-dasharray: 8 6; }
+/* Stat slides that have to make sense in a photo: notes carry a full sentence, so they
+   step up from the shared 21px. */
+.slide.stat-context .stat-grid { margin: var(--zilliz-s-4) 0 var(--zilliz-s-3); }
+.slide.stat-context .stat-note { font-size: 26px; }
+/* Request trace: one linear ms scale (--trace-total), each bar placed by --s start and --d length.
+   Opening the parent span hollows its bar and the child rows grow in beneath it; the
+   trace holds its full height throughout so the lines under it never move. */
+.slide .trace { --trace-total: 466; display: flex; flex-direction: column; min-height: 480px; margin: var(--zilliz-s-3) 0 14px; }
+.trace .tr-row { display: grid; grid-template-columns: 300px 1fr 130px; align-items: center; gap: var(--zilliz-s-3); height: 50px; margin-bottom: 10px; }
+.trace .tr-label { font-size: 28px; font-weight: 600; white-space: nowrap; color: var(--zilliz-navy); }
+.trace .tr-track { position: relative; height: 100%; border-radius: 8px; background: var(--zilliz-blue-10); }
+.trace .tr-track i { position: absolute; top: 0; bottom: 0; left: calc(var(--s) / var(--trace-total) * 100%); width: calc(var(--d) / var(--trace-total) * 100%); box-sizing: border-box; border-radius: 4px; background: var(--zilliz-navy); transition: background 200ms ease; }
+.trace .tr-ms { font-family: var(--zilliz-font-mono); font-size: 28px; font-weight: 600; text-align: right; white-space: nowrap; color: var(--zilliz-navy); }
+.trace .is-parent .tr-track i { border: 3px solid var(--zilliz-blue); background: var(--zilliz-blue); }
+.trace:has(.is-child.is-revealed) .is-parent .tr-track i { background: var(--zilliz-blue-20); }
+.trace .is-child { transition: height 300ms ease, margin 300ms ease, opacity 200ms ease 150ms; }
+@media screen { .trace .is-child:not(.is-revealed) { height: 0; margin: 0; overflow: hidden; } }
+.trace .is-child.is-prerevealed { transition: none; }
+.trace .is-child .tr-label { padding-left: 36px; font-size: 26px; font-weight: 500; }
+.trace .is-child .tr-track { background: none; }
+.trace .is-child .tr-track i { background: var(--zilliz-blue); }
+.trace .is-embed .tr-track i { background: var(--zilliz-berry); }
+.trace .is-network .tr-track i { background: var(--zilliz-grey); }
+.trace .is-search { border-radius: 10px; transition: height 300ms ease, margin 300ms ease, opacity 200ms ease 150ms, background 300ms ease, box-shadow 300ms ease; }
+.trace:has(~ .closing-line.is-revealed) .is-search { background: var(--zilliz-blue-10); box-shadow: -12px 0 0 var(--zilliz-blue-10), 12px 0 0 var(--zilliz-blue-10); }
+.trace:has(~ .closing-line.is-revealed) .is-search :is(.tr-label, .tr-ms) { color: var(--zilliz-blue); font-weight: 700; }
+.trace:has(~ .closing-line.is-revealed) .is-search .tr-track i { box-shadow: inset 0 0 0 3px var(--zilliz-blue), inset 0 0 0 6px var(--zilliz-white); }
+/* Showcase result strips: a stat card beside ten result slots, one row per config. */
+.slide .result-strips { display: flex; flex-direction: column; gap: 28px; }
+.slide .result-strip { display: grid; grid-template-columns: 316px 1fr; gap: var(--zilliz-s-3); }
+.result-strip .stat-card { justify-content: center; padding: var(--zilliz-s-2) var(--zilliz-s-3); }
+.result-strip .strip-stats { display: flex; gap: var(--zilliz-s-4); }
+.result-strip .strip-stats > div { display: flex; flex-direction: column; gap: 4px; }
+.result-strip .stat-value { font-size: 52px; }
+.slide .result-slots { display: grid; grid-template-columns: repeat(10, minmax(0, 1fr)); gap: 10px; list-style: none; margin: 0; padding: 0; }
+.slide .result-slot { position: relative; display: flex; flex-direction: column; margin: 0; }
+.result-slot .result-thumb { box-sizing: border-box; aspect-ratio: 3 / 4; display: grid; grid-template: 100% / 100%; place-items: center; overflow: hidden; padding: 4px; background: var(--zilliz-white); border: 2px solid var(--zilliz-blue-20); border-radius: 10px; }
+.slide .result-thumb img { width: 100%; height: 100%; object-fit: contain; }
+.result-thumb.is-missing { background: repeating-linear-gradient(45deg, var(--zilliz-blue-10) 0 8px, var(--zilliz-white) 8px 16px); font-family: var(--zilliz-font-mono); font-size: 14px; text-transform: uppercase; color: var(--zilliz-navy); }
+.result-slot.is-empty .result-thumb { background: var(--zilliz-berry-10); border: 3px dashed var(--zilliz-berry); }
+/* A filtered search: the query box, the active filters as chips, and what they leave. */
+.slide .search-demo.result-filter .header { justify-content: flex-start; gap: var(--zilliz-s-3); }
+.result-filter .header .query { flex: none; margin-top: 0; }
+.slide .result-filter + .closing-line { margin-top: 44px; font-size: 32px; }
+.result-filter .filter-chips { display: flex; gap: 12px; }
+.result-filter .filter-chip { padding: 8px 18px 9px; font-size: 24px; font-weight: 600; line-height: 1.2; white-space: nowrap; color: var(--zilliz-navy); background: var(--zilliz-blue-10); border: 2px solid var(--zilliz-blue); border-radius: var(--zilliz-radius-node); }
+.result-filter .filter-chip .field { display: block; margin-bottom: 2px; font-family: var(--zilliz-font-mono); font-size: 16px; text-transform: uppercase; letter-spacing: 0.06em; }
+.result-filter .stars { color: #f5a300; letter-spacing: 1px; }
+.result-filter .stars .is-off { color: var(--zilliz-blue-20); }
+.result-filter .match-count { margin-left: auto; font-size: 24px; line-height: 1.3; text-align: right; color: var(--zilliz-ink); }
+.result-filter .match-count strong { font-size: 32px; color: var(--zilliz-navy); }
+/* One query under rising boost weights: three strips, campaign products tagged. */
+.slide .result-boost .result-strips { gap: 24px; }
+.slide .result-boost .stat-card { gap: 14px; padding: 10px 20px; }
+.result-boost .boost-name { font-size: 30px; line-height: 1.1; color: var(--zilliz-navy); }
+.slide .result-boost .strip-stats { display: grid; grid-template-columns: 104px 1fr; gap: 22px; }
+.slide .result-boost .stat-value { font-size: 42px; }
+.slide .result-boost .stat-note { font-size: 20px; white-space: nowrap; }
+.slide :is(.result-boost, .trace) ~ .closing-line { margin-top: 28px; font-size: 32px; }
+.result-slot.is-sale .result-thumb { border: 4px solid var(--zilliz-berry); }
+.result-slot .sale-tag { position: absolute; top: -8px; right: -6px; padding: 3px 10px 4px; border-radius: 999px; background: var(--zilliz-berry); color: var(--zilliz-white); font-family: var(--zilliz-font-mono); font-size: 18px; font-weight: 700; line-height: 1.1; text-transform: uppercase; }
+/* One query, two facet panels: counts as bars scaled to the panel's own longest, latency below. */
+.slide .result-facets .body { gap: var(--zilliz-s-4); align-items: stretch; }
+.slide .result-facets .section { display: flex; flex-direction: column; padding: var(--zilliz-s-2) var(--zilliz-s-3); --facet-ink: var(--zilliz-blue); --facet-bar: var(--zilliz-blue-20); }
+.slide .result-facets .section.is-exact { --facet-ink: var(--zilliz-berry); --facet-bar: var(--zilliz-berry-20); border-color: var(--zilliz-berry-20); }
+.slide .result-facets .section-title { font-size: 22px; font-weight: 600; }
+.result-facets .section-title .tag { font-size: 20px; opacity: 1; color: var(--facet-ink); }
+.result-facets .facet-groups { flex: 1; display: flex; flex-direction: column; gap: var(--zilliz-s-2); }
+.slide .result-facets .facet-head { margin: 0 0 6px; font-family: var(--zilliz-font-mono); font-size: 18px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--zilliz-navy); }
+.slide .result-facets .facet-list { display: flex; flex-direction: column; gap: 8px; list-style: none; margin: 0; padding: 0; }
+.slide .result-facets .facet-list li { display: grid; grid-template-columns: 320px 1fr 100px; align-items: center; gap: var(--zilliz-s-2); margin: 0; font-size: 27px; line-height: 1.3; color: var(--zilliz-ink); }
+.result-facets .facet-name { white-space: nowrap; }
+.result-facets .facet-bar { width: calc(var(--v) * 100%); height: 20px; border-radius: 4px; background: var(--facet-bar); }
+.result-facets .facet-n { font-family: var(--zilliz-font-mono); font-weight: 600; text-align: right; color: var(--zilliz-navy); }
+.result-facets .facet-cost { display: flex; gap: var(--zilliz-s-6); margin-top: var(--zilliz-s-3); padding-top: var(--zilliz-s-2); border-top: 2px solid var(--zilliz-blue-20); }
+.result-facets .facet-cost > div { display: flex; align-items: baseline; gap: 12px; white-space: nowrap; }
+.slide .result-facets .stat-value { font-family: var(--zilliz-font-mono); font-size: 40px; font-weight: 600; line-height: 1; color: var(--facet-ink); }
+.slide .result-facets .stat-note { font-size: 24px; color: var(--zilliz-ink); }
+.slide .result-facets ~ .closing-line { margin-top: 28px; font-size: 32px; }
+/* Two ranked lists for one query: full product names, the ESCI label spelled out as a
+   pill, and a person icon on the pills a human labelled. */
+.slide .search-demo.result-compare .header { justify-content: space-between; gap: var(--zilliz-s-3); margin-bottom: var(--zilliz-s-3); }
+.result-compare .header .query { flex: none; margin-top: 0; }
+.result-compare .technique, .result-compare .label-key { display: flex; flex-direction: column; gap: 4px; font-size: 24px; line-height: 1.25; color: var(--zilliz-ink); }
+.result-compare .technique strong { color: var(--zilliz-navy); }
+.slide .result-compare .body { gap: var(--zilliz-s-3); }
+.slide .result-compare .section-title { font-size: 20px; padding-bottom: 4px; margin-bottom: 10px; }
+.slide .result-compare .section { padding: 10px 14px 12px; }
+.slide .result-compare + .closing-line { margin-top: 20px; }
+.result-compare .section-title .score { text-transform: none; }
+.result-compare .section-title .score strong { font-size: 28px; }
+.result-compare .results { gap: 4px; }
+.slide .result-compare .result { grid-template-columns: 28px 46px 1fr 136px; gap: 14px; padding: 2px 10px; }
+.slide .result-compare .result .title { font-size: 20px; line-height: 23px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.result-compare .result-thumb { box-sizing: border-box; width: 46px; height: 46px; padding: 2px; background: var(--zilliz-white); border: 1px solid var(--zilliz-blue-20); border-radius: 6px; overflow: hidden; }
+.slide .result-compare .pill { display: inline-flex; align-items: center; justify-content: center; gap: 6px; box-sizing: border-box; min-width: 0; padding: 5px 8px; font-size: 16px; letter-spacing: 0; text-transform: none; background: #e8ebf2; color: #475569; }
+.slide .result-compare .pill.is-e { background: var(--zilliz-blue); color: var(--zilliz-white); }
+.slide .result-compare .pill.is-s { background: #fff4dc; color: #8a5a00; }
+.slide .result-compare .pill.is-c { background: var(--zilliz-purple-10); color: var(--zilliz-purple); }
+.result-compare .pill.is-human::before { content: ""; width: 15px; height: 16px; background: currentColor; clip-path: path("M7.5 0a4 4 0 1 1 0 8a4 4 0 1 1 0-8ZM0 16c0-4 3-6.5 7.5-6.5s7.5 2.5 7.5 6.5Z"); }
+.result-compare .label-key { font-size: 21px; }
+.result-compare .label-key .pill { vertical-align: middle; }
+/* Production lifecycle: five stages matching the section dividers, two dashed loops back to PoC design. */
+.slide .lc-diagram { display: block; width: 100%; height: auto; max-height: 620px; margin: var(--zilliz-s-6) auto 0; font-family: var(--zilliz-font-sans); }
+.lc-diagram .lc-node { fill: var(--zilliz-white); stroke: var(--zilliz-navy); stroke-width: 2.5; }
+.lc-diagram .lc-num { font-family: var(--zilliz-font-mono); font-size: 18px; font-weight: 600; fill: var(--zilliz-blue); }
+.lc-diagram .lc-name { font-size: 28px; font-weight: 600; fill: var(--zilliz-navy); text-anchor: middle; }
+.lc-diagram .lc-sub { font-size: 19px; fill: var(--zilliz-ink); text-anchor: middle; }
+.lc-diagram .lc-edge { fill: none; stroke: var(--zilliz-navy); stroke-width: 2.5; marker-end: url(#lc-arrow); }
+.lc-diagram .lc-total { fill: var(--zilliz-navy); }
+.lc-diagram .lc-drop { fill: var(--zilliz-berry); }
+.lc-diagram .lc-link { fill: none; stroke: var(--zilliz-grey); stroke-width: 2; stroke-dasharray: 6 5; }
+.lc-diagram .lc-count { font-size: 24px; font-weight: 700; fill: var(--zilliz-white); text-anchor: middle; }
+.lc-diagram .lc-tick { font-size: 18px; fill: var(--zilliz-grey); text-anchor: middle; }
+.lc-diagram .lc-loss { font-size: 24px; font-weight: 700; fill: var(--zilliz-berry); text-anchor: middle; }
+.lc-diagram .lc-loss.is-big { font-size: 34px; }
+.lc-diagram .lc-loss-note { font-size: 22px; font-weight: 700; fill: var(--zilliz-white); text-anchor: middle; }
+.lc-diagram .lc-axis { fill: none; stroke: var(--zilliz-grey); stroke-width: 2; }
+.lc-diagram .lc-caption { font-size: 18px; fill: var(--zilliz-grey); }
+/* Checklist boxes: empty on the opening slide, ticked at the close. */
+.slide .cl-boxes { display: flex; gap: var(--zilliz-s-2); margin: 0; }
+.cl-box { display: grid; place-items: center; width: 40px; height: 40px; border: 3px solid var(--zilliz-blue); border-radius: 8px; font-size: 28px; font-weight: 700; line-height: 1; color: var(--zilliz-white); }
+.cl-box.is-ticked { background: var(--zilliz-blue); }
+.cl-box.is-ticked::before { content: "✓"; }
+/* Sized so the longest group name stays on one line, four cards across. */
+.slide .card:has(> .cl-list) > .case-name { font-size: 26px; white-space: nowrap; margin-bottom: var(--zilliz-s-2); }
+.slide .cl-list { list-style: none; display: flex; flex-direction: column; gap: var(--zilliz-s-2); margin: 0; padding: 0; }
+.slide .cl-list li { display: flex; align-items: center; gap: var(--zilliz-s-2); margin: 0; font-size: 24px; line-height: 1.2; }
+.slide .cl-list .cl-box { flex: none; }
+.slide .cl-road { margin-top: var(--zilliz-s-3); border-color: var(--zilliz-berry); display: grid; grid-template-columns: 1fr auto; align-items: center; }
+.cl-road .case-proof { grid-column: 1 / -1; }
+.cl-road .cl-box { border-color: var(--zilliz-berry); }
+.cl-road .cl-box.is-ticked { background: var(--zilliz-berry); }
+/* Talk link: the demo screenshot as backdrop under a navy scrim, one QR card. */
+.slide.talk-link { justify-content: flex-end; }
+.slide.talk-link > p:first-of-type img { object-position: top; }
+.slide.talk-link > p:first-of-type::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, transparent 30%, rgb(6 25 130 / .9)); }
+.slide.talk-link .tl-card { position: relative; z-index: 1; align-self: flex-end; background: var(--zilliz-white); border-radius: var(--zilliz-radius-card); padding: var(--zilliz-s-3) var(--zilliz-s-4) var(--zilliz-s-3) var(--zilliz-s-3); box-shadow: 0 16px 48px rgb(6 25 130 / .35); }
+.slide.talk-link .tl-link { display: flex; align-items: center; gap: var(--zilliz-s-3); color: var(--zilliz-navy); text-decoration: none; }
+.slide.talk-link .tl-link img { width: 260px; height: 260px; flex: none; image-rendering: pixelated; }
+.slide.talk-link .tl-text { display: flex; flex-direction: column; gap: var(--zilliz-s-1); }
+.slide.talk-link .tl-label { font-size: 32px; font-weight: 600; line-height: 1.2; }
+.slide.talk-link .tl-url { font-family: var(--zilliz-font-mono); font-size: 44px; line-height: 1.2; color: var(--zilliz-blue); }
+/* Section dividers: one question, a strip of the lifecycle stages, the checklist groups covered. */
+.slide.section .sec-question { font-size: 44px; line-height: 1.25; color: var(--zilliz-navy); margin: var(--zilliz-s-4) 0 auto; max-width: 1300px; }
+/* .late-reveal fades in 1s after its slide becomes current, no fragment step. */
+.slide .late-reveal { opacity: 0; transition: opacity 600ms ease; }
+.slide.is-current .late-reveal { opacity: 1; transition-delay: 1s; }
+@media print { .slide .late-reveal { opacity: 1; transition: none; } }
+.slide .sec-map { display: flex; flex-direction: column; gap: var(--zilliz-s-3); max-width: 1300px; min-height: 100px; margin-bottom: var(--zilliz-s-4); }
+.slide .lc-strip { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); gap: var(--zilliz-s-2); list-style: none; margin: 0; padding: 0; }
+/* Navy tints read on both ends of the section gradient; only the current stage is full strength, and thicker (padding absorbs the extra 4px so labels stay level). */
+.slide .lc-strip li { margin: 0; padding-top: var(--zilliz-s-1); border-top: 6px solid rgb(6 25 130 / .12); font-size: 24px; color: rgb(6 25 130 / .45); }
+.slide .lc-strip li.is-done { border-color: rgb(6 25 130 / .45); color: var(--zilliz-navy); }
+.slide .lc-strip li.is-now { border-top-width: 10px; padding-top: 4px; border-color: var(--zilliz-blue); color: var(--zilliz-blue); font-weight: 700; }
+.slide .sec-checks { display: flex; gap: var(--zilliz-s-2); margin: 0; }
+/* Query cards: five squares per arm in rank order, filled for an exact match, then what came back. */
+.slide .hit-cards { gap: var(--zilliz-s-2) var(--zilliz-s-3); margin-top: 0; }
+.slide .hit-cards .card { padding: var(--zilliz-s-2) var(--zilliz-s-3); gap: var(--zilliz-s-1); }
+.slide .hit-cards .feature-cat { margin: 0; }
+.slide .hit-cards .case-name { font-size: 32px; margin-bottom: var(--zilliz-s-1); }
+.slide .hit-cards .is-keep { border-color: var(--zilliz-purple); }
+.slide .hit-cards .is-keep .feature-cat { color: var(--zilliz-purple); }
+.hit-row { display: grid; grid-template-columns: 90px auto 1fr; align-items: center; gap: var(--zilliz-s-2); }
+.hit-arm { font-family: var(--zilliz-font-mono); font-size: 20px; font-weight: 600; color: var(--zilliz-navy); }
+.hit-sqs { display: inline-flex; gap: 6px; }
+.hit-sq { display: inline-block; width: 30px; height: 30px; border-radius: 6px; border: 3px solid var(--zilliz-blue-20); }
+.hit-sq.is-hit { background: var(--zilliz-blue); border-color: var(--zilliz-blue); }
+.hit-what { font-size: 24px; line-height: 1.2; color: var(--zilliz-ink); }
+.slide .hit-key { display: flex; align-items: center; justify-content: center; gap: var(--zilliz-s-1); font-size: 22px; margin: 0 0 var(--zilliz-s-2); }
+.hit-key .hit-sq { width: 22px; height: 22px; }
+.hit-key .hit-sq:nth-of-type(2) { margin-left: var(--zilliz-s-2); }
+/* Metric cards: one example top 10 scored three ways; ESCI label squares, rank weights under them. */
+/* Cards share five rows (label, name, visual, score, text) so scores and text line up; Speed has no visual, so its notes take that row above the numbers. */
+.slide .metric-defs { grid-template-rows: repeat(5, auto); }
+.slide .metric-defs .card { display: grid; grid-row: span 5; grid-template-rows: subgrid; row-gap: var(--zilliz-s-2); align-content: start; }
+.metric-defs .md-vis { display: flex; flex-direction: column; gap: 8px; }
+.metric-defs .md-lat { grid-row: 3 / span 2; }
+.slide .metric-defs .case-proof { grid-row: 5; }
+.slide .metric-defs .feature-cat { margin: 0; }
+.metric-defs .hit-sqs { gap: 8px; }
+.metric-defs .hit-sq { width: 36px; height: 36px; }
+.hit-sq.is-sub { background: #d97706; border-color: #d97706; }
+.hit-sq.is-comp { background: var(--zilliz-purple-20); border-color: var(--zilliz-purple); }
+.metric-defs .md-weights { display: inline-flex; gap: 8px; margin-top: -10px; font-family: var(--zilliz-font-mono); font-size: 14px; color: var(--zilliz-grey); }
+.metric-defs .md-weights span { width: 36px; text-align: center; }
+.slide .metric-defs .md-score { margin: 0; font-family: var(--zilliz-font-mono); font-size: 40px; font-weight: 600; line-height: 1; color: var(--zilliz-blue); }
+.slide .metric-defs .case-proof .is-sub { color: #b45f05; }
+.slide .metric-defs .case-proof .is-comp { color: var(--zilliz-purple); }
+.metric-defs .md-lat { display: flex; gap: var(--zilliz-s-4); }
+.metric-defs .md-lat > div { display: flex; flex-direction: column-reverse; justify-content: space-between; gap: var(--zilliz-s-1); }
+.slide .metric-defs .stat-note { font-size: 20px; color: var(--zilliz-ink); }
+/* Blocker cards: the title sits tight under its eyebrow and fits on one line. */
+.slide .blockers .card { gap: var(--zilliz-s-1); }
+.slide .blockers .feature-cat { margin: 0; }
+.slide .blockers .case-name { font-size: 36px; }
+.slide .blockers .case-proof { font-size: 28px; margin-top: var(--zilliz-s-1); }
+/* Fusion depth: four arms of one query beside the all-queries table. */
+.slide .hybrid-depth { grid-template-columns: 1.15fr 1fr; align-items: center; }
+.slide .hybrid-depth .hit-row { grid-template-columns: 240px auto 1fr; }
+.slide .hybrid-depth .card { gap: var(--zilliz-s-2); }
+/* Evidence loop: the lifecycle strip's top rule, four stages left to right, a dashed return from the last back to the first. The newest revealed stage takes the strip's is-now look. */
+.slide .ev-loop { --ev-gap: 72px; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); column-gap: var(--ev-gap); margin-block: auto; }
+.slide .ev-step { position: relative; display: flex; flex-direction: column; gap: var(--zilliz-s-2); padding-top: var(--zilliz-s-2); border-top: 6px solid rgb(6 25 130 / .45); }
+.slide .ev-step.is-current { border-top-width: 10px; padding-top: calc(var(--zilliz-s-2) - 4px); border-color: var(--zilliz-blue); }
+.slide .ev-step.is-current .feature-cat { color: var(--zilliz-blue); }
+.slide .ev-step + .ev-step::before { content: "→"; position: absolute; top: -21px; left: calc(-1 * var(--ev-gap)); width: var(--ev-gap); text-align: center; font-size: 36px; line-height: 1; color: var(--zilliz-navy); }
+.slide .ev-step + .ev-step.is-current::before { top: -25px; }
+.slide .ev-step .case-name { font-size: 40px; }
+.slide .ev-step .case-proof { font-size: 28px; line-height: 1.3; margin: 0; }
+.slide .ev-q { margin: auto 0 0; padding: var(--zilliz-s-2); min-height: calc(2.5em + 2 * var(--zilliz-s-2)); display: flex; align-items: center; border-radius: var(--zilliz-radius-node); background: var(--zilliz-blue-10); font-size: 26px; font-weight: 600; line-height: 1.25; color: var(--zilliz-navy); }
+.slide .ev-step.is-current .ev-q { background: var(--zilliz-blue); color: var(--zilliz-white); }
+.slide .ev-note { margin: 0; font-family: var(--zilliz-font-mono); font-size: 18px; color: var(--zilliz-grey); }
+.slide .ev-return { grid-column: 1 / -1; position: relative; height: 56px; margin: var(--zilliz-s-2) calc((100% - 3 * var(--ev-gap)) / 8) 0; border: 3px dashed rgb(6 25 130 / .45); border-top: 0; border-radius: 0 0 var(--zilliz-radius-card) var(--zilliz-radius-card); }
+.slide .ev-return::before { content: ""; position: absolute; top: -14px; left: -11px; border: 9px solid transparent; border-top: 0; border-bottom: 14px solid rgb(6 25 130 / .45); }
+.slide .ev-return span { position: absolute; left: 50%; bottom: -14px; transform: translateX(-50%); padding: 0 var(--zilliz-s-2); background: var(--zilliz-white); font-family: var(--zilliz-font-mono); font-size: 20px; font-weight: 600; color: var(--zilliz-navy); white-space: nowrap; }
