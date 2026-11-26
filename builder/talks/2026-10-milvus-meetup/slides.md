@@ -454,7 +454,7 @@ Approximate nearest-neighbour algorithms all trade perfection for reduced latenc
 
 No matter what algorithm you use, embeddings are big. In RAM or on disk, size matters.
 
-<svg class="size-diagram" viewBox="0 0 1400 400" role="img" aria-label="Four-step build of the embedding footprint: one chunk becomes a 3072-dimension vector, every dimension is a four-byte float32 so one vector costs 12.3 kilobytes, one hundred million chunks make 1.23 terabytes, and holding that costs about six thousand one hundred dollars a month in RAM or one hundred and eighty four dollars a month on premium SSD">
+<svg class="svg-diagram staged size-diagram" viewBox="0 0 1400 400" role="img" aria-label="Four-step build of the embedding footprint: one chunk becomes a 3072-dimension vector, every dimension is a four-byte float32 so one vector costs 12.3 kilobytes, one hundred million chunks make 1.23 terabytes, and holding that costs about six thousand one hundred dollars a month in RAM or one hundred and eighty four dollars a month on premium SSD">
 <defs>
 <marker id="sz-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="context-stroke"/></marker>
 <pattern id="sz-cells" width="28" height="66" patternUnits="userSpaceOnUse" patternTransform="translate(0 100)"><rect class="cell" x="4" y="8" width="20" height="50" rx="3"/></pattern>
@@ -751,7 +751,7 @@ Build time compression and dimensionality reduction both trade _accuracy to buy 
 
 <div class="two-col refine">
 <div>
-<svg class="refine-diagram" viewBox="0 0 1180 480" role="img" aria-label="Refinement funnel: a coarse pass scans nprobe of the 10 million 1-bit RaBitQ codes and reaches recall@10 of 0.778; an SQ8 refine pass rescores refine_k times limit candidates and reaches 0.986; widening nprobe from 256 to 1024 reaches 0.992; a re-ranker sits off the recall rail and only reorders the top-k">
+<svg class="svg-diagram staged refine-diagram" viewBox="0 0 1180 480" role="img" aria-label="Refinement funnel: a coarse pass scans nprobe of the 10 million 1-bit RaBitQ codes and reaches recall@10 of 0.778; an SQ8 refine pass rescores refine_k times limit candidates and reaches 0.986; widening nprobe from 256 to 1024 reaches 0.992; a re-ranker sits off the recall rail and only reorders the top-k">
 <defs>
 <marker id="rf-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="context-stroke"/></marker>
 <pattern id="rf-codes" width="25" height="24" patternUnits="userSpaceOnUse"><rect class="code" x="4" y="4" width="17" height="15" rx="3"/></pattern>
@@ -802,7 +802,7 @@ Build time compression and dimensionality reduction both trade _accuracy to buy 
 </svg>
 </div>
 <div>
-<ol class="refine-list">
+<ol class="stage-list refine-list">
 <li class="fragment" data-fragment-index="1"><strong>Coarse pass</strong> - scan <code>nprobe</code> of the lists using the 1-bit RaBitQ codes. Cheap, and on its own it stops at <strong>0.778</strong>.</li>
 <li class="fragment" data-fragment-index="2"><strong>Refine pass</strong> - Milvus keeps SQ8 copies beside the codes and <em>rescores</em> <code>refine_k &times; limit</code> candidates with them. Same candidates, better distances: <strong>0.986</strong>.</li>
 <li class="fragment" data-fragment-index="3"><strong>The last point</strong> comes from the coarse pass, not the refine. <code>nprobe</code> 256 to 1024 buys <strong>0.992</strong>, at a quarter of the throughput.</li>
@@ -962,7 +962,7 @@ Stage 1 - AUTOINDEX decides. [->]
 Stage 2 - Trade-off. [->]
 -->
 
-<svg class="tune-panel" viewBox="0 0 1700 570" role="img" aria-label="A control panel of index settings. Manually you set nine things: metric, index family, M, efConstruction and quantisation at build time, nprobe, ef or search_list and the filter strategy per query, and re-tune by hand as the data shifts. With AUTOINDEX the build row and the filter strategy are chosen automatically, the three query knobs collapse into a single level dial from 1 to 10, and only the metric and level remain yours.">
+<svg class="svg-diagram tune-panel" viewBox="0 0 1700 570" role="img" aria-label="A control panel of index settings. Manually you set nine things: metric, index family, M, efConstruction and quantisation at build time, nprobe, ef or search_list and the filter strategy per query, and re-tune by hand as the data shifts. With AUTOINDEX the build row and the filter strategy are chosen automatically, the three query knobs collapse into a single level dial from 1 to 10, and only the metric and level remain yours.">
 <rect class="panel" x="10" y="80" width="1680" height="480" rx="16"/>
 <path class="divider" d="M30 270 H1670 M30 450 H1670"/>
 <g class="head manual"><text class="htitle" x="20" y="50">You tune <tspan class="hsub">· open-source Milvus / other vector DBs</tspan></text><text class="hcount" x="1690" y="50" text-anchor="end">9 decisions</text></g>
@@ -1300,7 +1300,7 @@ embedding models against it before you touch the index.
 
 The same question, three ways to feed the model. The search itself is never the expensive part.
 
-<svg class="cost-anatomy" viewBox="0 0 1400 378" role="img" aria-label="One pipeline, three ways to feed it. A question goes into a model and the model returns an answer. Three stations sit below the model. Parametric has no retrieval at all and pays only for the answer it writes. Agentic loops three to four times through a grep, read and glob tool, each turn cheap on its own but re-sending the whole transcript. Indexed takes one or two fat payloads of chunks from a vector search, and carries a navy band across the foot of its own box marking the charge it incurs per day whether or not anything is asked. A fourth station hangs below the answer: an LLM-as-a-judge that grades every answer without knowing which arm produced it. Every per-query charge is marked with a purple coin; the one per-day charge is the navy band inside the index's box.">
+<svg class="svg-diagram cost-anatomy" viewBox="0 0 1400 378" role="img" aria-label="One pipeline, three ways to feed it. A question goes into a model and the model returns an answer. Three stations sit below the model. Parametric has no retrieval at all and pays only for the answer it writes. Agentic loops three to four times through a grep, read and glob tool, each turn cheap on its own but re-sending the whole transcript. Indexed takes one or two fat payloads of chunks from a vector search, and carries a navy band across the foot of its own box marking the charge it incurs per day whether or not anything is asked. A fourth station hangs below the answer: an LLM-as-a-judge that grades every answer without knowing which arm produced it. Every per-query charge is marked with a purple coin; the one per-day charge is the navy band inside the index's box.">
 <defs>
 <marker id="ca-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="18" markerHeight="18" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="context-stroke"/></marker>
 <marker id="ca-arrow-fat" viewBox="0 0 10 10" refX="0" refY="5" markerWidth="26" markerHeight="28" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="context-stroke"/></marker>
@@ -1573,7 +1573,7 @@ The pips: more filled is better for you. Setup, operations, scale, cost.
 
 Every lever in this talk spends recall, buys it back, or checks the balance.
 
-<svg class="levers-diagram" viewBox="0 0 1400 412" role="img" aria-label="The levers from this talk as a loop: check the model's answer ceiling, pick the index, shrink the vectors, buy recall back at query time, match the filter strategy to selectivity, then measure recall@k against a golden set on every deploy and feed the result back into the index choice">
+<svg class="svg-diagram staged levers-diagram" viewBox="0 0 1400 412" role="img" aria-label="The levers from this talk as a loop: check the model's answer ceiling, pick the index, shrink the vectors, buy recall back at query time, match the filter strategy to selectivity, then measure recall@k against a golden set on every deploy and feed the result back into the index choice">
 <defs>
 <marker id="lv-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="context-stroke"/></marker>
 </defs>

@@ -126,9 +126,7 @@
    slides earlier: navy-filled box for the model, dashed edge for a tool call
    against a solid one for the result it returns, mono `.elabel` for anything
    annotating an edge. A viewer who read that slide reads this one for free. */
-.slide .study-rig { display: block; flex: 0 0 auto; width: 100%; height: auto; margin: var(--zilliz-s-1) auto; font-family: var(--zilliz-font-sans); }
-.study-rig .node { fill: var(--zilliz-white); stroke: var(--zilliz-navy); stroke-width: 2.5; transition: stroke 200ms ease; }
-.study-rig .node-model { fill: var(--zilliz-navy); stroke: var(--zilliz-navy); }
+.slide .study-rig { flex: 0 0 auto; margin: var(--zilliz-s-1) auto; }
 /* The judge is a model too, but it sits off the pipeline: it scores what the
    rig produced and feeds nothing back into it. Berry outline over a white fill
    rather than a second navy block, which keeps the one heavy box on the slide
@@ -139,18 +137,15 @@
    brand gradient because two of the five things that go in it are the indexed
    arms the gradient already marks in the pill list below. */
 .study-rig .socket { fill: var(--zilliz-white); stroke: url(#sr-grad); stroke-width: 3.5; stroke-dasharray: 12 9; }
-.study-rig .mlabel { font-size: 38px; font-weight: 800; letter-spacing: 0.04em; fill: var(--zilliz-white); }
 .study-rig .mlabel-judge { fill: var(--zilliz-berry); }
 .study-rig .mlabel-socket { font-size: 34px; fill: var(--zilliz-navy); }
-.study-rig .nlabel { font-size: 27px; font-weight: 600; fill: var(--zilliz-navy); }
-.study-rig .nsub { font-size: 21px; fill: var(--zilliz-ink); }
-.study-rig .nsub-source { fill: var(--zilliz-white); }
-.study-rig .nsub.muted { fill: var(--zilliz-grey); font-size: 20px; font-style: italic; }
-.study-rig .edge { fill: none; stroke: var(--zilliz-navy); stroke-width: 2.5; stroke-linejoin: round; marker-end: url(#sr-arrow); transition: stroke 200ms ease; }
+.study-rig .nlabel { font-size: 27px; }
+.study-rig .nsub.muted { font-size: 20px; }
+.study-rig .edge { stroke-linejoin: round; marker-end: url(#sr-arrow); }
 /* Same convention as `Where the cost lands`: the call leg carries no payload,
    so it is dashed; the result leg comes back solid. */
 .study-rig .edge.call { stroke-dasharray: 9 7; }
-.study-rig .elabel { font-family: var(--zilliz-font-mono); font-size: 19px; font-weight: 600; letter-spacing: 0.03em; fill: var(--zilliz-navy); transition: fill 200ms ease; }
+.study-rig .elabel { font-size: 19px; }
 /* The bracket is the only new device on the slide. It holds the entire spine,
    so the one thing outside it reads as the experiment's single degree of
    freedom without a word of explanation. Broken around its own label rather
@@ -187,23 +182,18 @@
    arm names in the same navy and gradient pills the arms wear on `The study`,
    so live and indexed keep one colour across the deck. Nothing on it is
    staged: both arms are the subject of the slide, so neither is a reveal. */
-.slide .memory-rig { display: block; flex: 0 0 auto; width: 100%; height: auto; margin: var(--zilliz-s-2) auto; font-family: var(--zilliz-font-sans); }
-.memory-rig .node { fill: var(--zilliz-white); stroke: var(--zilliz-navy); stroke-width: 2.5; }
-.memory-rig .node-model { fill: var(--zilliz-navy); stroke: var(--zilliz-navy); }
+.slide .memory-rig { flex: 0 0 auto; margin: var(--zilliz-s-2) auto; }
 /* Berry for the store, which is the colour the `dot` version filled Milvus
    with, so the drawing that replaced it is legible against the old one. */
 .memory-rig .node-index { fill: var(--zilliz-berry-10); stroke: var(--zilliz-berry); }
-.memory-rig .mlabel { font-size: 38px; font-weight: 800; letter-spacing: 0.04em; fill: var(--zilliz-white); }
-.memory-rig .nlabel { font-size: 27px; font-weight: 600; fill: var(--zilliz-navy); }
-.memory-rig .nsub { font-size: 21px; fill: var(--zilliz-ink); }
-.memory-rig .nsub-source { fill: var(--zilliz-white); }
-.memory-rig .nsub.muted { fill: var(--zilliz-grey); font-size: 18px; font-style: italic; }
-.memory-rig .edge { fill: none; stroke: var(--zilliz-navy); stroke-width: 2.5; stroke-linejoin: round; marker-end: url(#mr-arrow); }
+.memory-rig .nlabel { font-size: 27px; }
+.memory-rig .nsub.muted { font-size: 18px; }
+.memory-rig .edge { stroke-linejoin: round; marker-end: url(#mr-arrow); }
 /* Each weight needs its own head, for the reason `.cost-anatomy` documents:
    an 18-unit marker disappears into its own line once the stroke passes ~14. */
 .memory-rig .flow-thin { stroke-width: 3.5; }
 .memory-rig .flow-huge { stroke-width: 16; marker-end: url(#mr-arrow-huge); }
-.memory-rig .elabel { font-family: var(--zilliz-font-mono); font-size: 19px; font-weight: 600; letter-spacing: 0.03em; fill: var(--zilliz-navy); }
+.memory-rig .elabel { font-size: 19px; }
 .memory-rig .tag { stroke-width: 2; }
 .memory-rig .tag-navy { fill: var(--zilliz-navy); stroke: var(--zilliz-navy); }
 .memory-rig .tag-gradient { fill: url(#mr-grad); stroke: none; }

@@ -117,7 +117,7 @@ Milvus 3.0 brought full-text retrieval, sorting, aggregation and faceting into o
 Every Elasticsearch / OpenSearch migration passes through the same stages:
 
 <div class="path">
-<svg class="path-diagram" viewBox="0 20 1220 210" role="img" aria-label="Migration path: assess, map, move, validate, cut over">
+<svg class="svg-diagram path-diagram" viewBox="0 20 1220 210" role="img" aria-label="Migration path: assess, map, move, validate, cut over">
 <defs>
 <marker id="mp-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="context-stroke"/></marker>
 </defs>
@@ -139,7 +139,7 @@ Every Elasticsearch / OpenSearch migration passes through the same stages:
 <g class="step step-5 is-edge fragment" data-fragment-index="5"><rect class="hl" x="970" y="40" width="200" height="96" rx="16"/><text class="hlabel" x="1070" y="80" text-anchor="middle">Cut over</text><text class="hsub" x="1070" y="112" text-anchor="middle">backfill / dual-write</text></g>
 <g class="focus fragment" data-fragment-index="2"><path class="bracket" d="M250 162 V176 H930 V162"/><text class="flabel" x="590" y="210" text-anchor="middle">what we cover today</text></g>
 </svg>
-<ul class="path-list">
+<ul class="stage-list">
 <li class="fragment" data-fragment-index="1"><strong>Assess</strong>: which indices, which query patterns, what actually needs to move</li>
 <li class="fragment" data-fragment-index="2"><strong>Map</strong>: mappings to collections, analyzers to Milvus analyzers, scores to scores</li>
 <li class="fragment" data-fragment-index="3"><strong>Move</strong>: bulk transfer plus change capture, without re-embedding</li>
@@ -346,7 +346,7 @@ Every field type an index needs has a home in Milvus. Most of the mapping is mec
 
 <div class="two-col phases">
 <div>
-<svg class="phase-diagram" viewBox="0 20 1160 450" role="img" aria-label="Six-phase migration: steady state, backfill, dual ingest, dual run, cut over, decommission">
+<svg class="svg-diagram phase-diagram" viewBox="0 20 1160 450" role="img" aria-label="Six-phase migration: steady state, backfill, dual ingest, dual run, cut over, decommission">
 <defs>
 <marker id="ph-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="context-stroke"/></marker>
 </defs>
@@ -386,7 +386,7 @@ Every field type an index needs has a home in Milvus. Most of the mapping is mec
 </svg>
 </div>
 <div>
-<ol class="phase-list small">
+<ol class="stage-list small">
 <li class="" data-fragment-index="1"><strong>Steady state</strong>: updates flow source → embedding → search; queries embed, then search</li>
 <li class="fragment" data-fragment-index="2"><strong>Backfill</strong>: stand up the new system, then <strong>reindex from the source</strong> (clean slate, re-embed) or <strong>migrate the index</strong> (keeps vectors, no re-embedding)</li>
 <li class="fragment" data-fragment-index="3"><strong>Dual ingest</strong>: write to both stacks so the new index keeps pace with production</li>

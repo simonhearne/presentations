@@ -201,7 +201,7 @@ corpus and the deployment, and the talk's job is to show its shape.
 
 Four ways for an agent to answer the same question, the search itself is not expensive.
 
-<svg class="cost-anatomy" viewBox="0 0 1400 378" role="img" aria-label="One pipeline, four ways to feed it. A question goes into a model and the model returns an answer. Four stations sit below the model. Parametric has no retrieval at all and pays only for the answer it writes. Agentic loops three to four times through a grep, read and glob tool, each turn cheap on its own but re-sending the whole transcript. Indexed takes one or two fat payloads of chunks from a vector search, and carries a navy band across the foot of its own box marking the charge it incurs per day whether or not anything is asked. Stuffed sends the whole corpus through a prompt cache once, in full, and reads from it cheaply after that. Every per-query charge is marked with a purple coin; the one per-day charge is the navy band inside the index's box.">
+<svg class="svg-diagram cost-anatomy" viewBox="0 0 1400 378" role="img" aria-label="One pipeline, four ways to feed it. A question goes into a model and the model returns an answer. Four stations sit below the model. Parametric has no retrieval at all and pays only for the answer it writes. Agentic loops three to four times through a grep, read and glob tool, each turn cheap on its own but re-sending the whole transcript. Indexed takes one or two fat payloads of chunks from a vector search, and carries a navy band across the foot of its own box marking the charge it incurs per day whether or not anything is asked. Stuffed sends the whole corpus through a prompt cache once, in full, and reads from it cheaply after that. Every per-query charge is marked with a purple coin; the one per-day charge is the navy band inside the index's box.">
 <defs>
 <marker id="ca-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="18" markerHeight="18" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="context-stroke"/></marker>
 <marker id="ca-arrow-fat" viewBox="0 0 10 10" refX="0" refY="5" markerWidth="26" markerHeight="28" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="context-stroke"/></marker>
@@ -428,7 +428,7 @@ ANN algorithms all trade perfection for reduced latency and cost.
 
 No matter what algorithm you use, embeddings are big. In RAM or on disk, size matters.
 
-<svg class="size-diagram" viewBox="0 0 1400 400" role="img" aria-label="Four-step build of the embedding footprint: one chunk becomes a 3072-dimension vector, every dimension is a four-byte float32 so one vector costs 12.3 kilobytes, one hundred million chunks make 1.23 terabytes, and holding that costs about six thousand one hundred dollars a month in RAM or one hundred and eighty four dollars a month on premium SSD">
+<svg class="svg-diagram staged size-diagram" viewBox="0 0 1400 400" role="img" aria-label="Four-step build of the embedding footprint: one chunk becomes a 3072-dimension vector, every dimension is a four-byte float32 so one vector costs 12.3 kilobytes, one hundred million chunks make 1.23 terabytes, and holding that costs about six thousand one hundred dollars a month in RAM or one hundred and eighty four dollars a month on premium SSD">
 <defs>
 <marker id="sz-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="context-stroke"/></marker>
 <pattern id="sz-cells" width="28" height="66" patternUnits="userSpaceOnUse" patternTransform="translate(0 100)"><rect class="cell" x="4" y="8" width="20" height="50" rx="3"/></pattern>
@@ -705,7 +705,7 @@ Build time compression and dimensionality reduction both trade _accuracy to buy 
 
 <div class="two-col refine">
 <div>
-<svg class="refine-diagram" viewBox="0 0 1180 480" role="img" aria-label="Refinement funnel: a coarse pass scans nprobe of the 10 million 1-bit RaBitQ codes and reaches recall@10 of 0.778; an SQ8 refine pass rescores refine_k times limit candidates and reaches 0.986; widening nprobe from 256 to 1024 reaches 0.992; a re-ranker sits off the recall rail and only reorders the top-k">
+<svg class="svg-diagram staged refine-diagram" viewBox="0 0 1180 480" role="img" aria-label="Refinement funnel: a coarse pass scans nprobe of the 10 million 1-bit RaBitQ codes and reaches recall@10 of 0.778; an SQ8 refine pass rescores refine_k times limit candidates and reaches 0.986; widening nprobe from 256 to 1024 reaches 0.992; a re-ranker sits off the recall rail and only reorders the top-k">
 <defs>
 <marker id="rf-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="context-stroke"/></marker>
 <pattern id="rf-codes" width="25" height="24" patternUnits="userSpaceOnUse"><rect class="code" x="4" y="4" width="17" height="15" rx="3"/></pattern>
@@ -756,7 +756,7 @@ Build time compression and dimensionality reduction both trade _accuracy to buy 
 </svg>
 </div>
 <div>
-<ol class="refine-list">
+<ol class="stage-list refine-list">
 <li class="fragment" data-fragment-index="1"><strong>Coarse pass</strong> - scan <code>nprobe</code> of the lists using the 1-bit RaBitQ codes. Cheap, and on its own it stops at <strong>0.778</strong>.</li>
 <li class="fragment" data-fragment-index="2"><strong>Refine pass</strong> - Milvus keeps SQ8 copies beside the codes and <em>rescores</em> <code>refine_k &times; limit</code> candidates with them. Same candidates, better distances: <strong>0.986</strong>.</li>
 <li class="fragment" data-fragment-index="3"><strong>The last point</strong> comes from the coarse pass, not the refine. <code>nprobe</code> 256 to 1024 buys <strong>0.992</strong>, at a quarter of the throughput.</li>
@@ -811,7 +811,7 @@ PCA and Matryoshka trade accuracy for speed and cost. Refinement trades both to 
 
 *Every number in this section is a judged answer, not a retrieval metric*
 
-<svg class="study-rig" viewBox="0 0 1400 270" role="img" aria-label="The scoring harness. A question goes to an agent running Sonnet 5, the agent returns an answer, and a judge running Opus 5 scores it without being told which arm produced it. A bracket across the top marks the questions, the corpus, the prompt and both models as held constant. Below the agent hangs the one dashed socket in the rig, labelled retrieval, the only variable, with a dashed call edge going down into it and a solid result edge coming back up.">
+<svg class="svg-diagram study-rig" viewBox="0 0 1400 270" role="img" aria-label="The scoring harness. A question goes to an agent running Sonnet 5, the agent returns an answer, and a judge running Opus 5 scores it without being told which arm produced it. A bracket across the top marks the questions, the corpus, the prompt and both models as held constant. Below the agent hangs the one dashed socket in the rig, labelled retrieval, the only variable, with a dashed call edge going down into it and a solid result edge coming back up.">
 <defs>
 <marker id="jr-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="18" markerHeight="18" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="context-stroke"/></marker>
 <linearGradient id="jr-grad" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#175fff"/><stop offset="50%" stop-color="#7f47ff"/><stop offset="100%" stop-color="#c84cff"/></linearGradient>
@@ -1349,7 +1349,7 @@ caps deep compression. Both are on the nlist and segment heap backup.
      + 40 for the fastapi-only stuffed arm (data/ws6a/summary.csv:n arm=stuffed). The three other ws6a rows are
      the same runs as ws6c's fastapi rows and are not counted twice; see the audit row in data/SOURCES.md.
      "blind to arm": data/ws6a/judge_prompt.txt, "You will NOT be told how the answer was produced" -->
-<svg class="study-rig" viewBox="0 0 1400 304" role="img" aria-label="The test harness, drawn as one rig with a single opening. A question goes to an agent running Sonnet 5, the agent returns an answer, and a judge running Opus 5 scores it blind to which arm produced it, 360 answers in all. A bracket across the top marks everything on that line as held constant: the questions, the system prompt, the agent model and the judge. Below the agent hangs the one dashed socket in the rig, labelled tool, the only variable, with a dashed call edge going down into it and a solid result edge coming back up. Out of the bottom of that socket a feed drops to a bus that spans the full width and fans into five arrows of the same length as the call and result edges, one into each of the five arm cards beneath the diagram: each card is a different thing plugged into that same socket.">
+<svg class="svg-diagram study-rig" viewBox="0 0 1400 304" role="img" aria-label="The test harness, drawn as one rig with a single opening. A question goes to an agent running Sonnet 5, the agent returns an answer, and a judge running Opus 5 scores it blind to which arm produced it, 360 answers in all. A bracket across the top marks everything on that line as held constant: the questions, the system prompt, the agent model and the judge. Below the agent hangs the one dashed socket in the rig, labelled tool, the only variable, with a dashed call edge going down into it and a solid result edge coming back up. Out of the bottom of that socket a feed drops to a bus that spans the full width and fans into five arrows of the same length as the call and result edges, one into each of the five arm cards beneath the diagram: each card is a different thing plugged into that same socket.">
 <defs>
 <marker id="sr-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="18" markerHeight="18" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="context-stroke"/></marker>
 <linearGradient id="sr-grad" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#175fff"/><stop offset="50%" stop-color="#7f47ff"/><stop offset="100%" stop-color="#c84cff"/></linearGradient>
@@ -1605,7 +1605,7 @@ still validated, the chart's stage filter just never reaches them.
 <!-- src: data/ws6b/cost_vs_history.csv:corpus_tokens 98134/392116/1221906, arm in replay,memsearch, n=12 a size at S and M; 38 at L -->
 <!-- src: data/ws6b/parametric_gate_summary.csv:n=38 correct=0 judge_accuracy=0.000 -->
 
-<svg class="memory-rig" viewBox="0 0 1400 460" role="img" aria-label="One history, two ways to feed one model. On the left, a box of markdown conversation transcripts at 98k, 392k and 1.2M tokens. Two lanes run right from it into a single navy model box. The upper lane, labelled replay, is one very thick arrow carrying the whole transcript into context on every query. The lower lane, labelled memsearch, is a thin arrow through a chunk-and-embed step and a Milvus index, arriving as top chunks only. The stroke weights are ordinal, not measured: the replay lane is drawn thick because it re-sends everything and the index lane thin because it sends a handful of chunks.">
+<svg class="svg-diagram memory-rig" viewBox="0 0 1400 460" role="img" aria-label="One history, two ways to feed one model. On the left, a box of markdown conversation transcripts at 98k, 392k and 1.2M tokens. Two lanes run right from it into a single navy model box. The upper lane, labelled replay, is one very thick arrow carrying the whole transcript into context on every query. The lower lane, labelled memsearch, is a thin arrow through a chunk-and-embed step and a Milvus index, arriving as top chunks only. The stroke weights are ordinal, not measured: the replay lane is drawn thick because it re-sends everything and the index lane thin because it sends a handful of chunks.">
 <defs>
 <marker id="mr-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="18" markerHeight="18" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="context-stroke"/></marker>
 <marker id="mr-arrow-huge" viewBox="0 0 10 10" refX="0" refY="5" markerWidth="30" markerHeight="32" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="context-stroke"/></marker>

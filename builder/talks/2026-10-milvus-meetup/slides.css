@@ -2,24 +2,11 @@
    .size-diagram: one node per lever the talk covered, the rail is a recall
    ledger (spend, buy back, protect, audit), and the last stage draws the
    dashed loop from measurement back to the index choice. */
-.slide .levers-diagram { display: block; width: 100%; height: auto; max-height: 480px; margin: var(--zilliz-s-4) auto 0; font-family: var(--zilliz-font-sans); }
-.levers-diagram .node { fill: var(--zilliz-white); stroke: var(--zilliz-navy); stroke-width: 2.5; transition: stroke 200ms ease; }
+.slide .levers-diagram { max-height: 480px; margin: var(--zilliz-s-4) auto 0; }
 .levers-diagram .node-measure { fill: var(--zilliz-navy); }
-.levers-diagram .nlabel { font-size: 28px; font-weight: 600; fill: var(--zilliz-navy); }
-.levers-diagram .nsub { font-size: 17px; fill: var(--zilliz-ink); }
+.levers-diagram .nsub { font-size: 17px; }
 .levers-diagram .nlabel-measure, .levers-diagram .nsub-measure { fill: var(--zilliz-white); }
-.levers-diagram .edge { fill: none; stroke: var(--zilliz-navy); stroke-width: 2.5; marker-end: url(#lv-arrow); transition: stroke 200ms ease; }
-.levers-diagram .edge.dashed { stroke-dasharray: 9 7; }
-.levers-diagram .elabel { font-family: var(--zilliz-font-mono); font-size: 20px; font-weight: 600; letter-spacing: 0.03em; fill: var(--zilliz-navy); transition: fill 200ms ease; }
-.levers-diagram .elabel.muted { fill: var(--zilliz-grey); font-style: italic; }
-.levers-diagram .rail path { fill: none; stroke: var(--zilliz-blue-20); stroke-width: 2; stroke-dasharray: 6 8; }
-.levers-diagram .tag { fill: var(--zilliz-blue-10); stroke: var(--zilliz-blue-20); stroke-width: 2; transition: fill 200ms ease, stroke 200ms ease; }
-.levers-diagram .tlabel { font-family: var(--zilliz-font-mono); font-size: 24px; font-weight: 700; fill: var(--zilliz-navy); transition: fill 200ms ease; }
-.levers-diagram .stage.is-current .node { stroke: var(--zilliz-blue); stroke-width: 4; }
-.levers-diagram .stage.is-current .edge { stroke: var(--zilliz-blue); stroke-width: 4; }
-.levers-diagram .stage.is-current .elabel:not(.muted) { fill: var(--zilliz-blue); }
-.levers-diagram .stage.is-current .tag { fill: var(--zilliz-blue); stroke: var(--zilliz-blue); }
-.levers-diagram .stage.is-current .tlabel { fill: var(--zilliz-white); }
+.levers-diagram .edge { marker-end: url(#lv-arrow); }
 /* Break-even on agentic memory: the money table replaces the cost-curve chart.
    Numbers right-aligned in fixed columns so the rows read as comparisons; the
    two break-even rows sit apart from the per-query costs above them. */
@@ -44,7 +31,7 @@
    every knob you set by hand, stage 1 swaps each build control for an AUTO pill
    and folds the three query knobs (--dx to the middle one) into the level
    dial, so the delta between the two modes is the animation itself. */
-.slide .tune-panel { display: block; width: 100%; height: auto; max-height: 520px; margin: var(--zilliz-s-3) auto 0; font-family: var(--zilliz-font-sans); }
+.slide .tune-panel { max-height: 520px; margin: var(--zilliz-s-3) auto 0; }
 .tune-panel .panel { fill: var(--zilliz-white); stroke: var(--zilliz-blue-20); stroke-width: 2; }
 .tune-panel .divider { fill: none; stroke: var(--zilliz-blue-10); stroke-width: 2; }
 .tune-panel .htitle { font-size: 32px; font-weight: 700; fill: var(--zilliz-navy); }

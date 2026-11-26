@@ -2,7 +2,7 @@
 .slide .readers .case-proof li { font-size: 28px; }
 .slide .readers .card { transition: opacity 300ms ease, transform 300ms ease, border-color 300ms ease, box-shadow 300ms ease; }
 .slide .readers:has(~ .readers-pick.is-revealed) .is-pick { border-color: var(--zilliz-blue); box-shadow: var(--zilliz-shadow-pop); }
-.slide .ws-diagram { --ws-amber: #d97706; --ws-amber-10: #fff4e0; display: block; width: 100%; height: auto; max-height: 960px; margin: auto; font-family: var(--zilliz-font-sans); }
+.slide .ws-diagram { --ws-amber: #d97706; --ws-amber-10: #fff4e0; max-height: 960px; margin: auto; }
 .ws-diagram .ws-lane { font-size: 13px; font-weight: 600; letter-spacing: 2px; fill: var(--zilliz-grey); text-anchor: middle; }
 .ws-diagram .ws-name { font-size: 16px; font-weight: 600; fill: var(--zilliz-navy); text-anchor: middle; }
 .ws-diagram text.ws-name[text-anchor="end"] { text-anchor: end; }
@@ -54,7 +54,7 @@
 /* Model change: the diagram follows the chart's stage (data-chart-stage on the slide), so one
    click moves both. Durations match how long b4b-swap.json takes to draw each stage. Dots
    keep the same rate when slow (spacing and speed drop together): arrivals don't change. */
-.slide .sw-diagram { --sw-old: var(--zilliz-blue); --sw-new: var(--zilliz-purple); display: block; flex: none; width: 100%; height: auto; max-height: none; margin: 0 0 var(--zilliz-s-1); font-family: var(--zilliz-font-sans); }
+.slide .sw-diagram { --sw-old: var(--zilliz-blue); --sw-new: var(--zilliz-purple); flex: none; max-height: none; margin: 0 0 var(--zilliz-s-1); }
 .sw-diagram text { fill: var(--zilliz-navy); text-anchor: middle; }
 .sw-diagram .sw-name { font-size: 28px; font-weight: 700; }
 .sw-diagram .sw-name.is-left { text-anchor: start; }
@@ -98,7 +98,7 @@
 .slide[data-chart-stage="3"]:has(.closing-line.is-revealed) .sw-v1 .sw-status.is-b { opacity: 1; }
 .slide:has(.sw-diagram) .closing-line.is-emphatic { margin-top: 0; }
 @media print { .sw-diagram * { animation: none !important; transition: none !important; } }
-.slide .tb-diagram { display: block; flex: none; width: 100%; height: auto; margin: 0 0 var(--zilliz-s-2); font-family: var(--zilliz-font-sans); }
+.slide .tb-diagram { flex: none; margin: 0 0 var(--zilliz-s-2); }
 .tb-diagram text { fill: var(--zilliz-navy); text-anchor: middle; }
 .tb-diagram .tb-lane { font-family: var(--zilliz-font-mono); font-size: 18px; font-weight: 600; letter-spacing: 2px; fill: var(--zilliz-grey); text-anchor: start; }
 .tb-diagram .tb-name { font-size: 28px; font-weight: 700; }
@@ -217,7 +217,7 @@
 .result-compare .label-key { font-size: 21px; }
 .result-compare .label-key .pill { vertical-align: middle; }
 /* Production lifecycle: five stages matching the section dividers, two dashed loops back to PoC design. */
-.slide .lc-diagram { display: block; width: 100%; height: auto; max-height: 620px; margin: var(--zilliz-s-6) auto 0; font-family: var(--zilliz-font-sans); }
+.slide .lc-diagram { max-height: 620px; margin: var(--zilliz-s-6) auto 0; }
 .lc-diagram .lc-node { fill: var(--zilliz-white); stroke: var(--zilliz-navy); stroke-width: 2.5; }
 .lc-diagram .lc-num { font-family: var(--zilliz-font-mono); font-size: 18px; font-weight: 600; fill: var(--zilliz-blue); }
 .lc-diagram .lc-name { font-size: 28px; font-weight: 600; fill: var(--zilliz-navy); text-anchor: middle; }

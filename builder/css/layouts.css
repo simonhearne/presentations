@@ -1000,7 +1000,49 @@
 .slide .chart-band { flex: 1; min-height: 0; }
 .slide .chart-band ~ p.fragment { margin: var(--zilliz-s-2) 0 0; }
 
-/* ── Staged SVG diagrams — inline <svg> builds stepped by fragments ── */
+/* ── SVG diagrams — inline <svg> drawn in slides.md ── */
+
+/* .svg-diagram — the vocabulary every inline diagram shares: white boxes
+   outlined in navy (.node, or .node-model filled navy for the model), a 28px
+   name and 21px caption inside them (.nlabel / .nsub, -source for white text
+   on a filled box), navy edges (.edge, .dashed for a call or a
+   future step, .plain for a trunk segment with no arrowhead) and mono edge
+   annotations (.elabel, .muted for an aside). Arrowheads are per diagram,
+   since each <svg> defines its own marker id. */
+.slide .svg-diagram { display: block; width: 100%; height: auto; font-family: var(--zilliz-font-sans); }
+.svg-diagram .node { fill: var(--zilliz-white); stroke: var(--zilliz-navy); stroke-width: 2.5; transition: stroke 200ms ease; }
+.svg-diagram .node-model { fill: var(--zilliz-navy); stroke: var(--zilliz-navy); }
+.svg-diagram .nlabel { font-size: 28px; font-weight: 600; fill: var(--zilliz-navy); }
+.svg-diagram .nsub { font-size: 21px; fill: var(--zilliz-ink); }
+.svg-diagram .nsub.muted { fill: var(--zilliz-grey); font-style: italic; }
+.svg-diagram .nlabel-source, .svg-diagram .nsub-source { fill: var(--zilliz-white); }
+.svg-diagram .mlabel { font-size: 38px; font-weight: 800; letter-spacing: 0.04em; fill: var(--zilliz-white); }
+.svg-diagram .edge { fill: none; stroke: var(--zilliz-navy); stroke-width: 2.5; transition: stroke 200ms ease; }
+.svg-diagram .edge.dashed { stroke-dasharray: 9 7; }
+.svg-diagram .edge.plain { marker-end: none; }
+.svg-diagram .elabel { font-family: var(--zilliz-font-mono); font-size: 20px; font-weight: 600; letter-spacing: 0.03em; fill: var(--zilliz-navy); transition: fill 200ms ease; }
+.svg-diagram .elabel.muted { fill: var(--zilliz-grey); font-style: italic; }
+
+/* .svg-diagram.staged — a build stepped by fragment groups (.stage), with a
+   dashed rail of pills along the foot (.rail, .tag / .tlabel). The current
+   stage paints its boxes, edges, labels and pill brand blue. */
+.svg-diagram.staged .rail path { fill: none; stroke: var(--zilliz-blue-20); stroke-width: 2; stroke-dasharray: 6 8; }
+.svg-diagram.staged .tag { fill: var(--zilliz-blue-10); stroke: var(--zilliz-blue-20); stroke-width: 2; transition: fill 200ms ease, stroke 200ms ease; }
+.svg-diagram.staged .tlabel { font-family: var(--zilliz-font-mono); font-size: 24px; font-weight: 700; fill: var(--zilliz-navy); transition: fill 200ms ease; }
+.svg-diagram.staged .stage.is-current .node { stroke: var(--zilliz-blue); stroke-width: 4; }
+.svg-diagram.staged .stage.is-current .edge { stroke: var(--zilliz-blue); stroke-width: 4; }
+.svg-diagram.staged .stage.is-current .elabel:not(.muted) { fill: var(--zilliz-blue); }
+.svg-diagram.staged .stage.is-current .tag { fill: var(--zilliz-blue); stroke: var(--zilliz-blue); }
+.svg-diagram.staged .stage.is-current .tlabel { fill: var(--zilliz-white); }
+
+/* .stage-list — the ordered list beside a staged diagram, each item sharing a
+   data-fragment-index with its stage: the current step is brand blue, earlier
+   ones settle back to ink. */
+.slide .stage-list { margin: 0; }
+.slide .stage-list li { font-size: 26px; transition: color 200ms ease; }
+.slide .stage-list li.is-revealed:not(.is-current) { color: var(--zilliz-ink); }
+.slide .stage-list li.is-current { color: var(--zilliz-blue); }
+.slide .stage-list li.is-current::marker { color: var(--zilliz-blue); font-weight: 700; }
 
 /* .refine — two-pass refinement drawn as a staged funnel, same construction as
    talks/2026-09-milvus-migration's .phases: inline SVG paired with a list, the
@@ -1014,8 +1056,6 @@
    leaves ~300px of slack under the lede, and without this the whole block
    hangs off the top of the slide. */
 .slide .two-col.refine { grid-template-columns: 1.7fr 1fr; align-items: center; align-content: center; flex: 1; }
-.slide .refine-diagram { display: block; width: 100%; height: auto; font-family: var(--zilliz-font-sans); }
-.refine-diagram .node { fill: var(--zilliz-white); stroke: var(--zilliz-navy); stroke-width: 2.5; transition: stroke 200ms ease; }
 .refine-diagram .band { fill: url(#rf-codes); }
 .refine-diagram .band-exact { fill: url(#rf-exact); }
 .refine-diagram .node-source { fill: var(--zilliz-navy); stroke: var(--zilliz-navy); }
@@ -1028,39 +1068,19 @@
 .refine-diagram .code { fill: var(--zilliz-sky); }
 .refine-diagram .code-exact { fill: var(--zilliz-navy); }
 .refine-diagram .funnel { fill: var(--zilliz-blue-10); transition: fill 200ms ease; }
-.refine-diagram .nlabel { font-size: 28px; font-weight: 600; fill: var(--zilliz-navy); }
-.refine-diagram .nsub { font-size: 21px; fill: var(--zilliz-ink); }
-.refine-diagram .nlabel-source, .refine-diagram .nsub-source { fill: var(--zilliz-white); }
-.refine-diagram .edge { fill: none; stroke: var(--zilliz-navy); stroke-width: 2.5; marker-end: url(#rf-arrow); transition: stroke 200ms ease; }
-.refine-diagram .edge.dashed { stroke-dasharray: 9 7; }
-.refine-diagram .elabel { font-family: var(--zilliz-font-mono); font-size: 20px; font-weight: 600; letter-spacing: 0.03em; fill: var(--zilliz-navy); transition: fill 200ms ease; }
-.refine-diagram .stage.is-current .node { stroke: var(--zilliz-blue); stroke-width: 4; }
-.refine-diagram .stage.is-current .edge { stroke: var(--zilliz-blue); stroke-width: 4; }
-.refine-diagram .elabel.muted { fill: var(--zilliz-grey); font-style: italic; }
-.refine-diagram .rail path { fill: none; stroke: var(--zilliz-blue-20); stroke-width: 2; stroke-dasharray: 6 8; }
+.refine-diagram .edge { marker-end: url(#rf-arrow); }
 /* The recall pills read as one row along the bottom, so the number for the
    live stage is the only one that should pop. */
-.refine-diagram .tag { fill: var(--zilliz-blue-10); stroke: var(--zilliz-blue-20); stroke-width: 2; transition: fill 200ms ease, stroke 200ms ease; }
-.refine-diagram .tlabel { font-family: var(--zilliz-font-mono); font-size: 24px; font-weight: 700; fill: var(--zilliz-navy); transition: fill 200ms ease; }
-.refine-diagram .stage.is-current .elabel:not(.muted) { fill: var(--zilliz-blue); }
-.refine-diagram .stage.is-current .tag { fill: var(--zilliz-blue); stroke: var(--zilliz-blue); }
-.refine-diagram .stage.is-current .tlabel { fill: var(--zilliz-white); }
 .refine-diagram .stage.is-current .funnel { fill: var(--zilliz-blue-20); }
 /* The corpus block is always on screen, so it can't live inside stage 1 and
    pick up .is-current with it; light it from the slide instead, so the "bulk
    scan every code" beat reads on the block actually being scanned. */
 .slide:has(.stage-1.is-current) .refine-diagram .nodes .band { stroke: var(--zilliz-blue); stroke-width: 4; }
-.slide .refine-list { margin: 0; }
-.slide .refine-list li { font-size: 26px; transition: color 200ms ease; }
-.slide .refine-list li.is-revealed:not(.is-current) { color: var(--zilliz-ink); }
-.slide .refine-list li.is-current { color: var(--zilliz-blue); }
-.slide .refine-list li.is-current::marker { color: var(--zilliz-blue); font-weight: 700; }
 
 /* "The size problem" build. Same staged-SVG vocabulary as .refine-diagram, but
    the rail carries bytes rather than recall, so the dollar figure steps off the
    scale into its own node instead of riding it as a fourth pill. */
-.slide .size-diagram { display: block; width: 100%; height: auto; max-height: 480px; margin: var(--zilliz-s-4) auto 0; font-family: var(--zilliz-font-sans); }
-.size-diagram .node { fill: var(--zilliz-white); stroke: var(--zilliz-navy); stroke-width: 2.5; transition: stroke 200ms ease; }
+.slide .size-diagram { max-height: 480px; margin: var(--zilliz-s-4) auto 0; }
 .size-diagram .strip { fill: url(#sz-cells); }
 .size-diagram .block { fill: url(#sz-block); }
 .size-diagram .cell { fill: var(--zilliz-sky); }
@@ -1074,26 +1094,10 @@
 .size-diagram .node-cost-alt { fill: var(--zilliz-white); stroke: var(--zilliz-navy); }
 .size-diagram .cost-num { font-size: 46px; font-weight: 800; fill: var(--zilliz-white); }
 .size-diagram .cost-num-alt { fill: var(--zilliz-navy); }
-.size-diagram .nlabel { font-size: 28px; font-weight: 600; fill: var(--zilliz-navy); }
-.size-diagram .nsub { font-size: 21px; fill: var(--zilliz-ink); }
-.size-diagram .nsub-source { fill: var(--zilliz-white); }
 /* The SSD caption is the longest string in a fixed-width box; 19px keeps a
    gutter inside the 260-unit card. */
 .size-diagram .nsub-tight { font-size: 19px; }
-.size-diagram .nsub.muted { fill: var(--zilliz-grey); font-style: italic; }
-.size-diagram .edge { fill: none; stroke: var(--zilliz-navy); stroke-width: 2.5; marker-end: url(#sz-arrow); transition: stroke 200ms ease; }
-/* The trunk of the fork into the two cost boxes; only the branches get heads. */
-.size-diagram .edge.plain { marker-end: none; }
-.size-diagram .elabel { font-family: var(--zilliz-font-mono); font-size: 20px; font-weight: 600; letter-spacing: 0.03em; fill: var(--zilliz-navy); transition: fill 200ms ease; }
-.size-diagram .elabel.muted { fill: var(--zilliz-grey); font-style: italic; }
-.size-diagram .rail path { fill: none; stroke: var(--zilliz-blue-20); stroke-width: 2; stroke-dasharray: 6 8; }
-.size-diagram .tag { fill: var(--zilliz-blue-10); stroke: var(--zilliz-blue-20); stroke-width: 2; transition: fill 200ms ease, stroke 200ms ease; }
-.size-diagram .tlabel { font-family: var(--zilliz-font-mono); font-size: 24px; font-weight: 700; fill: var(--zilliz-navy); transition: fill 200ms ease; }
-.size-diagram .stage.is-current .node { stroke: var(--zilliz-blue); stroke-width: 4; }
-.size-diagram .stage.is-current .edge { stroke: var(--zilliz-blue); stroke-width: 4; }
-.size-diagram .stage.is-current .elabel:not(.muted) { fill: var(--zilliz-blue); }
-.size-diagram .stage.is-current .tag { fill: var(--zilliz-blue); stroke: var(--zilliz-blue); }
-.size-diagram .stage.is-current .tlabel { fill: var(--zilliz-white); }
+.size-diagram .edge { marker-end: url(#sz-arrow); }
 /* The chunk node is always on screen, so it can't pick up .is-current with
    stage 1; light it from the slide instead. */
 .slide:has(.size-diagram .stage-1.is-current) .size-diagram .nodes .node { stroke: var(--zilliz-blue); stroke-width: 4; }
@@ -1107,7 +1111,7 @@
    Per-query charges are purple coins, and the single per-day charge (the box
    the index runs on) is the one navy coin, because that contrast IS the
    numerator-over-denominator of Q* on the slide before. */
-.slide .cost-anatomy { display: block; flex: 0 0 auto; width: 100%; height: auto; margin: var(--zilliz-s-2) auto 0; font-family: var(--zilliz-font-sans); }
+.slide .cost-anatomy { flex: 0 0 auto; margin: var(--zilliz-s-2) auto 0; }
 /* The per-station captions are HTML rather than <text>, because an SVG this
    wide letterboxes down to whatever height the flex column leaves it, and
    prose scaled by that factor stops being readable. The column geometry
@@ -1119,26 +1123,18 @@
    stack in the deck; the default .is-emphatic top margin tips it past the
    slide's bottom padding by a few pixels. */
 .slide:has(.cost-notes) .closing-line.is-emphatic { margin-top: var(--zilliz-s-3); }
-.cost-anatomy .node { fill: var(--zilliz-white); stroke: var(--zilliz-navy); stroke-width: 2.5; transition: stroke 200ms ease; }
-.cost-anatomy .node-model { fill: var(--zilliz-navy); stroke: var(--zilliz-navy); }
 .cost-anatomy .node-cache { fill: var(--zilliz-blue-10); stroke: var(--zilliz-blue); }
 /* Parametric's station is an absence, not a component: dashed and grey, and it
    keeps that outline even while it is the current stage. */
 .cost-anatomy .node-none { fill: none; stroke: var(--zilliz-grey); stroke-dasharray: 10 8; }
 .cost-anatomy .stage.is-current .node.node-none { stroke: var(--zilliz-grey); stroke-width: 2.5; }
-.cost-anatomy .mlabel { font-size: 38px; font-weight: 800; letter-spacing: 0.04em; fill: var(--zilliz-white); }
-.cost-anatomy .nlabel { font-size: 27px; font-weight: 600; fill: var(--zilliz-navy); }
+.cost-anatomy .nlabel { font-size: 27px; }
 .cost-anatomy .nlabel-none { fill: var(--zilliz-grey); font-style: italic; }
-.cost-anatomy .nsub { font-size: 21px; fill: var(--zilliz-ink); }
-.cost-anatomy .nsub-source { fill: var(--zilliz-white); }
-.cost-anatomy .nsub.muted { fill: var(--zilliz-grey); font-size: 18px; font-style: italic; }
-.cost-anatomy .edge { fill: none; stroke: var(--zilliz-navy); stroke-width: 2.5; stroke-linejoin: round; marker-end: url(#ca-arrow); transition: stroke 200ms ease; }
-.cost-anatomy .edge.spine { stroke: var(--zilliz-navy); }
+.cost-anatomy .nsub.muted { font-size: 18px; }
+.cost-anatomy .edge { stroke-linejoin: round; marker-end: url(#ca-arrow); }
 /* The call leg is the model reaching for a tool; it carries no payload, so it
    is dashed and stays thin even when its stage is current. */
 .cost-anatomy .edge.call { stroke-dasharray: 9 7; }
-/* A trunk segment: only the leg that lands on the model carries a head. */
-.cost-anatomy .edge.plain { marker-end: none; }
 .cost-anatomy .stage.is-current .edge.call { stroke-width: 2.5; }
 /* Each weight needs its own arrowhead: the marker is sized in user units, so a
    single 18-unit head is narrower than its own line once the stroke passes
@@ -1151,7 +1147,7 @@
 .cost-anatomy .stage.is-current .edge.flow-thin { stroke-width: 3.5; }
 .cost-anatomy .stage.is-current .edge.flow-fat { stroke-width: 10; }
 .cost-anatomy .stage.is-current .edge.flow-huge { stroke-width: 16; }
-.cost-anatomy .elabel { font-family: var(--zilliz-font-mono); font-size: 19px; font-weight: 600; letter-spacing: 0.03em; fill: var(--zilliz-navy); transition: fill 200ms ease; }
+.cost-anatomy .elabel { font-size: 19px; }
 /* The per-day charge is not a coin on an edge, because it is not incurred on
    any edge: the index bills for existing. It is a footer band inside the
    station's own border instead, which is also the only navy money on the

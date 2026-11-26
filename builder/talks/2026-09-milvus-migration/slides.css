@@ -40,16 +40,12 @@
    (dual run lights both query paths, cut over fades them to rollback-only,
    decommission greys out the old cluster). */
 .slide .two-col.phases { grid-template-columns: 1.9fr 1fr; align-items: center; }
-.slide .phase-diagram { display: block; width: 100%; height: auto; font-family: var(--zilliz-font-sans); }
-.phase-diagram .node { fill: var(--zilliz-white); stroke: var(--zilliz-navy); stroke-width: 2.5; }
 .phase-diagram .node-new { fill: var(--zilliz-blue); stroke: var(--zilliz-blue); }
-.phase-diagram .nlabel { font-size: 28px; font-weight: 600; fill: var(--zilliz-navy); }
-.phase-diagram .nsub { font-size: 21px; fill: var(--zilliz-ink); }
 .phase-diagram .nlabel-new, .phase-diagram .nsub-new { fill: var(--zilliz-white); }
-.phase-diagram .edge { fill: none; stroke: var(--zilliz-navy); stroke-width: 2.5; marker-end: url(#ph-arrow); transition: stroke 200ms ease, opacity 200ms ease; }
-.phase-diagram .edge.dashed { stroke-dasharray: 9 7; }
-.phase-diagram .elabel { font-size: 23px; fill: var(--zilliz-navy); transition: fill 200ms ease; }
-.phase-diagram .elabel.muted { fill: var(--zilliz-grey); font-style: italic; }
+.phase-diagram .edge { marker-end: url(#ph-arrow); transition: stroke 200ms ease, opacity 200ms ease; }
+/* The edge labels here are short sentences rather than annotations, so they
+   keep the body face instead of the shared mono. */
+.phase-diagram .elabel { font-family: inherit; font-size: 23px; font-weight: 400; letter-spacing: normal; }
 .phase-diagram .tag { fill: var(--zilliz-grey); }
 .phase-diagram .tlabel { font-family: var(--zilliz-font-mono); font-size: 16px; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; fill: var(--zilliz-white); }
 .phase-diagram .phase.is-current .edge { stroke: var(--zilliz-blue); stroke-width: 4; }
@@ -68,12 +64,6 @@
 .slide:has(.phase-6.is-revealed) .phase-diagram .to-old,
 .slide:has(.phase-6.is-revealed) .phase-diagram .to-old + .elabel,
 .slide:has(.phase-6.is-revealed) .phase-diagram .to-old + .elabel + .elabel { opacity: 0.28; }
-.slide .phase-list { margin: 0; }
-.slide .phase-list li { font-size: 26px; }
-.slide .phase-list li { transition: color 200ms ease; }
-.slide .phase-list li.is-revealed:not(.is-current) { color: var(--zilliz-ink); }
-.slide .phase-list li.is-current { color: var(--zilliz-blue); }
-.slide .phase-list li.is-current::marker { font-weight: 700; }
 
 /* .path — the five-stage migration path: static outlined nodes with a
    fragment overlay per stage, paired with the list below by
@@ -81,11 +71,10 @@
    stages (the webinar's scope) settle to filled navy once revealed and gain a
    "what we cover today" bracket, while Assess and Cut over drop back to
    outlines once passed. */
-.slide .path-diagram { display: block; width: 100%; max-height: 300px; height: auto; margin: 0 auto 8px; font-family: var(--zilliz-font-sans); }
-.path-diagram .node { fill: var(--zilliz-white); stroke: var(--zilliz-navy); stroke-width: 2.5; }
-.path-diagram .nlabel { font-size: 30px; font-weight: 600; fill: var(--zilliz-navy); }
-.path-diagram .nsub { font-size: 20px; fill: var(--zilliz-ink); }
-.path-diagram .edge { fill: none; stroke: var(--zilliz-navy); stroke-width: 2.5; marker-end: url(#mp-arrow); }
+.slide .path-diagram { max-height: 300px; margin: 0 auto 8px; }
+.path-diagram .nlabel { font-size: 30px; }
+.path-diagram .nsub { font-size: 20px; }
+.path-diagram .edge { marker-end: url(#mp-arrow); }
 .path-diagram .step { transition: opacity 200ms ease; }
 .path-diagram .hl { fill: var(--zilliz-navy); stroke: var(--zilliz-navy); stroke-width: 2.5; transition: fill 200ms ease, stroke 200ms ease; }
 .path-diagram .hlabel { font-size: 30px; font-weight: 600; fill: var(--zilliz-white); }
@@ -94,11 +83,6 @@
 .path-diagram .step.is-edge.is-revealed:not(.is-current) { opacity: 0; }
 .path-diagram .bracket { fill: none; stroke: var(--zilliz-blue); stroke-width: 3; }
 .path-diagram .flabel { font-family: var(--zilliz-font-mono); font-size: 18px; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; fill: var(--zilliz-blue); }
-.slide .path-list { margin: 0; }
-.slide .path-list li { font-size: 26px; transition: color 200ms ease; }
-.slide .path-list li.is-revealed:not(.is-current) { color: var(--zilliz-ink); }
-.slide .path-list li.is-current { color: var(--zilliz-blue); }
-.slide .path-list li.is-current::marker { color: var(--zilliz-blue); }
 
 /* .licensing — six product cards, three bullets each, on one slide: shrink
    names and bullet type so two rows of three fit above the footer. */
