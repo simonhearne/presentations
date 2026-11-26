@@ -3,7 +3,7 @@
 import { marked } from 'marked';
 import hljs from 'highlight.js/lib/common';
 import { Graphviz } from '@hpcc-js/wasm-graphviz';
-import { readFileSync, writeFileSync, mkdirSync, realpathSync, copyFileSync, readdirSync } from 'node:fs';
+import { readFileSync, writeFileSync, mkdirSync, realpathSync, copyFileSync, readdirSync, existsSync } from 'node:fs';
 import { resolve, basename, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -812,9 +812,13 @@ export async function buildDeck(talkDir) {
     const runtimeSrc = readFileSync(runtimePath, 'utf8');
     iframeScripts = `<script>\n${runtimeSrc}\n</script>`;
   }
+  const deckCss = existsSync(resolve(talkDir, 'slides.css'))
+    ? '<link rel="stylesheet" href="../slides.css">'
+    : '';
   const html = template
     .replaceAll('{{title}}', deckTitle)
     .replaceAll('{{cssDir}}', '../../../css')
+    .replace('{{deckCss}}', deckCss)
     .replaceAll('{{scriptDir}}', '../../../script')
     .replace('{{slides}}', sections.join('\n'))
     .replace('{{vegaScripts}}', vegaScripts)
