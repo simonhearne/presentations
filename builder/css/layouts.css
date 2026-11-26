@@ -215,11 +215,6 @@
 .section-byline .bi-arrow { font-size: 2em; opacity: 0.4; }
 
 /* .agenda — auto-generated TOC: numbered, hyperlinked section list */
-/* .slide.agenda h1 {
-  font-size: 96px;
-  font-weight: 600;
-  margin-bottom: var(--zilliz-s-12);
-} */
 .slide.agenda ol {
   padding-left: 1.5em;
   margin-left: 5vw;
@@ -315,17 +310,6 @@
   object-fit: cover;
   display: block;
 }
-/* .slide.bg > h1,
-.slide.bg > h2,
-.slide.bg > h3,
-.slide.bg > p:not(:first-of-type),
-.slide.bg > ul,
-.slide.bg > ol,
-.slide.bg > blockquote {
-  position: relative;
-  z-index: 1;
-  text-shadow: 0 2px 16px rgba(0, 0, 0, 0.6);
-} */
 
 /* Modifier: .center — horizontally and vertically center content */
 .slide.center {
@@ -759,7 +743,6 @@
 @keyframes query-caret-blink {
   to { background: transparent; }
 }
-.search-demo .query-label { font-family: var(--zilliz-font-mono); font-size: 19px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--zilliz-navy); opacity: 0.7; }
 .search-demo .eyebrow { font-family: var(--zilliz-font-mono); font-size: 20px; font-weight: 600; color: var(--zilliz-navy); background: var(--zilliz-blue-10); padding: 8px 18px; border-radius: 999px; }
 
 .search-demo .body { display: grid; grid-template-columns: 1fr 1fr; gap: var(--zilliz-s-6); align-items: start; }
@@ -799,9 +782,6 @@
 .search-demo .bar { border-top: 2px solid var(--zilliz-ink); }
 .search-demo .equals { font-size: 26px; opacity: 0.5; font-weight: 300; }
 .search-demo .result-num { font-size: 34px; font-weight: 800; color: var(--zilliz-navy); font-family: var(--zilliz-font-mono); }
-
-.search-demo .legend { font-size: 15px; line-height: 1.45; opacity: 0.75; margin: var(--zilliz-s-2) 0 0; }
-.search-demo .legend strong { color: var(--zilliz-navy); font-weight: 700; }
 
 /* Use-case grid — 3x3 tiles with fragment reveals */
 .usecase-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--zilliz-s-4); }
@@ -1068,15 +1048,6 @@
 /* .big-code — modifier: enlarge code blocks on sparse slides for replay legibility */
 .slide.big-code pre code { font-size: 30px; }
 
-/* UMAP modality-gap viz — legend over the full-bleed three.js canvas */
-.umap-legend { display: flex; gap: var(--zilliz-s-6); align-items: center; font-family: var(--zilliz-font-mono); font-size: 24px; }
-.umap-legend .key { display: flex; align-items: center; gap: var(--zilliz-s-2); }
-.umap-legend .swatch { width: 22px; height: 22px; border-radius: 50%; flex: none; }
-.umap-legend .swatch.image { background: var(--zilliz-blue); }
-.umap-legend .swatch.text { background: var(--zilliz-berry); }
-.umap-legend .swatch.gap { width: 38px; height: 0; border-radius: 0; border-top: 3px dashed var(--zilliz-white); }
-.umap-hint { font-family: var(--zilliz-font-mono); font-size: 20px; opacity: 0.6; margin-top: var(--zilliz-s-3); }
-
 /* dark bg lift — for slides with dark backgrounds, add a semi-transparent white overlay behind text for improved legibility */
 *.dark-bg-lift {
   font-weight: 400 !important;
@@ -1257,43 +1228,6 @@
 
 /* ── Deck: talks/rag-cost-curve ── */
 
-.stamp {
-  display: inline-block;
-  font-family: var(--zilliz-font-mono);
-  font-size: 0.75em;
-  font-weight: 700;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  padding: 0.2em 0.6em;
-  border: 2px solid currentColor;
-  border-radius: 4px;
-  transform: rotate(-3deg);
-  white-space: nowrap;
-}
-
-/* No --zilliz-green-ink token and no darkened-green literal exists anywhere
-   under builder/ (talks/vectordb-301-rabitq has neither) — derive a legible
-   dark teal from tokens instead of adding a new hex literal. */
-.stamp.is-held { color: color-mix(in srgb, var(--zilliz-green) 55%, var(--zilliz-navy)); }
-.stamp.is-reframed { color: var(--zilliz-blue); }
-.stamp.is-inverted { color: var(--zilliz-berry); }
-.stamp.is-split { color: var(--zilliz-grey); }
-
-/* A stamp that holds but carries a marked exception inline (slide 33's C15):
-   the inversion clause nests inside the same badge rather than a column of
-   its own, so it needs its own colour without becoming a whole new stamp. */
-.stamp .is-inverted { color: var(--zilliz-berry); }
-
-.stamp.is-pending {
-  color: var(--zilliz-grey);
-  border-style: dashed;
-  background: repeating-linear-gradient(
-    45deg,
-    color-mix(in srgb, var(--zilliz-grey) 10%, transparent) 0 5px,
-    transparent 5px 11px
-  );
-}
-
 .stamp-sub {
   display: block;
   font-family: var(--zilliz-font-mono);
@@ -1305,32 +1239,6 @@
 /* .stamp-sub sits inside a <p>, where .slide p's 32px wins on specificity
    over the 0.6em above: raise specificity so stamp-sub actually renders small. */
 .slide .stamp-sub { font-size: 22px; }
-
-.scorecard {
-  display: grid;
-  grid-template-columns: 2fr 1fr;
-  gap: 2rem;
-  align-items: start;
-}
-
-.scorecard-held {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 0.4rem 1.5rem;
-}
-
-.scorecard-rail {
-  display: grid;
-  gap: 0.6rem;
-  padding-left: 1.5rem;
-  border-left: 2px solid color-mix(in srgb, var(--zilliz-grey) 30%, transparent);
-}
-
-/* Fifteen lines don't fit at the deck's default 32px paragraph size (slide
-   33): shrink and tighten so all fifteen clear the footer rule without
-   wrapping to three lines each. */
-.slide .scorecard p { font-size: 21px; line-height: 1.35; margin: 0; }
-.slide:has(.scorecard) h1 { margin-bottom: var(--zilliz-s-3); }
 
 /* .chart-band — gives a vega chart the space the slide's other content leaves
    it, rather than a hard-coded height. The band takes the free room in the
@@ -1382,34 +1290,12 @@
 .slide .mechanism-cards .card p:first-child { margin: 0 0 4px; }
 .slide .mechanism-cards .card p:last-child { margin: 0; }
 
-/* .stats-4 — a four-tile stat row (mirrors .deep-dive's stat-grid rule);
-   the shared .stat-grid defaults to three columns. */
-.slide.stats-4 .stat-grid { grid-template-columns: repeat(4, 1fr); }
-
 /* .stats-2 — a two-tile stat row, for a slide that only earns two numbers
    rather than padding out to three empty columns. The smaller value size
    keeps a long slash-separated triple (e.g. "99.97 % / 99.97 % / 99.83 %")
    on one line instead of wrapping inside the tile. */
 .slide.stats-2 .stat-grid { grid-template-columns: repeat(2, 1fr); }
 .slide.stats-2 .stat-card .stat-value { font-size: 40px; }
-
-/* .mega-stat — a single headline number bigger than any default heading,
-   for a slide whose entire content is one number landing per fragment
-   (slide 21's two-numbers reveal). .mega-note is its small caption line. */
-.slide .mega-stat { display: block; font-family: var(--zilliz-font-mono); font-size: 150px; font-weight: 800; line-height: 1; color: var(--zilliz-blue); }
-.slide .mega-note { display: block; font-family: var(--zilliz-font-sans); font-size: 0.2em; font-weight: 500; letter-spacing: 0.01em; color: var(--zilliz-grey); margin-top: 0.15em; }
-
-/* .mega-question — the deployment question, which now owns its slide rather
-   than sharing one with a .card-grid row, so the squeeze the old rules applied
-   (84px stat, 20px trailing paragraph) is gone and the block takes the full
-   .mega-stat size from above. The question itself is the slide's h1 now; what
-   is left in the block is the number and the two lines that qualify it. The
-   measure is held narrow so the two lines centre under the stat rather than
-   running the full 1920px. */
-.slide .mega-question { margin-top: var(--zilliz-s-6); }
-.slide .mega-question .mega-stat { margin-bottom: var(--zilliz-s-6); }
-.slide .mega-question > p { max-width: 46ch; margin-left: auto; margin-right: auto; margin-bottom: var(--zilliz-s-4); }
-.slide .mega-question > p:has(.mega-stat) { max-width: none; }
 
 /* .index-heuristics — the five index families collapsed onto one slide as a
    decision table (the HNSW/IVF/DiskANN animations that used to carry this are
@@ -1495,7 +1381,6 @@
 .refine-diagram .node { fill: var(--zilliz-white); stroke: var(--zilliz-navy); stroke-width: 2.5; transition: stroke 200ms ease; }
 .refine-diagram .band { fill: url(#rf-codes); }
 .refine-diagram .band-exact { fill: url(#rf-exact); }
-.refine-diagram .node-out { fill: url(#rf-exact); stroke: var(--zilliz-blue); stroke-width: 4; }
 .refine-diagram .node-source { fill: var(--zilliz-navy); stroke: var(--zilliz-navy); }
 /* The re-ranker is drawn deliberately outside the recall rail: it reorders the
    top-k rather than retrieving more of it, so it gets a dashed grey outline, no
@@ -1631,7 +1516,6 @@
 .cost-anatomy .stage.is-current .edge.flow-fat { stroke-width: 10; }
 .cost-anatomy .stage.is-current .edge.flow-huge { stroke-width: 16; }
 .cost-anatomy .elabel { font-family: var(--zilliz-font-mono); font-size: 19px; font-weight: 600; letter-spacing: 0.03em; fill: var(--zilliz-navy); transition: fill 200ms ease; }
-.cost-anatomy .cap { font-size: 19px; fill: var(--zilliz-ink); }
 /* The per-day charge is not a coin on an edge, because it is not incurred on
    any edge: the index bills for existing. It is a footer band inside the
    station's own border instead, which is also the only navy money on the
@@ -1783,9 +1667,8 @@
 .slide .promise-cards .promise-body p,
 .slide .verdict-cards .promise-body p { margin: 0; }
 
-/* Resting state is the hatch borrowed from .stamp.is-pending: before the
-   reveal every card reads as verdict pending, which is the beat the fragment
-   index is already playing. */
+/* Resting state is a grey hatch: before the reveal every card reads as
+   verdict pending, which is the beat the fragment index is already playing. */
 .slide .promise-cards .promise-verdict,
 .slide .verdict-cards .promise-verdict {
   margin: 0;
@@ -1805,10 +1688,9 @@
   );
   transition: background 220ms ease, color 220ms ease;
 }
-/* Fills once the verdict fragment lands, in the same two hues .stamp uses so
-   the opener and the scorecard agree on what reframed and held look like.
-   Held is mixed one step darker than the stamp's 55% text colour: as a fill
-   behind white type it has to clear 4.5:1, which 55% does not. */
+/* Fills once the verdict fragment lands: blue for reframed, green mixed with
+   navy for held. As a fill behind white type held has to clear 4.5:1, which
+   is why the green is mixed down to 45%. */
 .slide .promise-cards .card:has(.promise-verdict .is-revealed) .promise-verdict,
 .slide .verdict-cards .card:has(.promise-verdict .is-revealed) .promise-verdict { color: var(--zilliz-white); border-bottom-color: transparent; }
 .slide .promise-cards .card:has(.promise-verdict .is-revealed.is-reframed) .promise-verdict { background: var(--zilliz-blue); }
@@ -1926,7 +1808,6 @@
    stretch into two half-empty rows. */
 .slide .domain-cards { flex: 1; min-height: 0; grid-auto-rows: min-content; align-content: center; gap: var(--zilliz-s-4) var(--zilliz-s-3); margin-top: 0; }
 .slide .domain-cards .card { gap: 0; justify-content: flex-start; }
-/* .slide .domain-cards .card p { margin: 0; } */
 .slide .domain-cards .feature-cat { color: var(--zilliz-blue); margin-bottom: var(--zilliz-s-1); }
 .slide .domain-cards .case-name { font-size: 34px; color: var(--zilliz-navy); }
 .slide .domain-cards .case-proof { margin-top: var(--zilliz-s-2); }
@@ -2337,9 +2218,6 @@
 .slide .result-thumb img { width: 100%; height: 100%; object-fit: contain; }
 .result-thumb.is-missing { background: repeating-linear-gradient(45deg, var(--zilliz-blue-10) 0 8px, var(--zilliz-white) 8px 16px); font-family: var(--zilliz-font-mono); font-size: 14px; text-transform: uppercase; color: var(--zilliz-navy); }
 .result-slot.is-empty .result-thumb { background: var(--zilliz-berry-10); border: 3px dashed var(--zilliz-berry); }
-.slide .result-strips > .stat-note, .slide .esci-key { font-size: 22px; line-height: 1.3; color: var(--zilliz-ink); margin: 0; }
-.slide .esci-key { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; }
-.esci-key .esci-key-rule { margin-left: var(--zilliz-s-2); color: var(--zilliz-navy); }
 /* A filtered search: the query box, the active filters as chips, and what they leave. */
 .slide .search-demo.result-filter .header { justify-content: flex-start; gap: var(--zilliz-s-3); }
 .result-filter .header .query { flex: none; margin-top: 0; }
