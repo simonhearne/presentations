@@ -1,0 +1,131 @@
+{
+  "$schema": "https://vega.github.io/schema/vega/v5.json",
+  "description": "How often a random 50-search set picks each retrieval config, as 100 dots. Stage 0: 100 unsorted sets. Stage 1: each dot lights up with the config it would pick, then flies into sorted groups (timer signal t, ms since stage 1). Stage 2: text + image (RRF) joins as a fourth candidate and the dots that switch to it regroup (timer signal t2); a new candidate only takes picks, so no dot moves between the old three. Source: vector_search_ecom results/b1a.json, power.filled.draw_power, 20,000 draws, judgment pool 955696df0b6a, RRF at 100 candidates per arm: text + BM25 0.52975, image 0.4303, text 0.03995; stage 2 from probes/probe_text_image.json, draw_power_4.50: text + image 0.87595, text + BM25 0.08125, image 0.0416, text 0.0012.",
+  "width": 1040,
+  "height": 440,
+  "padding": 0,
+  "autosize": "fit",
+  "background": "rgba(0,0,0,0)",
+  "signals": [
+    {"name": "stage", "value": 0},
+    {"name": "t0", "value": 0, "on": [{"events": {"signal": "stage"}, "update": "now()"}]},
+    {"name": "t", "value": 0, "on": [{"events": {"type": "timer", "throttle": 16}, "update": "stage < 1 ? 0 : stage > 1 ? 2600 : min(2600, now() - t0)"}]},
+    {"name": "t2", "value": 0, "on": [{"events": {"type": "timer", "throttle": 16}, "update": "stage < 2 ? 0 : min(2900, now() - t0)"}]},
+    {"name": "counts", "update": "clamp((t - 2100) / 400, 0, 1) * (1 - clamp(t2 / 300, 0, 1))"},
+    {"name": "counts2", "update": "clamp((t2 - 2400) / 400, 0, 1)"},
+    {"name": "pitch", "value": 44},
+    {"name": "top", "value": 130}
+  ],
+  "data": [
+    {
+      "name": "groups",
+      "values": [
+        {"g": "hybrid", "n": 53, "first": 0, "col": 0, "label": "text + BM25 ✓", "sub": "", "right": true},
+        {"g": "image", "n": 43, "first": 53, "col": 11, "label": "image", "sub": "", "right": false},
+        {"g": "text", "n": 4, "first": 96, "col": 21, "label": "text", "sub": "", "right": false}
+      ],
+      "transform": [{"type": "formula", "as": "x", "expr": "datum.col * pitch"}]
+    },
+    {
+      "name": "groups2",
+      "values": [
+        {"n": 88, "col": 0, "label": "text + image ✓"},
+        {"n": 8, "col": 15.5, "label": "text + BM25"},
+        {"n": 4, "col": 19.3, "label": "image"},
+        {"n": 0, "col": 22, "label": "text"}
+      ],
+      "transform": [{"type": "formula", "as": "x", "expr": "datum.col * pitch"}]
+    },
+    {
+      "name": "dots",
+      "transform": [
+        {"type": "sequence", "start": 0, "stop": 100, "as": "i"},
+        {"type": "formula", "as": "g", "expr": "datum.i < 53 ? 0 : datum.i < 96 ? 1 : 2"},
+        {"type": "formula", "as": "k", "expr": "datum.i - [0, 53, 96][datum.g]"},
+        {"type": "formula", "as": "slot", "expr": "(datum.i * 37 + 11) % 100"},
+        {"type": "formula", "as": "x0", "expr": "floor(datum.slot / 6) * pitch + 18"},
+        {"type": "formula", "as": "y0", "expr": "top + datum.slot % 6 * pitch + 18"},
+        {"type": "formula", "as": "x1", "expr": "([0, 11, 21][datum.g] + floor(datum.k / 6)) * pitch + 18"},
+        {"type": "formula", "as": "y1", "expr": "top + datum.k % 6 * pitch + 18"},
+        {"type": "formula", "as": "pick", "expr": "1 + (datum.i * 61 + 23) % 100 * 9"},
+        {"type": "formula", "as": "go", "expr": "1200 + (datum.i * 29 + 7) % 100 * 4"},
+        {"type": "formula", "as": "p", "expr": "clamp((t - datum.go) / 700, 0, 1)"},
+        {"type": "formula", "as": "e", "expr": "datum.p < 0.5 ? 4 * pow(datum.p, 3) : 1 - pow(2 - 2 * datum.p, 3) / 2"},
+        {"type": "formula", "as": "g2", "expr": "datum.i < 8 ? 0 : datum.i >= 53 && datum.i < 57 ? 1 : 3"},
+        {"type": "formula", "as": "k2", "expr": "datum.g2 < 3 ? datum.k : datum.i < 53 ? datum.i - 8 : datum.i - 12"},
+        {"type": "formula", "as": "x2", "expr": "([15.5, 19.3, 22, 0][datum.g2] + floor(datum.k2 / 6)) * pitch + 18"},
+        {"type": "formula", "as": "y2", "expr": "top + datum.k2 % 6 * pitch + 18"},
+        {"type": "formula", "as": "pick2", "expr": "500 + (datum.i * 61 + 23) % 100 * 7"},
+        {"type": "formula", "as": "p2", "expr": "clamp((t2 - 1400 - (datum.i * 29 + 7) % 100 * 4) / 700, 0, 1)"},
+        {"type": "formula", "as": "e2", "expr": "datum.p2 < 0.5 ? 4 * pow(datum.p2, 3) : 1 - pow(2 - 2 * datum.p2, 3) / 2"}
+      ]
+    }
+  ],
+  "marks": [
+    {
+      "type": "symbol",
+      "from": {"data": "dots"},
+      "encode": {
+        "enter": {"shape": {"value": "circle"}, "size": {"value": 900}},
+        "update": {
+          "x": {"signal": "datum.x0 + (datum.x1 - datum.x0) * datum.e + (datum.x2 - datum.x1) * datum.e2"},
+          "y": {"signal": "datum.y0 + (datum.y1 - datum.y0) * datum.e + (datum.y2 - datum.y1) * datum.e2"},
+          "fill": {"signal": "t < datum.pick ? '#cce0ff' : ['#d97706', '#175fff', '#0f9f8f', '#6b21a8'][t2 > 0 && t2 >= datum.pick2 ? datum.g2 : datum.g]"}
+        }
+      }
+    },
+    {
+      "type": "text",
+      "from": {"data": "groups"},
+      "encode": {
+        "enter": {"x": {"field": "x"}, "y": {"value": 62}, "fontSize": {"value": 52}, "fontWeight": {"value": 700}, "fill": {"value": "#061982"}, "text": {"field": "n"}},
+        "update": {"opacity": {"signal": "counts"}}
+      }
+    },
+    {
+      "type": "text",
+      "from": {"data": "groups"},
+      "encode": {
+        "enter": {"x": {"field": "x"}, "y": {"value": 98}, "fontSize": {"value": 26}, "fontWeight": {"value": 600}, "fill": {"value": "#1e293b"}, "text": {"signal": "datum.label + (datum.sub ? ': ' + datum.sub : '')"}},
+        "update": {"opacity": {"signal": "counts"}}
+      }
+    },
+    {
+      "type": "text",
+      "encode": {
+        "enter": {"x": {"value": 0}, "y": {"value": 428}, "fontSize": {"value": 20}, "fill": {"value": "#1e293b"}, "text": {"value": "The config with the best nDCG@10 on each set. ✓ best on all 1,000 judged searches."}},
+        "update": {"opacity": {"signal": "counts * 0.75"}}
+      }
+    },
+    {
+      "type": "text",
+      "encode": {
+        "enter": {"x": {"value": 0}, "y": {"value": 62}, "fontSize": {"value": 28}, "fontWeight": {"value": 600}, "fill": {"value": "#061982"}, "text": {"value": "Same 100 sets, plus a fourth candidate: text + image"}},
+        "update": {"opacity": {"signal": "clamp((t2 - 200) / 300, 0, 1) * (1 - clamp((t2 - 2100) / 300, 0, 1))"}}
+      }
+    },
+    {
+      "type": "text",
+      "from": {"data": "groups2"},
+      "encode": {
+        "enter": {"x": {"field": "x"}, "y": {"value": 62}, "fontSize": {"value": 52}, "fontWeight": {"value": 700}, "fill": {"value": "#061982"}, "text": {"field": "n"}},
+        "update": {"opacity": {"signal": "counts2"}}
+      }
+    },
+    {
+      "type": "text",
+      "from": {"data": "groups2"},
+      "encode": {
+        "enter": {"x": {"field": "x"}, "y": {"value": 98}, "fontSize": {"value": 26}, "fontWeight": {"value": 600}, "fill": {"value": "#1e293b"}, "text": {"field": "label"}},
+        "update": {"opacity": {"signal": "counts2"}}
+      }
+    },
+    {
+      "type": "text",
+      "encode": {
+        "enter": {"x": {"value": 0}, "y": {"value": 428}, "fontSize": {"value": 20}, "fill": {"value": "#1e293b"}, "text": {"value": "✓ best on all 1,000 judged searches. 20,000 draws, RRF at 100 candidates per arm."}},
+        "update": {"opacity": {"signal": "counts2 * 0.75"}}
+      }
+    }
+  ]
+}

@@ -1,0 +1,146 @@
+{
+  "$schema": "https://vega.github.io/schema/vega/v5.json",
+  "description": "Why a narrow filter comes back short on IVF. Illustration derived from visualisations/ivf-voronoi.json: 500 vectors, 24 cells, a fixed search vector. Stage 0: no filter, nprobe 4, full page. Stage 1: a filter keeps 14 vectors, the same 4 cells are visited. Stage 2: nprobe climbs to 12. The benchmark itself used nlist 1024.",
+  "width": 1060,
+  "height": 480,
+  "padding": 4,
+  "background": "rgba(0,0,0,0)",
+  "signals": [
+    {"name": "stage", "value": 0},
+    {"name": "nlist", "value": 24},
+    {"name": "qx", "value": 6},
+    {"name": "qy", "value": 5},
+    {"name": "f", "value": 0, "on": [{"events": {"type": "timer", "throttle": 16}, "update": "stage < 1 ? 0 : min(1, f + 0.03)"}]},
+    {"name": "nprobe", "value": 4, "on": [{"events": {"type": "timer", "throttle": 160}, "update": "stage < 2 ? 4 : min(12, nprobe + 1)"}]},
+    {"name": "page", "update": "stage < 1 ? 10 : min(10, length(data('returned')))"},
+    {"name": "matches", "update": "length(data('matching'))"}
+  ],
+  "data": [
+    {
+      "name": "centroids",
+      "transform": [
+        {"type": "sequence", "start": 0, "stop": {"signal": "nlist"}, "as": "id"},
+        {"type": "formula", "as": "cols", "expr": "ceil(sqrt(nlist))"},
+        {"type": "formula", "as": "rows", "expr": "ceil(nlist / datum.cols)"},
+        {"type": "formula", "as": "row", "expr": "floor(datum.id / datum.cols)"},
+        {"type": "formula", "as": "col", "expr": "datum.id - datum.row * datum.cols"},
+        {"type": "formula", "as": "jx", "expr": "(sin(datum.id * 12.9898) * 43758.5453) - floor(sin(datum.id * 12.9898) * 43758.5453)"},
+        {"type": "formula", "as": "jy", "expr": "(sin(datum.id * 78.233) * 12345.6789) - floor(sin(datum.id * 78.233) * 12345.6789)"},
+        {"type": "formula", "as": "x", "expr": "((datum.col + 0.15 + 0.7 * datum.jx) / datum.cols) * 10"},
+        {"type": "formula", "as": "y", "expr": "((datum.row + 0.15 + 0.7 * datum.jy) / datum.rows) * 10"}
+      ]
+    },
+    {
+      "name": "centroids_with_dist", "source": "centroids",
+      "transform": [
+        {"type": "formula", "as": "dist", "expr": "sqrt(pow(datum.x - qx, 2) + pow(datum.y - qy, 2))"},
+        {"type": "formula", "as": "pdist", "expr": "sqrt(pow((datum.x - qx) * width / 10, 2) + pow((datum.y - qy) * height / 10, 2))"},
+        {"type": "window", "ops": ["row_number"], "as": ["rank"], "sort": {"field": "pdist"}},
+        {"type": "formula", "as": "probed", "expr": "datum.rank <= nprobe"},
+        {"type": "formula", "as": "px", "expr": "scale('xscale', datum.x)"},
+        {"type": "formula", "as": "py", "expr": "scale('yscale', datum.y)"}
+      ]
+    },
+    {
+      "name": "voronoi", "source": "centroids_with_dist",
+      "transform": [
+        {"type": "voronoi", "x": "px", "y": "py", "size": [{"signal": "width"}, {"signal": "height"}]}
+      ]
+    },
+    {
+      "name": "background_points",
+      "transform": [
+        {"type": "sequence", "start": 0, "stop": 500, "as": "i"},
+        {"type": "formula", "as": "hx", "expr": "(sin(datum.i * 91.345 + 3.1) * 47453.5453) - floor(sin(datum.i * 91.345 + 3.1) * 47453.5453)"},
+        {"type": "formula", "as": "hy", "expr": "(sin(datum.i * 27.719 + 1.7) * 23421.6311) - floor(sin(datum.i * 27.719 + 1.7) * 23421.6311)"},
+        {"type": "formula", "as": "x", "expr": "datum.hx * 10"},
+        {"type": "formula", "as": "y", "expr": "datum.hy * 10"}
+      ]
+    },
+    {
+      "name": "point_centroid_pairs", "source": "background_points",
+      "transform": [
+        {"type": "formula", "as": "cids", "expr": "sequence(0, nlist)"},
+        {"type": "flatten", "fields": ["cids"], "as": ["cid"]},
+        {"type": "lookup", "from": "centroids", "key": "id", "fields": ["cid"], "values": ["x", "y"], "as": ["cx", "cy"]},
+        {"type": "formula", "as": "cd", "expr": "pow((datum.x - datum.cx) * width / 10, 2) + pow((datum.y - datum.cy) * height / 10, 2)"},
+        {"type": "aggregate", "groupby": ["i", "x", "y"], "ops": ["argmin"], "fields": ["cd"], "as": ["nearest"]},
+        {"type": "formula", "as": "cell", "expr": "datum.nearest.cid"}
+      ]
+    },
+    {
+      "name": "points", "source": "point_centroid_pairs",
+      "transform": [
+        {"type": "lookup", "from": "centroids_with_dist", "key": "id", "fields": ["cell"], "values": ["probed"], "as": ["probed"]},
+        {"type": "formula", "as": "qdist", "expr": "sqrt(pow((datum.x - qx) * width / 10, 2) + pow((datum.y - qy) * height / 10, 2))"},
+        {"type": "formula", "as": "match", "expr": "datum.i % 36 === 1"},
+        {"type": "window", "ops": ["row_number"], "as": ["qrank"], "sort": {"field": "qdist"}}
+      ]
+    },
+    {"name": "top", "source": "points", "transform": [{"type": "filter", "expr": "datum.qrank <= 10"}]},
+    {"name": "matching", "source": "points", "transform": [{"type": "filter", "expr": "datum.match"}]},
+    {"name": "returned", "source": "matching", "transform": [{"type": "filter", "expr": "datum.probed"}]}
+  ],
+  "scales": [
+    {"name": "xscale", "type": "linear", "domain": [0, 10], "range": "width"},
+    {"name": "yscale", "type": "linear", "domain": [0, 10], "range": "height"}
+  ],
+  "marks": [
+    {
+      "type": "path", "from": {"data": "voronoi"},
+      "encode": {
+        "enter": {"stroke": {"value": "#cbd5e1"}, "strokeWidth": {"value": 1}},
+        "update": {"path": {"field": "path"}, "fill": [{"test": "datum.probed", "value": "#175fff"}, {"value": "#f6f8fa"}], "fillOpacity": [{"test": "datum.probed", "value": 0.2}, {"value": 1}]}
+      }
+    },
+    {
+      "type": "symbol", "from": {"data": "points"},
+      "encode": {
+        "enter": {"size": {"value": 16}, "fill": {"value": "#6b7280"}},
+        "update": {"x": {"scale": "xscale", "field": "x"}, "y": {"scale": "yscale", "field": "y"}, "fillOpacity": {"signal": "0.5 - 0.35 * f"}}
+      }
+    },
+    {
+      "type": "symbol", "from": {"data": "top"},
+      "encode": {
+        "enter": {"size": {"value": 190}, "fill": {"value": "#175fff"}, "stroke": {"value": "#ffffff"}, "strokeWidth": {"value": 2}},
+        "update": {"x": {"scale": "xscale", "field": "x"}, "y": {"scale": "yscale", "field": "y"}, "opacity": {"signal": "1 - f"}}
+      }
+    },
+    {
+      "type": "symbol", "from": {"data": "matching"},
+      "encode": {
+        "enter": {"size": {"value": 260}, "stroke": {"value": "#d97706"}, "strokeWidth": {"value": 4}},
+        "update": {"x": {"scale": "xscale", "field": "x"}, "y": {"scale": "yscale", "field": "y"}, "fill": [{"test": "datum.probed", "value": "#d97706"}, {"value": "#ffffff"}], "opacity": {"signal": "f"}}
+      }
+    },
+    {
+      "type": "symbol",
+      "encode": {
+        "enter": {"shape": {"value": "diamond"}, "size": {"value": 300}, "fill": {"value": "#061982"}, "stroke": {"value": "#ffffff"}, "strokeWidth": {"value": 2}},
+        "update": {"x": {"scale": "xscale", "signal": "qx"}, "y": {"scale": "yscale", "signal": "qy"}}
+      }
+    },
+    {
+      "type": "text",
+      "encode": {
+        "enter": {"x": {"value": 0}, "y": {"value": -22}, "fontSize": {"value": 46}, "fontWeight": {"value": 700}},
+        "update": {"fill": [{"test": "page < 10", "value": "#d97706"}, {"value": "#061982"}], "text": {"signal": "page + ' of 10'"}}
+      }
+    },
+    {
+      "type": "text",
+      "encode": {
+        "enter": {"x": {"value": 190}, "y": {"value": -26}, "fontSize": {"value": 24}, "fontWeight": {"value": 600}, "fill": {"value": "#1e293b"}},
+        "update": {"text": {"signal": "stage < 1 ? 'no filter: visit the nearest 4 of 24 cells, full page' : 'filter keeps ' + matches + ' of 500, nprobe ' + nprobe + ' of 24 cells'"}}
+      }
+    },
+    {
+      "type": "text",
+      "encode": {
+        "enter": {"x": {"value": 0}, "y": {"signal": "height + 30"}, "fontSize": {"value": 20}, "fill": {"value": "#1e293b"}},
+        "update": {"text": {"signal": "stage < 1 ? 'Illustration. Diamond: the search vector. Blue: its ten nearest vectors.' : 'Illustration. Filled: returned. Hollow: matches the filter, but its cell is never visited.'"}}
+      }
+    }
+  ]
+}

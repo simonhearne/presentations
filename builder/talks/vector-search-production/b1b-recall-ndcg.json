@@ -1,0 +1,146 @@
+{
+  "$schema": "https://vega.github.io/schema/vega/v5.json",
+  "description": "Recall@10 (against exact search) and judge-filled nDCG@10 plotted against p50 latency relative to ef 10, HNSW ef 10/32/64/128/256, 448k text vectors, 1,000 searches. ef 16/24/48 are left out: their p50 sits within laptop noise of ef 10/32 and would make the line double back. Stage 0: recall against latency, under the exact-search ceiling. 1: the expensive tail, ef 64 to 256 (+0.03 recall, +1.1 pts nDCG for another 2.3x p50). 2: nDCG on the same axis, and the gap ef can't close. Source: vector_search_ecom results/b1b.json (filled), judgment pool 955696df0b6a.",
+  "width": 1500,
+  "height": 520,
+  "padding": 5,
+  "autosize": "fit",
+  "background": "rgba(0,0,0,0)",
+  "signals": [
+    {"name": "stage", "value": 0},
+    {"name": "p1", "value": 0, "on": [{"events": {"type": "timer", "throttle": 16}, "update": "stage < 1 ? 0 : min(1, p1 + 0.04)"}]},
+    {"name": "p2", "value": 0, "on": [{"events": {"type": "timer", "throttle": 16}, "update": "stage < 2 ? 0 : min(1, p2 + 0.025)"}]}
+  ],
+  "data": [
+    {
+      "name": "points",
+      "values": [
+        {"ef": 10, "p50": 1.532, "recall": 0.8300, "ndcg": 0.5952},
+        {"ef": 32, "p50": 1.609, "recall": 0.9227, "ndcg": 0.6159},
+        {"ef": 64, "p50": 1.872, "recall": 0.9526, "ndcg": 0.6248},
+        {"ef": 128, "p50": 2.872, "recall": 0.9715, "ndcg": 0.6316},
+        {"ef": 256, "p50": 4.325, "recall": 0.9835, "ndcg": 0.6363}
+      ],
+      "transform": [
+        {"type": "formula", "as": "rel", "expr": "datum.p50 / 1.532"},
+        {"type": "formula", "as": "ny", "expr": "datum.recall + (datum.ndcg - datum.recall) * (1 - pow(1 - p2, 3))"}
+      ]
+    }
+  ],
+  "scales": [
+    {"name": "x", "type": "linear", "domain": [0.9, 3.6], "range": "width", "nice": false, "zero": false},
+    {"name": "y", "type": "linear", "domain": [0.5, 1.06], "range": "height", "nice": false, "zero": false}
+  ],
+  "axes": [
+    {
+      "orient": "bottom", "scale": "x", "title": "p50 latency, relative to ef 10", "values": [1, 1.5, 2, 2.5, 3],
+      "encode": {"labels": {"update": {"text": {"signal": "format(datum.value, '.1~f') + '×'"}}}}
+    },
+    {"orient": "left", "scale": "y", "values": [0.5, 0.6, 0.7, 0.8, 0.9, 1], "format": ".1f"}
+  ],
+  "marks": [
+    {
+      "type": "rect",
+      "encode": {
+        "enter": {"x": {"scale": "x", "value": 1.222}, "x2": {"scale": "x", "value": 2.824}, "y": {"scale": "y", "value": 1.06}, "y2": {"scale": "y", "value": 0.5}, "fill": {"value": "#061982"}},
+        "update": {"fillOpacity": {"signal": "p1 * 0.07"}}
+      }
+    },
+    {
+      "type": "rule",
+      "encode": {
+        "enter": {"x": {"scale": "x", "value": 0.9}, "x2": {"scale": "x", "value": 3.6}, "y": {"scale": "y", "value": 1}, "stroke": {"value": "#175fff"}, "strokeWidth": {"value": 2}, "strokeDash": {"value": [8, 6]}}
+      }
+    },
+    {
+      "type": "text",
+      "encode": {
+        "enter": {"x": {"scale": "x", "value": 0.9, "offset": 14}, "y": {"scale": "y", "value": 1, "offset": -10}, "baseline": {"value": "bottom"}, "fontSize": {"value": 24}, "fontWeight": {"value": 600}, "fill": {"value": "#175fff"}, "text": {"value": "1.0 recall: exact search"}}
+      }
+    },
+    {
+      "type": "line",
+      "from": {"data": "points"},
+      "encode": {
+        "enter": {"x": {"scale": "x", "field": "rel"}, "y": {"scale": "y", "field": "recall"}, "stroke": {"value": "#175fff"}, "strokeWidth": {"value": 5}}
+      }
+    },
+    {
+      "type": "symbol",
+      "from": {"data": "points"},
+      "encode": {
+        "enter": {"x": {"scale": "x", "field": "rel"}, "y": {"scale": "y", "field": "recall"}, "fill": {"value": "#175fff"}, "size": {"value": 260}, "strokeWidth": {"value": 0}}
+      }
+    },
+    {
+      "type": "text",
+      "from": {"data": "points"},
+      "encode": {
+        "enter": {
+          "x": {"scale": "x", "field": "rel", "offset": {"signal": "datum.ef == 10 ? 18 : datum.ef == 32 ? 6 : 0"}},
+          "y": {"scale": "y", "field": "recall", "offset": {"signal": "datum.ef == 10 ? 0 : 20"}},
+          "align": {"signal": "datum.ef <= 32 ? 'left' : datum.ef == 256 ? 'right' : 'center'"},
+          "baseline": {"signal": "datum.ef == 10 ? 'middle' : 'top'"}, "fontSize": {"value": 20}, "fill": {"value": "#4b5563"},
+          "text": {"signal": "'ef ' + datum.ef"}
+        }
+      }
+    },
+    {
+      "type": "line",
+      "from": {"data": "points"},
+      "encode": {
+        "enter": {"x": {"scale": "x", "field": "rel"}, "stroke": {"value": "#d97706"}, "strokeWidth": {"value": 5}},
+        "update": {"y": {"scale": "y", "field": "ny"}, "opacity": {"signal": "min(1, p2 * 4)"}}
+      }
+    },
+    {
+      "type": "symbol",
+      "from": {"data": "points"},
+      "encode": {
+        "enter": {"x": {"scale": "x", "field": "rel"}, "fill": {"value": "#d97706"}, "shape": {"value": "diamond"}, "size": {"value": 300}, "strokeWidth": {"value": 0}},
+        "update": {"y": {"scale": "y", "field": "ny"}, "opacity": {"signal": "min(1, p2 * 4)"}}
+      }
+    },
+    {
+      "type": "text",
+      "encode": {
+        "enter": {"x": {"scale": "x", "value": 2.824, "offset": 26}, "y": {"scale": "y", "value": 0.9835, "offset": -4}, "baseline": {"value": "top"}, "fontSize": {"value": 28}, "fontWeight": {"value": 700}, "fill": {"value": "#175fff"}, "text": {"value": "0.98 recall@10"}}
+      }
+    },
+    {
+      "type": "text",
+      "encode": {
+        "enter": {"x": {"scale": "x", "value": 2.824, "offset": 26}, "y": {"scale": "y", "value": 0.6363}, "baseline": {"value": "middle"}, "fontSize": {"value": 28}, "fontWeight": {"value": 700}, "fill": {"value": "#b45309"}, "text": {"value": "0.64 nDCG@10"}},
+        "update": {"opacity": {"signal": "clamp((p2 - 0.8) * 5, 0, 1)"}}
+      }
+    },
+    {
+      "type": "text",
+      "encode": {
+        "enter": {"x": {"scale": "x", "value": 2.023}, "y": {"scale": "y", "value": 0.86}, "align": {"value": "center"}, "baseline": {"value": "middle"}, "lineHeight": {"value": 36}, "fontSize": {"value": 26}, "fontWeight": {"value": 600}, "fill": {"value": "#061982"}, "text": {"value": ["ef 64 to 256: +0.03 recall", "at 2.3× p50"]}},
+        "update": {"opacity": {"signal": "p1"}}
+      }
+    },
+    {
+      "type": "text",
+      "encode": {
+        "enter": {"x": {"scale": "x", "value": 2.023}, "y": {"scale": "y", "value": 0.6316, "offset": -22}, "align": {"value": "center"}, "baseline": {"value": "bottom"}, "fontSize": {"value": 26}, "fontWeight": {"value": 600}, "fill": {"value": "#b45309"}, "text": {"value": "+0.01 nDCG"}},
+        "update": {"opacity": {"signal": "clamp((p2 - 0.8) * 5, 0, 1)"}}
+      }
+    },
+    {
+      "type": "rule",
+      "encode": {
+        "enter": {"x": {"scale": "x", "value": 3.42}, "y": {"scale": "y", "value": 1}, "y2": {"scale": "y", "value": 0.6363}, "stroke": {"value": "#b45309"}, "strokeWidth": {"value": 3}},
+        "update": {"opacity": {"signal": "clamp((p2 - 0.8) * 5, 0, 1)"}}
+      }
+    },
+    {
+      "type": "text",
+      "encode": {
+        "enter": {"x": {"scale": "x", "value": 3.42, "offset": -16}, "y": {"scale": "y", "value": 0.78}, "align": {"value": "right"}, "baseline": {"value": "middle"}, "lineHeight": {"value": 34}, "fontSize": {"value": 25}, "fontWeight": {"value": 600}, "fill": {"value": "#b45309"}, "text": {"value": ["The best this","model can do"]}},
+        "update": {"opacity": {"signal": "clamp((p2 - 0.8) * 5, 0, 1)"}}
+      }
+    }
+  ]
+}

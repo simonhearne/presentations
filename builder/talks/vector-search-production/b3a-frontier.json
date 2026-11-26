@@ -1,0 +1,139 @@
+{
+  "$schema": "https://vega.github.io/schema/vega/v5.json",
+  "description": "Resident RAM against judge-filled nDCG@10 for 12 dims x dtype x index configs, 448k text vectors, 1,000 searches. Stage 0: FP32 baseline. 1: FP16 and SQ8 (HNSW_SQ with an FP16 refine copy in RAM). 2: RaBitQ (p50 63.2 ms at nprobe 64 against 1.68 ms for FP32 HNSW at ef 64, but untuned, so the ratio is not shown: rbq_query_bits 0, refine_k 1, Arm laptop). 3: 512 and 256 dims. 4: three configs at about 0.65 GB. Source: vector_search_ecom results/b3a.json (filled), judgment pool 955696df0b6a.",
+  "width": 1500,
+  "height": 580,
+  "padding": 5,
+  "autosize": "fit",
+  "background": "rgba(0,0,0,0)",
+  "signals": [
+    {"name": "stage", "value": 0},
+    {"name": "p1", "value": 0, "on": [{"events": {"type": "timer", "throttle": 16}, "update": "stage < 1 ? 0 : min(1, p1 + 0.025)"}]},
+    {"name": "p2", "value": 0, "on": [{"events": {"type": "timer", "throttle": 16}, "update": "stage < 2 ? 0 : min(1, p2 + 0.025)"}]},
+    {"name": "p3", "value": 0, "on": [{"events": {"type": "timer", "throttle": 16}, "update": "stage < 3 ? 0 : min(1, p3 + 0.025)"}]},
+    {"name": "p4", "value": 0, "on": [{"events": {"type": "timer", "throttle": 16}, "update": "stage < 4 ? 0 : min(1, p4 + 0.025)"}]}
+  ],
+  "data": [
+    {
+      "name": "points",
+      "values": [
+        {"dim": 1024, "kind": "fp32", "index": "HNSW", "gb": 2.016, "ndcg": 0.6233, "s": 0, "ring": false},
+        {"dim": 1024, "kind": "fp16", "index": "HNSW", "gb": 1.099, "ndcg": 0.6170, "s": 1, "ring": false},
+        {"dim": 1024, "kind": "sq8", "index": "HNSW", "gb": 1.557, "ndcg": 0.6244, "s": 1, "ring": false},
+        {"dim": 1024, "kind": "rabitq", "index": "RABITQ", "gb": 0.657, "ndcg": 0.6234, "s": 2, "ring": true},
+        {"dim": 512, "kind": "fp32", "index": "HNSW", "gb": 1.099, "ndcg": 0.5991, "s": 3, "ring": false},
+        {"dim": 512, "kind": "sq8", "index": "HNSW", "gb": 0.869, "ndcg": 0.5984, "s": 3, "ring": false},
+        {"dim": 512, "kind": "fp16", "index": "HNSW", "gb": 0.640, "ndcg": 0.5955, "s": 3, "ring": true},
+        {"dim": 512, "kind": "rabitq", "index": "RABITQ", "gb": 0.385, "ndcg": 0.5841, "s": 3, "ring": false},
+        {"dim": 256, "kind": "fp32", "index": "HNSW", "gb": 0.640, "ndcg": 0.5707, "s": 3, "ring": true},
+        {"dim": 256, "kind": "sq8", "index": "HNSW", "gb": 0.525, "ndcg": 0.5720, "s": 3, "ring": false},
+        {"dim": 256, "kind": "fp16", "index": "HNSW", "gb": 0.411, "ndcg": 0.5644, "s": 3, "ring": false},
+        {"dim": 256, "kind": "rabitq", "index": "RABITQ", "gb": 0.256, "ndcg": 0.5537, "s": 3, "ring": false}
+      ],
+      "transform": [
+        {"type": "formula", "as": "p", "expr": "[1, p1, p2, p3][datum.s]"},
+        {"type": "formula", "as": "e", "expr": "1 - pow(1 - datum.p, 3)"},
+        {"type": "formula", "as": "gx", "expr": "2.016 + (datum.gb - 2.016) * datum.e"},
+        {"type": "formula", "as": "ny", "expr": "0.6233 + (datum.ndcg - 0.6233) * datum.e"}
+      ]
+    },
+    {
+      "name": "labels",
+      "values": [
+        {"gb": 2.016, "ndcg": 0.6233, "s": 0, "name": "FP32", "sub": "the PoC default", "dy1": -58, "dy2": -26, "dx": 0, "al": "center"},
+        {"gb": 1.557, "ndcg": 0.6244, "s": 1, "name": "SQ8 + FP16 refine", "sub": "23% less RAM, no loss", "dy1": -58, "dy2": -26, "dx": 0, "al": "center"},
+        {"gb": 1.099, "ndcg": 0.6170, "s": 1, "name": "FP16", "sub": "half the RAM, −0.6 pts: noise", "dy1": -4, "dy2": 26, "dx": 22, "al": "left"},
+        {"gb": 0.657, "ndcg": 0.6234, "s": 2, "name": "1-bit RaBitQ", "sub": "3× smaller, same nDCG, slower (untuned)", "dy1": -58, "dy2": -26, "dx": 0, "al": "center"}
+      ],
+      "transform": [{"type": "formula", "as": "o", "expr": "datum.s === 0 ? 1 : clamp(([1, p1, p2, p3][datum.s] - 0.6) / 0.4, 0, 1)"}]
+    },
+    {
+      "name": "rows",
+      "values": [
+        {"dim": 1024, "gb": 2.016, "ndcg": 0.6233, "s": 0, "text": "1024 dims"},
+        {"dim": 512, "gb": 1.099, "ndcg": 0.5991, "s": 3, "text": "512 dims: −2.4 pts"},
+        {"dim": 256, "gb": 0.640, "ndcg": 0.5707, "s": 3, "text": "256 dims: −5.3 pts"}
+      ],
+      "transform": [{"type": "formula", "as": "o", "expr": "datum.s === 0 ? 1 : clamp(([1, p1, p2, p3][datum.s] - 0.6) / 0.4, 0, 1)"}]
+    }
+  ],
+  "scales": [
+    {"name": "kind", "type": "ordinal", "domain": ["HNSW", "IVF_RABITQ"], "range": ["#175fff", "#d97706"]},
+    {"name": "kindShape", "type": "ordinal", "domain": ["HNSW", "IVF_RABITQ"], "range": ["circle", "diamond"]},
+    {"name": "x", "type": "linear", "domain": [0, 2.3], "range": "width", "nice": false, "zero": true},
+    {"name": "y", "type": "linear", "domain": [0.545, 0.64], "range": "height", "nice": false, "zero": false}
+  ],
+  "axes": [
+    {"orient": "bottom", "scale": "x", "title": "resident RAM, GB (448k text vectors)", "values": [0, 0.5, 1, 1.5, 2]},
+    {"orient": "left", "scale": "y", "title": "nDCG@10", "values": [0.56, 0.58, 0.6, 0.62, 0.64], "format": ".2f"}
+  ],
+  "legends": [
+    {"fill": "kind", "shape": "kindShape", "orient": "none", "direction": "horizontal", "legendX": {"signal": "scale('x', 1.72)"}, "legendY": {"signal": "height - 44"}, "symbolSize": 300, "symbolStrokeWidth": 0, "labelFontSize": 20, "columnPadding": 24}
+  ],
+  "marks": [
+    {
+      "type": "rule",
+      "encode": {
+        "enter": {"x": {"scale": "x", "value": 0.648}, "y": {"scale": "y", "value": 0.545}, "y2": {"scale": "y", "value": 0.6234}, "stroke": {"value": "#061982"}, "strokeWidth": {"value": 2}, "strokeDash": {"value": [8, 6]}},
+        "update": {"opacity": {"signal": "p4"}}
+      }
+    },
+    {
+      "type": "rule",
+      "encode": {
+        "enter": {"x": {"scale": "x", "value": 2.12}, "y": {"scale": "y", "value": 0.557}, "y2": {"scale": "y", "value": 0.595}, "stroke": {"value": "#7d8a9e"}, "strokeWidth": {"value": 3}}
+      }
+    },
+    {
+      "type": "text",
+      "encode": {
+        "enter": {"x": {"scale": "x", "value": 2.12, "offset": -14}, "y": {"scale": "y", "value": 0.576}, "align": {"value": "right"}, "baseline": {"value": "middle"}, "fontSize": {"value": 20}, "fill": {"value": "#1e293b"}, "text": {"value": "95% CI per point, ±0.019"}}
+      }
+    },
+    {
+      "type": "symbol",
+      "from": {"data": "points"},
+      "encode": {
+        "enter": {"fill": {"signal": "datum.index === 'RABITQ' ? '#d97706' : '#175fff'"}, "shape": {"signal": "datum.index === 'RABITQ' ? 'diamond' : 'circle'"}, "size": {"signal": "datum.index === 'RABITQ' ? 460 : 400"}},
+        "update": {
+          "x": {"scale": "x", "field": "gx"},
+          "y": {"scale": "y", "field": "ny"},
+          "opacity": {"signal": "datum.s === 0 ? 1 : min(1, datum.p * 4)"},
+          "stroke": {"value": "#061982"},
+          "strokeWidth": {"signal": "datum.ring ? 4 * p4 : 0"}
+        }
+      }
+    },
+    {
+      "type": "text",
+      "from": {"data": "labels"},
+      "encode": {
+        "enter": {"x": {"scale": "x", "field": "gb"}, "y": {"scale": "y", "field": "ndcg"}, "dy": {"field": "dy1"}, "dx": {"field": "dx"}, "align": {"field": "al"}, "fontSize": {"value": 26}, "fontWeight": {"value": 700}, "fill": {"value": "#061982"}, "text": {"field": "name"}},
+        "update": {"opacity": {"field": "o"}}
+      }
+    },
+    {
+      "type": "text",
+      "from": {"data": "labels"},
+      "encode": {
+        "enter": {"x": {"scale": "x", "field": "gb"}, "y": {"scale": "y", "field": "ndcg"}, "dy": {"field": "dy2"}, "dx": {"field": "dx"}, "align": {"field": "al"}, "fontSize": {"value": 22}, "fill": {"value": "#1e293b"}, "text": {"field": "sub"}},
+        "update": {"opacity": {"field": "o"}}
+      }
+    },
+    {
+      "type": "text",
+      "from": {"data": "rows"},
+      "encode": {
+        "enter": {"x": {"scale": "x", "field": "gb", "offset": 22}, "y": {"scale": "y", "field": "ndcg"}, "baseline": {"value": "middle"}, "fontSize": {"value": 24}, "fontWeight": {"value": 600}, "fill": {"value": "#061982"}, "text": {"field": "text"}},
+        "update": {"opacity": {"field": "o"}}
+      }
+    },
+    {
+      "type": "text",
+      "encode": {
+        "enter": {"x": {"scale": "x", "value": 0.648, "offset": 16}, "y": {"scale": "y", "value": 0.5495}, "fontSize": {"value": 24}, "fontWeight": {"value": 600}, "fill": {"value": "#061982"}, "text": {"value": "Same 0.65 GB: 0.623, 0.596 or 0.571"}},
+        "update": {"opacity": {"signal": "p4"}}
+      }
+    }
+  ]
+}

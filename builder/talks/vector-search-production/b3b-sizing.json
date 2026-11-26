@@ -1,0 +1,119 @@
+{
+  "$schema": "https://vega.github.io/schema/vega/v5.json",
+  "description": "Estimated resident RAM and its monthly cost for 10M products x 2 vectors x 2 replicas at 1,024 dims. Stage 0: the PoC, 448k x 1 x 1 (measured). 1: the sizing arithmetic for HNSW FP32. 2: HNSW FP16, HNSW SQ8 without refine, IVF_RABITQ without refine. 3: RaBitQ with its SQ8 refine data in RAM. Source: vector_search_ecom results/b3a.json bytes per vector (4501.26 FP32, 2453.23 FP16, 1466.46 RaBitQ with SQ8 refine). Derived, not measured: RaBitQ without refine 442.46 (1466.46 minus 1,024; 128 B of it is codes, amber, the rest grey), HNSW SQ8 without refine 1429.3 (1,024 plus the 405.3 B HNSW overhead), and 254.3 B of shared row data inferred from HNSW (405.3 minus 151 B graph and ids, sized from rag-cost-curve), counted once per row instead of once per vector: GB = (2 * (b - 254.3) + 254.3) * 20e6 / 1e9. usdPerGiB is AWS r8g on-demand in eu-west-2, Linux, USD 1.10704/h for 128 GiB (price list 2026-11-24) x 730 h. GB are decimal, so dollars convert through 1.073741824.",
+  "width": 1500,
+  "height": 452,
+  "padding": 5,
+  "autosize": "fit",
+  "background": "rgba(0,0,0,0)",
+  "signals": [
+    {"name": "stage", "value": 0},
+    {"name": "usdPerGiB", "value": 6.3136},
+    {"name": "p1", "value": 0, "on": [{"events": {"type": "timer", "throttle": 16}, "update": "stage < 1 ? 0 : min(3, p1 + 0.03)"}]},
+    {"name": "p2", "value": 0, "on": [{"events": {"type": "timer", "throttle": 16}, "update": "stage < 2 ? 0 : min(3, p2 + 0.03)"}]},
+    {"name": "p3", "value": 0, "on": [{"events": {"type": "timer", "throttle": 16}, "update": "stage < 3 ? 0 : min(1, p3 + 0.02)"}]}
+  ],
+  "data": [
+    {
+      "name": "rows",
+      "values": [
+        {"y": 26, "name": "PoC: 448k products", "sub": "", "from": 0, "gb": 2.016, "s": 0, "k": 0, "kind": "hnsw", "note": "HNSW FP32, the PoC default"},
+        {"y": 81, "name": "10M products", "sub": "", "from": 0, "gb": 45.013, "s": 1, "k": 0, "kind": "hnsw", "note": ""},
+        {"y": 136, "name": "+ image vectors", "sub": "", "from": 0, "gb": 87.482, "s": 1, "k": 1, "kind": "hnsw", "note": ""},
+        {"y": 191, "name": "× 2 replicas", "sub": "", "from": 0, "gb": 174.964, "s": 1, "k": 2, "kind": "hnsw", "note": ""},
+        {"y": 262, "name": "HNSW FP16", "sub": "", "from": 0, "gb": 93.043, "s": 2, "k": 0, "kind": "hnsw", "note": "same nDCG within noise"},
+        {"y": 317, "name": "HNSW SQ8", "sub": "", "from": 0, "gb": 52.086, "s": 2, "k": 1, "kind": "hnsw", "note": "est.: no refine, nDCG and p50 not measured"},
+        {"y": 372, "name": "RaBitQ, no refine", "sub": "", "from": 0, "gb": 12.613, "s": 2, "k": 2, "kind": "rabitq", "note": "est.: codes are 1/32 (5 GB), rest overhead"},
+        {"y": 427, "name": "RaBitQ + SQ8 refine", "sub": "", "from": 0, "gb": 53.573, "s": 3, "k": 0, "kind": "rabitq", "note": "same nDCG, slower search (untuned)"}
+      ],
+      "transform": [
+        {"type": "formula", "as": "p", "expr": "datum.s === 0 ? 1 : clamp([p1, p2, p3][datum.s - 1] - datum.k, 0, 1)"},
+        {"type": "formula", "as": "e", "expr": "1 - pow(1 - datum.p, 3)"},
+        {"type": "formula", "as": "o", "expr": "datum.s === 0 ? 1 : clamp(datum.p * 4, 0, 1)"},
+        {"type": "formula", "as": "lo", "expr": "datum.s === 0 ? 1 : clamp((datum.p - 0.6) / 0.4, 0, 1)"},
+        {"type": "formula", "as": "label", "expr": "format(datum.gb, '.0f') + ' GB'"},
+        {"type": "formula", "as": "usd", "expr": "'$' + format(datum.gb / 1.073741824 * usdPerGiB, ',.0f') + '/mo'"},
+        {"type": "formula", "as": "base", "expr": "datum.s === 3 ? 12.613 : datum.gb"},
+        {"type": "formula", "as": "code", "expr": "datum.kind === 'rabitq' ? 5.12 : datum.gb"}
+      ]
+    },
+    {"name": "rabitq", "source": "rows", "transform": [{"type": "filter", "expr": "datum.kind === 'rabitq'"}]},
+    {"name": "refine", "source": "rows", "transform": [{"type": "filter", "expr": "datum.s === 3"}]}
+  ],
+  "scales": [
+    {"name": "x", "type": "linear", "domain": [0, 180], "range": [350, 1040], "nice": false, "zero": true}
+  ],
+  "marks": [
+    {
+      "type": "rule",
+      "encode": {
+        "enter": {"x": {"value": 0}, "x2": {"value": 1500}, "y": {"value": 226}, "stroke": {"value": "#7d8a9e"}, "strokeWidth": {"value": 2}, "strokeDash": {"value": [8, 6]}},
+        "update": {"opacity": {"signal": "clamp(p2 * 4, 0, 1)"}}
+      }
+    },
+    {
+      "type": "text",
+      "from": {"data": "rows"},
+      "encode": {
+        "enter": {"x": {"value": 330}, "y": {"field": "y"}, "align": {"value": "right"}, "baseline": {"value": "middle"}, "fontSize": {"value": 28}, "fontWeight": {"value": 600}, "fill": {"value": "#061982"}, "text": {"field": "name"}},
+        "update": {"opacity": {"field": "o"}}
+      }
+    },
+    {
+      "type": "rect",
+      "from": {"data": "rows"},
+      "encode": {
+        "enter": {"y": {"field": "y", "offset": -20}, "height": {"value": 40}, "cornerRadius": {"value": 4}, "fill": {"signal": "datum.kind === 'rabitq' ? '#d97706' : '#175fff'"}},
+        "update": {"x": {"scale": "x", "value": 0}, "x2": {"scale": "x", "signal": "min(datum.code, datum.base * datum.e)"}, "opacity": {"field": "o"}}
+      }
+    },
+    {
+      "type": "rect",
+      "from": {"data": "rabitq"},
+      "encode": {
+        "enter": {"y": {"field": "y", "offset": -20}, "height": {"value": 40}, "cornerRadius": {"value": 4}, "fill": {"value": "#94a3b8"}},
+        "update": {"x": {"scale": "x", "field": "code", "offset": 2}, "x2": {"scale": "x", "signal": "max(datum.code, datum.base * datum.e)"}, "opacity": {"field": "o"}}
+      }
+    },
+    {
+      "type": "rect",
+      "from": {"data": "refine"},
+      "encode": {
+        "enter": {"y": {"field": "y", "offset": -20}, "height": {"value": 40}, "cornerRadius": {"value": 4}, "fill": {"value": "#fcd9a8"}, "stroke": {"value": "#d97706"}, "strokeWidth": {"value": 2}},
+        "update": {"x": {"scale": "x", "field": "base", "offset": 2}, "x2": {"scale": "x", "signal": "datum.base + (datum.gb - datum.base) * datum.e"}, "opacity": {"field": "o"}}
+      }
+    },
+    {
+      "type": "text",
+      "from": {"data": "refine"},
+      "encode": {
+        "enter": {"x": {"scale": "x", "signal": "(datum.base + datum.gb) / 2"}, "y": {"field": "y"}, "align": {"value": "center"}, "baseline": {"value": "middle"}, "fontSize": {"value": 20}, "fontWeight": {"value": 600}, "fill": {"value": "#1e293b"}, "text": {"value": "SQ8, in RAM"}},
+        "update": {"opacity": {"field": "lo"}}
+      }
+    },
+    {
+      "type": "text",
+      "from": {"data": "rows"},
+      "encode": {
+        "enter": {"x": {"scale": "x", "field": "gb", "offset": 18}, "y": {"field": "y"}, "align": {"value": "left"}, "baseline": {"value": "middle"}, "fontSize": {"value": 30}, "fontWeight": {"value": 700}, "fill": {"value": "#061982"}, "text": {"field": "label"}},
+        "update": {"opacity": {"field": "lo"}}
+      }
+    },
+    {
+      "type": "text",
+      "from": {"data": "rows"},
+      "encode": {
+        "enter": {"x": {"scale": "x", "field": "gb", "offset": 140}, "y": {"field": "y"}, "align": {"value": "left"}, "baseline": {"value": "middle"}, "fontSize": {"value": 28}, "fill": {"value": "#1e293b"}, "text": {"field": "usd"}},
+        "update": {"opacity": {"field": "lo"}}
+      }
+    },
+    {
+      "type": "text",
+      "from": {"data": "rows"},
+      "encode": {
+        "enter": {"x": {"scale": "x", "field": "gb", "offset": 290}, "y": {"field": "y"}, "align": {"value": "left"}, "baseline": {"value": "middle"}, "fontSize": {"value": 24}, "fill": {"value": "#1e293b"}, "text": {"field": "note"}},
+        "update": {"opacity": {"field": "lo"}}
+      }
+    }
+  ]
+}

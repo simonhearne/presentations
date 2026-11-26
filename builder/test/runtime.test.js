@@ -250,3 +250,26 @@ test('presenter cue: a chart-first slide is not done until its fragment lands', 
     assert.equal(await cueOn(), true, 'fragment and stages both on screen');
   });
 });
+
+test('backward entry: pre-revealed fragments are tagged until a step touches them', async (t) => {
+  await withDeck(t, async ({ page, origin, press, back, slideId }) => {
+    const tagged = async () => page.evaluate(() => Array.from(
+      document.querySelectorAll('#frags .fragment')).map(el => el.classList.contains('is-prerevealed')));
+    await page.goto(`${origin}/#3`);
+    await back();
+    assert.equal(await slideId(), 'frags');
+    assert.deepEqual(await tagged(), [true, true], 'entered backward, both shown finished');
+    await back();
+    await press();
+    assert.deepEqual(await tagged(), [true, false], 'a re-revealed step animates again');
+    await press();
+    await back();
+    await back();
+    await back();
+    await back();
+    assert.equal(await slideId(), 'plain');
+    await press();
+    assert.equal(await slideId(), 'frags');
+    assert.deepEqual(await tagged(), [false, false], 'a forward entry clears the tag');
+  });
+});

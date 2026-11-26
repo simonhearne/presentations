@@ -1,0 +1,129 @@
+{
+  "$schema": "https://vega.github.io/schema/vega/v5.json",
+  "description": "Unfiltered search p50 for four layouts of the same 448k products, as a multiple of the compacted collection with no partition key, next to the segment count each layout ended with. One dot per round and ef (2 rounds; ef 32 upper, ef 192 lower), each divided by the no-partitions p50 of the same round and ef. Stage 0: no partitions (the 1x reference) and 16 partitions. Stage 1: 4 partitions. Stage 2: no partitions, left uncompacted. Blocks are segment counts only: equal width, not grouped by partition, since the probe recorded neither. Source: vector_search_ecom probes/probe_b2_segments.json.",
+  "width": 1650,
+  "height": 520,
+  "padding": 5,
+  "autosize": "fit",
+  "background": "rgba(0,0,0,0)",
+  "signals": [
+    {"name": "stage", "value": 0},
+    {"name": "p0", "value": 0, "on": [{"events": {"type": "timer", "throttle": 16}, "update": "min(1, p0 + 0.015)"}]},
+    {"name": "p1", "value": 0, "on": [{"events": {"type": "timer", "throttle": 16}, "update": "stage < 1 ? 0 : min(1, p1 + 0.015)"}]},
+    {"name": "p2", "value": 0, "on": [{"events": {"type": "timer", "throttle": 16}, "update": "stage < 2 ? 0 : min(1, p2 + 0.015)"}]}
+  ],
+  "data": [
+    {
+      "name": "rows",
+      "values": [
+        {"y": 128, "name": "No partitions", "sub": "compacted", "segs": 4, "s": 0, "range": "1× (reference)", "slow": false},
+        {"y": 238, "name": "16 partitions", "sub": "compacted, 14 hold data", "segs": 18, "s": 0, "range": "1.4 to 2.2×", "slow": true},
+        {"y": 348, "name": "4 partitions", "sub": "compacted", "segs": 4, "s": 1, "range": "0.7 to 0.9×", "slow": false},
+        {"y": 458, "name": "No partitions", "sub": "left uncompacted", "segs": 24, "s": 2, "range": "1.8 to 2.5×", "slow": true}
+      ],
+      "transform": [
+        {"type": "formula", "as": "p", "expr": "[p0, p1, p2][datum.s]"},
+        {"type": "formula", "as": "o", "expr": "clamp(datum.p * 5, 0, 1)"},
+        {"type": "formula", "as": "lo", "expr": "clamp((datum.p - 0.75) / 0.25, 0, 1)"},
+        {"type": "formula", "as": "color", "expr": "datum.slow ? '#c84cff' : '#175fff'"}
+      ]
+    },
+    {
+      "name": "blocks",
+      "source": "rows",
+      "transform": [
+        {"type": "formula", "as": "ks", "expr": "sequence(datum.segs)"},
+        {"type": "flatten", "fields": ["ks"], "as": ["k"]},
+        {"type": "formula", "as": "bo", "expr": "clamp((datum.p * 1.6 - datum.k / datum.segs) * 6, 0, 1)"}
+      ]
+    },
+    {
+      "name": "runs",
+      "values": [
+        {"s": 0, "y": 128, "x": 1, "dy": 0, "slow": false},
+        {"s": 0, "y": 238, "x": 2.1329, "dy": -11, "slow": true}, {"s": 0, "y": 238, "x": 2.2483, "dy": 11, "slow": true}, {"s": 0, "y": 238, "x": 1.4425, "dy": -11, "slow": true}, {"s": 0, "y": 238, "x": 1.651, "dy": 11, "slow": true},
+        {"s": 1, "y": 348, "x": 0.9247, "dy": -11, "slow": false}, {"s": 1, "y": 348, "x": 0.8984, "dy": 11, "slow": false}, {"s": 1, "y": 348, "x": 0.741, "dy": -11, "slow": false}, {"s": 1, "y": 348, "x": 0.7093, "dy": 11, "slow": false},
+        {"s": 2, "y": 458, "x": 2.3314, "dy": -11, "slow": true}, {"s": 2, "y": 458, "x": 2.538, "dy": 11, "slow": true}, {"s": 2, "y": 458, "x": 1.804, "dy": -11, "slow": true}, {"s": 2, "y": 458, "x": 1.8752, "dy": 11, "slow": true}
+      ],
+      "transform": [
+        {"type": "formula", "as": "p", "expr": "[p0, p1, p2][datum.s]"},
+        {"type": "formula", "as": "t", "expr": "clamp((datum.p - 0.5) / 0.4, 0, 1)"},
+        {"type": "formula", "as": "cx", "expr": "1 + (datum.x - 1) * (1 - pow(1 - datum.t, 3))"},
+        {"type": "formula", "as": "o", "expr": "clamp(datum.t * 5, 0, 1)"},
+        {"type": "formula", "as": "color", "expr": "datum.slow ? '#c84cff' : '#175fff'"}
+      ]
+    },
+    {"name": "ticks", "values": [{"v": 0.5}, {"v": 1}, {"v": 1.5}, {"v": 2}, {"v": 2.5}]}
+  ],
+  "scales": [
+    {"name": "x", "type": "linear", "domain": [0.5, 2.6], "range": [935, 1400], "nice": false, "zero": false}
+  ],
+  "marks": [
+    {
+      "type": "text",
+      "encode": {"enter": {"x": {"value": 315}, "y": {"value": 22}, "baseline": {"value": "middle"}, "fontSize": {"value": 24}, "fontWeight": {"value": 600}, "fill": {"value": "#1e293b"}, "text": {"value": "Segments searched"}}}
+    },
+    {
+      "type": "text",
+      "encode": {"enter": {"x": {"value": 935}, "y": {"value": 22}, "baseline": {"value": "middle"}, "fontSize": {"value": 24}, "fontWeight": {"value": 600}, "fill": {"value": "#1e293b"}, "text": {"value": "p50 vs no partitions, compacted"}}}
+    },
+    {
+      "type": "rule",
+      "from": {"data": "ticks"},
+      "encode": {"enter": {"x": {"scale": "x", "field": "v"}, "y": {"value": 76}, "y2": {"value": 510}, "stroke": {"signal": "datum.v === 1 ? '#061982' : '#cbd5e1'"}, "strokeWidth": {"signal": "datum.v === 1 ? 2.5 : 1.5"}, "strokeDash": {"signal": "datum.v === 1 ? [8, 6] : [1, 0]"}}}
+    },
+    {
+      "type": "text",
+      "from": {"data": "ticks"},
+      "encode": {"enter": {"x": {"scale": "x", "field": "v"}, "y": {"value": 58}, "align": {"value": "center"}, "baseline": {"value": "middle"}, "fontSize": {"value": 22}, "fontWeight": {"signal": "datum.v === 1 ? 700 : 400"}, "fill": {"signal": "datum.v === 1 ? '#061982' : '#475569'"}, "text": {"signal": "datum.v + '×'"}}}
+    },
+    {
+      "type": "text",
+      "from": {"data": "rows"},
+      "encode": {
+        "enter": {"x": {"value": 0}, "y": {"field": "y", "offset": -14}, "baseline": {"value": "middle"}, "fontSize": {"value": 30}, "fontWeight": {"value": 600}, "fill": {"value": "#061982"}, "text": {"field": "name"}},
+        "update": {"opacity": {"field": "o"}}
+      }
+    },
+    {
+      "type": "text",
+      "from": {"data": "rows"},
+      "encode": {
+        "enter": {"x": {"value": 0}, "y": {"field": "y", "offset": 19}, "baseline": {"value": "middle"}, "fontSize": {"value": 23}, "fill": {"value": "#1e293b"}, "text": {"field": "sub"}},
+        "update": {"opacity": {"field": "o"}}
+      }
+    },
+    {
+      "type": "rect",
+      "from": {"data": "blocks"},
+      "encode": {
+        "enter": {"x": {"signal": "315 + datum.k * 21"}, "width": {"value": 17}, "y": {"field": "y", "offset": -24}, "height": {"value": 48}, "cornerRadius": {"value": 4}, "fill": {"field": "color"}},
+        "update": {"opacity": {"field": "bo"}}
+      }
+    },
+    {
+      "type": "text",
+      "from": {"data": "rows"},
+      "encode": {
+        "enter": {"x": {"signal": "315 + datum.segs * 21 + 12"}, "y": {"field": "y"}, "baseline": {"value": "middle"}, "fontSize": {"value": 34}, "fontWeight": {"value": 700}, "fill": {"value": "#061982"}, "text": {"field": "segs"}},
+        "update": {"opacity": {"field": "lo"}}
+      }
+    },
+    {
+      "type": "symbol",
+      "from": {"data": "runs"},
+      "encode": {
+        "enter": {"y": {"signal": "datum.y + datum.dy"}, "size": {"value": 380}, "fill": {"field": "color"}, "stroke": {"value": "#ffffff"}, "strokeWidth": {"value": 2}},
+        "update": {"x": {"scale": "x", "field": "cx"}, "opacity": {"field": "o"}}
+      }
+    },
+    {
+      "type": "text",
+      "from": {"data": "rows"},
+      "encode": {
+        "enter": {"x": {"value": 1445}, "y": {"field": "y"}, "baseline": {"value": "middle"}, "fontSize": {"signal": "datum.s === 0 && !datum.slow ? 24 : 32"}, "fontWeight": {"value": 700}, "fill": {"value": "#061982"}, "text": {"field": "range"}},
+        "update": {"opacity": {"field": "lo"}}
+      }
+    }
+  ]
+}

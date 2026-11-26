@@ -1,0 +1,227 @@
+{
+  "$schema": "https://vega.github.io/schema/vega/v5.json",
+  "description": "Search p99 per 30 s window at 20 searches/s as a multiple of the 31 ms no-writes p99, for two stacked runs (price storm, bulk feed, price storm back to back) from a level start. Line: mean of the two runs; band: their range. Thick steps and headers: the mean of the 30 s p99s in that span, both runs; the writes split at the feed (7.0 to 7.5 min, about 30 s). Stage 0: the 1x reference. Stage 1: the writes. Stage 2: the first 10 minutes after. Stage 3: 10 to 14 minutes after, the seal. Stage 4: 14 to 20 minutes after. Stage 5: a single 10% storm with nothing before or after it (teal); headers fade out, lined up on writes stopping, each run divided by its own no-writes control p99 (29.5 and 30.9 ms). Source: vector_search_ecom results/b4a.json passes 2, 5; reference from passes 0, 7. Storm alone: results/b4d_single_ops.json storm10 passes, both repeats.",
+  "width": 1500,
+  "height": 560,
+  "padding": {"left": 5, "right": 5, "top": 5, "bottom": 26},
+  "autosize": "fit",
+  "background": "rgba(0,0,0,0)",
+  "signals": [
+    {"name": "stage", "value": 0},
+    {"name": "span", "value": 32.5},
+    {"name": "stop", "value": 12.5},
+    {"name": "pause", "value": 22.5},
+    {"name": "pause2", "value": 26.5},
+    {"name": "draw", "value": 0, "on": [{"events": {"type": "timer", "throttle": 16}, "update": "stage < 1 ? 0 : stage < 2 ? min(stop, draw + 0.16) : stage < 3 ? min(pause, max(draw, stop) + 0.2) : stage < 4 ? min(pause2, max(draw, pause) + 0.2) : min(span, max(draw, pause2) + 0.2)"}]},
+    {"name": "drawB", "value": 12.5, "on": [{"events": {"type": "timer", "throttle": 16}, "update": "stage < 5 ? stop : min(span, drawB + 0.2)"}]}
+  ],
+  "data": [
+    {
+      "name": "windows",
+      "values": [
+        {"g": "stacked", "run": "stacked0", "t": 0.25, "x": 2.46}, {"g": "stacked", "run": "stacked0", "t": 0.75, "x": 0.77}, {"g": "stacked", "run": "stacked0", "t": 1.25, "x": 0.78}, {"g": "stacked", "run": "stacked0", "t": 1.75, "x": 0.69},
+        {"g": "stacked", "run": "stacked0", "t": 2.25, "x": 1.33}, {"g": "stacked", "run": "stacked0", "t": 2.75, "x": 3.45}, {"g": "stacked", "run": "stacked0", "t": 3.25, "x": 5.14}, {"g": "stacked", "run": "stacked0", "t": 3.75, "x": 1.92},
+        {"g": "stacked", "run": "stacked0", "t": 4.25, "x": 6.00}, {"g": "stacked", "run": "stacked0", "t": 4.75, "x": 3.71}, {"g": "stacked", "run": "stacked0", "t": 5.25, "x": 3.21}, {"g": "stacked", "run": "stacked0", "t": 5.75, "x": 3.47},
+        {"g": "stacked", "run": "stacked0", "t": 6.25, "x": 3.44}, {"g": "stacked", "run": "stacked0", "t": 6.75, "x": 3.54}, {"g": "stacked", "run": "stacked0", "t": 7.25, "x": 13.18}, {"g": "stacked", "run": "stacked0", "t": 7.75, "x": 19.67},
+        {"g": "stacked", "run": "stacked0", "t": 8.25, "x": 10.11}, {"g": "stacked", "run": "stacked0", "t": 8.75, "x": 8.22}, {"g": "stacked", "run": "stacked0", "t": 9.25, "x": 10.15}, {"g": "stacked", "run": "stacked0", "t": 9.75, "x": 3.29},
+        {"g": "stacked", "run": "stacked0", "t": 10.25, "x": 11.91}, {"g": "stacked", "run": "stacked0", "t": 10.75, "x": 7.65}, {"g": "stacked", "run": "stacked0", "t": 11.25, "x": 3.25}, {"g": "stacked", "run": "stacked0", "t": 11.75, "x": 22.16},
+        {"g": "stacked", "run": "stacked0", "t": 12.25, "x": 3.15}, {"g": "stacked", "run": "stacked0", "t": 12.75, "x": 13.41}, {"g": "stacked", "run": "stacked0", "t": 13.25, "x": 17.57}, {"g": "stacked", "run": "stacked0", "t": 13.75, "x": 11.29},
+        {"g": "stacked", "run": "stacked0", "t": 14.25, "x": 10.19}, {"g": "stacked", "run": "stacked0", "t": 14.75, "x": 7.71}, {"g": "stacked", "run": "stacked0", "t": 15.25, "x": 7.56}, {"g": "stacked", "run": "stacked0", "t": 15.75, "x": 0.82},
+        {"g": "stacked", "run": "stacked0", "t": 16.25, "x": 8.54}, {"g": "stacked", "run": "stacked0", "t": 16.75, "x": 6.68}, {"g": "stacked", "run": "stacked0", "t": 17.25, "x": 3.78}, {"g": "stacked", "run": "stacked0", "t": 17.75, "x": 9.67},
+        {"g": "stacked", "run": "stacked0", "t": 18.25, "x": 1.64}, {"g": "stacked", "run": "stacked0", "t": 18.75, "x": 1.05}, {"g": "stacked", "run": "stacked0", "t": 19.25, "x": 1.36}, {"g": "stacked", "run": "stacked0", "t": 19.75, "x": 4.05},
+        {"g": "stacked", "run": "stacked0", "t": 20.25, "x": 1.22}, {"g": "stacked", "run": "stacked0", "t": 20.75, "x": 0.99}, {"g": "stacked", "run": "stacked0", "t": 21.25, "x": 11.13}, {"g": "stacked", "run": "stacked0", "t": 21.75, "x": 5.90},
+        {"g": "stacked", "run": "stacked0", "t": 22.25, "x": 3.99}, {"g": "stacked", "run": "stacked0", "t": 22.75, "x": 18.78}, {"g": "stacked", "run": "stacked0", "t": 23.25, "x": 18.64}, {"g": "stacked", "run": "stacked0", "t": 23.75, "x": 4.81},
+        {"g": "stacked", "run": "stacked0", "t": 24.25, "x": 21.16}, {"g": "stacked", "run": "stacked0", "t": 24.75, "x": 6.46}, {"g": "stacked", "run": "stacked0", "t": 25.25, "x": 5.08}, {"g": "stacked", "run": "stacked0", "t": 25.75, "x": 1.07},
+        {"g": "stacked", "run": "stacked0", "t": 26.25, "x": 8.05}, {"g": "stacked", "run": "stacked0", "t": 26.75, "x": 0.96}, {"g": "stacked", "run": "stacked0", "t": 27.25, "x": 0.77}, {"g": "stacked", "run": "stacked0", "t": 27.75, "x": 0.79},
+        {"g": "stacked", "run": "stacked0", "t": 28.25, "x": 0.90}, {"g": "stacked", "run": "stacked0", "t": 28.75, "x": 1.12}, {"g": "stacked", "run": "stacked0", "t": 29.25, "x": 0.76}, {"g": "stacked", "run": "stacked0", "t": 29.75, "x": 0.81},
+        {"g": "stacked", "run": "stacked0", "t": 30.25, "x": 0.78}, {"g": "stacked", "run": "stacked0", "t": 30.75, "x": 0.64}, {"g": "stacked", "run": "stacked0", "t": 31.25, "x": 0.75}, {"g": "stacked", "run": "stacked0", "t": 31.75, "x": 0.71},
+        {"g": "stacked", "run": "stacked0", "t": 32.25, "x": 0.90}, {"g": "stacked", "run": "stacked1", "t": 0.25, "x": 1.41}, {"g": "stacked", "run": "stacked1", "t": 0.75, "x": 1.00}, {"g": "stacked", "run": "stacked1", "t": 1.25, "x": 1.17},
+        {"g": "stacked", "run": "stacked1", "t": 1.75, "x": 0.99}, {"g": "stacked", "run": "stacked1", "t": 2.25, "x": 3.64}, {"g": "stacked", "run": "stacked1", "t": 2.75, "x": 3.80}, {"g": "stacked", "run": "stacked1", "t": 3.25, "x": 3.88},
+        {"g": "stacked", "run": "stacked1", "t": 3.75, "x": 4.90}, {"g": "stacked", "run": "stacked1", "t": 4.25, "x": 3.91}, {"g": "stacked", "run": "stacked1", "t": 4.75, "x": 5.12}, {"g": "stacked", "run": "stacked1", "t": 5.25, "x": 3.64},
+        {"g": "stacked", "run": "stacked1", "t": 5.75, "x": 6.51}, {"g": "stacked", "run": "stacked1", "t": 6.25, "x": 5.73}, {"g": "stacked", "run": "stacked1", "t": 6.75, "x": 3.71}, {"g": "stacked", "run": "stacked1", "t": 7.25, "x": 9.04},
+        {"g": "stacked", "run": "stacked1", "t": 7.75, "x": 21.69}, {"g": "stacked", "run": "stacked1", "t": 8.25, "x": 15.39}, {"g": "stacked", "run": "stacked1", "t": 8.75, "x": 5.27}, {"g": "stacked", "run": "stacked1", "t": 9.25, "x": 13.06},
+        {"g": "stacked", "run": "stacked1", "t": 9.75, "x": 8.45}, {"g": "stacked", "run": "stacked1", "t": 10.25, "x": 25.52}, {"g": "stacked", "run": "stacked1", "t": 10.75, "x": 24.75}, {"g": "stacked", "run": "stacked1", "t": 11.25, "x": 6.77},
+        {"g": "stacked", "run": "stacked1", "t": 11.75, "x": 4.07}, {"g": "stacked", "run": "stacked1", "t": 12.25, "x": 6.73}, {"g": "stacked", "run": "stacked1", "t": 12.75, "x": 9.54}, {"g": "stacked", "run": "stacked1", "t": 13.25, "x": 7.66},
+        {"g": "stacked", "run": "stacked1", "t": 13.75, "x": 5.04}, {"g": "stacked", "run": "stacked1", "t": 14.25, "x": 1.15}, {"g": "stacked", "run": "stacked1", "t": 14.75, "x": 3.16}, {"g": "stacked", "run": "stacked1", "t": 15.25, "x": 0.93},
+        {"g": "stacked", "run": "stacked1", "t": 15.75, "x": 5.67}, {"g": "stacked", "run": "stacked1", "t": 16.25, "x": 1.38}, {"g": "stacked", "run": "stacked1", "t": 16.75, "x": 3.21}, {"g": "stacked", "run": "stacked1", "t": 17.25, "x": 3.99},
+        {"g": "stacked", "run": "stacked1", "t": 17.75, "x": 5.07}, {"g": "stacked", "run": "stacked1", "t": 18.25, "x": 1.23}, {"g": "stacked", "run": "stacked1", "t": 18.75, "x": 2.16}, {"g": "stacked", "run": "stacked1", "t": 19.25, "x": 0.83},
+        {"g": "stacked", "run": "stacked1", "t": 19.75, "x": 3.10}, {"g": "stacked", "run": "stacked1", "t": 20.25, "x": 0.80}, {"g": "stacked", "run": "stacked1", "t": 20.75, "x": 0.93}, {"g": "stacked", "run": "stacked1", "t": 21.25, "x": 0.80},
+        {"g": "stacked", "run": "stacked1", "t": 21.75, "x": 0.88}, {"g": "stacked", "run": "stacked1", "t": 22.25, "x": 0.87}, {"g": "stacked", "run": "stacked1", "t": 22.75, "x": 5.73}, {"g": "stacked", "run": "stacked1", "t": 23.25, "x": 22.52},
+        {"g": "stacked", "run": "stacked1", "t": 23.75, "x": 16.78}, {"g": "stacked", "run": "stacked1", "t": 24.25, "x": 10.31}, {"g": "stacked", "run": "stacked1", "t": 24.75, "x": 9.68}, {"g": "stacked", "run": "stacked1", "t": 25.25, "x": 10.69},
+        {"g": "stacked", "run": "stacked1", "t": 25.75, "x": 18.89}, {"g": "stacked", "run": "stacked1", "t": 26.25, "x": 0.97}, {"g": "stacked", "run": "stacked1", "t": 26.75, "x": 2.69}, {"g": "stacked", "run": "stacked1", "t": 27.25, "x": 1.48},
+        {"g": "stacked", "run": "stacked1", "t": 27.75, "x": 4.00}, {"g": "stacked", "run": "stacked1", "t": 28.25, "x": 1.10}, {"g": "stacked", "run": "stacked1", "t": 28.75, "x": 0.94}, {"g": "stacked", "run": "stacked1", "t": 29.25, "x": 3.08},
+        {"g": "stacked", "run": "stacked1", "t": 29.75, "x": 1.02}, {"g": "stacked", "run": "stacked1", "t": 30.25, "x": 4.21}, {"g": "stacked", "run": "stacked1", "t": 30.75, "x": 1.69}, {"g": "stacked", "run": "stacked1", "t": 31.25, "x": 1.06},
+        {"g": "stacked", "run": "stacked1", "t": 31.75, "x": 2.18}, {"g": "stacked", "run": "stacked1", "t": 32.25, "x": 2.46}
+      ]
+    },
+    {
+      "name": "alone",
+      "values": [
+        {"run": "alone0", "t": 12.75, "x": 0.94}, {"run": "alone0", "t": 13.25, "x": 0.95}, {"run": "alone0", "t": 13.75, "x": 0.93}, {"run": "alone0", "t": 14.25, "x": 0.94},
+        {"run": "alone0", "t": 14.75, "x": 0.96}, {"run": "alone0", "t": 15.25, "x": 0.99}, {"run": "alone0", "t": 15.75, "x": 0.97}, {"run": "alone0", "t": 16.25, "x": 0.99},
+        {"run": "alone0", "t": 16.75, "x": 0.99}, {"run": "alone0", "t": 17.25, "x": 1.07}, {"run": "alone0", "t": 17.75, "x": 1.09}, {"run": "alone0", "t": 18.25, "x": 1.06},
+        {"run": "alone0", "t": 18.75, "x": 1.13}, {"run": "alone0", "t": 19.25, "x": 0.93}, {"run": "alone0", "t": 19.75, "x": 0.93}, {"run": "alone0", "t": 20.25, "x": 1.00},
+        {"run": "alone0", "t": 20.75, "x": 0.87}, {"run": "alone0", "t": 21.25, "x": 1.04}, {"run": "alone0", "t": 21.75, "x": 1.11}, {"run": "alone0", "t": 22.25, "x": 1.05},
+        {"run": "alone0", "t": 22.75, "x": 1.17}, {"run": "alone0", "t": 23.25, "x": 40.46}, {"run": "alone0", "t": 23.75, "x": 1.15}, {"run": "alone0", "t": 24.25, "x": 1.08},
+        {"run": "alone0", "t": 24.75, "x": 1.03}, {"run": "alone0", "t": 25.25, "x": 1.07}, {"run": "alone0", "t": 25.75, "x": 1.00}, {"run": "alone0", "t": 26.25, "x": 0.96},
+        {"run": "alone0", "t": 26.75, "x": 1.05}, {"run": "alone0", "t": 27.25, "x": 1.21}, {"run": "alone0", "t": 27.75, "x": 0.96}, {"run": "alone0", "t": 28.25, "x": 1.03},
+        {"run": "alone0", "t": 28.75, "x": 0.96}, {"run": "alone0", "t": 29.25, "x": 0.94}, {"run": "alone0", "t": 29.75, "x": 1.08}, {"run": "alone0", "t": 30.25, "x": 0.98},
+        {"run": "alone0", "t": 30.75, "x": 1.21}, {"run": "alone0", "t": 31.25, "x": 1.14}, {"run": "alone0", "t": 31.75, "x": 1.11}, {"run": "alone0", "t": 32.25, "x": 0.97},
+        {"run": "alone1", "t": 12.75, "x": 0.98}, {"run": "alone1", "t": 13.25, "x": 0.97}, {"run": "alone1", "t": 13.75, "x": 0.95}, {"run": "alone1", "t": 14.25, "x": 1.01},
+        {"run": "alone1", "t": 14.75, "x": 1.04}, {"run": "alone1", "t": 15.25, "x": 0.94}, {"run": "alone1", "t": 15.75, "x": 1.09}, {"run": "alone1", "t": 16.25, "x": 0.90},
+        {"run": "alone1", "t": 16.75, "x": 1.05}, {"run": "alone1", "t": 17.25, "x": 0.95}, {"run": "alone1", "t": 17.75, "x": 0.95}, {"run": "alone1", "t": 18.25, "x": 0.89},
+        {"run": "alone1", "t": 18.75, "x": 0.94}, {"run": "alone1", "t": 19.25, "x": 0.99}, {"run": "alone1", "t": 19.75, "x": 0.99}, {"run": "alone1", "t": 20.25, "x": 0.97},
+        {"run": "alone1", "t": 20.75, "x": 0.93}, {"run": "alone1", "t": 21.25, "x": 1.06}, {"run": "alone1", "t": 21.75, "x": 0.95}, {"run": "alone1", "t": 22.25, "x": 0.94},
+        {"run": "alone1", "t": 22.75, "x": 0.78}, {"run": "alone1", "t": 23.25, "x": 1.00}, {"run": "alone1", "t": 23.75, "x": 30.68}, {"run": "alone1", "t": 24.25, "x": 1.06},
+        {"run": "alone1", "t": 24.75, "x": 1.03}, {"run": "alone1", "t": 25.25, "x": 1.03}, {"run": "alone1", "t": 25.75, "x": 1.14}, {"run": "alone1", "t": 26.25, "x": 1.01},
+        {"run": "alone1", "t": 26.75, "x": 1.08}, {"run": "alone1", "t": 27.25, "x": 1.08}, {"run": "alone1", "t": 27.75, "x": 1.03}, {"run": "alone1", "t": 28.25, "x": 1.07},
+        {"run": "alone1", "t": 28.75, "x": 1.09}, {"run": "alone1", "t": 29.25, "x": 1.19}, {"run": "alone1", "t": 29.75, "x": 1.05}, {"run": "alone1", "t": 30.25, "x": 1.03},
+        {"run": "alone1", "t": 30.75, "x": 1.09}, {"run": "alone1", "t": 31.25, "x": 1.14}, {"run": "alone1", "t": 31.75, "x": 1.04}, {"run": "alone1", "t": 32.25, "x": 1.04}
+      ]
+    },
+    {
+      "name": "aloneMerged",
+      "source": "alone",
+      "transform": [
+        {"type": "filter", "expr": "datum.t <= drawB"},
+        {"type": "aggregate", "groupby": ["t"], "fields": ["x", "x", "x"], "ops": ["mean", "min", "max"], "as": ["x", "lo", "hi"]},
+        {"type": "collect", "sort": {"field": "t"}}
+      ]
+    },
+    {"name": "segmented", "source": "windows", "transform": [{"type": "formula", "as": "a", "expr": "datum.t < 2 ? 0 : datum.t < 7 ? 2 : datum.t < 7.5 ? 7 : datum.t < 12.5 ? 7.5 : datum.t < 17.5 ? 12.5 : datum.t < 22.5 ? 17.5 : datum.t < 26.5 ? 22.5 : 26.5"}]},
+    {"name": "avg", "source": "segmented", "transform": [{"type": "aggregate", "groupby": ["a"], "fields": ["x"], "ops": ["mean"], "as": ["m"]}]},
+    {
+      "name": "merged",
+      "source": "windows",
+      "transform": [
+        {"type": "filter", "expr": "datum.t <= draw"},
+        {"type": "aggregate", "groupby": ["t"], "fields": ["x", "x", "x"], "ops": ["mean", "min", "max"], "as": ["x", "lo", "hi"]},
+        {"type": "collect", "sort": {"field": "t"}}
+      ]
+    },
+    {
+      "name": "bands",
+      "values": [
+        {"a": 0, "b": 2, "at": 99, "ratio": false, "text": "", "fill": "rgba(0,0,0,0)"},
+        {"a": 2, "b": 7, "at": 2, "ratio": true, "text": "storm", "fill": "#fff4e0"},
+        {"a": 7, "b": 7.5, "at": 7, "ratio": false, "text": "", "fill": "#fff4e0"},
+        {"a": 7.5, "b": 12.5, "at": 7.6, "ratio": true, "text": "second storm", "fill": "#fff4e0"},
+        {"a": 12.5, "b": 17.5, "at": 13.6, "ratio": true, "text": "0 to 5 min after", "fill": "rgba(0,0,0,0)"},
+        {"a": 17.5, "b": 22.5, "at": 18.6, "ratio": true, "text": "5 to 10 min", "fill": "rgba(0,0,0,0)"},
+        {"a": 22.5, "b": 26.5, "at": 23.6, "ratio": true, "text": ["10 to 14 min:", "segments seal"], "fill": "rgba(0,0,0,0)"},
+        {"a": 26.5, "b": 32.5, "at": 27.6, "ratio": true, "text": "14 to 20 min", "fill": "rgba(0,0,0,0)"}
+      ],
+      "transform": [
+        {"type": "lookup", "from": "avg", "key": "a", "fields": ["a"], "values": ["m"], "as": ["m"]},
+        {"type": "formula", "as": "o", "expr": "clamp((draw - datum.at) / 1.5, 0, 1)"},
+        {"type": "formula", "as": "end", "expr": "clamp(draw, datum.a, datum.b)"}
+      ]
+    }
+  ],
+  "scales": [
+    {"name": "x", "type": "linear", "domain": [0, 32.5], "range": "width", "nice": false, "zero": false},
+    {"name": "y", "type": "log", "domain": [0.5, 100], "range": "height", "nice": false}
+  ],
+  "axes": [
+    {"orient": "bottom", "scale": "x", "title": "minutes", "titleAnchor": "start", "values": [0, 5, 10, 15, 20, 25, 30]},
+    {"orient": "left", "scale": "y", "title": "search p99 vs. no writes", "values": [1, 3, 10, 30], "encode": {"labels": {"update": {"text": {"signal": "datum.value + '×'"}}}}}
+  ],
+  "marks": [
+    {
+      "type": "rect",
+      "from": {"data": "bands"},
+      "encode": {
+        "enter": {"x": {"scale": "x", "field": "a"}, "x2": {"scale": "x", "field": "b"}, "y": {"value": 0}, "y2": {"signal": "height"}, "fill": {"field": "fill"}},
+        "update": {"opacity": {"field": "o"}}
+      }
+    },
+    {
+      "type": "rule",
+      "from": {"data": "bands"},
+      "encode": {
+        "enter": {"x": {"scale": "x", "field": "b"}, "y": {"value": 0}, "y2": {"signal": "height"}, "stroke": {"value": "#cbd5e1"}, "strokeWidth": {"value": 1.5}, "strokeDash": {"value": [5, 6]}},
+        "update": {"opacity": {"field": "o"}}
+      }
+    },
+    {
+      "type": "rule",
+      "encode": {"enter": {"x": {"value": 0}, "x2": {"signal": "width"}, "y": {"scale": "y", "value": 1}, "stroke": {"value": "#175fff"}, "strokeWidth": {"value": 6}}}
+    },
+    {
+      "type": "area",
+      "from": {"data": "merged"},
+      "encode": {"update": {"x": {"scale": "x", "field": "t"}, "y": {"scale": "y", "field": "hi"}, "y2": {"scale": "y", "field": "lo"}, "fill": {"value": "#d97706"}, "fillOpacity": {"signal": "stage > 4 ? 0.08 : 0.16"}}}
+    },
+    {
+      "type": "line",
+      "from": {"data": "merged"},
+      "encode": {"update": {"x": {"scale": "x", "field": "t"}, "y": {"scale": "y", "field": "x"}, "stroke": {"value": "#d97706"}, "strokeWidth": {"value": 2.5}, "strokeOpacity": {"signal": "stage > 4 ? 0.35 : 0.65"}}}
+    },
+    {
+      "type": "rule",
+      "from": {"data": "bands"},
+      "encode": {
+        "enter": {"x": {"scale": "x", "field": "a"}, "y": {"scale": "y", "field": "m"}, "stroke": {"value": "#d97706"}, "strokeWidth": {"value": 7}},
+        "update": {"x2": {"scale": "x", "field": "end"}, "opacity": {"signal": "datum.ratio && datum.end > datum.a ? (stage > 4 ? 0.4 : 1) : 0"}}
+      }
+    },
+    {
+      "type": "area",
+      "from": {"data": "aloneMerged"},
+      "encode": {"update": {"x": {"scale": "x", "field": "t"}, "y": {"scale": "y", "field": "hi"}, "y2": {"scale": "y", "field": "lo"}, "fill": {"value": "#0f9f8f"}, "fillOpacity": {"value": 0.18}}}
+    },
+    {
+      "type": "line",
+      "from": {"data": "aloneMerged"},
+      "encode": {"update": {"x": {"scale": "x", "field": "t"}, "y": {"scale": "y", "field": "x"}, "stroke": {"value": "#0f9f8f"}, "strokeWidth": {"value": 3}}}
+    },
+    {
+      "type": "text",
+      "encode": {
+        "enter": {"x": {"scale": "x", "value": 12.5, "offset": 14}, "y": {"scale": "y", "value": 1, "offset": -22}, "fontSize": {"value": 21}, "fontWeight": {"value": 600}, "fill": {"value": "#0f9f8f"}, "text": {"value": "single storm"}},
+        "update": {"opacity": {"signal": "drawB > 14 ? 1 : 0"}}
+      }
+    },
+    {
+      "type": "text",
+      "encode": {
+        "enter": {"x": {"scale": "x", "value": 26.5, "offset": 14}, "y": {"scale": "y", "value": 30}, "fontSize": {"value": 21}, "fontWeight": {"value": 600}, "lineHeight": {"value": 26}, "fill": {"value": "#0f9f8f"}, "text": {"value": ["single storm: one 30 s", "window at 0.95 to 1.19 s"]}},
+        "update": {"opacity": {"signal": "drawB > 24.5 ? 1 : 0"}}
+      }
+    },
+    {
+      "type": "text",
+      "encode": {"enter": {"x": {"scale": "x", "value": 2, "offset": 14}, "y": {"scale": "y", "value": 1, "offset": 30}, "fontSize": {"value": 21}, "fontWeight": {"value": 600}, "fill": {"value": "#175fff"}, "text": {"value": "no writes: 31 ms"}}}
+    },
+    {
+      "type": "text",
+      "encode": {
+        "enter": {"x": {"scale": "x", "value": 7.25}, "y": {"signal": "height", "offset": -14}, "align": {"value": "center"}, "fontSize": {"value": 21}, "fontWeight": {"value": 600}, "fill": {"value": "#1e293b"}, "text": {"value": "feed"}},
+        "update": {"opacity": {"signal": "draw > 7.5 ? 1 : 0"}}
+      }
+    },
+    {
+      "type": "text",
+      "encode": {
+        "enter": {"x": {"signal": "width"}, "y": {"signal": "height", "offset": 56}, "align": {"value": "right"}, "fontSize": {"value": 20}, "fill": {"value": "#1e293b"}, "text": {"value": "thin: 30 s p99, mean of two runs. shaded: their range. thick: average over each span"}},
+        "update": {"opacity": {"signal": "stage > 0 ? 1 : 0"}}
+      }
+    },
+    {
+      "type": "text",
+      "from": {"data": "bands"},
+      "encode": {
+        "enter": {"x": {"scale": "x", "field": "a", "offset": 14}, "y": {"value": 40}, "fontSize": {"value": 40}, "fontWeight": {"value": 700}, "fill": {"value": "#061982"}, "text": {"signal": "datum.ratio ? '~' + format(datum.m, datum.m < 2 ? '.1f' : '.0f') + '×' : ''"}},
+        "update": {"opacity": {"signal": "datum.o * (1 - clamp((drawB - stop) / 4, 0, 1))"}}
+      }
+    },
+    {
+      "type": "text",
+      "from": {"data": "bands"},
+      "encode": {
+        "enter": {"x": {"scale": "x", "field": "a", "offset": 14}, "y": {"value": 70}, "fontSize": {"value": 21}, "lineHeight": {"value": 26}, "fill": {"value": "#1e293b"}, "text": {"field": "text"}},
+        "update": {"opacity": {"signal": "datum.o * (1 - clamp((drawB - stop) / 4, 0, 1))"}}
+      }
+    }
+  ]
+}

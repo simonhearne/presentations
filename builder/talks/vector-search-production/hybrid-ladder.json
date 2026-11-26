@@ -1,0 +1,103 @@
+{
+  "$schema": "https://vega.github.io/schema/vega/v5.json",
+  "description": "Mean exact matches in the top 5 over 966 judged searches, each arm alone and fused. Stage 0: BM25 and dense text alone. 1: RRF with 10 and 100 candidates per arm. 2: Milvus WeightedRanker at 70% BM25 / 30% dense, 100 per arm. 3: the oracle, a row of its own: mean exact of 5 if each search used whichever arm alone did better (unknowable at search time), and the headroom band above the best fusion. 'Beat both' is the share of searches where the fusion has more exact matches than either arm. Source: vector_search_ecom probes/probe_fusion.json (exact_top5, beats_best_arm, oracle_best_arm_exact_top5).",
+  "width": 760,
+  "height": 386,
+  "padding": 5,
+  "autosize": "pad",
+  "background": "rgba(0,0,0,0)",
+  "signals": [
+    {"name": "stage", "value": 0},
+    {"name": "oracle", "value": 3.4358},
+    {"name": "best", "value": 3.1977},
+    {"name": "f1", "value": 0, "on": [{"events": {"type": "timer", "throttle": 16}, "update": "stage < 1 ? 0 : min(1, f1 + 0.05)"}]},
+    {"name": "f2", "value": 0, "on": [{"events": {"type": "timer", "throttle": 16}, "update": "stage < 2 ? 0 : min(1, f2 + 0.05)"}]},
+    {"name": "f3", "value": 0, "on": [{"events": {"type": "timer", "throttle": 16}, "update": "stage < 3 ? 0 : min(1, f3 + 0.04)"}]}
+  ],
+  "data": [
+    {
+      "name": "rows",
+      "values": [
+        {"y": 70, "name": "BM25 alone", "exact": 2.8789, "beats": null, "s": 0, "fused": false},
+        {"y": 126, "name": "Vector alone", "exact": 2.9969, "beats": null, "s": 0, "fused": false},
+        {"y": 182, "name": "RRF, 10 per arm", "exact": 3.1097, "beats": 0.0538, "s": 1, "fused": true},
+        {"y": 238, "name": "RRF, 100 per arm", "exact": 3.1781, "beats": 0.1097, "s": 1, "fused": true},
+        {"y": 294, "name": "Weighted, 70% BM25", "exact": 3.1977, "beats": 0.0932, "s": 2, "fused": true},
+        {"y": 350, "name": "Best option", "exact": 3.4358, "beats": null, "s": 3, "fused": false, "oracle": true}
+      ],
+      "transform": [
+        {"type": "formula", "as": "o", "expr": "datum.s === 0 ? 1 : [f1, f2, f3][datum.s - 1]"},
+        {"type": "formula", "as": "label", "expr": "format(datum.exact, '.2f')"},
+        {"type": "formula", "as": "pct", "expr": "datum.beats === null ? '' : format(datum.beats * 100, '.0f') + '%'"}
+      ]
+    }
+  ],
+  "scales": [
+    {"name": "x", "type": "linear", "domain": [2.8, 3.5], "range": [275, 660], "nice": false, "zero": false}
+  ],
+  "axes": [
+    {"orient": "bottom", "scale": "x", "values": [2.8, 3.0, 3.2, 3.4], "format": ".1f", "title": "exact matches in the top 5, mean of 966 searches", "titleY": 52}
+  ],
+  "marks": [
+    {
+      "type": "rect",
+      "encode": {
+        "enter": {"y": {"value": 40}, "y2": {"value": 378}, "fill": {"value": "#e8eefc"}},
+        "update": {"x": {"scale": "x", "signal": "best"}, "x2": {"scale": "x", "signal": "oracle"}, "opacity": {"signal": "f3"}}
+      }
+    },
+    {
+      "type": "rule",
+      "encode": {
+        "enter": {"y": {"value": 40}, "y2": {"value": 378}, "stroke": {"value": "#061982"}, "strokeWidth": {"value": 2}, "strokeDash": {"value": [8, 6]}},
+        "update": {"x": {"scale": "x", "signal": "oracle"}, "opacity": {"signal": "f3"}}
+      }
+    },
+    {
+      "type": "text",
+      "encode": {
+        "enter": {"y": {"value": 210}, "angle": {"value": -90}, "align": {"value": "center"}, "baseline": {"value": "middle"}, "fontSize": {"value": 18}, "fill": {"value": "#475569"}, "text": {"value": "headroom"}},
+        "update": {"x": {"scale": "x", "signal": "oracle", "offset": -18}, "opacity": {"signal": "f3"}}
+      }
+    },
+    {
+      "type": "text",
+      "encode": {
+        "enter": {"x": {"value": 760}, "y": {"value": 22}, "align": {"value": "right"}, "baseline": {"value": "middle"}, "fontSize": {"value": 18}, "fill": {"value": "#475569"}, "text": {"value": "beat both"}},
+        "update": {"opacity": {"signal": "f1"}}
+      }
+    },
+    {
+      "type": "text",
+      "from": {"data": "rows"},
+      "encode": {
+        "enter": {"x": {"value": 255}, "y": {"field": "y"}, "align": {"value": "right"}, "baseline": {"value": "middle"}, "fontSize": {"value": 24}, "fontWeight": {"value": 600}, "lineHeight": {"value": 26}, "fill": {"value": "#061982"}, "text": {"field": "name"}},
+        "update": {"opacity": {"field": "o"}}
+      }
+    },
+    {
+      "type": "symbol",
+      "from": {"data": "rows"},
+      "encode": {
+        "enter": {"x": {"scale": "x", "field": "exact"}, "y": {"field": "y"}, "shape": {"value": "circle"}, "size": {"value": 520}, "fill": {"signal": "datum.oracle ? '#ffffff' : datum.fused ? '#175fff' : '#94a3b8'"}, "stroke": {"signal": "datum.oracle ? '#061982' : null"}, "strokeWidth": {"value": 3}},
+        "update": {"opacity": {"field": "o"}}
+      }
+    },
+    {
+      "type": "text",
+      "from": {"data": "rows"},
+      "encode": {
+        "enter": {"x": {"scale": "x", "field": "exact", "offset": 22}, "y": {"field": "y"}, "align": {"value": "left"}, "baseline": {"value": "middle"}, "fontSize": {"value": 24}, "fontWeight": {"value": 700}, "fill": {"signal": "datum.fused || datum.oracle ? '#061982' : '#475569'"}, "text": {"field": "label"}},
+        "update": {"opacity": {"field": "o"}}
+      }
+    },
+    {
+      "type": "text",
+      "from": {"data": "rows"},
+      "encode": {
+        "enter": {"x": {"value": 760}, "y": {"field": "y"}, "align": {"value": "right"}, "baseline": {"value": "middle"}, "fontSize": {"value": 24}, "fontWeight": {"signal": "datum.beats > 0.1 ? 700 : 400"}, "fill": {"value": "#061982"}, "text": {"field": "pct"}},
+        "update": {"opacity": {"field": "o"}}
+      }
+    }
+  ]
+}

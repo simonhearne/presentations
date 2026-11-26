@@ -1,0 +1,128 @@
+{
+  "$schema": "https://vega.github.io/schema/vega/v5.json",
+  "description": "Share of updated products missing from results (y axis in %, data kept as counts of the 150 tracked) during and after the 10% storm (5 min of price updates at 150 rows/s, as on the B4d slide), out of 150 tracked products, by read setting. x: minutes since the writes stopped, -5 to 30 to match the B4d chart. Stage 0: axes and the storm band only. Stage 1: normal reads (Bounded, Strong, Eventually) sweep in, which never hide a product for more than 0.7 s. Stage 2: reads that skip growing segments. Stage 3: the same, with a flush right after the writes (16 s to return, berry as the flush line on B4d). ASSUMPTION until the bench is re-run: the no-flush return is drawn as a straight ramp from all 150 hidden at 15.5 min to none at 16.3 min after the first write (10.5 to 11.3 after the writes stopped), the span of the measured returns. Measured: 102 + 23 of 150 back at 15.5 and 15.6 min (b4c), 73 + 29 at 16.1 and 16.3 min (probe); the rest were unconfirmed because polling stopped 15 min after each write. Source: vector_search_ecom results/b4c.json and probes/probe_b4c_flush_compact.json.",
+  "width": 1500,
+  "height": 540,
+  "padding": {"left": 5, "right": 5, "top": 5, "bottom": 5},
+  "autosize": "fit",
+  "background": "rgba(0,0,0,0)",
+  "signals": [
+    {"name": "stage", "value": 0},
+    {"name": "x0", "value": -5},
+    {"name": "x1", "value": 30},
+    {"name": "total", "value": 150},
+    {"name": "stop", "value": 0},
+    {"name": "flushed", "value": 0.27},
+    {"name": "backFrom", "value": 10.5},
+    {"name": "backTo", "value": 11.3},
+    {"name": "drawB", "value": -5, "on": [{"events": {"type": "timer", "throttle": 16}, "update": "stage < 1 ? x0 : stage > 1 ? x1 : min(x1, drawB + 0.6)"}]},
+    {"name": "draw", "value": -5, "on": [{"events": {"type": "timer", "throttle": 16}, "update": "stage < 2 ? x0 : stage > 2 ? x1 : min(x1, draw + 0.2)"}]},
+    {"name": "drop", "value": 0, "on": [{"events": {"type": "timer", "throttle": 16}, "update": "stage < 3 ? 0 : min(1, drop + 0.03)"}]}
+  ],
+  "data": [
+    {
+      "name": "skip",
+      "values": [{"t": -5, "n": 0}, {"t": 0, "n": 150}, {"t": 10.5, "n": 150}, {"t": 11.3, "n": 0}]
+    },
+    {
+      "name": "flush",
+      "values": [{"t": 0, "n": 150}, {"t": 0.27, "n": 150}, {"t": 0.27, "n": 0}]
+    },
+    {"name": "normal", "values": [{"t": -5, "n": 0}, {"t": 30, "n": 0}]}
+  ],
+  "scales": [
+    {"name": "x", "type": "linear", "domain": [-5, 30], "range": "width", "nice": false, "zero": false},
+    {"name": "y", "type": "linear", "domain": [0, 185], "range": "height", "nice": false}
+  ],
+  "axes": [
+    {"orient": "bottom", "scale": "x", "title": "minutes since the writes stopped", "titleAnchor": "start", "values": [-5, 0, 5, 10, 15, 20, 25, 30], "offset": 10},
+    {"orient": "left", "scale": "y", "title": "% of updated products hidden", "values": {"signal": "[0, total / 4, total / 2, total * 3 / 4, total]"}, "encode": {"labels": {"update": {"text": {"signal": "format(datum.value / total * 100, 'd') + '%'"}}}}}
+  ],
+  "marks": [
+    {
+      "type": "rect",
+      "encode": {"enter": {"x": {"scale": "x", "value": -5}, "x2": {"scale": "x", "signal": "stop"}, "y": {"value": 0}, "y2": {"signal": "height"}, "fill": {"value": "#e6f6f4"}}}
+    },
+    {
+      "type": "text",
+      "encode": {"enter": {"x": {"scale": "x", "value": -5, "offset": 14}, "y": {"scale": "y", "value": 115}, "fontSize": {"value": 21}, "fontWeight": {"value": 600}, "fill": {"value": "#0f9f8f"}, "text": {"value": "10% storm"}}}
+    },
+    {
+      "type": "rule",
+      "encode": {
+        "enter": {"x": {"scale": "x", "value": -5}, "y": {"scale": "y", "value": 0}, "stroke": {"value": "#175fff"}, "strokeWidth": {"value": 6}},
+        "update": {"x2": {"scale": "x", "signal": "drawB"}, "opacity": {"signal": "drawB > x0 ? 1 : 0"}}
+      }
+    },
+    {
+      "type": "group",
+      "encode": {
+        "enter": {"x": {"value": 0}, "y": {"value": 0}, "height": {"signal": "height"}, "clip": {"value": true}},
+        "update": {"width": {"signal": "scale('x', draw)"}}
+      },
+      "marks": [
+        {
+          "type": "line",
+          "from": {"data": "skip"},
+          "encode": {"enter": {"x": {"scale": "x", "field": "t"}, "y": {"scale": "y", "field": "n"}, "stroke": {"value": "#d97706"}, "strokeWidth": {"value": 7}, "strokeJoin": {"value": "round"}}}
+        }
+      ]
+    },
+    {
+      "type": "group",
+      "encode": {
+        "enter": {"x": {"value": 0}, "y": {"value": 0}, "width": {"signal": "width"}, "clip": {"value": true}},
+        "update": {"height": {"signal": "drop > 0 ? scale('y', total * (1 - drop)) : 0"}}
+      },
+      "marks": [
+        {
+          "type": "line",
+          "from": {"data": "flush"},
+          "encode": {"enter": {"x": {"scale": "x", "field": "t"}, "y": {"scale": "y", "field": "n"}, "stroke": {"value": "#c84cff"}, "strokeWidth": {"value": 7}, "strokeJoin": {"value": "round"}}}
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "encode": {
+        "enter": {"x": {"scale": "x", "signal": "backTo", "offset": 22}, "y": {"scale": "y", "value": 0, "offset": -20}, "fontSize": {"value": 24}, "fontWeight": {"value": 600}, "fill": {"value": "#175fff"}, "text": {"value": "Bounded, Strong, Eventually: new price in about 0.2 s"}},
+        "update": {"opacity": {"signal": "clamp((drawB - 14) / 3, 0, 1)"}}
+      }
+    },
+    {
+      "type": "text",
+      "encode": {
+        "enter": {"x": {"scale": "x", "value": 5.25}, "y": {"scale": "y", "signal": "total", "offset": -20}, "align": {"value": "center"}, "fontSize": {"value": 26}, "fontWeight": {"value": 600}, "fill": {"value": "#b45309"}, "text": {"value": "skip growing segments: 100% hidden"}},
+        "update": {"opacity": {"signal": "clamp((draw - 5) / 2, 0, 1)"}}
+      }
+    },
+    {
+      "type": "text",
+      "encode": {
+        "enter": {"x": {"scale": "x", "signal": "backTo", "offset": 22}, "y": {"scale": "y", "value": 85}, "fontSize": {"value": 40}, "fontWeight": {"value": 700}, "fill": {"value": "#b45309"}},
+        "update": {"opacity": {"signal": "clamp((draw - backTo) / 1.5, 0, 1)"}, "text": {"signal": "format(backFrom - stop, '.1f') + ' to ' + format(backTo - stop, '.1f') + ' min'"}}
+      }
+    },
+    {
+      "type": "text",
+      "encode": {
+        "enter": {"x": {"scale": "x", "signal": "backTo", "offset": 22}, "y": {"scale": "y", "value": 85, "offset": 32}, "fontSize": {"value": 21}, "fill": {"value": "#1e293b"}, "text": {"value": "after the writes, until all are back"}},
+        "update": {"opacity": {"signal": "clamp((draw - backTo) / 1.5, 0, 1)"}}
+      }
+    },
+    {
+      "type": "text",
+      "encode": {
+        "enter": {"x": {"scale": "x", "signal": "flushed", "offset": 22}, "y": {"scale": "y", "value": 85}, "fontSize": {"value": 40}, "fontWeight": {"value": 700}, "fill": {"value": "#c84cff"}, "text": {"value": "16 s"}},
+        "update": {"opacity": {"signal": "clamp((drop - 0.6) / 0.4, 0, 1)"}}
+      }
+    },
+    {
+      "type": "text",
+      "encode": {
+        "enter": {"x": {"scale": "x", "signal": "flushed", "offset": 22}, "y": {"scale": "y", "value": 85, "offset": 32}, "fontSize": {"value": 21}, "fill": {"value": "#1e293b"}, "text": {"value": "with a flush, until all are back"}},
+        "update": {"opacity": {"signal": "clamp((drop - 0.6) / 0.4, 0, 1)"}}
+      }
+    }
+  ]
+}

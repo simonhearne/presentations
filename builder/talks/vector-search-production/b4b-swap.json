@@ -1,0 +1,711 @@
+{
+ "$schema": "https://vega.github.io/schema/vega/v5.json",
+ "description": "Live search latency at 20 searches/s through an alias while a separate process builds a second collection (HNSW_SQ8 re-index of the same vectors) and the alias moves to it. Line: p99 in ms per 15 s, by when each search was due, so queueing counts. x is minutes from the start of the build. Normal p99 (5 min before the build): 28 ms. Stage 0: before. Stage 1: insert, flush and compaction (0 to 5.33 min), with stalls at 2.4 and 5.1 min. Stage 2: index build (5.33 to 7.70 min), p99 116 ms (4x). Stage 3: the alias moves (7.70 min) and the 5 min after; 15 s p99 is back under 30 ms 3.8 min after. One run. Source: vector_search_ecom results/b4b_isolated.json and its raw load file.",
+ "width": 1560,
+ "height": 275,
+ "padding": {
+  "left": 5,
+  "right": 5,
+  "top": 5,
+  "bottom": 5
+ },
+ "autosize": "fit",
+ "background": "rgba(0,0,0,0)",
+ "signals": [
+  {
+   "name": "stage",
+   "value": 0
+  },
+  {
+   "name": "draw",
+   "value": 0,
+   "on": [
+    {
+     "events": {
+      "type": "timer",
+      "throttle": 16
+     },
+     "update": "stage < 1 ? 0 : stage < 2 ? min(5.332, draw + 0.0178) : stage < 3 ? min(7.702, max(draw, 5.332) + 0.0152) : min(13, max(draw, 7.702) + 0.0282)"
+    }
+   ]
+  }
+ ],
+ "data": [
+  {
+   "name": "windows",
+   "values": [
+    {
+     "t": -1.875,
+     "ms": 28.2
+    },
+    {
+     "t": -1.625,
+     "ms": 27.7
+    },
+    {
+     "t": -1.375,
+     "ms": 27.9
+    },
+    {
+     "t": -1.125,
+     "ms": 25.8
+    },
+    {
+     "t": -0.875,
+     "ms": 28.1
+    },
+    {
+     "t": -0.625,
+     "ms": 29.0
+    },
+    {
+     "t": -0.375,
+     "ms": 27.3
+    },
+    {
+     "t": -0.125,
+     "ms": 28.1
+    },
+    {
+     "t": 0.125,
+     "ms": 542.6
+    },
+    {
+     "t": 0.375,
+     "ms": 135.8
+    },
+    {
+     "t": 0.625,
+     "ms": 208.1
+    },
+    {
+     "t": 0.875,
+     "ms": 155.8
+    },
+    {
+     "t": 1.125,
+     "ms": 198.5
+    },
+    {
+     "t": 1.375,
+     "ms": 456.4
+    },
+    {
+     "t": 1.625,
+     "ms": 153.2
+    },
+    {
+     "t": 1.875,
+     "ms": 163.5
+    },
+    {
+     "t": 2.125,
+     "ms": 197.1
+    },
+    {
+     "t": 2.375,
+     "ms": 10925.3
+    },
+    {
+     "t": 2.625,
+     "ms": 10540.3
+    },
+    {
+     "t": 2.875,
+     "ms": 615.9
+    },
+    {
+     "t": 3.125,
+     "ms": 654.9
+    },
+    {
+     "t": 3.375,
+     "ms": 180.3
+    },
+    {
+     "t": 3.625,
+     "ms": 230.7
+    },
+    {
+     "t": 3.875,
+     "ms": 44.3
+    },
+    {
+     "t": 4.125,
+     "ms": 55.3
+    },
+    {
+     "t": 4.375,
+     "ms": 65.0
+    },
+    {
+     "t": 4.625,
+     "ms": 45.8
+    },
+    {
+     "t": 4.875,
+     "ms": 102.8
+    },
+    {
+     "t": 5.125,
+     "ms": 8804.8
+    },
+    {
+     "t": 5.375,
+     "ms": 510.4
+    },
+    {
+     "t": 5.625,
+     "ms": 104.6
+    },
+    {
+     "t": 5.875,
+     "ms": 105.4
+    },
+    {
+     "t": 6.125,
+     "ms": 52.5
+    },
+    {
+     "t": 6.375,
+     "ms": 173.1
+    },
+    {
+     "t": 6.625,
+     "ms": 258.7
+    },
+    {
+     "t": 6.875,
+     "ms": 66.1
+    },
+    {
+     "t": 7.125,
+     "ms": 275.6
+    },
+    {
+     "t": 7.375,
+     "ms": 67.9
+    },
+    {
+     "t": 7.625,
+     "ms": 762.3
+    },
+    {
+     "t": 7.875,
+     "ms": 291.2
+    },
+    {
+     "t": 8.125,
+     "ms": 82.1
+    },
+    {
+     "t": 8.375,
+     "ms": 67.1
+    },
+    {
+     "t": 8.625,
+     "ms": 133.4
+    },
+    {
+     "t": 8.875,
+     "ms": 360.0
+    },
+    {
+     "t": 9.125,
+     "ms": 55.9
+    },
+    {
+     "t": 9.375,
+     "ms": 144.6
+    },
+    {
+     "t": 9.625,
+     "ms": 54.7
+    },
+    {
+     "t": 9.875,
+     "ms": 87.3
+    },
+    {
+     "t": 10.125,
+     "ms": 60.9
+    },
+    {
+     "t": 10.375,
+     "ms": 56.6
+    },
+    {
+     "t": 10.625,
+     "ms": 41.4
+    },
+    {
+     "t": 10.875,
+     "ms": 55.1
+    },
+    {
+     "t": 11.125,
+     "ms": 83.5
+    },
+    {
+     "t": 11.375,
+     "ms": 38.8
+    },
+    {
+     "t": 11.625,
+     "ms": 25.1
+    },
+    {
+     "t": 11.875,
+     "ms": 29.8
+    },
+    {
+     "t": 12.125,
+     "ms": 28.6
+    },
+    {
+     "t": 12.375,
+     "ms": 27.8
+    },
+    {
+     "t": 12.625,
+     "ms": 28.9
+    },
+    {
+     "t": 12.875,
+     "ms": 27.8
+    }
+   ],
+   "transform": [
+    {
+     "type": "filter",
+     "expr": "datum.t <= draw"
+    }
+   ]
+  },
+  {
+   "name": "bands",
+   "values": [
+    {
+     "a": 0,
+     "b": 5.332,
+     "at": 0,
+     "label": "Two stalls, up to 11 s",
+     "text": "",
+     "fill": "#fff4e0",
+     "sw": false
+    },
+    {
+     "a": 5.332,
+     "b": 7.702,
+     "at": 5.332,
+     "label": "~4× p99",
+     "text": "index build",
+     "fill": "#fff4e0",
+     "sw": false
+    },
+    {
+     "a": 7.702,
+     "b": 13,
+     "at": 7.702,
+     "label": "Normal in ~4 min",
+     "text": "after the alias moves",
+     "fill": "rgba(0,0,0,0)",
+     "sw": true
+    }
+   ],
+   "transform": [
+    {
+     "type": "formula",
+     "as": "o",
+     "expr": "clamp((draw - datum.at) / 0.15, 0, 1)"
+    },
+    {
+     "type": "formula",
+     "as": "end",
+     "expr": "clamp(draw, datum.a, datum.b)"
+    }
+   ]
+  },
+  {
+   "name": "stalls",
+   "values": [
+    {
+     "t": 2.2,
+     "at": 2.4,
+     "label": "insert"
+    },
+    {
+     "t": 4.95,
+     "at": 5.1,
+     "label": "compaction"
+    }
+   ]
+  }
+ ],
+ "scales": [
+  {
+   "name": "x",
+   "type": "linear",
+   "domain": [
+    -2,
+    13
+   ],
+   "range": "width",
+   "nice": false,
+   "zero": false
+  },
+  {
+   "name": "y",
+   "type": "log",
+   "domain": [
+    10,
+    200000
+   ],
+   "range": "height",
+   "nice": false
+  }
+ ],
+ "axes": [
+  {
+   "orient": "bottom",
+   "scale": "x",
+   "title": "minutes into the build",
+   "titleAnchor": "start",
+   "values": [
+    0,
+    2,
+    4,
+    6,
+    8,
+    10,
+    12
+   ]
+  },
+  {
+   "orient": "left",
+   "scale": "y",
+   "values": [
+    10,
+    100,
+    1000,
+    10000
+   ],
+   "encode": {
+    "labels": {
+     "update": {
+      "text": {
+       "signal": "datum.value >= 1000 ? datum.value / 1000 + ' s' : datum.value + ' ms'"
+      }
+     }
+    }
+   }
+  }
+ ],
+ "marks": [
+  {
+   "type": "rect",
+   "from": {
+    "data": "bands"
+   },
+   "encode": {
+    "enter": {
+     "y": {
+      "value": 0
+     },
+     "y2": {
+      "signal": "height"
+     },
+     "fill": {
+      "field": "fill"
+     }
+    },
+    "update": {
+     "x2": {
+      "scale": "x",
+      "field": "end"
+     },
+     "opacity": {
+      "field": "o"
+     },
+     "x": {
+      "scale": "x",
+      "field": "a"
+     }
+    }
+   }
+  },
+  {
+   "type": "rule",
+   "from": {
+    "data": "bands"
+   },
+   "encode": {
+    "enter": {
+     "x": {
+      "scale": "x",
+      "field": "a"
+     },
+     "y": {
+      "value": 0
+     },
+     "y2": {
+      "signal": "height"
+     },
+     "stroke": {
+      "signal": "datum.sw ? '#7f47ff' : '#cbd5e1'"
+     },
+     "strokeWidth": {
+      "signal": "datum.sw ? 4 : 1.5"
+     },
+     "strokeDash": {
+      "signal": "datum.sw ? [1,0] : [5,6]"
+     }
+    },
+    "update": {
+     "opacity": {
+      "field": "o"
+     }
+    }
+   }
+  },
+  {
+   "type": "rule",
+   "encode": {
+    "enter": {
+     "x": {
+      "value": 0
+     },
+     "x2": {
+      "signal": "width"
+     },
+     "y": {
+      "scale": "y",
+      "value": 28
+     },
+     "stroke": {
+      "value": "#175fff"
+     },
+     "strokeWidth": {
+      "value": 3
+     },
+     "strokeDash": {
+      "value": [
+       8,
+       6
+      ]
+     }
+    }
+   }
+  },
+  {
+   "type": "line",
+   "from": {
+    "data": "windows"
+   },
+   "encode": {
+    "update": {
+     "x": {
+      "scale": "x",
+      "field": "t"
+     },
+     "y": {
+      "scale": "y",
+      "field": "ms"
+     },
+     "stroke": {
+      "value": "#d97706"
+     },
+     "strokeWidth": {
+      "value": 5
+     },
+     "strokeJoin": {
+      "value": "round"
+     },
+     "strokeCap": {
+      "value": "round"
+     }
+    }
+   }
+  },
+  {
+   "type": "text",
+   "encode": {
+    "enter": {
+     "x": {
+      "scale": "x",
+      "value": -1.9
+     },
+     "y": {
+      "scale": "y",
+      "value": 28,
+      "offset": -7
+     },
+     "fontSize": {
+      "value": 19
+     },
+     "fontWeight": {
+      "value": 600
+     },
+     "fill": {
+      "value": "#175fff"
+     },
+     "text": {
+      "value": "normal p99: 28 ms"
+     }
+    }
+   }
+  },
+  {
+   "type": "text",
+   "from": {
+    "data": "bands"
+   },
+   "encode": {
+    "enter": {
+     "x": {
+      "scale": "x",
+      "field": "a",
+      "offset": 12
+     },
+     "y": {
+      "value": 28
+     },
+     "fontSize": {
+      "value": 32
+     },
+     "fontWeight": {
+      "value": 700
+     },
+     "fill": {
+      "value": "#061982"
+     },
+     "text": {
+      "field": "label"
+     }
+    },
+    "update": {
+     "opacity": {
+      "field": "o"
+     }
+    }
+   }
+  },
+  {
+   "type": "text",
+   "from": {
+    "data": "bands"
+   },
+   "encode": {
+    "enter": {
+     "x": {
+      "scale": "x",
+      "field": "a",
+      "offset": 12
+     },
+     "y": {
+      "value": 56
+     },
+     "fontSize": {
+      "value": 22
+     },
+     "fill": {
+      "value": "#1e293b"
+     },
+     "text": {
+      "field": "text"
+     }
+    },
+    "update": {
+     "opacity": {
+      "field": "o"
+     }
+    }
+   }
+  },
+  {
+   "type": "text",
+   "from": {
+    "data": "stalls"
+   },
+   "encode": {
+    "enter": {
+     "x": {
+      "scale": "x",
+      "field": "t"
+     },
+     "y": {
+      "scale": "y",
+      "value": 3000
+     },
+     "align": {
+      "value": "right"
+     },
+     "baseline": {
+      "value": "middle"
+     },
+     "fontSize": {
+      "value": 22
+     },
+     "fill": {
+      "value": "#1e293b"
+     },
+     "text": {
+      "field": "label"
+     }
+    },
+    "update": {
+     "opacity": {
+      "signal": "clamp((draw - datum.at) / 0.15, 0, 1)"
+     }
+    }
+   }
+  },
+  {
+   "type": "text",
+   "encode": {
+    "enter": {
+     "x": {
+      "value": 0
+     },
+     "y": {
+      "value": -14
+     },
+     "fontSize": {
+      "value": 24
+     },
+     "fontWeight": {
+      "value": 700
+     },
+     "fill": {
+      "value": "#061982"
+     },
+     "text": {
+      "value": "Live search latency"
+     }
+    }
+   }
+  },
+  {
+   "type": "text",
+   "encode": {
+    "enter": {
+     "x": {
+      "value": 246
+     },
+     "y": {
+      "value": -14
+     },
+     "fontSize": {
+      "value": 21
+     },
+     "fill": {
+      "value": "#1e293b"
+     },
+     "text": {
+      "value": "p99 every 15 s, one run"
+     }
+    }
+   }
+  }
+ ]
+}

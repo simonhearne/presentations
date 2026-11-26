@@ -1,0 +1,466 @@
+{
+  "$schema": "https://vega.github.io/schema/vega/v5.json",
+  "description": "Search p99 per 30 s window at 20 searches/s, each write run alone from an idle, indexed collection, as a multiple of that run's own no-writes control p99 (29.5 and 30.9 ms). x: minutes since the writes stopped. Line: mean of the two runs; band: their range. Stage 0: the no-writes control, mean and range, measured the same way (dimmed from stage 2). Stage 1: the small writes (1% price update, 1% full-row upsert, 1% delete, 10 min trickle at 5 rows/s), one colour each with a legend, no band. Stage 2: the small writes and their legend fade out; the 10% storm (teal) and the span headers come in. Stage 3: a 1% price update then a flush (berry); headers fade out. Source: vector_search_ecom results/b4d_single_ops.json, both repeats.",
+  "width": 1500,
+  "height": 560,
+  "padding": {"left": 5, "right": 5, "top": 5, "bottom": 26},
+  "autosize": "fit",
+  "background": "rgba(0,0,0,0)",
+  "signals": [
+    {"name": "stage", "value": 0},
+    {"name": "x0", "value": -5},
+    {"name": "x1", "value": 30},
+    {"name": "drawA", "value": -5, "on": [{"events": {"type": "timer", "throttle": 16}, "update": "stage < 1 ? x0 : min(x1, drawA + 0.25)"}]},
+    {"name": "drawS", "value": -5, "on": [{"events": {"type": "timer", "throttle": 16}, "update": "stage < 2 ? x0 : min(x1, drawS + 0.25)"}]},
+    {"name": "drawF", "value": -5, "on": [{"events": {"type": "timer", "throttle": 16}, "update": "stage < 3 ? x0 : min(x1, drawF + 0.25)"}]},
+    {"name": "fade", "update": "1 - clamp((drawF - x0) / 4, 0, 1)"},
+    {"name": "smallFade", "update": "1 - clamp((drawS - x0) / 3, 0, 1)"}
+  ],
+  "data": [
+    {
+      "name": "windows",
+      "values": [
+        {"op": "trickle", "t": -4.75, "x": 2.47}, {"op": "trickle", "t": -4.25, "x": 1.09}, {"op": "trickle", "t": -3.75, "x": 1.12}, {"op": "trickle", "t": -3.25, "x": 1.09},
+        {"op": "trickle", "t": -2.75, "x": 1.20}, {"op": "trickle", "t": -2.25, "x": 2.43}, {"op": "trickle", "t": -1.75, "x": 2.26}, {"op": "trickle", "t": -1.25, "x": 1.15},
+        {"op": "trickle", "t": -0.75, "x": 1.27}, {"op": "trickle", "t": -0.25, "x": 1.09}, {"op": "trickle", "t": 0.25, "x": 1.00}, {"op": "trickle", "t": 0.75, "x": 1.36},
+        {"op": "trickle", "t": 1.25, "x": 1.09}, {"op": "trickle", "t": 1.75, "x": 1.80}, {"op": "trickle", "t": 2.25, "x": 1.04}, {"op": "trickle", "t": 2.75, "x": 0.99},
+        {"op": "trickle", "t": 3.25, "x": 1.06}, {"op": "trickle", "t": 3.75, "x": 1.07}, {"op": "trickle", "t": 4.25, "x": 1.40}, {"op": "trickle", "t": 4.75, "x": 1.10},
+        {"op": "trickle", "t": 5.25, "x": 3.57}, {"op": "trickle", "t": 5.75, "x": 1.01}, {"op": "trickle", "t": 6.25, "x": 1.02}, {"op": "trickle", "t": 6.75, "x": 1.00},
+        {"op": "trickle", "t": 7.25, "x": 1.05}, {"op": "trickle", "t": 7.75, "x": 0.94}, {"op": "trickle", "t": 8.25, "x": 1.59}, {"op": "trickle", "t": 8.75, "x": 1.03},
+        {"op": "trickle", "t": 9.25, "x": 0.96}, {"op": "trickle", "t": 9.75, "x": 1.04}, {"op": "trickle", "t": 10.25, "x": 0.97}, {"op": "trickle", "t": 10.75, "x": 1.06},
+        {"op": "trickle", "t": 11.25, "x": 1.11}, {"op": "trickle", "t": 11.75, "x": 1.02}, {"op": "trickle", "t": 12.25, "x": 1.02}, {"op": "trickle", "t": 12.75, "x": 0.94},
+        {"op": "trickle", "t": 13.25, "x": 1.01}, {"op": "trickle", "t": 13.75, "x": 0.94}, {"op": "trickle", "t": 14.25, "x": 1.02}, {"op": "trickle", "t": 14.75, "x": 1.01},
+        {"op": "trickle", "t": 15.25, "x": 0.98}, {"op": "trickle", "t": 15.75, "x": 0.96}, {"op": "trickle", "t": 16.25, "x": 0.99}, {"op": "trickle", "t": 16.75, "x": 1.00},
+        {"op": "trickle", "t": 17.25, "x": 0.95}, {"op": "trickle", "t": 17.75, "x": 1.02}, {"op": "trickle", "t": 18.25, "x": 0.96}, {"op": "trickle", "t": 18.75, "x": 0.80},
+        {"op": "trickle", "t": 19.25, "x": 1.01}, {"op": "trickle", "t": 19.75, "x": 0.96}, {"op": "trickle", "t": 20.25, "x": 0.98}, {"op": "trickle", "t": 20.75, "x": 1.01},
+        {"op": "trickle", "t": 21.25, "x": 0.98}, {"op": "trickle", "t": 21.75, "x": 1.00}, {"op": "trickle", "t": 22.25, "x": 1.03}, {"op": "trickle", "t": 22.75, "x": 1.07},
+        {"op": "trickle", "t": 23.25, "x": 1.01}, {"op": "trickle", "t": 23.75, "x": 1.11}, {"op": "trickle", "t": 24.25, "x": 0.99}, {"op": "trickle", "t": 24.75, "x": 1.03},
+        {"op": "trickle", "t": 25.25, "x": 1.08}, {"op": "trickle", "t": 25.75, "x": 1.10}, {"op": "trickle", "t": 26.25, "x": 0.97}, {"op": "trickle", "t": 26.75, "x": 0.97},
+        {"op": "trickle", "t": 27.25, "x": 0.99}, {"op": "trickle", "t": 27.75, "x": 1.06}, {"op": "trickle", "t": 28.25, "x": 1.02}, {"op": "trickle", "t": 28.75, "x": 0.97},
+        {"op": "trickle", "t": 29.25, "x": 1.05}, {"op": "trickle", "t": 29.75, "x": 1.03}, {"op": "promo", "t": -4.75, "x": 7.14}, {"op": "promo", "t": -4.25, "x": 1.03},
+        {"op": "promo", "t": -3.75, "x": 1.07}, {"op": "promo", "t": -3.25, "x": 1.49}, {"op": "promo", "t": -2.75, "x": 2.99}, {"op": "promo", "t": -2.25, "x": 1.03},
+        {"op": "promo", "t": -1.75, "x": 1.00}, {"op": "promo", "t": -1.25, "x": 1.03}, {"op": "promo", "t": -0.75, "x": 1.04}, {"op": "promo", "t": -0.25, "x": 2.35},
+        {"op": "promo", "t": 0.25, "x": 1.67}, {"op": "promo", "t": 0.75, "x": 1.01}, {"op": "promo", "t": 1.25, "x": 0.97}, {"op": "promo", "t": 1.75, "x": 1.02},
+        {"op": "promo", "t": 2.25, "x": 1.05}, {"op": "promo", "t": 2.75, "x": 0.99}, {"op": "promo", "t": 3.25, "x": 1.00}, {"op": "promo", "t": 3.75, "x": 1.00},
+        {"op": "promo", "t": 4.25, "x": 1.07}, {"op": "promo", "t": 4.75, "x": 1.01}, {"op": "promo", "t": 5.25, "x": 12.63}, {"op": "promo", "t": 5.75, "x": 1.05},
+        {"op": "promo", "t": 6.25, "x": 1.00}, {"op": "promo", "t": 6.75, "x": 1.11}, {"op": "promo", "t": 7.25, "x": 1.10}, {"op": "promo", "t": 7.75, "x": 1.00},
+        {"op": "promo", "t": 8.25, "x": 1.07}, {"op": "promo", "t": 8.75, "x": 4.14}, {"op": "promo", "t": 9.25, "x": 1.06}, {"op": "promo", "t": 9.75, "x": 1.13},
+        {"op": "promo", "t": 10.25, "x": 1.02}, {"op": "promo", "t": 10.75, "x": 1.03}, {"op": "promo", "t": 11.25, "x": 2.08}, {"op": "promo", "t": 11.75, "x": 1.01},
+        {"op": "promo", "t": 12.25, "x": 1.03}, {"op": "promo", "t": 12.75, "x": 1.03}, {"op": "promo", "t": 13.25, "x": 2.61}, {"op": "promo", "t": 13.75, "x": 1.03},
+        {"op": "promo", "t": 14.25, "x": 1.07}, {"op": "promo", "t": 14.75, "x": 1.00}, {"op": "promo", "t": 15.25, "x": 7.62}, {"op": "promo", "t": 15.75, "x": 0.98},
+        {"op": "promo", "t": 16.25, "x": 1.00}, {"op": "promo", "t": 16.75, "x": 0.99}, {"op": "promo", "t": 17.25, "x": 1.03}, {"op": "promo", "t": 17.75, "x": 1.03},
+        {"op": "promo", "t": 18.25, "x": 0.99}, {"op": "promo", "t": 18.75, "x": 1.03}, {"op": "promo", "t": 19.25, "x": 0.95}, {"op": "promo", "t": 19.75, "x": 0.99},
+        {"op": "promo", "t": 20.25, "x": 1.08}, {"op": "promo", "t": 20.75, "x": 1.05}, {"op": "promo", "t": 21.25, "x": 1.03}, {"op": "promo", "t": 21.75, "x": 1.05},
+        {"op": "promo", "t": 22.25, "x": 1.04}, {"op": "promo", "t": 22.75, "x": 1.09}, {"op": "promo", "t": 23.25, "x": 1.09}, {"op": "promo", "t": 23.75, "x": 1.09},
+        {"op": "promo", "t": 24.25, "x": 1.13}, {"op": "promo", "t": 24.75, "x": 1.08}, {"op": "promo", "t": 25.25, "x": 1.06}, {"op": "promo", "t": 25.75, "x": 1.01},
+        {"op": "promo", "t": 26.25, "x": 0.97}, {"op": "promo", "t": 26.75, "x": 0.97}, {"op": "promo", "t": 27.25, "x": 1.02}, {"op": "promo", "t": 27.75, "x": 0.99},
+        {"op": "promo", "t": 28.25, "x": 1.07}, {"op": "promo", "t": 28.75, "x": 1.00}, {"op": "promo", "t": 29.25, "x": 1.07}, {"op": "promo", "t": 29.75, "x": 1.04},
+        {"op": "promo_flush", "t": -4.75, "x": 0.90}, {"op": "promo_flush", "t": -4.25, "x": 1.01}, {"op": "promo_flush", "t": -3.75, "x": 1.00}, {"op": "promo_flush", "t": -3.25, "x": 2.91},
+        {"op": "promo_flush", "t": -2.75, "x": 1.22}, {"op": "promo_flush", "t": -2.25, "x": 0.95}, {"op": "promo_flush", "t": -1.75, "x": 1.12}, {"op": "promo_flush", "t": -1.25, "x": 1.11},
+        {"op": "promo_flush", "t": -0.75, "x": 1.09}, {"op": "promo_flush", "t": -0.25, "x": 3.02}, {"op": "promo_flush", "t": 0.25, "x": 8.05}, {"op": "promo_flush", "t": 0.75, "x": 1.12},
+        {"op": "promo_flush", "t": 1.25, "x": 1.06}, {"op": "promo_flush", "t": 1.75, "x": 15.99}, {"op": "promo_flush", "t": 2.25, "x": 18.13}, {"op": "promo_flush", "t": 2.75, "x": 2.70},
+        {"op": "promo_flush", "t": 3.25, "x": 0.98}, {"op": "promo_flush", "t": 3.75, "x": 0.91}, {"op": "promo_flush", "t": 4.25, "x": 3.08}, {"op": "promo_flush", "t": 4.75, "x": 1.01},
+        {"op": "promo_flush", "t": 5.25, "x": 0.88}, {"op": "promo_flush", "t": 5.75, "x": 0.97}, {"op": "promo_flush", "t": 6.25, "x": 1.07}, {"op": "promo_flush", "t": 6.75, "x": 0.97},
+        {"op": "promo_flush", "t": 7.25, "x": 1.03}, {"op": "promo_flush", "t": 7.75, "x": 1.17}, {"op": "promo_flush", "t": 8.25, "x": 1.16}, {"op": "promo_flush", "t": 8.75, "x": 1.07},
+        {"op": "promo_flush", "t": 9.25, "x": 1.24}, {"op": "promo_flush", "t": 9.75, "x": 1.34}, {"op": "promo_flush", "t": 10.25, "x": 1.07}, {"op": "promo_flush", "t": 10.75, "x": 1.05},
+        {"op": "promo_flush", "t": 11.25, "x": 2.29}, {"op": "promo_flush", "t": 11.75, "x": 0.99}, {"op": "promo_flush", "t": 12.25, "x": 2.66}, {"op": "promo_flush", "t": 12.75, "x": 0.84},
+        {"op": "promo_flush", "t": 13.25, "x": 0.94}, {"op": "promo_flush", "t": 13.75, "x": 1.11}, {"op": "promo_flush", "t": 14.25, "x": 1.01}, {"op": "promo_flush", "t": 14.75, "x": 1.04},
+        {"op": "promo_flush", "t": 15.25, "x": 0.95}, {"op": "promo_flush", "t": 15.75, "x": 0.91}, {"op": "promo_flush", "t": 16.25, "x": 1.02}, {"op": "promo_flush", "t": 16.75, "x": 0.85},
+        {"op": "promo_flush", "t": 17.25, "x": 1.00}, {"op": "promo_flush", "t": 17.75, "x": 0.92}, {"op": "promo_flush", "t": 18.25, "x": 0.86}, {"op": "promo_flush", "t": 18.75, "x": 1.04},
+        {"op": "promo_flush", "t": 19.25, "x": 0.99}, {"op": "promo_flush", "t": 19.75, "x": 0.99}, {"op": "promo_flush", "t": 20.25, "x": 0.98}, {"op": "promo_flush", "t": 20.75, "x": 0.89},
+        {"op": "promo_flush", "t": 21.25, "x": 0.91}, {"op": "promo_flush", "t": 21.75, "x": 1.03}, {"op": "promo_flush", "t": 22.25, "x": 0.90}, {"op": "promo_flush", "t": 22.75, "x": 0.83},
+        {"op": "promo_flush", "t": 23.25, "x": 0.96}, {"op": "promo_flush", "t": 23.75, "x": 0.94}, {"op": "promo_flush", "t": 24.25, "x": 0.83}, {"op": "promo_flush", "t": 24.75, "x": 0.81},
+        {"op": "promo_flush", "t": 25.25, "x": 0.99}, {"op": "promo_flush", "t": 25.75, "x": 0.97}, {"op": "promo_flush", "t": 26.25, "x": 1.04}, {"op": "promo_flush", "t": 26.75, "x": 1.15},
+        {"op": "promo_flush", "t": 27.25, "x": 1.19}, {"op": "promo_flush", "t": 27.75, "x": 1.10}, {"op": "promo_flush", "t": 28.25, "x": 1.18}, {"op": "promo_flush", "t": 28.75, "x": 1.15},
+        {"op": "promo_flush", "t": 29.25, "x": 0.98}, {"op": "promo_flush", "t": 29.75, "x": 0.84}, {"op": "delta", "t": -4.75, "x": 1.07}, {"op": "delta", "t": -4.25, "x": 1.03},
+        {"op": "delta", "t": -3.75, "x": 1.08}, {"op": "delta", "t": -3.25, "x": 0.95}, {"op": "delta", "t": -2.75, "x": 1.07}, {"op": "delta", "t": -2.25, "x": 2.61},
+        {"op": "delta", "t": -1.75, "x": 1.18}, {"op": "delta", "t": -1.25, "x": 1.00}, {"op": "delta", "t": -0.75, "x": 1.13}, {"op": "delta", "t": -0.25, "x": 1.12},
+        {"op": "delta", "t": 0.25, "x": 1.32}, {"op": "delta", "t": 0.75, "x": 2.18}, {"op": "delta", "t": 1.25, "x": 1.07}, {"op": "delta", "t": 1.75, "x": 1.02},
+        {"op": "delta", "t": 2.25, "x": 0.99}, {"op": "delta", "t": 2.75, "x": 1.05}, {"op": "delta", "t": 3.25, "x": 1.00}, {"op": "delta", "t": 3.75, "x": 1.10},
+        {"op": "delta", "t": 4.25, "x": 0.97}, {"op": "delta", "t": 4.75, "x": 0.96}, {"op": "delta", "t": 5.25, "x": 1.02}, {"op": "delta", "t": 5.75, "x": 1.00},
+        {"op": "delta", "t": 6.25, "x": 1.02}, {"op": "delta", "t": 6.75, "x": 1.06}, {"op": "delta", "t": 7.25, "x": 0.98}, {"op": "delta", "t": 7.75, "x": 5.50},
+        {"op": "delta", "t": 8.25, "x": 6.93}, {"op": "delta", "t": 8.75, "x": 1.05}, {"op": "delta", "t": 9.25, "x": 0.98}, {"op": "delta", "t": 9.75, "x": 0.98},
+        {"op": "delta", "t": 10.25, "x": 1.04}, {"op": "delta", "t": 10.75, "x": 1.02}, {"op": "delta", "t": 11.25, "x": 3.73}, {"op": "delta", "t": 11.75, "x": 1.30},
+        {"op": "delta", "t": 12.25, "x": 1.03}, {"op": "delta", "t": 12.75, "x": 6.68}, {"op": "delta", "t": 13.25, "x": 0.97}, {"op": "delta", "t": 13.75, "x": 1.06},
+        {"op": "delta", "t": 14.25, "x": 0.94}, {"op": "delta", "t": 14.75, "x": 1.00}, {"op": "delta", "t": 15.25, "x": 1.00}, {"op": "delta", "t": 15.75, "x": 0.89},
+        {"op": "delta", "t": 16.25, "x": 1.04}, {"op": "delta", "t": 16.75, "x": 1.09}, {"op": "delta", "t": 17.25, "x": 1.02}, {"op": "delta", "t": 17.75, "x": 1.04},
+        {"op": "delta", "t": 18.25, "x": 1.03}, {"op": "delta", "t": 18.75, "x": 1.08}, {"op": "delta", "t": 19.25, "x": 1.12}, {"op": "delta", "t": 19.75, "x": 1.16},
+        {"op": "delta", "t": 20.25, "x": 1.05}, {"op": "delta", "t": 20.75, "x": 1.11}, {"op": "delta", "t": 21.25, "x": 1.11}, {"op": "delta", "t": 21.75, "x": 1.04},
+        {"op": "delta", "t": 22.25, "x": 1.09}, {"op": "delta", "t": 22.75, "x": 1.04}, {"op": "delta", "t": 23.25, "x": 1.25}, {"op": "delta", "t": 23.75, "x": 1.19},
+        {"op": "delta", "t": 24.25, "x": 0.99}, {"op": "delta", "t": 24.75, "x": 0.93}, {"op": "delta", "t": 25.25, "x": 1.10}, {"op": "delta", "t": 25.75, "x": 14.81},
+        {"op": "delta", "t": 26.25, "x": 1.10}, {"op": "delta", "t": 26.75, "x": 11.11}, {"op": "delta", "t": 27.25, "x": 1.04}, {"op": "delta", "t": 27.75, "x": 2.11},
+        {"op": "delta", "t": 28.25, "x": 1.21}, {"op": "delta", "t": 28.75, "x": 1.04}, {"op": "delta", "t": 29.25, "x": 1.06}, {"op": "delta", "t": 29.75, "x": 1.09},
+        {"op": "delist", "t": -4.75, "x": 0.82}, {"op": "delist", "t": -4.25, "x": 0.89}, {"op": "delist", "t": -3.75, "x": 0.88}, {"op": "delist", "t": -3.25, "x": 0.86},
+        {"op": "delist", "t": -2.75, "x": 0.86}, {"op": "delist", "t": -2.25, "x": 6.48}, {"op": "delist", "t": -1.75, "x": 1.21}, {"op": "delist", "t": -1.25, "x": 1.30},
+        {"op": "delist", "t": -0.75, "x": 1.15}, {"op": "delist", "t": -0.25, "x": 0.90}, {"op": "delist", "t": 0.25, "x": 0.89}, {"op": "delist", "t": 0.75, "x": 10.24},
+        {"op": "delist", "t": 1.25, "x": 4.72}, {"op": "delist", "t": 1.75, "x": 1.01}, {"op": "delist", "t": 2.25, "x": 2.47}, {"op": "delist", "t": 2.75, "x": 0.86},
+        {"op": "delist", "t": 3.25, "x": 0.85}, {"op": "delist", "t": 3.75, "x": 0.85}, {"op": "delist", "t": 4.25, "x": 11.53}, {"op": "delist", "t": 4.75, "x": 0.85},
+        {"op": "delist", "t": 5.25, "x": 0.79}, {"op": "delist", "t": 5.75, "x": 0.83}, {"op": "delist", "t": 6.25, "x": 0.94}, {"op": "delist", "t": 6.75, "x": 0.95},
+        {"op": "delist", "t": 7.25, "x": 0.77}, {"op": "delist", "t": 7.75, "x": 0.78}, {"op": "delist", "t": 8.25, "x": 0.79}, {"op": "delist", "t": 8.75, "x": 0.80},
+        {"op": "delist", "t": 9.25, "x": 0.97}, {"op": "delist", "t": 9.75, "x": 0.78}, {"op": "delist", "t": 10.25, "x": 0.83}, {"op": "delist", "t": 10.75, "x": 0.83},
+        {"op": "delist", "t": 11.25, "x": 0.86}, {"op": "delist", "t": 11.75, "x": 0.92}, {"op": "delist", "t": 12.25, "x": 1.10}, {"op": "delist", "t": 12.75, "x": 0.84},
+        {"op": "delist", "t": 13.25, "x": 1.03}, {"op": "delist", "t": 13.75, "x": 0.94}, {"op": "delist", "t": 14.25, "x": 0.90}, {"op": "delist", "t": 14.75, "x": 5.24},
+        {"op": "delist", "t": 15.25, "x": 0.94}, {"op": "delist", "t": 15.75, "x": 1.13}, {"op": "delist", "t": 16.25, "x": 1.48}, {"op": "delist", "t": 16.75, "x": 0.88},
+        {"op": "delist", "t": 17.25, "x": 0.86}, {"op": "delist", "t": 17.75, "x": 1.07}, {"op": "delist", "t": 18.25, "x": 1.26}, {"op": "delist", "t": 18.75, "x": 1.31},
+        {"op": "delist", "t": 19.25, "x": 0.86}, {"op": "delist", "t": 19.75, "x": 0.86}, {"op": "delist", "t": 20.25, "x": 0.89}, {"op": "delist", "t": 20.75, "x": 0.99},
+        {"op": "delist", "t": 21.25, "x": 0.93}, {"op": "delist", "t": 21.75, "x": 1.08}, {"op": "delist", "t": 22.25, "x": 0.90}, {"op": "delist", "t": 22.75, "x": 0.84},
+        {"op": "delist", "t": 23.25, "x": 0.98}, {"op": "delist", "t": 23.75, "x": 0.90}, {"op": "delist", "t": 24.25, "x": 1.01}, {"op": "delist", "t": 24.75, "x": 1.02},
+        {"op": "delist", "t": 25.25, "x": 0.90}, {"op": "delist", "t": 25.75, "x": 0.92}, {"op": "delist", "t": 26.25, "x": 0.96}, {"op": "delist", "t": 26.75, "x": 0.88},
+        {"op": "delist", "t": 27.25, "x": 0.80}, {"op": "delist", "t": 27.75, "x": 0.81}, {"op": "delist", "t": 28.25, "x": 0.81}, {"op": "delist", "t": 28.75, "x": 1.00},
+        {"op": "delist", "t": 29.25, "x": 1.00}, {"op": "delist", "t": 29.75, "x": 0.89}, {"op": "storm10", "t": -4.75, "x": 1.15}, {"op": "storm10", "t": -4.25, "x": 2.38},
+        {"op": "storm10", "t": -3.75, "x": 9.48}, {"op": "storm10", "t": -3.25, "x": 2.67}, {"op": "storm10", "t": -2.75, "x": 2.68}, {"op": "storm10", "t": -2.25, "x": 2.57},
+        {"op": "storm10", "t": -1.75, "x": 2.46}, {"op": "storm10", "t": -1.25, "x": 2.47}, {"op": "storm10", "t": -0.75, "x": 1.22}, {"op": "storm10", "t": -0.25, "x": 2.59},
+        {"op": "storm10", "t": 0.25, "x": 0.94}, {"op": "storm10", "t": 0.75, "x": 0.95}, {"op": "storm10", "t": 1.25, "x": 0.93}, {"op": "storm10", "t": 1.75, "x": 0.94},
+        {"op": "storm10", "t": 2.25, "x": 0.96}, {"op": "storm10", "t": 2.75, "x": 0.99}, {"op": "storm10", "t": 3.25, "x": 0.97}, {"op": "storm10", "t": 3.75, "x": 0.99},
+        {"op": "storm10", "t": 4.25, "x": 0.99}, {"op": "storm10", "t": 4.75, "x": 1.07}, {"op": "storm10", "t": 5.25, "x": 1.09}, {"op": "storm10", "t": 5.75, "x": 1.06},
+        {"op": "storm10", "t": 6.25, "x": 1.13}, {"op": "storm10", "t": 6.75, "x": 0.93}, {"op": "storm10", "t": 7.25, "x": 0.93}, {"op": "storm10", "t": 7.75, "x": 1.00},
+        {"op": "storm10", "t": 8.25, "x": 0.87}, {"op": "storm10", "t": 8.75, "x": 1.04}, {"op": "storm10", "t": 9.25, "x": 1.11}, {"op": "storm10", "t": 9.75, "x": 1.05},
+        {"op": "storm10", "t": 10.25, "x": 1.17}, {"op": "storm10", "t": 10.75, "x": 40.46}, {"op": "storm10", "t": 11.25, "x": 1.15}, {"op": "storm10", "t": 11.75, "x": 1.08},
+        {"op": "storm10", "t": 12.25, "x": 1.03}, {"op": "storm10", "t": 12.75, "x": 1.07}, {"op": "storm10", "t": 13.25, "x": 1.00}, {"op": "storm10", "t": 13.75, "x": 0.96},
+        {"op": "storm10", "t": 14.25, "x": 1.05}, {"op": "storm10", "t": 14.75, "x": 1.21}, {"op": "storm10", "t": 15.25, "x": 0.96}, {"op": "storm10", "t": 15.75, "x": 1.03},
+        {"op": "storm10", "t": 16.25, "x": 0.96}, {"op": "storm10", "t": 16.75, "x": 0.94}, {"op": "storm10", "t": 17.25, "x": 1.08}, {"op": "storm10", "t": 17.75, "x": 0.98},
+        {"op": "storm10", "t": 18.25, "x": 1.21}, {"op": "storm10", "t": 18.75, "x": 1.14}, {"op": "storm10", "t": 19.25, "x": 1.11}, {"op": "storm10", "t": 19.75, "x": 0.97},
+        {"op": "storm10", "t": 20.25, "x": 0.97}, {"op": "storm10", "t": 20.75, "x": 1.02}, {"op": "storm10", "t": 21.25, "x": 1.05}, {"op": "storm10", "t": 21.75, "x": 1.10},
+        {"op": "storm10", "t": 22.25, "x": 0.98}, {"op": "storm10", "t": 22.75, "x": 0.94}, {"op": "storm10", "t": 23.25, "x": 1.09}, {"op": "storm10", "t": 23.75, "x": 1.01},
+        {"op": "storm10", "t": 24.25, "x": 0.99}, {"op": "storm10", "t": 24.75, "x": 0.93}, {"op": "storm10", "t": 25.25, "x": 1.02}, {"op": "storm10", "t": 25.75, "x": 1.04},
+        {"op": "storm10", "t": 26.25, "x": 1.00}, {"op": "storm10", "t": 26.75, "x": 0.94}, {"op": "storm10", "t": 27.25, "x": 0.99}, {"op": "storm10", "t": 27.75, "x": 0.96},
+        {"op": "storm10", "t": 28.25, "x": 1.02}, {"op": "storm10", "t": 28.75, "x": 1.06}, {"op": "storm10", "t": 29.25, "x": 1.01}, {"op": "storm10", "t": 29.75, "x": 0.94},
+        {"op": "storm10", "t": -4.75, "x": 2.58}, {"op": "storm10", "t": -4.25, "x": 2.93}, {"op": "storm10", "t": -3.75, "x": 2.68}, {"op": "storm10", "t": -3.25, "x": 2.79},
+        {"op": "storm10", "t": -2.75, "x": 2.89}, {"op": "storm10", "t": -2.25, "x": 2.96}, {"op": "storm10", "t": -1.75, "x": 2.63}, {"op": "storm10", "t": -1.25, "x": 2.89},
+        {"op": "storm10", "t": -0.75, "x": 2.68}, {"op": "storm10", "t": -0.25, "x": 2.77}, {"op": "storm10", "t": 0.25, "x": 0.98}, {"op": "storm10", "t": 0.75, "x": 0.97},
+        {"op": "storm10", "t": 1.25, "x": 0.95}, {"op": "storm10", "t": 1.75, "x": 1.01}, {"op": "storm10", "t": 2.25, "x": 1.04}, {"op": "storm10", "t": 2.75, "x": 0.94},
+        {"op": "storm10", "t": 3.25, "x": 1.09}, {"op": "storm10", "t": 3.75, "x": 0.90}, {"op": "storm10", "t": 4.25, "x": 1.05}, {"op": "storm10", "t": 4.75, "x": 0.95},
+        {"op": "storm10", "t": 5.25, "x": 0.95}, {"op": "storm10", "t": 5.75, "x": 0.89}, {"op": "storm10", "t": 6.25, "x": 0.94}, {"op": "storm10", "t": 6.75, "x": 0.99},
+        {"op": "storm10", "t": 7.25, "x": 0.99}, {"op": "storm10", "t": 7.75, "x": 0.97}, {"op": "storm10", "t": 8.25, "x": 0.93}, {"op": "storm10", "t": 8.75, "x": 1.06},
+        {"op": "storm10", "t": 9.25, "x": 0.95}, {"op": "storm10", "t": 9.75, "x": 0.94}, {"op": "storm10", "t": 10.25, "x": 0.78}, {"op": "storm10", "t": 10.75, "x": 1.00},
+        {"op": "storm10", "t": 11.25, "x": 30.68}, {"op": "storm10", "t": 11.75, "x": 1.06}, {"op": "storm10", "t": 12.25, "x": 1.03}, {"op": "storm10", "t": 12.75, "x": 1.03},
+        {"op": "storm10", "t": 13.25, "x": 1.14}, {"op": "storm10", "t": 13.75, "x": 1.01}, {"op": "storm10", "t": 14.25, "x": 1.08}, {"op": "storm10", "t": 14.75, "x": 1.08},
+        {"op": "storm10", "t": 15.25, "x": 1.03}, {"op": "storm10", "t": 15.75, "x": 1.07}, {"op": "storm10", "t": 16.25, "x": 1.09}, {"op": "storm10", "t": 16.75, "x": 1.19},
+        {"op": "storm10", "t": 17.25, "x": 1.05}, {"op": "storm10", "t": 17.75, "x": 1.03}, {"op": "storm10", "t": 18.25, "x": 1.09}, {"op": "storm10", "t": 18.75, "x": 1.14},
+        {"op": "storm10", "t": 19.25, "x": 1.04}, {"op": "storm10", "t": 19.75, "x": 1.04}, {"op": "storm10", "t": 20.25, "x": 1.08}, {"op": "storm10", "t": 20.75, "x": 1.05},
+        {"op": "storm10", "t": 21.25, "x": 1.08}, {"op": "storm10", "t": 21.75, "x": 1.09}, {"op": "storm10", "t": 22.25, "x": 1.06}, {"op": "storm10", "t": 22.75, "x": 0.95},
+        {"op": "storm10", "t": 23.25, "x": 1.09}, {"op": "storm10", "t": 23.75, "x": 1.00}, {"op": "storm10", "t": 24.25, "x": 1.02}, {"op": "storm10", "t": 24.75, "x": 1.02},
+        {"op": "storm10", "t": 25.25, "x": 0.98}, {"op": "storm10", "t": 25.75, "x": 1.14}, {"op": "storm10", "t": 26.25, "x": 1.10}, {"op": "storm10", "t": 26.75, "x": 1.02},
+        {"op": "storm10", "t": 27.25, "x": 1.17}, {"op": "storm10", "t": 27.75, "x": 1.08}, {"op": "storm10", "t": 28.25, "x": 1.15}, {"op": "storm10", "t": 28.75, "x": 1.10},
+        {"op": "storm10", "t": 29.25, "x": 1.06}, {"op": "storm10", "t": 29.75, "x": 0.94}, {"op": "delist", "t": -4.75, "x": 0.92}, {"op": "delist", "t": -4.25, "x": 0.96},
+        {"op": "delist", "t": -3.75, "x": 1.03}, {"op": "delist", "t": -3.25, "x": 1.08}, {"op": "delist", "t": -2.75, "x": 0.98}, {"op": "delist", "t": -2.25, "x": 0.95},
+        {"op": "delist", "t": -1.75, "x": 1.01}, {"op": "delist", "t": -1.25, "x": 0.98}, {"op": "delist", "t": -0.75, "x": 0.94}, {"op": "delist", "t": -0.25, "x": 0.91},
+        {"op": "delist", "t": 0.25, "x": 1.00}, {"op": "delist", "t": 0.75, "x": 0.89}, {"op": "delist", "t": 1.25, "x": 0.89}, {"op": "delist", "t": 1.75, "x": 0.89},
+        {"op": "delist", "t": 2.25, "x": 0.99}, {"op": "delist", "t": 2.75, "x": 1.06}, {"op": "delist", "t": 3.25, "x": 1.00}, {"op": "delist", "t": 3.75, "x": 0.94},
+        {"op": "delist", "t": 4.25, "x": 0.87}, {"op": "delist", "t": 4.75, "x": 0.90}, {"op": "delist", "t": 5.25, "x": 0.94}, {"op": "delist", "t": 5.75, "x": 0.86},
+        {"op": "delist", "t": 6.25, "x": 0.87}, {"op": "delist", "t": 6.75, "x": 1.10}, {"op": "delist", "t": 7.25, "x": 0.84}, {"op": "delist", "t": 7.75, "x": 0.86},
+        {"op": "delist", "t": 8.25, "x": 2.26}, {"op": "delist", "t": 8.75, "x": 0.97}, {"op": "delist", "t": 9.25, "x": 0.95}, {"op": "delist", "t": 9.75, "x": 0.99},
+        {"op": "delist", "t": 10.25, "x": 1.04}, {"op": "delist", "t": 10.75, "x": 0.90}, {"op": "delist", "t": 11.25, "x": 1.11}, {"op": "delist", "t": 11.75, "x": 0.93},
+        {"op": "delist", "t": 12.25, "x": 0.93}, {"op": "delist", "t": 12.75, "x": 0.88}, {"op": "delist", "t": 13.25, "x": 0.93}, {"op": "delist", "t": 13.75, "x": 0.99},
+        {"op": "delist", "t": 14.25, "x": 0.85}, {"op": "delist", "t": 14.75, "x": 0.91}, {"op": "delist", "t": 15.25, "x": 0.95}, {"op": "delist", "t": 15.75, "x": 0.87},
+        {"op": "delist", "t": 16.25, "x": 0.95}, {"op": "delist", "t": 16.75, "x": 0.90}, {"op": "delist", "t": 17.25, "x": 0.92}, {"op": "delist", "t": 17.75, "x": 0.88},
+        {"op": "delist", "t": 18.25, "x": 0.88}, {"op": "delist", "t": 18.75, "x": 0.85}, {"op": "delist", "t": 19.25, "x": 0.91}, {"op": "delist", "t": 19.75, "x": 0.90},
+        {"op": "delist", "t": 20.25, "x": 0.97}, {"op": "delist", "t": 20.75, "x": 0.94}, {"op": "delist", "t": 21.25, "x": 0.90}, {"op": "delist", "t": 21.75, "x": 0.86},
+        {"op": "delist", "t": 22.25, "x": 0.91}, {"op": "delist", "t": 22.75, "x": 0.92}, {"op": "delist", "t": 23.25, "x": 0.87}, {"op": "delist", "t": 23.75, "x": 0.83},
+        {"op": "delist", "t": 24.25, "x": 0.85}, {"op": "delist", "t": 24.75, "x": 0.90}, {"op": "delist", "t": 25.25, "x": 0.87}, {"op": "delist", "t": 25.75, "x": 0.88},
+        {"op": "delist", "t": 26.25, "x": 0.93}, {"op": "delist", "t": 26.75, "x": 0.86}, {"op": "delist", "t": 27.25, "x": 0.99}, {"op": "delist", "t": 27.75, "x": 0.83},
+        {"op": "delist", "t": 28.25, "x": 0.89}, {"op": "delist", "t": 28.75, "x": 0.98}, {"op": "delist", "t": 29.25, "x": 0.89}, {"op": "delist", "t": 29.75, "x": 0.90},
+        {"op": "delta", "t": -4.75, "x": 0.98}, {"op": "delta", "t": -4.25, "x": 0.94}, {"op": "delta", "t": -3.75, "x": 0.91}, {"op": "delta", "t": -3.25, "x": 1.15},
+        {"op": "delta", "t": -2.75, "x": 1.17}, {"op": "delta", "t": -2.25, "x": 0.99}, {"op": "delta", "t": -1.75, "x": 0.95}, {"op": "delta", "t": -1.25, "x": 1.14},
+        {"op": "delta", "t": -0.75, "x": 0.95}, {"op": "delta", "t": -0.25, "x": 0.91}, {"op": "delta", "t": 0.25, "x": 1.12}, {"op": "delta", "t": 0.75, "x": 1.09},
+        {"op": "delta", "t": 1.25, "x": 1.10}, {"op": "delta", "t": 1.75, "x": 1.05}, {"op": "delta", "t": 2.25, "x": 1.14}, {"op": "delta", "t": 2.75, "x": 0.90},
+        {"op": "delta", "t": 3.25, "x": 0.92}, {"op": "delta", "t": 3.75, "x": 0.94}, {"op": "delta", "t": 4.25, "x": 1.04}, {"op": "delta", "t": 4.75, "x": 1.15},
+        {"op": "delta", "t": 5.25, "x": 1.13}, {"op": "delta", "t": 5.75, "x": 1.05}, {"op": "delta", "t": 6.25, "x": 1.07}, {"op": "delta", "t": 6.75, "x": 1.10},
+        {"op": "delta", "t": 7.25, "x": 1.06}, {"op": "delta", "t": 7.75, "x": 0.95}, {"op": "delta", "t": 8.25, "x": 0.91}, {"op": "delta", "t": 8.75, "x": 1.14},
+        {"op": "delta", "t": 9.25, "x": 1.12}, {"op": "delta", "t": 9.75, "x": 1.04}, {"op": "delta", "t": 10.25, "x": 1.24}, {"op": "delta", "t": 10.75, "x": 1.17},
+        {"op": "delta", "t": 11.25, "x": 1.03}, {"op": "delta", "t": 11.75, "x": 1.03}, {"op": "delta", "t": 12.25, "x": 1.11}, {"op": "delta", "t": 12.75, "x": 0.99},
+        {"op": "delta", "t": 13.25, "x": 1.06}, {"op": "delta", "t": 13.75, "x": 0.97}, {"op": "delta", "t": 14.25, "x": 1.12}, {"op": "delta", "t": 14.75, "x": 1.08},
+        {"op": "delta", "t": 15.25, "x": 0.95}, {"op": "delta", "t": 15.75, "x": 1.18}, {"op": "delta", "t": 16.25, "x": 1.14}, {"op": "delta", "t": 16.75, "x": 1.04},
+        {"op": "delta", "t": 17.25, "x": 1.00}, {"op": "delta", "t": 17.75, "x": 1.01}, {"op": "delta", "t": 18.25, "x": 1.06}, {"op": "delta", "t": 18.75, "x": 1.05},
+        {"op": "delta", "t": 19.25, "x": 1.11}, {"op": "delta", "t": 19.75, "x": 0.96}, {"op": "delta", "t": 20.25, "x": 1.15}, {"op": "delta", "t": 20.75, "x": 1.10},
+        {"op": "delta", "t": 21.25, "x": 1.19}, {"op": "delta", "t": 21.75, "x": 1.14}, {"op": "delta", "t": 22.25, "x": 1.09}, {"op": "delta", "t": 22.75, "x": 0.97},
+        {"op": "delta", "t": 23.25, "x": 1.03}, {"op": "delta", "t": 23.75, "x": 1.12}, {"op": "delta", "t": 24.25, "x": 1.00}, {"op": "delta", "t": 24.75, "x": 0.98},
+        {"op": "delta", "t": 25.25, "x": 1.03}, {"op": "delta", "t": 25.75, "x": 0.94}, {"op": "delta", "t": 26.25, "x": 0.95}, {"op": "delta", "t": 26.75, "x": 1.15},
+        {"op": "delta", "t": 27.25, "x": 1.02}, {"op": "delta", "t": 27.75, "x": 1.08}, {"op": "delta", "t": 28.25, "x": 1.04}, {"op": "delta", "t": 28.75, "x": 1.09},
+        {"op": "delta", "t": 29.25, "x": 1.01}, {"op": "delta", "t": 29.75, "x": 1.00}, {"op": "promo_flush", "t": -4.75, "x": 1.01}, {"op": "promo_flush", "t": -4.25, "x": 0.90},
+        {"op": "promo_flush", "t": -3.75, "x": 0.98}, {"op": "promo_flush", "t": -3.25, "x": 0.96}, {"op": "promo_flush", "t": -2.75, "x": 1.00}, {"op": "promo_flush", "t": -2.25, "x": 0.93},
+        {"op": "promo_flush", "t": -1.75, "x": 0.89}, {"op": "promo_flush", "t": -1.25, "x": 1.04}, {"op": "promo_flush", "t": -0.75, "x": 0.89}, {"op": "promo_flush", "t": -0.25, "x": 1.65},
+        {"op": "promo_flush", "t": 0.25, "x": 1.72}, {"op": "promo_flush", "t": 0.75, "x": 1.09}, {"op": "promo_flush", "t": 1.25, "x": 0.97}, {"op": "promo_flush", "t": 1.75, "x": 1.15},
+        {"op": "promo_flush", "t": 2.25, "x": 1.70}, {"op": "promo_flush", "t": 2.75, "x": 33.42}, {"op": "promo_flush", "t": 3.25, "x": 2.47}, {"op": "promo_flush", "t": 3.75, "x": 1.22},
+        {"op": "promo_flush", "t": 4.25, "x": 0.97}, {"op": "promo_flush", "t": 4.75, "x": 0.92}, {"op": "promo_flush", "t": 5.25, "x": 1.12}, {"op": "promo_flush", "t": 5.75, "x": 1.11},
+        {"op": "promo_flush", "t": 6.25, "x": 0.99}, {"op": "promo_flush", "t": 6.75, "x": 1.03}, {"op": "promo_flush", "t": 7.25, "x": 1.03}, {"op": "promo_flush", "t": 7.75, "x": 0.93},
+        {"op": "promo_flush", "t": 8.25, "x": 0.95}, {"op": "promo_flush", "t": 8.75, "x": 0.96}, {"op": "promo_flush", "t": 9.25, "x": 0.90}, {"op": "promo_flush", "t": 9.75, "x": 0.91},
+        {"op": "promo_flush", "t": 10.25, "x": 0.95}, {"op": "promo_flush", "t": 10.75, "x": 0.90}, {"op": "promo_flush", "t": 11.25, "x": 1.03}, {"op": "promo_flush", "t": 11.75, "x": 0.91},
+        {"op": "promo_flush", "t": 12.25, "x": 0.92}, {"op": "promo_flush", "t": 12.75, "x": 0.93}, {"op": "promo_flush", "t": 13.25, "x": 0.96}, {"op": "promo_flush", "t": 13.75, "x": 0.99},
+        {"op": "promo_flush", "t": 14.25, "x": 0.99}, {"op": "promo_flush", "t": 14.75, "x": 0.94}, {"op": "promo_flush", "t": 15.25, "x": 0.90}, {"op": "promo_flush", "t": 15.75, "x": 0.94},
+        {"op": "promo_flush", "t": 16.25, "x": 0.94}, {"op": "promo_flush", "t": 16.75, "x": 1.00}, {"op": "promo_flush", "t": 17.25, "x": 0.95}, {"op": "promo_flush", "t": 17.75, "x": 0.91},
+        {"op": "promo_flush", "t": 18.25, "x": 0.91}, {"op": "promo_flush", "t": 18.75, "x": 0.91}, {"op": "promo_flush", "t": 19.25, "x": 0.98}, {"op": "promo_flush", "t": 19.75, "x": 0.91},
+        {"op": "promo_flush", "t": 20.25, "x": 0.98}, {"op": "promo_flush", "t": 20.75, "x": 0.91}, {"op": "promo_flush", "t": 21.25, "x": 0.93}, {"op": "promo_flush", "t": 21.75, "x": 1.17},
+        {"op": "promo_flush", "t": 22.25, "x": 0.94}, {"op": "promo_flush", "t": 22.75, "x": 0.93}, {"op": "promo_flush", "t": 23.25, "x": 1.15}, {"op": "promo_flush", "t": 23.75, "x": 0.91},
+        {"op": "promo_flush", "t": 24.25, "x": 0.92}, {"op": "promo_flush", "t": 24.75, "x": 0.92}, {"op": "promo_flush", "t": 25.25, "x": 0.90}, {"op": "promo_flush", "t": 25.75, "x": 0.92},
+        {"op": "promo_flush", "t": 26.25, "x": 1.16}, {"op": "promo_flush", "t": 26.75, "x": 0.99}, {"op": "promo_flush", "t": 27.25, "x": 0.92}, {"op": "promo_flush", "t": 27.75, "x": 0.93},
+        {"op": "promo_flush", "t": 28.25, "x": 0.99}, {"op": "promo_flush", "t": 28.75, "x": 0.94}, {"op": "promo_flush", "t": 29.25, "x": 0.94}, {"op": "promo_flush", "t": 29.75, "x": 0.95},
+        {"op": "promo", "t": -4.75, "x": 0.95}, {"op": "promo", "t": -4.25, "x": 0.89}, {"op": "promo", "t": -3.75, "x": 0.97}, {"op": "promo", "t": -3.25, "x": 0.94},
+        {"op": "promo", "t": -2.75, "x": 0.88}, {"op": "promo", "t": -2.25, "x": 1.02}, {"op": "promo", "t": -1.75, "x": 0.96}, {"op": "promo", "t": -1.25, "x": 0.90},
+        {"op": "promo", "t": -0.75, "x": 0.85}, {"op": "promo", "t": -0.25, "x": 3.59}, {"op": "promo", "t": 0.25, "x": 1.12}, {"op": "promo", "t": 0.75, "x": 0.95},
+        {"op": "promo", "t": 1.25, "x": 1.00}, {"op": "promo", "t": 1.75, "x": 1.11}, {"op": "promo", "t": 2.25, "x": 1.25}, {"op": "promo", "t": 2.75, "x": 1.00},
+        {"op": "promo", "t": 3.25, "x": 0.97}, {"op": "promo", "t": 3.75, "x": 0.96}, {"op": "promo", "t": 4.25, "x": 0.99}, {"op": "promo", "t": 4.75, "x": 0.99},
+        {"op": "promo", "t": 5.25, "x": 1.11}, {"op": "promo", "t": 5.75, "x": 0.90}, {"op": "promo", "t": 6.25, "x": 0.91}, {"op": "promo", "t": 6.75, "x": 1.03},
+        {"op": "promo", "t": 7.25, "x": 0.98}, {"op": "promo", "t": 7.75, "x": 0.93}, {"op": "promo", "t": 8.25, "x": 1.06}, {"op": "promo", "t": 8.75, "x": 1.01},
+        {"op": "promo", "t": 9.25, "x": 1.14}, {"op": "promo", "t": 9.75, "x": 1.04}, {"op": "promo", "t": 10.25, "x": 1.00}, {"op": "promo", "t": 10.75, "x": 0.95},
+        {"op": "promo", "t": 11.25, "x": 0.92}, {"op": "promo", "t": 11.75, "x": 1.02}, {"op": "promo", "t": 12.25, "x": 1.03}, {"op": "promo", "t": 12.75, "x": 0.89},
+        {"op": "promo", "t": 13.25, "x": 1.04}, {"op": "promo", "t": 13.75, "x": 0.93}, {"op": "promo", "t": 14.25, "x": 1.09}, {"op": "promo", "t": 14.75, "x": 0.97},
+        {"op": "promo", "t": 15.25, "x": 0.91}, {"op": "promo", "t": 15.75, "x": 1.07}, {"op": "promo", "t": 16.25, "x": 0.95}, {"op": "promo", "t": 16.75, "x": 1.01},
+        {"op": "promo", "t": 17.25, "x": 0.97}, {"op": "promo", "t": 17.75, "x": 0.94}, {"op": "promo", "t": 18.25, "x": 0.95}, {"op": "promo", "t": 18.75, "x": 0.91},
+        {"op": "promo", "t": 19.25, "x": 0.99}, {"op": "promo", "t": 19.75, "x": 0.98}, {"op": "promo", "t": 20.25, "x": 1.06}, {"op": "promo", "t": 20.75, "x": 1.13},
+        {"op": "promo", "t": 21.25, "x": 1.01}, {"op": "promo", "t": 21.75, "x": 1.05}, {"op": "promo", "t": 22.25, "x": 0.99}, {"op": "promo", "t": 22.75, "x": 1.02},
+        {"op": "promo", "t": 23.25, "x": 0.91}, {"op": "promo", "t": 23.75, "x": 0.91}, {"op": "promo", "t": 24.25, "x": 1.01}, {"op": "promo", "t": 24.75, "x": 1.02},
+        {"op": "promo", "t": 25.25, "x": 1.10}, {"op": "promo", "t": 25.75, "x": 0.91}, {"op": "promo", "t": 26.25, "x": 0.93}, {"op": "promo", "t": 26.75, "x": 0.98},
+        {"op": "promo", "t": 27.25, "x": 0.99}, {"op": "promo", "t": 27.75, "x": 0.99}, {"op": "promo", "t": 28.25, "x": 0.94}, {"op": "promo", "t": 28.75, "x": 0.96},
+        {"op": "promo", "t": 29.25, "x": 0.97}, {"op": "promo", "t": 29.75, "x": 0.98}, {"op": "trickle", "t": -4.75, "x": 2.18}, {"op": "trickle", "t": -4.25, "x": 3.74},
+        {"op": "trickle", "t": -3.75, "x": 1.15}, {"op": "trickle", "t": -3.25, "x": 2.26}, {"op": "trickle", "t": -2.75, "x": 2.33}, {"op": "trickle", "t": -2.25, "x": 1.21},
+        {"op": "trickle", "t": -1.75, "x": 2.14}, {"op": "trickle", "t": -1.25, "x": 1.13}, {"op": "trickle", "t": -0.75, "x": 2.19}, {"op": "trickle", "t": -0.25, "x": 3.71},
+        {"op": "trickle", "t": 0.25, "x": 1.15}, {"op": "trickle", "t": 0.75, "x": 1.03}, {"op": "trickle", "t": 1.25, "x": 0.93}, {"op": "trickle", "t": 1.75, "x": 0.99},
+        {"op": "trickle", "t": 2.25, "x": 1.19}, {"op": "trickle", "t": 2.75, "x": 0.94}, {"op": "trickle", "t": 3.25, "x": 1.04}, {"op": "trickle", "t": 3.75, "x": 0.89},
+        {"op": "trickle", "t": 4.25, "x": 0.98}, {"op": "trickle", "t": 4.75, "x": 0.97}, {"op": "trickle", "t": 5.25, "x": 1.15}, {"op": "trickle", "t": 5.75, "x": 1.20},
+        {"op": "trickle", "t": 6.25, "x": 1.10}, {"op": "trickle", "t": 6.75, "x": 1.09}, {"op": "trickle", "t": 7.25, "x": 1.10}, {"op": "trickle", "t": 7.75, "x": 1.05},
+        {"op": "trickle", "t": 8.25, "x": 0.97}, {"op": "trickle", "t": 8.75, "x": 1.11}, {"op": "trickle", "t": 9.25, "x": 1.09}, {"op": "trickle", "t": 9.75, "x": 1.04},
+        {"op": "trickle", "t": 10.25, "x": 0.90}, {"op": "trickle", "t": 10.75, "x": 1.13}, {"op": "trickle", "t": 11.25, "x": 0.92}, {"op": "trickle", "t": 11.75, "x": 0.91},
+        {"op": "trickle", "t": 12.25, "x": 1.03}, {"op": "trickle", "t": 12.75, "x": 0.97}, {"op": "trickle", "t": 13.25, "x": 0.98}, {"op": "trickle", "t": 13.75, "x": 1.08},
+        {"op": "trickle", "t": 14.25, "x": 1.11}, {"op": "trickle", "t": 14.75, "x": 1.07}, {"op": "trickle", "t": 15.25, "x": 1.07}, {"op": "trickle", "t": 15.75, "x": 1.01},
+        {"op": "trickle", "t": 16.25, "x": 1.15}, {"op": "trickle", "t": 16.75, "x": 0.97}, {"op": "trickle", "t": 17.25, "x": 0.94}, {"op": "trickle", "t": 17.75, "x": 1.19},
+        {"op": "trickle", "t": 18.25, "x": 1.09}, {"op": "trickle", "t": 18.75, "x": 0.98}, {"op": "trickle", "t": 19.25, "x": 0.98}, {"op": "trickle", "t": 19.75, "x": 0.98},
+        {"op": "trickle", "t": 20.25, "x": 0.94}, {"op": "trickle", "t": 20.75, "x": 1.12}, {"op": "trickle", "t": 21.25, "x": 1.16}, {"op": "trickle", "t": 21.75, "x": 1.08},
+        {"op": "trickle", "t": 22.25, "x": 1.04}, {"op": "trickle", "t": 22.75, "x": 0.94}, {"op": "trickle", "t": 23.25, "x": 1.08}, {"op": "trickle", "t": 23.75, "x": 1.04},
+        {"op": "trickle", "t": 24.25, "x": 1.18}, {"op": "trickle", "t": 24.75, "x": 1.18}, {"op": "trickle", "t": 25.25, "x": 1.03}, {"op": "trickle", "t": 25.75, "x": 1.22},
+        {"op": "trickle", "t": 26.25, "x": 0.99}, {"op": "trickle", "t": 26.75, "x": 0.98}, {"op": "trickle", "t": 27.25, "x": 0.99}, {"op": "trickle", "t": 27.75, "x": 1.05},
+        {"op": "trickle", "t": 28.25, "x": 1.17}, {"op": "trickle", "t": 28.75, "x": 0.92}, {"op": "trickle", "t": 29.25, "x": 0.94}, {"op": "trickle", "t": 29.75, "x": 1.07},
+        {"op": "control", "t": -4.75, "x": 0.87}, {"op": "control", "t": -4.25, "x": 0.96}, {"op": "control", "t": -3.75, "x": 0.91}, {"op": "control", "t": -3.25, "x": 0.98},
+        {"op": "control", "t": -2.75, "x": 0.91}, {"op": "control", "t": -2.25, "x": 0.84}, {"op": "control", "t": -1.75, "x": 0.81}, {"op": "control", "t": -1.25, "x": 0.88},
+        {"op": "control", "t": -0.75, "x": 0.86}, {"op": "control", "t": -0.25, "x": 0.89}, {"op": "control", "t": 0.25, "x": 0.82}, {"op": "control", "t": 0.75, "x": 1.03},
+        {"op": "control", "t": 1.25, "x": 0.95}, {"op": "control", "t": 1.75, "x": 1.07}, {"op": "control", "t": 2.25, "x": 0.91}, {"op": "control", "t": 2.75, "x": 1.07},
+        {"op": "control", "t": 3.25, "x": 0.91}, {"op": "control", "t": 3.75, "x": 10.85}, {"op": "control", "t": 4.25, "x": 0.98}, {"op": "control", "t": 4.75, "x": 0.82},
+        {"op": "control", "t": 5.25, "x": 0.97}, {"op": "control", "t": 5.75, "x": 1.04}, {"op": "control", "t": 6.25, "x": 1.02}, {"op": "control", "t": 6.75, "x": 1.63},
+        {"op": "control", "t": 7.25, "x": 0.91}, {"op": "control", "t": 7.75, "x": 0.95}, {"op": "control", "t": 8.25, "x": 0.81}, {"op": "control", "t": 8.75, "x": 0.88},
+        {"op": "control", "t": 9.25, "x": 1.02}, {"op": "control", "t": 9.75, "x": 0.98}, {"op": "control", "t": 10.25, "x": 0.87}, {"op": "control", "t": 10.75, "x": 0.93},
+        {"op": "control", "t": 11.25, "x": 0.84}, {"op": "control", "t": 11.75, "x": 0.81}, {"op": "control", "t": 12.25, "x": 0.94}, {"op": "control", "t": 12.75, "x": 1.03},
+        {"op": "control", "t": 13.25, "x": 2.59}, {"op": "control", "t": 13.75, "x": 0.87}, {"op": "control", "t": 14.25, "x": 0.82}, {"op": "control", "t": 14.75, "x": 0.81},
+        {"op": "control", "t": 15.25, "x": 0.88}, {"op": "control", "t": 15.75, "x": 0.97}, {"op": "control", "t": 16.25, "x": 0.90}, {"op": "control", "t": 16.75, "x": 1.21},
+        {"op": "control", "t": 17.25, "x": 1.01}, {"op": "control", "t": 17.75, "x": 3.66}, {"op": "control", "t": 18.25, "x": 10.87}, {"op": "control", "t": 18.75, "x": 1.10},
+        {"op": "control", "t": 19.25, "x": 1.19}, {"op": "control", "t": 19.75, "x": 0.89}, {"op": "control", "t": 20.25, "x": 17.13}, {"op": "control", "t": 20.75, "x": 0.96},
+        {"op": "control", "t": 21.25, "x": 0.95}, {"op": "control", "t": 21.75, "x": 1.00}, {"op": "control", "t": 22.25, "x": 0.90}, {"op": "control", "t": 22.75, "x": 0.90},
+        {"op": "control", "t": 23.25, "x": 0.87}, {"op": "control", "t": 23.75, "x": 0.92}, {"op": "control", "t": 24.25, "x": 0.92}, {"op": "control", "t": 24.75, "x": 0.82},
+        {"op": "control", "t": 25.25, "x": 0.95}, {"op": "control", "t": 25.75, "x": 0.93}, {"op": "control", "t": 26.25, "x": 0.86}, {"op": "control", "t": 26.75, "x": 0.94},
+        {"op": "control", "t": 27.25, "x": 0.84}, {"op": "control", "t": 27.75, "x": 0.93}, {"op": "control", "t": 28.25, "x": 0.82}, {"op": "control", "t": 28.75, "x": 0.80},
+        {"op": "control", "t": 29.25, "x": 0.82}, {"op": "control", "t": 29.75, "x": 0.79}, {"op": "control", "t": -4.75, "x": 0.91}, {"op": "control", "t": -4.25, "x": 0.90},
+        {"op": "control", "t": -3.75, "x": 1.12}, {"op": "control", "t": -3.25, "x": 0.90}, {"op": "control", "t": -2.75, "x": 1.09}, {"op": "control", "t": -2.25, "x": 1.01},
+        {"op": "control", "t": -1.75, "x": 1.10}, {"op": "control", "t": -1.25, "x": 1.07}, {"op": "control", "t": -0.75, "x": 0.89}, {"op": "control", "t": -0.25, "x": 0.92},
+        {"op": "control", "t": 0.25, "x": 1.00}, {"op": "control", "t": 0.75, "x": 1.09}, {"op": "control", "t": 1.25, "x": 1.04}, {"op": "control", "t": 1.75, "x": 0.91},
+        {"op": "control", "t": 2.25, "x": 0.88}, {"op": "control", "t": 2.75, "x": 0.92}, {"op": "control", "t": 3.25, "x": 0.93}, {"op": "control", "t": 3.75, "x": 1.01},
+        {"op": "control", "t": 4.25, "x": 0.89}, {"op": "control", "t": 4.75, "x": 0.94}, {"op": "control", "t": 5.25, "x": 0.89}, {"op": "control", "t": 5.75, "x": 0.95},
+        {"op": "control", "t": 6.25, "x": 0.95}, {"op": "control", "t": 6.75, "x": 1.06}, {"op": "control", "t": 7.25, "x": 1.05}, {"op": "control", "t": 7.75, "x": 0.92},
+        {"op": "control", "t": 8.25, "x": 0.93}, {"op": "control", "t": 8.75, "x": 0.94}, {"op": "control", "t": 9.25, "x": 0.95}, {"op": "control", "t": 9.75, "x": 0.94},
+        {"op": "control", "t": 10.25, "x": 0.88}, {"op": "control", "t": 10.75, "x": 0.99}, {"op": "control", "t": 11.25, "x": 0.94}, {"op": "control", "t": 11.75, "x": 1.93},
+        {"op": "control", "t": 12.25, "x": 0.94}, {"op": "control", "t": 12.75, "x": 1.01}, {"op": "control", "t": 13.25, "x": 0.94}, {"op": "control", "t": 13.75, "x": 1.04},
+        {"op": "control", "t": 14.25, "x": 0.91}, {"op": "control", "t": 14.75, "x": 0.99}, {"op": "control", "t": 15.25, "x": 0.88}, {"op": "control", "t": 15.75, "x": 1.04},
+        {"op": "control", "t": 16.25, "x": 0.99}, {"op": "control", "t": 16.75, "x": 1.10}, {"op": "control", "t": 17.25, "x": 0.91}, {"op": "control", "t": 17.75, "x": 1.09},
+        {"op": "control", "t": 18.25, "x": 0.92}, {"op": "control", "t": 18.75, "x": 1.11}, {"op": "control", "t": 19.25, "x": 0.98}, {"op": "control", "t": 19.75, "x": 1.11},
+        {"op": "control", "t": 20.25, "x": 0.91}, {"op": "control", "t": 20.75, "x": 0.96}, {"op": "control", "t": 21.25, "x": 1.01}, {"op": "control", "t": 21.75, "x": 0.88},
+        {"op": "control", "t": 22.25, "x": 0.96}, {"op": "control", "t": 22.75, "x": 0.91}, {"op": "control", "t": 23.25, "x": 0.99}, {"op": "control", "t": 23.75, "x": 0.99},
+        {"op": "control", "t": 24.25, "x": 0.93}, {"op": "control", "t": 24.75, "x": 0.93}, {"op": "control", "t": 25.25, "x": 1.08}, {"op": "control", "t": 25.75, "x": 1.04},
+        {"op": "control", "t": 26.25, "x": 0.88}, {"op": "control", "t": 26.75, "x": 0.92}, {"op": "control", "t": 27.25, "x": 0.89}, {"op": "control", "t": 27.75, "x": 1.04},
+        {"op": "control", "t": 28.25, "x": 1.05}, {"op": "control", "t": 28.75, "x": 1.09}, {"op": "control", "t": 29.25, "x": 0.87}, {"op": "control", "t": 29.75, "x": 1.08}
+      ]
+    },
+    {
+      "name": "control",
+      "source": "windows",
+      "transform": [
+        {"type": "filter", "expr": "datum.op == 'control'"},
+        {"type": "aggregate", "groupby": ["t"], "fields": ["x", "x", "x"], "ops": ["mean", "min", "max"], "as": ["x", "lo", "hi"]},
+        {"type": "collect", "sort": {"field": "t"}}
+      ]
+    },
+    {
+      "name": "small",
+      "source": "windows",
+      "transform": [
+        {"type": "filter", "expr": "indexof(['trickle', 'promo', 'delta', 'delist'], datum.op) >= 0 && datum.t <= drawA"},
+        {"type": "aggregate", "groupby": ["op", "t"], "fields": ["x"], "ops": ["mean"], "as": ["x"]},
+        {"type": "collect", "sort": {"field": ["op", "t"]}}
+      ]
+    },
+    {
+      "name": "storm",
+      "source": "windows",
+      "transform": [
+        {"type": "filter", "expr": "datum.op == 'storm10' && datum.t <= drawS"},
+        {"type": "aggregate", "groupby": ["t"], "fields": ["x", "x", "x"], "ops": ["mean", "min", "max"], "as": ["x", "lo", "hi"]},
+        {"type": "collect", "sort": {"field": "t"}}
+      ]
+    },
+    {
+      "name": "flush",
+      "source": "windows",
+      "transform": [
+        {"type": "filter", "expr": "datum.op == 'promo_flush' && datum.t <= drawF"},
+        {"type": "aggregate", "groupby": ["t"], "fields": ["x", "x", "x"], "ops": ["mean", "min", "max"], "as": ["x", "lo", "hi"]},
+        {"type": "collect", "sort": {"field": "t"}}
+      ]
+    },
+    {
+      "name": "bands",
+      "values": [
+        {"a": -5, "b": 0, "big": "~3×", "text": "10% storm writing", "fill": "#e6f6f4"},
+        {"a": 0, "b": 10, "big": "~1×", "text": "0 to 10 min after", "fill": "rgba(0,0,0,0)"},
+        {"a": 10, "b": 13, "big": "1.2 s", "text": ["segments", "seal"], "fill": "rgba(0,0,0,0)"},
+        {"a": 13, "b": 30, "big": "~1×", "text": "13 to 30 min", "fill": "rgba(0,0,0,0)"}
+      ],
+      "transform": [
+        {"type": "formula", "as": "o", "expr": "clamp((drawS - datum.a) / 1.5, 0, 1)"}
+      ]
+    },
+    {
+      "name": "smallKey",
+      "values": [
+        {"op": "promo", "label": "1% price update", "px": 14},
+        {"op": "delta", "label": "1% full-row upsert", "px": 270},
+        {"op": "delist", "label": "1% delete", "px": 556},
+        {"op": "trickle", "label": "10 min trickle, 5 rows/s", "px": 746}
+      ]
+    }
+  ],
+  "scales": [
+    {"name": "smallColor", "type": "ordinal", "domain": ["promo", "delta", "delist", "trickle"], "range": ["#d97706", "#6b21a8", "#e0457b", "#0891b2"]},
+    {"name": "x", "type": "linear", "domain": [-5, 30], "range": "width", "nice": false, "zero": false},
+    {"name": "y", "type": "log", "domain": [0.5, 100], "range": "height", "nice": false}
+  ],
+  "axes": [
+    {"orient": "bottom", "scale": "x", "title": "minutes since the writes stopped", "titleAnchor": "start", "values": [-5, 0, 5, 10, 15, 20, 25, 30]},
+    {"orient": "left", "scale": "y", "title": "search p99 vs. no writes", "values": [1, 3, 10, 30], "encode": {"labels": {"update": {"text": {"signal": "datum.value + '×'"}}}}}
+  ],
+  "marks": [
+    {
+      "type": "rect",
+      "from": {"data": "bands"},
+      "encode": {
+        "enter": {"x": {"scale": "x", "field": "a"}, "x2": {"scale": "x", "field": "b"}, "y": {"value": 0}, "y2": {"signal": "height"}, "fill": {"field": "fill"}},
+        "update": {"opacity": {"field": "o"}}
+      }
+    },
+    {
+      "type": "rule",
+      "from": {"data": "bands"},
+      "encode": {
+        "enter": {"x": {"scale": "x", "field": "b"}, "y": {"value": 0}, "y2": {"signal": "height"}, "stroke": {"value": "#cbd5e1"}, "strokeWidth": {"value": 1.5}, "strokeDash": {"value": [5, 6]}},
+        "update": {"opacity": {"signal": "datum.o * fade"}}
+      }
+    },
+    {
+      "type": "area",
+      "from": {"data": "control"},
+      "encode": {
+        "enter": {"x": {"scale": "x", "field": "t"}, "y": {"scale": "y", "field": "hi"}, "y2": {"scale": "y", "field": "lo"}, "fill": {"value": "#175fff"}},
+        "update": {"fillOpacity": {"signal": "stage > 1 ? 0.07 : 0.14"}}
+      }
+    },
+    {
+      "type": "line",
+      "from": {"data": "control"},
+      "encode": {
+        "enter": {"x": {"scale": "x", "field": "t"}, "y": {"scale": "y", "field": "x"}, "stroke": {"value": "#175fff"}, "strokeWidth": {"value": 3}},
+        "update": {"strokeOpacity": {"signal": "stage > 1 ? 0.4 : 1"}}
+      }
+    },
+    {
+      "type": "group",
+      "from": {"facet": {"name": "smallOp", "data": "small", "groupby": "op"}},
+      "marks": [
+        {
+          "type": "line",
+          "from": {"data": "smallOp"},
+          "encode": {"update": {"x": {"scale": "x", "field": "t"}, "y": {"scale": "y", "field": "x"}, "stroke": {"scale": "smallColor", "field": "op"}, "strokeWidth": {"value": 2.5}, "strokeOpacity": {"signal": "0.9 * smallFade"}}}
+        }
+      ]
+    },
+    {
+      "type": "rule",
+      "from": {"data": "smallKey"},
+      "encode": {
+        "enter": {"x": {"field": "px"}, "x2": {"field": "px", "offset": 36}, "y": {"value": 28}, "stroke": {"scale": "smallColor", "field": "op"}, "strokeWidth": {"value": 5}, "strokeCap": {"value": "round"}},
+        "update": {"opacity": {"signal": "stage > 0 ? smallFade : 0"}}
+      }
+    },
+    {
+      "type": "text",
+      "from": {"data": "smallKey"},
+      "encode": {
+        "enter": {"x": {"field": "px", "offset": 48}, "y": {"value": 28}, "baseline": {"value": "middle"}, "fontSize": {"value": 21}, "fontWeight": {"value": 600}, "fill": {"value": "#1e293b"}, "text": {"field": "label"}},
+        "update": {"opacity": {"signal": "stage > 0 ? smallFade : 0"}}
+      }
+    },
+    {
+      "type": "area",
+      "from": {"data": "storm"},
+      "encode": {"update": {"x": {"scale": "x", "field": "t"}, "y": {"scale": "y", "field": "hi"}, "y2": {"scale": "y", "field": "lo"}, "fill": {"value": "#0f9f8f"}, "fillOpacity": {"value": 0.18}}}
+    },
+    {
+      "type": "line",
+      "from": {"data": "storm"},
+      "encode": {"update": {"x": {"scale": "x", "field": "t"}, "y": {"scale": "y", "field": "x"}, "stroke": {"value": "#0f9f8f"}, "strokeWidth": {"value": 3}}}
+    },
+    {
+      "type": "area",
+      "from": {"data": "flush"},
+      "encode": {"update": {"x": {"scale": "x", "field": "t"}, "y": {"scale": "y", "field": "hi"}, "y2": {"scale": "y", "field": "lo"}, "fill": {"value": "#c84cff"}, "fillOpacity": {"value": 0.16}}}
+    },
+    {
+      "type": "line",
+      "from": {"data": "flush"},
+      "encode": {"update": {"x": {"scale": "x", "field": "t"}, "y": {"scale": "y", "field": "x"}, "stroke": {"value": "#c84cff"}, "strokeWidth": {"value": 3}}}
+    },
+    {
+      "type": "text",
+      "encode": {"enter": {"x": {"scale": "x", "value": -5, "offset": 14}, "y": {"scale": "y", "value": 1, "offset": 30}, "fontSize": {"value": 21}, "fontWeight": {"value": 600}, "fill": {"value": "#175fff"}, "text": {"value": "no writes: ~30 ms"}}}
+    },
+    {
+      "type": "text",
+      "encode": {
+        "enter": {"x": {"value": 14}, "y": {"value": 72}, "baseline": {"value": "middle"}, "fontSize": {"value": 21}, "fill": {"value": "#475569"}, "text": {"value": "all four: latency variability within no-writes run ranges"}},
+        "update": {"opacity": {"signal": "drawA > 0 ? smallFade : 0"}}
+      }
+    },
+    {
+      "type": "text",
+      "encode": {
+        "enter": {"x": {"scale": "x", "value": -5, "offset": 14}, "y": {"scale": "y", "value": 12}, "fontSize": {"value": 21}, "fontWeight": {"value": 600}, "fill": {"value": "#0f9f8f"}, "text": {"value": "10% storm"}},
+        "update": {"opacity": {"signal": "drawS > -3 ? 1 : 0"}}
+      }
+    },
+    {
+      "type": "text",
+      "encode": {
+        "enter": {"x": {"scale": "x", "value": 3.2}, "y": {"scale": "y", "value": 20}, "fontSize": {"value": 21}, "fontWeight": {"value": 600}, "lineHeight": {"value": 26}, "fill": {"value": "#c84cff"}, "text": {"value": ["1% update, then a flush:", "the stall comes within 3 min"]}},
+        "update": {"opacity": {"signal": "drawF > 3 ? 1 : 0"}}
+      }
+    },
+    {
+      "type": "text",
+      "encode": {
+        "enter": {"x": {"signal": "width"}, "y": {"signal": "height", "offset": 56}, "align": {"value": "right"}, "fontSize": {"value": 20}, "fill": {"value": "#1e293b"}, "text": {"value": "thin: 30 s p99, mean of two runs. shaded: their range"}},
+        "update": {"opacity": {"value": 1}}
+      }
+    },
+    {
+      "type": "text",
+      "from": {"data": "bands"},
+      "encode": {
+        "enter": {"x": {"scale": "x", "field": "a", "offset": 14}, "y": {"value": 40}, "fontSize": {"value": 40}, "fontWeight": {"value": 700}, "fill": {"value": "#061982"}, "text": {"field": "big"}},
+        "update": {"opacity": {"signal": "datum.o * fade"}}
+      }
+    },
+    {
+      "type": "text",
+      "from": {"data": "bands"},
+      "encode": {
+        "enter": {"x": {"scale": "x", "field": "a", "offset": 14}, "y": {"value": 70}, "fontSize": {"value": 21}, "lineHeight": {"value": 26}, "fill": {"value": "#1e293b"}, "text": {"field": "text"}},
+        "update": {"opacity": {"signal": "datum.o * fade"}}
+      }
+    }
+  ]
+}

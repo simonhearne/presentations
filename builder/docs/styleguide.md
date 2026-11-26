@@ -34,8 +34,10 @@ Defined in `css/layouts.css` under "Shared components".
 | Stat grid | `.stat-grid`, `.stat-card` (+`.is-warn`), `.stat-label`, `.stat-value`, `.stat-note` | 3-up metric tiles. |
 | Callout | `blockquote` (+`.blue` / `.bottom` / `.small`), `.label` | Stat-tile chrome (tint, `-20` border, card radius) with a mono eyebrow. Berry by default, `.blue` for the positive variant. |
 | Closing line | `.closing-line` (+`.is-emphatic`) | The sentence under a diagram, grid or chart that says what it meant. Bare text, no panel. `.is-emphatic` makes it bold navy when the line is the takeaway rather than a caption. Use `blockquote` instead when it needs chrome, or `p.punchline` when the line *is* the slide. |
+| Setup line | `p.setup-line` with a leading `<strong>Setup</strong>` | How the numbers on the slide were measured. Works on any layout: always pinned just above the footer rule, out of flow, wherever it sits in the markup. Keep it to one line, and leave the slide's last ~55px clear for it. |
 | Pull quote | `blockquote.case-quote`, `cite` | No panel: gradient quote glyph, navy text, mono grey attribution. |
-| Eyebrow | `[RAM]{.eyebrow-new}`, `[2.5]{.eyebrow-ver}` | Inline label beside the text it marks — trails a heading, rides alongside a cell or bullet. Em-sized: scales with its context, stepping down again inside an `h1`. `-new` gradient for the headline mark, `-ver` muted grey for the quiet one (release version, memory tier). |
+| Eyebrow | `[RAM]{.eyebrow-new}`, `[2.5]{.eyebrow-ver}` | Inline label beside the text it marks — trails a heading, rides alongside a cell or bullet. Em-sized: scales with its context, stepping down again inside an `h1`. `-new` gradient for the headline mark, `-ver` muted grey for the quiet one (release version, memory tier). `[[B1b](url)]{.eyebrow-run}` is `-ver` with the case kept, for the benchmark run behind a slide; any eyebrow can wrap a link and keeps its pill colours. |
+| Metric ladder | `.metric-ladder`: `.ml-head`, then `.ml-body` > `.ml-rail` + `.ml-rungs` > `.ml-rung` | Layered table of metrics with an upward rail. Write rungs bottom-first; `column-reverse` stacks them so fragments climb. Each rung is five cells, led by `.ml-name` and `.ml-metrics` (`.pill.ghost`s). |
 | Highlight | `mark` (plain markdown) | Brand-tinted emphasis. |
 | Big code | `.big-code` on the slide | Enlarges code blocks on sparse slides. |
 | Placeholder | `.slide.placeholder`, `.placeholder-dep` | Unfinished-slide marker: hatched border, rotated "PLACEHOLDER" tag, dimmed body. `.placeholder-dep` is an undimmed "waiting on: " line naming the blocker. |
@@ -78,8 +80,7 @@ phrase the gradient accent on a multi-line title. On the dark layouts
 (`.title`, `.hero`) add `bright` — `<span class="hero-text bright">` — for a
 still aqua-to-sky fill that holds its colour against the blue-berry background;
 the plain navy-to-berry fill disappears there. All the `hero-text` variants
-print as a flat fill (white on the dark layouts, purple elsewhere), and the
-animated ones hold still under `prefers-reduced-motion`.
+print as a flat fill (white on the dark layouts, purple elsewhere).
 
 **Closing slide** — two accepted forms. Pick one; don't blend them.
 

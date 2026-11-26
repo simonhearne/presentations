@@ -74,7 +74,7 @@
       if (revealed.length === 0) return false;
       const last = revealed[revealed.length - 1];
       if (last.index < chartIndex && window.deckCharts?.pending(slide, -1)) return false;
-      last.els.forEach(el => el.classList.remove('is-revealed'));
+      last.els.forEach(el => el.classList.remove('is-revealed', 'is-prerevealed'));
     }
     markCurrent(slide, steps);
     return true;
@@ -114,12 +114,15 @@
     cancelAuto();
     autoState = 'idle';
     const frags = fragmentsOn(slide);
+    // is-prerevealed lets deck CSS show a backward entry finished instead of
+    // replaying every step's entrance at once; a step that hides drops it, so
+    // revealing that step again animates as usual.
     if (direction === 'backward') {
-      frags.forEach(el => el.classList.add('is-revealed'));
+      frags.forEach(el => el.classList.add('is-revealed', 'is-prerevealed'));
       markCurrent(slide, stepsOn(slide));
       return;
     }
-    frags.forEach(el => el.classList.remove('is-revealed', 'is-current'));
+    frags.forEach(el => el.classList.remove('is-revealed', 'is-current', 'is-prerevealed'));
     window.deckSteps?.refresh(slide);
     if (slide.classList.contains('auto-reveal')) {
       if (slide.dataset.autorevealStart === 'immediate') {

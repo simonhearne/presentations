@@ -103,6 +103,10 @@ html, body {
 .footer-right::before {
   content: 'Next: ';
 }
+.slide.title .footer-right {
+  display: none;
+}
+
 /* Presenter cue: once a slide has spent every advance it stages -- fragment
    steps and vega signal stages alike -- the next advance changes slide, so a
    brand dot sits centred on the footer rule. */
@@ -254,6 +258,17 @@ body.cursor-hidden {
 .fragment { visibility: hidden; opacity: 0; transition: opacity 200ms ease; }
 .fragment.is-revealed { visibility: visible; opacity: 1; }
 
+/* .fragment-pop: a fragment that springs in from smaller instead of fading.
+   A backward entry shows it finished rather than replaying the pop. */
+.fragment-pop.is-revealed {
+  animation: fragment-pop 520ms cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+.fragment-pop.is-prerevealed { animation: none; }
+@keyframes fragment-pop {
+  0%   { opacity: 0; transform: scale(0.6); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
 /* Matryoshka pop — MRL-slide accent. Parked below the bottom edge (clipped by
    the slide's overflow:hidden), it springs up and rightward on reveal and
    settles with a slight left tilt. */
@@ -291,10 +306,4 @@ body.cursor-hidden {
 @keyframes shimmer-gradient {
   0% { background-position: 0% 50%; }
   100% { background-position: 300% 50%; }
-}
-
-/* The hero accents are the only ambient motion in a deck — hold them on their
-   opening frame when the viewer has asked for less. */
-@media (prefers-reduced-motion: reduce) {
-  .hero-text { animation: none; }
 }

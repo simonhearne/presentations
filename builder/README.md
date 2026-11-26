@@ -50,7 +50,7 @@ apply slide layout classes. Available layouts:
 | Class | Use |
 | --- | --- |
 | (none) | Content slide: white bg, black text, headings + body |
-| `.title` | Title slide: gradient background, white text. Also the sign-off closing slide — see [docs/styleguide.md](docs/styleguide.md#deck-bookends) |
+| `.title` | Title slide: gradient background, white text, no next link in the footer. Also the sign-off closing slide — see [docs/styleguide.md](docs/styleguide.md#deck-bookends) |
 | `.section` | Divider between sections: oversized number + name |
 | `.hero` | Full-bleed statement: dark gradient with one big claim |
 | `.center` (modifier) | Centers content horizontally and vertically |
@@ -103,7 +103,10 @@ components from `css/layouts.css` — `.card` panels in a `.card-grid`
 (`.navy`/`.gradient`/`.berry`/`.ghost`), `.stat-grid` metric tiles, and inline
 eyebrows (`[RAM]{.eyebrow-new}`, `[2.5]{.eyebrow-ver}`) that label a heading,
 cell or bullet without joining its text — trailing the title on a heading, and
-kept out of the footer, the next-link and the slide's anchor slug:
+kept out of the footer, the next-link and the slide's anchor slug. An eyebrow
+can hold a link (`[[B1b](https://…#b1b)]{.eyebrow-run}`) and keeps its pill
+look; `.eyebrow-run` is the grey pill without the uppercase, for naming the
+benchmark run behind a results slide:
 
 ```html
 <div class="card-grid cols-2">
@@ -402,6 +405,18 @@ phases settle to navy). `is-current` moves back a step on ArrowLeft and sits
 on the last step when a slide is entered backward, and on the last step of
 every slide in print (see [PDF export](#pdf-export)).
 
+Fragments revealed by a backward entry also carry `is-prerevealed`, which a
+step drops when it hides them. Deck CSS that animates a fragment's entrance can
+key on it to show the slide finished instead of replaying every step at once,
+e.g. `.my-diagram .fragment.is-prerevealed { animation: none; }`. Stepping
+back and forward again still animates that step.
+
+Add `.fragment-pop` alongside `.fragment` and the element springs in from
+smaller with a slight overshoot rather than fading:
+`<div class="match-count fragment fragment-pop">…</div>`, or
+`{.fragment .fragment-pop}` in markdown. It skips the pop on a backward entry
+and in print, so it never shows a half-grown frame.
+
 Once the last step is on screen the slide gains `fragments-done` and a small
 brand-blue dot appears centred on the footer rule. It is a presenter cue: the
 next advance leaves the slide rather than revealing more. The dot clears when
@@ -477,6 +492,16 @@ Either way, pressing any arrow/space/page key while the timer runs cancels it
 and hands back manual stepping. The sequence stops on the last fragment — it
 never advances the deck. Entering a slide backward reveals every fragment at
 once, with no timer.
+
+### Timed fade-in without a fragment
+
+Wrap an element in `.late-reveal` to fade it in one second after its slide
+is shown. It is not a fragment: no keypress, no step count, no footer cue.
+It replays every time the slide becomes current, and shows at once in print.
+
+```html
+<p class="sec-question">You've cleared the technical blockers. <span class="late-reveal">That was the easy part.</span></p>
+```
 
 ## Iframe embeds
 

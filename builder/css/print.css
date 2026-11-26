@@ -91,6 +91,7 @@ html, body {
   visibility: visible !important;
   opacity: 1 !important;
 }
+.fragment-pop { animation: none !important; }
 
 @page {
   size: 1920px 1080px;
