@@ -1,0 +1,66 @@
+.slide .case-note { font-size: 20px; opacity: 0.7; margin: var(--zilliz-s-3) 0 0; }
+/* Feature cards — the shared .feature-cat eyebrow over a panel list on .card.
+   .feature-grid top-aligns so short cards size to content instead of stretching */
+.slide .feature-grid { align-items: start; margin-top: var(--zilliz-s-6); }
+.slide .feature-grid .card { padding: var(--zilliz-s-2) var(--zilliz-s-3); }
+.slide .feature-list { list-style: none; padding: 0; margin: 0; }
+.slide .feature-list li { font-size: 32px; line-height: 1.3; margin: 0; padding: 18px 0; border-bottom: 2px solid var(--zilliz-blue-20); }
+.slide .feature-list li:first-child { padding-top: 6px; }
+.slide .feature-list li:last-child { border-bottom: 0; padding-bottom: 6px; }
+.slide .feature-grid.cols-4 .feature-list li { font-size: 24px; padding: 15px 0; }
+
+/* .es-compare — per-card Elasticsearch comparison, pinned below the why */
+.slide .card .es-compare { margin-top: auto; padding-top: var(--zilliz-s-2); border-top: 2px solid var(--zilliz-blue-20); font-size: 20px; line-height: 1.35; opacity: 0.9; }
+.slide .card .es-compare strong { color: var(--zilliz-berry); }
+
+/* Query rows — exact (navy) vs semantic (gradient) example queries.
+   The card takes over as the grid and the rows dissolve into it, so every pill
+   sits in one auto-sized column and matches the widest label in the card */
+.slide .card:has(.q-row) { display: grid; grid-template-columns: auto 1fr; align-items: center; }
+.slide .card:has(.q-row) > :not(.q-row) { grid-column: 1 / -1; }
+.slide .q-row { display: contents; }
+.slide .q-text { font-size: 24px; line-height: 1.3; color: var(--zilliz-ink); min-width: 0; }
+
+/* Architecture panels — the three ways to run hybrid search, on .card/.card-grid;
+   connectors are drawn in CSS rather than a diagram so the copy stays editable
+   in slides.md. .is-win flags the one-engine answer */
+.slide .arch-grid { gap: var(--zilliz-s-4); margin-top: var(--zilliz-s-6); }
+.slide .arch-grid .card { gap: var(--zilliz-s-3); }
+.slide .arch-eyebrow { margin: 0; }
+
+.slide .arch-flow { display: flex; flex-direction: column; }
+.slide .arch-node { border-radius: var(--zilliz-radius-node); padding: 14px var(--zilliz-s-2); text-align: center; font-size: 28px; font-weight: 700; line-height: 1.15; color: var(--zilliz-navy); }
+.slide .arch-node small { display: block; font-family: var(--zilliz-font-mono); font-size: 17px; font-weight: 400; line-height: 1.3; margin-top: 7px; opacity: 0.8; }
+.slide .arch-node small code { font-size: inherit; background: none; padding: 0; }
+.slide .arch-node.app { background: var(--zilliz-blue-10); border: 2px solid var(--zilliz-blue-20); }
+.slide .arch-node.engine { background: var(--zilliz-berry-10); border: 2px solid var(--zilliz-berry-20); }
+.slide .arch-engines { display: grid; grid-template-columns: 1fr; gap: var(--zilliz-s-2); }
+.slide .arch-engines:has(.arch-node + .arch-node) { grid-template-columns: 1fr 1fr; }
+.slide .card.is-win .arch-node.engine { background: var(--zilliz-gradient); border-color: var(--zilliz-navy); color: var(--zilliz-white); }
+
+/* Fork — the query paths out of the app. Two drops split into lanes;
+   a single drop stays one stem, which is the whole point of the slide */
+.slide .arch-fork { position: relative; display: grid; grid-template-columns: 1fr; --arch-line: var(--zilliz-purple); }
+.slide .arch-fork:has(.arch-drop + .arch-drop) { grid-template-columns: 1fr 1fr; }
+.slide .arch-drop { position: relative; display: flex; justify-content: center; align-items: center; gap: var(--zilliz-s-1); padding: 26px 0; }
+.slide .arch-drop::before { content: ''; position: absolute; top: 0; bottom: 0; left: 50%; width: 3px; margin-left: -1.5px; background: var(--arch-line); }
+.slide .arch-drop::after { content: ''; position: absolute; bottom: 0; left: 50%; margin-left: -9px; border-left: 9px solid transparent; border-right: 9px solid transparent; border-top: 11px solid var(--arch-line); }
+.slide .arch-drop > .pill { position: relative; }
+
+/* Sync line — the running cost of the shape above it, berry when it's a tax */
+.slide .arch-sync { margin: var(--zilliz-s-2) 0 0; text-align: center; font-family: var(--zilliz-font-mono); font-size: 18px; letter-spacing: 0.02em; color: var(--zilliz-berry); border-top: 2px dashed var(--zilliz-berry-20); padding-top: var(--zilliz-s-2); }
+.slide .arch-sync.is-good { color: var(--zilliz-blue); border-top-color: var(--zilliz-blue-20); }
+
+.slide .arch-verdict { margin: 0; padding-top: var(--zilliz-s-2); border-top: 1px solid var(--zilliz-blue-10); font-size: 22px; line-height: 1.4; color: var(--zilliz-ink); }
+.slide .arch-verdict strong { color: var(--zilliz-berry); }
+.slide .card.is-win .arch-verdict strong { color: var(--zilliz-blue); }
+
+/* Timeline — horizontal milestone row; .is-now highlights the current release */
+.slide .timeline { display: flex; margin-top: var(--zilliz-s-8); }
+.slide .timeline .tl-item { flex: 1; position: relative; border-top: 4px solid var(--zilliz-blue-20); padding: var(--zilliz-s-3) var(--zilliz-s-3) 0 0; display: flex; flex-direction: column; gap: var(--zilliz-s-1); }
+.slide .timeline .tl-item::before { content: ''; position: absolute; top: -13px; left: 0; width: 22px; height: 22px; border-radius: 50%; background: var(--zilliz-blue); }
+.slide .timeline .tl-year { font-family: var(--zilliz-font-mono); font-size: 48px; font-weight: 600; color: var(--zilliz-navy); }
+.slide .timeline .tl-label { font-size: 26px; line-height: 1.3; color: var(--zilliz-ink); }
+.slide .timeline .tl-item.is-now { border-top-color: var(--zilliz-berry-20); }
+.slide .timeline .tl-item.is-now::before { background: var(--zilliz-gradient); width: 30px; height: 30px; top: -17px; }
+.slide .timeline .tl-item.is-now .tl-year { color: var(--zilliz-blue); }

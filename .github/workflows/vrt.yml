@@ -9,6 +9,7 @@ on:
   pull_request:
     paths:
       - 'builder/css/**'
+      - 'builder/talks/*/slides.css'
       - 'builder/script/**'
       - 'builder/templates/**'
       - 'builder/img/**'
@@ -29,7 +30,7 @@ concurrency:
 
 jobs:
   vrt:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 30
     steps:
       - uses: actions/checkout@v7

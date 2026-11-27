@@ -2008,3 +2008,30 @@ test('extractTitle: keeps the text of an inline [text]{.class} span, drops the m
   assert.equal(extractTitle('<h1>What it costs you [(in theory)]{.reality-swap}</h1>'), 'What it costs you (in theory)');
   assert.equal(extractTitle('<h1>What it costs you <span class="reality-swap">(in theory)</span></h1>'), 'What it costs you (in theory)');
 });
+
+test('buildDeck: links a deck-local slides.css after the shared layouts, before print', async () => {
+  const root = mkdtempSync(join(tmpdir(), 'deck-css-'));
+  try {
+    writeFileSync(join(root, 'slides.md'), '# Deck\n');
+    writeFileSync(join(root, 'slides.css'), '.slide .x { color: red; }');
+    const html = readFileSync(await buildDeck(root), 'utf8');
+    const link = '<link rel="stylesheet" href="../slides.css">';
+    assert.ok(html.includes(link));
+    assert.ok(html.indexOf('layouts.css') < html.indexOf(link));
+    assert.ok(html.indexOf(link) < html.indexOf('print.css'));
+  } finally {
+    rmSync(root, { recursive: true, force: true });
+  }
+});
+
+test('buildDeck: no slides.css, no deck stylesheet link', async () => {
+  const root = mkdtempSync(join(tmpdir(), 'deck-no-css-'));
+  try {
+    writeFileSync(join(root, 'slides.md'), '# Deck\n');
+    const html = readFileSync(await buildDeck(root), 'utf8');
+    assert.doesNotMatch(html, /slides\.css/);
+    assert.doesNotMatch(html, /\{\{deckCss\}\}/);
+  } finally {
+    rmSync(root, { recursive: true, force: true });
+  }
+});

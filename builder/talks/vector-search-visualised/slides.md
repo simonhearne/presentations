@@ -4,13 +4,6 @@
 
 {.title .no-chrome .automata}
 
-<style>
-  .q-grid { display: grid; grid-template-columns: repeat(8, 1fr); gap: 0.7vw; margin: 1.6vh 0; }
-  .q-grid img { width: 100%; aspect-ratio: 2 / 1; object-fit: contain; border-radius: 5px; image-rendering: pixelated; }
-  .source-ref { font-family: var(--zilliz-font-mono, monospace); font-size: 0.55em; opacity: 0.5; margin-top: 1.5vh; }
-  .source-ref a { color: inherit; }
-</style>
-
 <img class="logo" src="../../../img/zilliz-light.svg" alt="">
 
 # Vector Search <br><span class="hero-text smashing">Visualised</span>
@@ -32,13 +25,6 @@
 - module: ../../visualisations/connectome.js
   id: connectome
 ```
-
-<style>
-.text-vignette {
-  padding: 5em;
-  background: radial-gradient(ellipse 75% 75% at 50% 50%, rgba(0, 0, 0, 0.75) 0%, rgba(0, 0, 0, 0) 68%);
-}
-</style>
 
 <div class="text-vignette">
 <p class="fragment">You recognise a friend's face across a crowded room {.fragment .dark-bg-lift}</p>
@@ -317,17 +303,6 @@ Every technique trades **speed**, **accuracy** & **cost**.
 
 # The big idea
 
-<style>
-  .big-idea { display: flex; align-items: center; justify-content: center; gap: 3vw; margin: 10vh 0; font-size: 32px; }
-  .big-idea .bi-cell { display: flex; flex-direction: column; align-items: center; }
-  .big-idea .bi-num { font-size: 3.4em; font-weight: 800; line-height: 1; }
-  .big-idea .bi-lab { font-family: var(--zilliz-font-mono, monospace); font-size: 0.85em; opacity: 0.65; margin-top: 0.6em; }
-  .big-idea .give .bi-num { color: #94a3b8; }
-  .big-idea .get .bi-num { color: var(--zilliz-blue, #175fff); }
-  .big-idea .bi-arrow { font-size: 2.6em; opacity: 0.4; }
-  .big-idea-foot { text-align: center; font-size: 1.3em; }
-</style>
-
 <div class="big-idea">
   <div class="bi-cell give"><span class="bi-num">&lt;10%</span><span class="bi-lab">recall you give up</span></div>
   <div class="bi-arrow">→</div>
@@ -560,36 +535,6 @@ Approximate nearest-neighbour algorithms all trade perfection for reduced latenc
 
 512 dimensions → a 16×32 grid → hue based on normalised dimension value → a fingerprint for each face.
 
-<style>
-  .fp-grid-wrap { --gap: 0.6vw; }
-  .fp-grid-wrap .fp-trigger { position: absolute; }
-  .fp-grid {
-    display: grid;
-    grid-template-columns: repeat(8, 1fr);
-    grid-auto-rows: auto;
-    gap: var(--gap);
-    /* max-width: 70vh; */
-  }
-  .fp-grid .cell {
-    position: relative;
-    aspect-ratio: 1 / 1;
-    overflow: hidden;
-    border-radius: 6px;
-    background: #eee;
-  }
-  .fp-grid .cell img {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transition: opacity 0.5s ease;
-  }
-  .fp-grid .cell .fp { opacity: 0; image-rendering: pixelated; object-fit: contain; }
-  .fp-grid-wrap .fp-trigger.is-revealed ~ .fp-grid .cell .face { opacity: 0; }
-  .fp-grid-wrap .fp-trigger.is-revealed ~ .fp-grid .cell .fp { opacity: 1; }
-</style>
-
 <div class="fp-grid-wrap">
   <div class="fp-trigger fragment" aria-hidden="true"></div>
   <div class="fp-grid">
@@ -619,24 +564,6 @@ Approximate nearest-neighbour algorithms all trade perfection for reduced latenc
 # Similar faces, similar fingerprints
 
 The fingerprint isn't decoration - it _is_ the geometry. Close vectors share a pattern; distant ones don't.
-
-<style>
-  .fp-cmp { display: flex; flex-direction: column; gap: 4vh; margin: 3vh 0; }
-  .fp-cmp .pair { display: grid; grid-template-columns: auto auto; gap: 2.5vw; align-items: center; justify-content: center; }
-  .fp-cmp .verdict { font-family: var(--zilliz-font-mono, monospace); font-size: 1.1em; text-align: right; line-height: 1.4; }
-  .fp-cmp .verdict .score { display: block; font-size: 1.9em; font-weight: 700; }
-  .fp-cmp .verdict.hit .score { color: var(--zilliz-blue, #175fff); }
-  .fp-cmp .verdict.miss .score { color: #c84cff; }
-  .fp-cmp .row { display: flex; gap: 1.4vw; align-items: center; justify-content: center; }
-  .fp-cmp figure { margin: 0; text-align: center; }
-  .fp-cmp img { height: 13vh; border-radius: 6px; object-fit: cover; opacity: 0.85; }
-  .fp-cmp .fp-duo { display: flex; align-items: center; gap: 0.6vw; padding: 1vh 1.2vw; border-radius: 12px; }
-  .fp-cmp .fp-duo.hit { background: rgba(23, 95, 255, 0.09); outline: 1px solid rgba(23, 95, 255, 0.25); }
-  .fp-cmp .fp-duo.miss { background: rgba(200, 76, 255, 0.09); outline: 1px solid rgba(200, 76, 255, 0.25); }
-  .fp-cmp img.fp { height: 23vh; image-rendering: pixelated; object-fit: contain; background: #eee; opacity: 1; }
-  .fp-cmp figcaption { font-family: var(--zilliz-font-mono, monospace); font-size: 0.7em; opacity: 0.6; margin-top: 0.4em; }
-  .fp-cmp .vs { font-family: var(--zilliz-font-mono, monospace); opacity: 0.45; padding: 0 0.3vw; }
-</style>
 
 <div class="fp-cmp">
   <div class="pair fragment">

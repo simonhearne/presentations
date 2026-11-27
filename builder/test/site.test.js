@@ -551,3 +551,9 @@ test('captureTitleSlide: writes a PNG of the .deck element', async (t) => {
     rmSync(root, { recursive: true, force: true });
   }
 });
+
+test('collectLocalAssetRefs + rewriteAssetPaths: a deck slides.css is copied and served from the deck dir', () => {
+  const html = '<link rel="stylesheet" href="../../../css/layouts.css">\n<link rel="stylesheet" href="../slides.css">';
+  assert.deepEqual(collectLocalAssetRefs(html), ['slides.css']);
+  assert.match(rewriteAssetPaths(html, 'deck-a'), /href="\/deck-a\/slides\.css"/);
+});
