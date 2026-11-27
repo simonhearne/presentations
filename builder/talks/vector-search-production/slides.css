@@ -172,7 +172,7 @@
 .slide .result-boost .strip-stats { display: grid; grid-template-columns: 104px 1fr; gap: 22px; }
 .slide .result-boost .stat-value { font-size: 42px; }
 .slide .result-boost .stat-note { font-size: 20px; white-space: nowrap; }
-.slide :is(.result-boost, .trace) ~ .closing-line { margin-top: 28px; font-size: 32px; }
+.slide :is(.result-boost, .result-facets, .trace) ~ .closing-line { margin-top: 28px; font-size: 32px; }
 .result-slot.is-sale .result-thumb { border: 4px solid var(--zilliz-berry); }
 .result-slot .sale-tag { position: absolute; top: -8px; right: -6px; padding: 3px 10px 4px; border-radius: 999px; background: var(--zilliz-berry); color: var(--zilliz-white); font-family: var(--zilliz-font-mono); font-size: 18px; font-weight: 700; line-height: 1.1; text-transform: uppercase; }
 /* One query, two facet panels: counts as bars scaled to the panel's own longest, latency below. */
@@ -192,7 +192,6 @@
 .result-facets .facet-cost > div { display: flex; align-items: baseline; gap: 12px; white-space: nowrap; }
 .slide .result-facets .stat-value { font-family: var(--zilliz-font-mono); font-size: 40px; font-weight: 600; line-height: 1; color: var(--facet-ink); }
 .slide .result-facets .stat-note { font-size: 24px; color: var(--zilliz-ink); }
-.slide .result-facets ~ .closing-line { margin-top: 28px; font-size: 32px; }
 /* Two ranked lists for one query: full product names, the ESCI label spelled out as a
    pill, and a person icon on the pills a human labelled. */
 .slide .search-demo.result-compare .header { justify-content: space-between; gap: var(--zilliz-s-3); margin-bottom: var(--zilliz-s-3); }
@@ -272,7 +271,6 @@
 .slide .sec-checks { display: flex; gap: var(--zilliz-s-2); margin: 0; }
 /* Query cards: five squares per arm in rank order, filled for an exact match, then what came back. */
 .slide .hit-cards { gap: var(--zilliz-s-2) var(--zilliz-s-3); margin-top: 0; }
-.slide .hit-cards .card { padding: var(--zilliz-s-2) var(--zilliz-s-3); gap: var(--zilliz-s-1); }
 .slide .hit-cards .feature-cat { margin: 0; }
 .slide .hit-cards .case-name { font-size: 32px; margin-bottom: var(--zilliz-s-1); }
 .slide .hit-cards .is-keep { border-color: var(--zilliz-purple); }

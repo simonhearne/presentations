@@ -993,7 +993,7 @@ with real cards instead of text drawn into the SVG.
 </div>
 </div>
 
-<div class="card-grid answerability fragment">
+<div class="card-grid tight answerability fragment">
 <div class="card">
 <span class="feature-cat">Never</span>
 <p class="qa-q">"where are the winter olympics and when do they start"</p>
@@ -2185,7 +2185,7 @@ Everything I showed you is reproducible on your laptop.
 
 *Six gaps that I will address.*
 
-<div class="card-grid cols-3 next-cards">
+<div class="card-grid tight cols-3 next-cards">
 <div class="card fragment" data-fragment-index="1">
 <p><span class="pill ghost">range</span></p>
 <p><strong>BM25 and dense, measured apart</strong></p>
@@ -2305,7 +2305,7 @@ under their own `Limits and caveats` headings.
 Truncation does not preserve retrieval recall on this model. Identity recall
 is stricter than the task metrics MRL is usually sold on.
 
-<div class="stat-grid">
+<div class="stat-grid cols-2">
 <div class="stat-card"><span class="stat-value">0.700</span><!-- src: data/ws3/transform_ceiling_1m.csv --><span class="stat-label">MRL prefix, 512d, exact-search ceiling r@10</span></div>
 <div class="stat-card"><span class="stat-value">0.964</span><!-- src: data/ws3/transform_ceiling_1m.csv --><span class="stat-label">uncentred PCA, 512d, exact-search ceiling r@10</span></div>
 </div>
@@ -2350,7 +2350,7 @@ itself is on a backup slide.
 
 # Backup: nlist and the segment heap
 
-<div class="stat-grid">
+<div class="stat-grid cols-2">
 <div class="stat-card"><span class="stat-value">4096</span><!-- src: benchlib/config.py --><span class="stat-label">nlist, held across every arm and every rung of the sweep</span></div>
 <div class="stat-card"><span class="stat-value">54 MiB</span><!-- src: RESULTS-WS3.md:232-237 --><span class="stat-label">dim-independent Milvus pk/stats heap</span></div>
 </div>
@@ -2493,7 +2493,7 @@ that before pulling it under time pressure.
 
 ---
 
-{.backup-table}
+{.dense-table}
 
 # Backup: the 10M k-anchor table
 
@@ -2565,7 +2565,7 @@ why this slide is now three cards and a line.
 
 ---
 
-{.backup-table}
+{.dense-table}
 
 # Backup: ground-truth verification detail
 
@@ -2629,7 +2629,7 @@ entirely, say about the same arms.
 
 ---
 
-{.backup-table}
+{.dense-table}
 
 # Backup: WS6a setup effort
 
@@ -3054,7 +3054,7 @@ uninformative below ~100,000 tokens".
 
 ---
 
-{.backup-table}
+{.dense-table}
 
 # Backup: WS8 power and robustness
 
@@ -3114,7 +3114,7 @@ it. Source: results/non-code-retrieval.md, "The separation of hop1 is robust".
 
 ---
 
-{.backup-table}
+{.dense-table}
 
 # Backup: the M2 pair table
 
@@ -3214,7 +3214,7 @@ deck.
 
 ---
 
-{.backup-table}
+{.dense-table}
 
 # Backup: WS4 secondary metrics
 
@@ -3335,7 +3335,7 @@ is hearing it before the chart rather than after.
 
 ---
 
-{.backup-table}
+{.dense-table}
 
 # Backup: the WS5 sensitivity table
 
@@ -3377,7 +3377,7 @@ runs to 11.3 % and is not the gate the deck cites.
 
 # Backup: what the index costs to keep
 
-<div class="stat-grid">
+<div class="stat-grid cols-2">
 <div class="stat-card fragment"><span class="stat-value">$0.0176</span><!-- src: data/ws6b/index_cost.csv, derived: tiktoken x list rate --><span class="stat-label">to build the index at S plus M plus L, derived</span></div>
 <div class="stat-card fragment"><span class="stat-value">99.97 % / 99.97 % / 99.83 %</span><!-- src: data/ws6b/skip_rate.csv --><span class="stat-label">chunks skipped on a new file, an append, a mid-file edit</span></div>
 </div>

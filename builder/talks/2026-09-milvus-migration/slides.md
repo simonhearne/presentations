@@ -78,7 +78,7 @@ Milvus 3.0 brought full-text retrieval, sorting, aggregation and faceting into o
 # Why migrate?
 
 <br>
-<div class="card-grid why-migrate">
+<div class="card-grid tight why-migrate">
 <div class="card">
 <p class="case-name">Vector search is a plugin</p>
 <ul class="case-proof">
@@ -318,7 +318,7 @@ Schema first. The target collection exists before VTS is asked to move a row, so
 
 ---
 
-{.small-title .schema-map}
+{.small-title .dense-table .schema-map}
 
 # Mapping the schema
 
@@ -428,7 +428,7 @@ Every field type an index needs has a home in Milvus. Most of the mapping is mec
 
 # Licensing and commercial tradeoffs
 
-<div class="card-grid licensing">
+<div class="card-grid tight licensing">
 <div class="card">
 <p class="case-eyebrows"><span class="pill berry">open source</span></p>
 <p class="case-name">OpenSearch</p>
@@ -544,7 +544,7 @@ Every field type an index needs has a home in Milvus. Most of the mapping is mec
 
 <p class="case-eyebrows"><span class="case-journey"><span class="pill berry">OpenSearch</span><span class="case-arrow">→</span><span class="pill gradient">Zilliz Cloud</span></span><span class="pill ghost">text-to-image and reverse image search</span><span class="case-source">Source: <a href="https://zilliz.com/customers/123rf">zilliz.com/customers/123rf</a></span></p>
 
-<div class="stat-grid fragment">
+<div class="stat-grid cols-4 fragment">
 <div class="stat-card">
 <span class="stat-label">Query latency</span>
 <span class="stat-value">30ms - 50ms</span>
@@ -567,7 +567,7 @@ Every field type an index needs has a home in Milvus. Most of the mapping is mec
 </div>
 </div>
 
-<div class="card-grid">
+<div class="card-grid tight">
 <div class="card fragment">
 <p class="case-eyebrows"><span class="pill berry">why they moved</span></p>
 <ul class="case-proof">
@@ -601,7 +601,7 @@ Every field type an index needs has a home in Milvus. Most of the mapping is mec
 
 <p class="case-eyebrows"><span class="case-journey"><span class="pill berry">OpenSearch</span><span class="case-arrow">→</span><span class="pill gradient">Zilliz Cloud</span></span><span class="pill ghost">agentic RAG and memory for 2M+ devices in 170+ countries</span><span class="case-source">Source: <a href="https://zilliz.com/customers/plaud">zilliz.com/customers/plaud</a></span></p>
 
-<div class="stat-grid fragment">
+<div class="stat-grid cols-4 fragment">
 <div class="stat-card">
 <span class="stat-label">Scale</span>
 <span class="stat-value">10B+</span>
@@ -624,7 +624,7 @@ Every field type an index needs has a home in Milvus. Most of the mapping is mec
 </div>
 </div>
 
-<div class="card-grid">
+<div class="card-grid tight">
 <div class="card fragment">
 <p class="case-eyebrows"><span class="pill berry">why they moved</span></p>
 <ul class="case-proof">

@@ -198,7 +198,7 @@ both arms on 11% of searches (RRF, 100 candidates per arm). Titles are shortened
 
 <br>
 
-<div class="card-grid cols-2 hit-cards">
+<div class="card-grid tight cols-2 hit-cards">
 <div class="card fragment">
 <p class="feature-cat">…describe a need</p>
 <p class="case-name">“nurse accessories for work”</p>

@@ -138,9 +138,8 @@
 .slide .recall-watch .rw-foot { margin: 0; font-size: 20px; color: var(--zilliz-ink); opacity: 0.8; }
 .recall-watch .rw-chart { min-width: 0; height: 100%; display: flex; align-items: center; }
 
-/* Dataset pill strip under a chart, same idea as .methodology .rig. */
-.slide .chart-rig { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--zilliz-s-1) var(--zilliz-s-2); margin: var(--zilliz-s-2) 0 0; }
-.slide .chart-rig .pill { min-width: 0; }
+/* .chart-rig — the shared .rig strip, centred under a chart. */
+.slide .chart-rig { justify-content: center; margin: var(--zilliz-s-2) 0 0; }
 
 /* .deploy-options — Milvus deployment modes over Zilliz Cloud tiers. Each row
    leads with a label column; each card carries four 5-pip meters where more
@@ -161,8 +160,3 @@
 .deploy-matrix .dm-meters { display: grid; grid-template-columns: auto 92px auto 92px; justify-content: space-between; gap: 10px 12px; white-space: nowrap; align-items: center; margin-top: 4px; font-family: var(--zilliz-font-mono); font-size: 15px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--zilliz-grey); }
 .deploy-matrix .dm-pips { height: 16px; background: linear-gradient(to right, var(--zilliz-blue) calc(var(--v) * 20%), var(--zilliz-blue-20) 0); -webkit-mask: repeating-linear-gradient(to right, #000 0 16px, transparent 16px 19px); mask: repeating-linear-gradient(to right, #000 0 16px, transparent 16px 19px); }
 .slide.deploy-options .dm-key { margin: var(--zilliz-s-3) 0 0 calc(210px + var(--zilliz-s-3)); font-family: var(--zilliz-font-mono); font-size: 16px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--zilliz-grey); }
-
-.q-grid { display: grid; grid-template-columns: repeat(8, 1fr); gap: 0.7vw; margin: 1.6vh 0; }
-.q-grid img { width: 100%; aspect-ratio: 2 / 1; object-fit: contain; border-radius: 5px; image-rendering: pixelated; }
-.source-ref { font-family: var(--zilliz-font-mono, monospace); font-size: 0.55em; opacity: 0.5; margin-top: 1.5vh; }
-.source-ref a { color: inherit; }
