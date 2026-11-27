@@ -8,7 +8,7 @@ A markdown-to-HTML presentation builder, brand-aligned with Zilliz. Decks live u
 
 Two independent pipelines:
 
-1. **Build** ([bin/build.js](bin/build.js)) — `slides.md` → `dist/index.html`. References CSS, JS, and images via relative paths.
+1. **Build** ([bin/build.js](bin/build.js)) — `slides.md` → `dist/index.html`. References CSS, JS, and images via relative paths, including the deck's own `slides.css` when it has one.
 2. **Bundle** ([bin/bundle.js](bin/bundle.js)) — `dist/index.html` → `dist/bundle.html`. Inlines every local asset (CSS, JS, SVG, raster, Google Fonts) as a single self-contained file. Run after build.
 
 ## Site assembly & deploy
@@ -78,7 +78,7 @@ This is a deliberately dep-light project. One runtime dep (`marked`) and Node's 
 - No comments unless the *why* is non-obvious. Don't restate what the code does.
 - `escapeHtml` is the single point for HTML escaping in `bin/build.js` — reuse it for any new user-supplied output.
 - Never honour `prefers-reduced-motion`: the presenter's machine has it on and the deck's animations must still play. Don't add `@media (prefers-reduced-motion)` rules or `matchMedia` checks for it. Print is the only place motion is switched off.
-- CSS: follow [docs/styleguide.md](docs/styleguide.md) before adding any rule. Compose the shared components (`.card`, `.card-grid`, `.pill`, `.stat-grid`) and `--zilliz-*` tokens first; deck one-offs go at the bottom of `css/layouts.css` under a `/* ── Deck: talks/<slug> ── */` banner and are deleted when the deck retires.
+- CSS: follow [docs/styleguide.md](docs/styleguide.md) before adding any rule. Compose the shared components (`.card`, `.card-grid`, `.pill`, `.stat-grid`) and `--zilliz-*` tokens first; deck one-offs go in `talks/<slug>/slides.css`, which `buildDeck` links after `css/layouts.css` (as `../slides.css`, the deck-local asset convention `site.js` copies and `bundle.js` inlines) only when the file exists. A rule a second deck needs moves to `css/layouts.css`, never into the second deck's file, and decks keep no `<style>` blocks in `slides.md`. Inline SVG diagrams compose `.svg-diagram` (+`.staged`) rather than re-declaring node/edge/label styles.
 - Filesystem I/O lives in `buildDeck` / `bundleDeck`; `renderSlide` and friends stay pure for testability.
 - For sub-tasks that touch `bin/build.js`, place new functions above `renderSlide`; keep `buildDeck` last.
 

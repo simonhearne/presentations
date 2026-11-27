@@ -9,6 +9,7 @@ on:
   pull_request:
     paths:
       - 'builder/css/**'
+      - 'builder/talks/*/slides.css'
       - 'builder/script/**'
       - 'builder/templates/**'
       - 'builder/img/**'

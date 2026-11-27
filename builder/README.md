@@ -144,7 +144,11 @@ panel for a pull quote with a gradient quote glyph and a mono `<cite>`:
 
 Before writing new CSS for a slide, read [docs/styleguide.md](docs/styleguide.md)
 — it covers the full component inventory, naming conventions, and where
-deck-specific styles belong.
+deck-specific styles belong. In short: a deck's own rules go in
+`talks/<slug>/slides.css` next to its `slides.md`. The build links that file
+after the shared stylesheets whenever it exists, and it reaches the site and
+the bundle like any other deck-local asset. Rules more than one deck uses live
+in `css/layouts.css`.
 
 ## Code blocks
 
@@ -607,7 +611,7 @@ Google Fonts). Use `-- --no-images` to skip raster images if size matters.
 - `script/` — runtime: `deck.js` (scale, navigation, deeplinks), `vega.js` (chart embedding)
 - `templates/` — HTML shell with placeholders
 - `img/` — shared brand SVGs (spark, logo)
-- `talks/<slug>/` — your decks
+- `talks/<slug>/` — your decks: `slides.md`, plus an optional `slides.css` for deck-only styles
 - `brand_assets/`, `inspiration/` — reference only, not consumed at build
 
 ## Tests
