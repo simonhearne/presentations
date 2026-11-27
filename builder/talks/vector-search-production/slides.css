@@ -2,7 +2,7 @@
 .slide .readers .case-proof li { font-size: 28px; }
 .slide .readers .card { transition: opacity 300ms ease, transform 300ms ease, border-color 300ms ease, box-shadow 300ms ease; }
 .slide .readers:has(~ .readers-pick.is-revealed) .is-pick { border-color: var(--zilliz-blue); box-shadow: var(--zilliz-shadow-pop); }
-.slide .ws-diagram { --ws-amber: #d97706; --ws-amber-10: #fff4e0; max-height: 960px; margin: auto; }
+.slide .ws-diagram { max-height: 960px; margin: auto; }
 .ws-diagram .ws-lane { font-size: 13px; font-weight: 600; letter-spacing: 2px; fill: var(--zilliz-grey); text-anchor: middle; }
 .ws-diagram .ws-name { font-size: 16px; font-weight: 600; fill: var(--zilliz-navy); text-anchor: middle; }
 .ws-diagram text.ws-name[text-anchor="end"] { text-anchor: end; }
@@ -37,20 +37,20 @@
 .ws-diagram:has(.ws-search .is-revealed) .ws-insert { opacity: .25; }
 .ws-diagram:has(.ws-search .is-prerevealed) .ws-insert { transition: none; }
 .ws-diagram .ws-part { fill: none; stroke: var(--zilliz-blue-20); stroke-width: 1.5; }
-.ws-diagram .ws-part.is-hot { stroke: var(--ws-amber); stroke-width: 2; }
+.ws-diagram .ws-part.is-hot { stroke: var(--zilliz-amber); stroke-width: 2; }
 .ws-diagram .ws-part-name { font-size: 13px; font-weight: 600; fill: var(--zilliz-navy); }
 /* Once the search is routed, the partition it skips recedes. */
 .ws-diagram .ws-pruned { transition: opacity 200ms ease; }
 .ws-diagram:has(.ws-route.is-revealed) .ws-pruned { opacity: .3; }
 .ws-diagram:has(.ws-route.is-prerevealed) .ws-pruned { transition: none; }
-.ws-diagram .ws-arrow.is-search { stroke: var(--ws-amber); }
+.ws-diagram .ws-arrow.is-search { stroke: var(--zilliz-amber); }
 .ws-diagram .ws-arrow.is-return { stroke-width: 2; stroke-dasharray: 6 5; }
-.ws-diagram .ws-search-icon { fill: none; stroke: var(--ws-amber); stroke-width: 3.5; stroke-linecap: round; }
-.ws-diagram .ws-results rect { fill: var(--ws-amber); }
-.ws-diagram .ws-seg.is-hot { fill: var(--ws-amber-10); stroke: var(--ws-amber); }
-.ws-diagram .ws-dots.is-hot { fill: var(--ws-amber); }
-.ws-diagram .ws-scan { fill: none; stroke: var(--ws-amber); stroke-width: 1; opacity: .7; }
-.ws-diagram .ws-hop { fill: none; stroke: var(--ws-amber); stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
+.ws-diagram .ws-search-icon { fill: none; stroke: var(--zilliz-amber); stroke-width: 3.5; stroke-linecap: round; }
+.ws-diagram .ws-results rect { fill: var(--zilliz-amber); }
+.ws-diagram .ws-seg.is-hot { fill: var(--zilliz-amber-10); stroke: var(--zilliz-amber); }
+.ws-diagram .ws-dots.is-hot { fill: var(--zilliz-amber); }
+.ws-diagram .ws-scan { fill: none; stroke: var(--zilliz-amber); stroke-width: 1; opacity: .7; }
+.ws-diagram .ws-hop { fill: none; stroke: var(--zilliz-amber); stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
 /* Model change: the diagram follows the chart's stage (data-chart-stage on the slide), so one
    click moves both. Durations match how long b4b-swap.json takes to draw each stage. Dots
    keep the same rate when slow (spacing and speed drop together): arrivals don't change. */
@@ -210,7 +210,7 @@
 .result-compare .result-thumb { box-sizing: border-box; width: 46px; height: 46px; padding: 2px; background: var(--zilliz-white); border: 1px solid var(--zilliz-blue-20); border-radius: 6px; overflow: hidden; }
 .slide .result-compare .pill { display: inline-flex; align-items: center; justify-content: center; gap: 6px; box-sizing: border-box; min-width: 0; padding: 5px 8px; font-size: 16px; letter-spacing: 0; text-transform: none; background: #e8ebf2; color: #475569; }
 .slide .result-compare .pill.is-e { background: var(--zilliz-blue); color: var(--zilliz-white); }
-.slide .result-compare .pill.is-s { background: #fff4dc; color: #8a5a00; }
+.slide .result-compare .pill.is-s { background: var(--zilliz-amber-10); color: var(--zilliz-amber-ink); }
 .slide .result-compare .pill.is-c { background: var(--zilliz-purple-10); color: var(--zilliz-purple); }
 .result-compare .pill.is-human::before { content: ""; width: 15px; height: 16px; background: currentColor; clip-path: path("M7.5 0a4 4 0 1 1 0 8a4 4 0 1 1 0-8ZM0 16c0-4 3-6.5 7.5-6.5s7.5 2.5 7.5 6.5Z"); }
 .result-compare .label-key { font-size: 21px; }
@@ -258,10 +258,6 @@
 .slide.talk-link .tl-url { font-family: var(--zilliz-font-mono); font-size: 44px; line-height: 1.2; color: var(--zilliz-blue); }
 /* Section dividers: one question, a strip of the lifecycle stages, the checklist groups covered. */
 .slide.section .sec-question { font-size: 44px; line-height: 1.25; color: var(--zilliz-navy); margin: var(--zilliz-s-4) 0 auto; max-width: 1300px; }
-/* .late-reveal fades in 1s after its slide becomes current, no fragment step. */
-.slide .late-reveal { opacity: 0; transition: opacity 600ms ease; }
-.slide.is-current .late-reveal { opacity: 1; transition-delay: 1s; }
-@media print { .slide .late-reveal { opacity: 1; transition: none; } }
 .slide .sec-map { display: flex; flex-direction: column; gap: var(--zilliz-s-3); max-width: 1300px; min-height: 100px; margin-bottom: var(--zilliz-s-4); }
 .slide .lc-strip { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); gap: var(--zilliz-s-2); list-style: none; margin: 0; padding: 0; }
 /* Navy tints read on both ends of the section gradient; only the current stage is full strength, and thicker (padding absorbs the extra 4px so labels stay level). */
@@ -294,7 +290,7 @@
 .slide .metric-defs .feature-cat { margin: 0; }
 .metric-defs .hit-sqs { gap: 8px; }
 .metric-defs .hit-sq { width: 36px; height: 36px; }
-.hit-sq.is-sub { background: #d97706; border-color: #d97706; }
+.hit-sq.is-sub { background: var(--zilliz-amber); border-color: var(--zilliz-amber); }
 .hit-sq.is-comp { background: var(--zilliz-purple-20); border-color: var(--zilliz-purple); }
 .metric-defs .md-weights { display: inline-flex; gap: 8px; margin-top: -10px; font-family: var(--zilliz-font-mono); font-size: 14px; color: var(--zilliz-grey); }
 .metric-defs .md-weights span { width: 36px; text-align: center; }

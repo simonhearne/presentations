@@ -192,7 +192,7 @@
 .section-byline .bi-arrow { font-size: 2em; opacity: 0.4; }
 
 /* .big-idea — the same give/get row at statement size, centred on a slide of
-   its own; .big-idea-foot is the line under it. */
+   its own. */
 .big-idea { display: flex; align-items: center; justify-content: center; gap: 3vw; margin: 10vh 0; font-size: 32px; }
 .big-idea .bi-cell { display: flex; flex-direction: column; align-items: center; }
 .big-idea .bi-num { font-size: 3.4em; font-weight: 800; line-height: 1; }
@@ -200,7 +200,6 @@
 .big-idea .give .bi-num { color: #94a3b8; }
 .big-idea .get .bi-num { color: var(--zilliz-blue); }
 .big-idea .bi-arrow { font-size: 2.6em; opacity: 0.4; }
-.big-idea-foot { text-align: center; font-size: 1.3em; }
 
 /* .agenda — auto-generated TOC: numbered, hyperlinked section list */
 .slide.agenda ol {
@@ -699,6 +698,11 @@
 .slide .setup-line { position: absolute; left: var(--zilliz-s-16); right: var(--zilliz-s-16); bottom: 82px; margin: 0; font-size: 22px; line-height: 1.4; color: var(--zilliz-ink); }
 .slide .setup-line strong { margin-right: 8px; font-family: var(--zilliz-font-mono); font-size: 19px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--zilliz-navy); }
 
+/* .late-reveal fades in 1s after its slide becomes current, no fragment step. */
+.slide .late-reveal { opacity: 0; transition: opacity 600ms ease; }
+.slide.is-current .late-reveal { opacity: 1; transition-delay: 1s; }
+@media print { .slide .late-reveal { opacity: 1; transition: none; } }
+
 /* ── Shared components — compose these before writing new CSS (docs/styleguide.md) ── */
 
 /* .search-demo — a query box over ranked result lists, each list scored
@@ -776,7 +780,7 @@
 .search-demo .result-num { font-size: 34px; font-weight: 800; color: var(--zilliz-navy); font-family: var(--zilliz-font-mono); }
 
 .slide .search-demo .body:has(> .section:nth-child(3)) { grid-template-columns: repeat(3, 1fr); gap: var(--zilliz-s-4); }
-.slide .search-demo .pill.near { background: #fff4dc; color: #8a5a00; }
+.slide .search-demo .pill.near { background: var(--zilliz-amber-10); color: var(--zilliz-amber-ink); }
 /* Three columns leave little room for titles: the shared .pill's 115px minimum
    and the 40px rank column push them onto a second line. */
 .slide .search-demo .body:has(> .section:nth-child(3)) .result { grid-template-columns: 24px 1fr auto; gap: var(--zilliz-s-1); padding-inline: 10px; }

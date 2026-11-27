@@ -18,6 +18,12 @@
   --zilliz-sky: #49bcff;
   --zilliz-green: #00dcc6;
 
+  /* Data — the second chart series in script/vega.js BRAND, for marking the
+     thing a diagram or result list is drawing attention to */
+  --zilliz-amber: #d97706;
+  --zilliz-amber-10: #fff4dc;
+  --zilliz-amber-ink: #8a5a00;
+
   /* Brand — gradients */
   --zilliz-gradient: linear-gradient(135deg, #175fff 0%, #7f47ff 50%, #c84cff 100%);
   --zilliz-gradient-light:
